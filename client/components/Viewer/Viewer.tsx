@@ -97,172 +97,6 @@ export default function Viewer({
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [activeImageId, images]);
 
-    const MainViewer = () => {
-        const currentImage = images.find(img => img.id === activeImageId);
-        const [isImageLoading, setIsImageLoading] = useState(false);
-
-        return (
-            <Card padding="md" pos="relative" withBorder>
-                <Box style={{
-                    position: 'relative',
-                    width: '100%',
-                    aspectRatio: '16/9',
-                    overflow: "hidden",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
-                    borderRadius: "10px",
-                    flexShrink: 0
-                }}
-                    onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
-                    onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
-                >
-                    {isImageLoading && (
-                        <Skeleton height="100%" width="100%" radius="md" />
-                    )}
-                    <Image
-                        src={currentImage?.src || "/placeholder_image.svg"}
-                        alt={currentImage?.alt || ""}
-                        width={500}
-                        height={500}
-                        style={{
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: "contain",
-                            cursor: "zoom-in",
-                            opacity: isImageLoading ? 0 : 1,
-                            transition: 'opacity 0.2s ease-in-out'
-                        }}
-                        sizes="100vw"
-                        placeholder="blur"
-                        blurDataURL="/placeholder_image.svg"
-                        onClick={() => setIsImageModalOpen(true)}
-                        onLoadingComplete={() => setIsImageLoading(false)}
-                        onLoadStart={() => setIsImageLoading(true)}
-                        priority
-                    />
-
-                    {showNavigation && (
-                        <>
-                            <ActionIcon
-                                size="lg"
-                                variant="filled"
-                                color={colorScheme === "dark" ? "gray" : "dark"}
-                                style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: 5,
-                                    transform: 'translateY(-50%)',
-                                    zIndex: 100,
-                                }}
-                                onClick={() => {
-                                    const currentIndex = images.findIndex(img => img.id === activeImageId);
-                                    if (currentIndex > 0) {
-                                        setActiveImageId(images[currentIndex - 1].id);
-                                    }
-                                }}
-                                disabled={images.findIndex(img => img.id === activeImageId) === 0}
-                            >
-                                <IconArrowLeft size={24} />
-                            </ActionIcon>
-                            <ActionIcon
-                                size="lg"
-                                variant="filled"
-                                color={colorScheme === "dark" ? "gray" : "dark"}
-                                style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    right: 5,
-                                    transform: 'translateY(-50%)',
-                                    zIndex: 100,
-                                }}
-                                onClick={() => {
-                                    const currentIndex = images.findIndex(img => img.id === activeImageId);
-                                    if (currentIndex < images.length - 1) {
-                                        setActiveImageId(images[currentIndex + 1].id);
-                                    }
-                                }}
-                                disabled={images.findIndex(img => img.id === activeImageId) === images.length - 1}
-                            >
-                                <IconArrowRight size={24} />
-                            </ActionIcon>
-                        </>
-                    )}
-
-                    {/* Image label overlay */}
-                    <Box
-                        pos="absolute"
-                        bottom={embedded ? 5 : 10}
-                        right={embedded ? 5 : 10}
-                        p={embedded ? 4 : 8}
-                        style={{
-                            zIndex: 100,
-                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                            borderRadius: "4px",
-                        }}
-                    >
-                        <Text
-                            size={embedded ? "xs" : "sm"}
-                            fw={500}
-                            style={{
-                                color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ?
-                                    "0px 0px 4px rgba(0,0,0,0.5)" :
-                                    "0px 0px 4px rgba(255,255,255,0.5)"
-                            }}
-                        >
-                            {currentImage?.label || ""}
-                        </Text>
-                    </Box>
-                </Box>
-            </Card>
-        );
-    };
-
-    const PreviewStrip = () => (
-        <Flex
-            ref={previewScrollRef}
-            gap={4}
-            style={{
-                overflowX: 'auto',
-                padding: '2px',
-                height: '100%',
-                width: '100%'
-            }}
-        >
-            {images.map((img) => (
-                <Box
-                    key={img.id}
-                    data-image={img.id}
-                    style={{
-                        cursor: 'pointer',
-                        width: 35,
-                        height: 35,
-                        position: 'relative',
-                        flexShrink: 0,
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                    }}
-                    onClick={() => setActiveImageId(img.id)}
-                >
-                    <Image
-                        src={img.src}
-                        alt={img.alt}
-                        width={35}
-                        height={35}
-                        style={{
-                            objectFit: 'cover',
-                            outline: img.id === activeImageId ? '2px solid skyblue' : 'none',
-                            outlineOffset: '-2px',
-                        }}
-                        sizes="100vw"
-                    />
-                </Box>
-            ))}
-        </Flex>
-    );
-
     const Content = () => (
         <Stack gap="xs" style={{ height: '100%' }}>
             {/* Title section - only show if not embedded */}
@@ -288,9 +122,155 @@ export default function Viewer({
                             </>
                         ) : (
                             <>
-                                <MainViewer />
+                                <Card padding="md" pos="relative" withBorder>
+                                    <Box style={{
+                                        position: 'relative',
+                                        width: '100%',
+                                        aspectRatio: '16/9',
+                                        overflow: "hidden",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+                                        borderRadius: "10px",
+                                        flexShrink: 0
+                                    }}
+                                        onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                                        onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
+                                    >
+                                        <Image
+                                            src={images.find(img => img.id === activeImageId)?.src || "/placeholder_image.svg"}
+                                            alt={images.find(img => img.id === activeImageId)?.alt || ""}
+                                            width={500}
+                                            height={500}
+                                            style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '100%',
+                                                objectFit: "contain",
+                                                cursor: "zoom-in",
+                                            }}
+                                            sizes="100vw"
+                                            placeholder="blur"
+                                            blurDataURL="/placeholder_image.svg"
+                                            onClick={() => setIsImageModalOpen(true)}
+                                            priority
+                                        />
+
+                                        {showNavigation && (
+                                            <>
+                                                <ActionIcon
+                                                    size="lg"
+                                                    variant="filled"
+                                                    color={colorScheme === "dark" ? "gray" : "dark"}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: 5,
+                                                        transform: 'translateY(-50%)',
+                                                        zIndex: 100,
+                                                    }}
+                                                    onClick={() => {
+                                                        const currentIndex = images.findIndex(img => img.id === activeImageId);
+                                                        if (currentIndex > 0) {
+                                                            setActiveImageId(images[currentIndex - 1].id);
+                                                        }
+                                                    }}
+                                                    disabled={images.findIndex(img => img.id === activeImageId) === 0}
+                                                >
+                                                    <IconArrowLeft size={24} />
+                                                </ActionIcon>
+                                                <ActionIcon
+                                                    size="lg"
+                                                    variant="filled"
+                                                    color={colorScheme === "dark" ? "gray" : "dark"}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: 5,
+                                                        transform: 'translateY(-50%)',
+                                                        zIndex: 100,
+                                                    }}
+                                                    onClick={() => {
+                                                        const currentIndex = images.findIndex(img => img.id === activeImageId);
+                                                        if (currentIndex < images.length - 1) {
+                                                            setActiveImageId(images[currentIndex + 1].id);
+                                                        }
+                                                    }}
+                                                    disabled={images.findIndex(img => img.id === activeImageId) === images.length - 1}
+                                                >
+                                                    <IconArrowRight size={24} />
+                                                </ActionIcon>
+                                            </>
+                                        )}
+
+                                        {/* Image label overlay */}
+                                        <Box
+                                            pos="absolute"
+                                            bottom={embedded ? 5 : 10}
+                                            right={embedded ? 5 : 10}
+                                            p={embedded ? 4 : 8}
+                                            style={{
+                                                zIndex: 100,
+                                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                                borderRadius: "4px",
+                                            }}
+                                        >
+                                            <Text
+                                                size={embedded ? "xs" : "sm"}
+                                                fw={500}
+                                                style={{
+                                                    color: colorScheme === "dark" ? "white" : "black",
+                                                    textShadow: colorScheme === "dark" ?
+                                                        "0px 0px 4px rgba(0,0,0,0.5)" :
+                                                        "0px 0px 4px rgba(255,255,255,0.5)"
+                                                }}
+                                            >
+                                                {images.find(img => img.id === activeImageId)?.label || ""}
+                                            </Text>
+                                        </Box>
+                                    </Box>
+                                </Card>
                                 <Box style={{ flexShrink: 0, height: '40px', marginBottom: '4px' }}>
-                                    <PreviewStrip />
+                                    <Flex
+                                        ref={previewScrollRef}
+                                        gap={4}
+                                        style={{
+                                            overflowX: 'auto',
+                                            padding: '2px',
+                                            height: '100%',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        {images.map((img) => (
+                                            <Box
+                                                key={img.id}
+                                                data-image={img.id}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    width: 35,
+                                                    height: 35,
+                                                    position: 'relative',
+                                                    flexShrink: 0,
+                                                    borderRadius: '4px',
+                                                    overflow: 'hidden',
+                                                }}
+                                                onClick={() => setActiveImageId(img.id)}
+                                            >
+                                                <Image
+                                                    src={img.src}
+                                                    alt={img.alt}
+                                                    width={35}
+                                                    height={35}
+                                                    style={{
+                                                        objectFit: 'cover',
+                                                        outline: img.id === activeImageId ? '2px solid skyblue' : 'none',
+                                                        outlineOffset: '-2px',
+                                                    }}
+                                                    sizes="100vw"
+                                                />
+                                            </Box>
+                                        ))}
+                                    </Flex>
                                 </Box>
                                 {/* Description always appears below images */}
                                 {description && (

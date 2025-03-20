@@ -3,11 +3,11 @@
  * Component for viewing documents, lectures, and textbooks
  */
 
-import { Card, Stack, Group, Text, ActionIcon, Box } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
+import { Card, Stack, Group, Text, ActionIcon, Box, Button } from "@mantine/core";
+import { IconMinus, IconPlus, IconX } from "@tabler/icons-react";
 import LectureViewer from "../../Viewer/LectureViewer";
 import { memo } from "react";
-import { Lecture, Textbook, ViewerMode } from "@/types";
+import { ChatMessage, Lecture, Textbook, ViewerMode } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
@@ -21,11 +21,14 @@ import { getExercises } from "@/utils/queries/get-exercises";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
-    setViewerMode: (viewerMode: ViewerMode) => void;
+    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
+    activeChat: ChatMessage;
+    addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void;
     classId: string;
+    fullscreen?: boolean;
 }
 
-export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPanelProps) => {
+export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, classId, fullscreen = false, activeChat }: ViewerPanelProps) => {
     const supabase = useSupabaseBrowser();
 
     const { data: lectures } = useQuery({
@@ -69,18 +72,10 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
 
     // Modify the close handler to fully close the panel
     const handleClose = () => {
-        // Pass an object with active:false to close the viewer
-        // The setViewerMode function in ChatCanvas will handle the complete closing
-        setViewerMode({
+        setViewerMode(prev => ({
+            ...prev,
             active: false,
-            // We keep other properties to maintain the ViewerMode type
-            documentId: viewerMode.documentId,
-            lectureId: viewerMode.lectureId,
-            chapterId: viewerMode.chapterId,
-            textbookId: viewerMode.textbookId,
-            homeworkId: viewerMode.homeworkId,
-            exerciseId: viewerMode.exerciseId,
-        });
+        }));
     };
 
     return (
@@ -89,7 +84,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
             padding="lg"
             radius="md"
             withBorder
-            style={{ height: "80vh" }}
+            style={{ height: fullscreen ? "90vh" : "80vh" }}
         >
             <Stack style={{ height: "100%" }}>
                 <Group justify="space-between" wrap="nowrap">
@@ -109,47 +104,78 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, classId}: ViewerPa
                         <IconX size={20} />
                     </ActionIcon>
                 </Group>
-                <Box style={{ flex: 1, overflow: 'hidden' }}>
-                    {viewerMode.lectureId ? (
-                        <LectureViewer
-                            key={`${viewerMode.lectureId}-${viewerMode.documentId}`}
-                            classId={classId}
-                            lectureId={viewerMode.lectureId}
-                            initialDocumentId={viewerMode.documentId}
-                            embedded={true}
-                        />
-                    ) : viewerMode.chapterId ? (
-                        viewerMode.textbookId ? (
-                            <ChapterViewer
-                                key={`${viewerMode.textbookId}-${viewerMode.chapterId}`}
+                {viewerMode.lectureId ? (
+                    <>
+                        <Box style={{ flex: 1, overflow: 'hidden' }}>
+                            <LectureViewer
+                                key={`${viewerMode.lectureId}-${viewerMode.documentId}`}
                                 classId={classId}
-                                textbookId={viewerMode.textbookId}
-                                chapterId={viewerMode.chapterId}
+                                lectureId={viewerMode.lectureId}
                                 initialDocumentId={viewerMode.documentId}
-                                embedded={true}
                             />
-                            
-                        ) : viewerMode.exerciseId ? (
-                            <ExerciseViewer
-                                key={`${viewerMode.chapterId}-${viewerMode.exerciseId}`}
+                        </Box>
+                        {activeChat.context.lectures.includes(viewerMode.lectureId ?? "") ? null : <Button
+                            leftSection={<IconPlus size={16} />}
+                            onClick={() => addContextToChat("lectures", viewerMode.lectureId ?? "")}
+                            color="blue"
+                        >Add Lecture to Chat</Button>}
+                    </>
+                ) : viewerMode.chapterId ? (
+                    viewerMode.exerciseId ? (
+                        <>
+                            <Box style={{ flex: 1, overflow: 'hidden' }}>
+                                <ExerciseViewer
+                                    key={`${viewerMode.chapterId}-${viewerMode.exerciseId}`}
+                                    classId={classId}
+                                    chapterId={viewerMode.chapterId}
+                                    initialExerciseId={viewerMode.exerciseId}
+                                />
+
+                            </Box>
+                            {activeChat.context.exercises.includes(viewerMode.exerciseId ?? "") ? null : <Button
+                                leftSection={<IconPlus size={16} />}
+                                onClick={() => addContextToChat("exercises", viewerMode.chapterId ?? "")} // adding all the exercises for the chapter
+                                color="teal"
+                            >Add Exercises to Chat</Button>}
+                        </>
+                    ) : viewerMode.textbookId ? (
+                        <>
+                            <Box style={{ flex: 1, overflow: 'hidden' }}>
+                                <ChapterViewer
+                                    key={`${viewerMode.textbookId}-${viewerMode.chapterId}`}
+                                    classId={classId}
+                                    textbookId={viewerMode.textbookId}
+                                    chapterId={viewerMode.chapterId}
+                                    initialDocumentId={viewerMode.documentId}
+                                />
+                            </Box>
+                            {activeChat.context.chapters.includes(viewerMode.chapterId ?? "") ? null : <Button
+                                leftSection={<IconPlus size={16} />}
+                                onClick={() => addContextToChat("chapters", viewerMode.chapterId ?? "")}
+                                color="green"
+                            >Add Chapter to Chat</Button>}
+                        </>
+                    ) : null
+                ) : viewerMode.homeworkId ? (
+                    <>
+                        <Box style={{ flex: 1, overflow: 'hidden' }}>
+                            <HomeworkViewer
+                                key={`${viewerMode.homeworkId}-${viewerMode.exerciseId}`}
                                 classId={classId}
-                                chapterId={viewerMode.chapterId}
+                                homeworkId={viewerMode.homeworkId}
                                 initialExerciseId={viewerMode.exerciseId}
-                                embedded={true}
                             />
-                        ) : null
-                    ) : viewerMode.homeworkId ? (
-                        <HomeworkViewer
-                            key={`${viewerMode.homeworkId}-${viewerMode.exerciseId}`}
-                            classId={classId}
-                            homeworkId={viewerMode.homeworkId}
-                            initialExerciseId={viewerMode.exerciseId}
-                            embedded={true}
-                        />
-                    ) : null}
-                </Box>
+
+                        </Box>
+                        <Button
+                            leftSection={<IconPlus size={16} />}
+                            onClick={() => addContextToChat("homeworks", viewerMode.homeworkId ?? "")}
+                        >Add Homework to Chat</Button>
+                    </>
+                ) : null}
+
             </Stack>
-        </Card>
+        </Card >
     );
 });
 

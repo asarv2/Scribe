@@ -179,6 +179,48 @@ export const ContextBadges = memo(({
                 );
             })}
 
+            {activeChat.context.exercises.map(exerciseId => {
+                const exercise = exercises?.find(e => e.id === exerciseId);
+                const chapter = chapters?.find(c => c.id === exercise?.chapter);
+                return exercise && chapter && (
+                    <Badge
+                        key={exerciseId}
+                        color="teal"
+                        style={{ cursor: 'pointer' }}
+                        leftSection={
+                            <Avatar 
+                                src={exercises?.find(e => e.id === exerciseId) ? 
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${chapter.textbook}/${exercise.id}.png` : 
+                                    '/placeholder_image.svg'}
+                                size="xs"
+                                radius="sm"
+                            />
+                        }
+                        rightSection={onRemoveContext && (
+                            <IconX
+                                size={14}
+                                
+                                style={{ cursor: 'pointer' }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onRemoveContext('exercises', exerciseId);
+                                }}
+                            />
+                        )}
+                        onClick={(e) => {
+                            if (setViewerMode) {
+                                const exercise = exercises?.find(e => e.id === exerciseId) // find first exercise of the homework
+                                if (exercise) {
+                                    handleDocumentClick('chapters', exerciseId, setViewerMode, undefined, undefined, exercise.id);
+                                }
+                            }
+                        }}
+                    >
+                        {exercise.title}
+                    </Badge>
+                );
+            })}
+
             {activeChat.context.homeworks.map(homeworkId => {
                 const homework = homeworkData?.find(h => h.id === homeworkId);
                 return homework && (
@@ -218,108 +260,18 @@ export const ContextBadges = memo(({
                     </Badge>
                 );
             })}
-        </>
-    );
 
-    // Render "Add X" badges
-    const renderAddBadges = () => (
-        <>
-            {activeChat.context.homeworks.length === 0 && homeworkData && homeworkData.length !== 0 && (
-                <Badge
-                    color="orange"
-                    variant="light"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={() => {
-                        if (setViewerMode) {
-                            setViewerMode({
-                                active: false,
-                            });
-                        }
-                        // First ensure the section is expanded
-                        if (!expandedSections.has("homeworks")) {
-                            toggleSection("homeworks");
-                        }
-                        // Use onScrollToSection which is passed as a prop
-                        if (onScrollToSection) {
-                            // Small delay to ensure UI updates first
-                            setTimeout(() => {
-                                onScrollToSection("homeworks-section-first-item");
-                            }, 50);
-                        }
-                    }}
-                    style={{ cursor: "pointer" }}
-                >
-                    Add Homeworks
-                </Badge>
-            )}
-            {activeChat.context.lectures.length === 0 && lectures && lectures.length !== 0 && (
-                <Badge
-                    color="blue"
-                    variant="light"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={() => {
-                        if (setViewerMode) {
-                            setViewerMode({
-                                active: false,
-                            });
-                        }
-                        // First ensure the section is expanded
-                        if (!expandedSections.has("lectures")) {
-                            toggleSection("lectures");
-                        }
-                        // Use onScrollToSection which is passed as a prop
-                        if (onScrollToSection) {
-                            // Small delay to ensure UI updates first
-                            setTimeout(() => {
-                                onScrollToSection("lectures-section-first-item");
-                            }, 50);
-                        }
-                    }}
-                    style={{ cursor: "pointer" }}
-                >
-                    Add Lectures
-                </Badge>
-            )}
-
-            {activeChat.context.chapters.length === 0 && chapters && chapters.length !== 0 && (
-                <Badge
-                    color="green"
-                    variant="light"
-                    leftSection={<IconPlus size={12} />}
-                    onClick={() => {
-                        if (setViewerMode) {
-                            setViewerMode({
-                                active: false,
-                            });
-                        }
-                        // First ensure the section is expanded
-                        if (!expandedSections.has("chapters")) {
-                            toggleSection("chapters");
-                        }
-                        // Use onScrollToSection which is passed as a prop
-                        if (onScrollToSection) {
-                            // Small delay to ensure UI updates first
-                            setTimeout(() => {
-                                onScrollToSection("chapters-section-first-item");
-                            }, 50);
-                        }
-                    }}
-                    style={{ cursor: "pointer" }}
-                >
-                    Add Readings
-                </Badge>
-            )}
 
         </>
     );
 
     return (
         <Group>
-            <Text size="sm" c="dimmed">
+            {/* <Text size="sm" c="dimmed">
                 Add Context:
-            </Text>
+            </Text> */}
             {renderActiveBadges()}
-            {renderAddBadges()}
+            {/* {renderAddBadges()} */}
             {(!activeChat.context.lectures?.length && 
                 !activeChat.context.chapters?.length && 
                 !activeChat.context.homeworks?.length)}

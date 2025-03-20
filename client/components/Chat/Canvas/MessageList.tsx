@@ -15,7 +15,6 @@ import {
   splitTextByDocuments,
   splitTextByFigures,
   groupConsecutiveDocuments,
-  handleDocumentClick
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useQuery } from "@tanstack/react-query";
@@ -44,13 +43,10 @@ interface MessageListProps {
   activeChat: ChatMessage;
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
   onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
-  setViewerMode: (viewerMode: ViewerMode) => void; // Changed to function instead of React.Dispatch
+  setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
   loading?: boolean;
-  immersiveMode?: boolean;
-  currentChunkIndex?: number;
-  setCurrentChunkIndex?: React.Dispatch<React.SetStateAction<number>>;
-  isUserInterrupting?: boolean;
+  fullscreen?: boolean;
 }
 
 export const MessageList = memo(({
@@ -63,10 +59,7 @@ export const MessageList = memo(({
   existingChat,
   isInitializing = false,
   loading,
-  immersiveMode = false,
-  currentChunkIndex = 0,
-  setCurrentChunkIndex,
-  isUserInterrupting = false,
+  fullscreen = false,
 }: MessageListProps) => {
   const supabase = useSupabaseBrowser();
 
@@ -150,44 +143,44 @@ export const MessageList = memo(({
 
   // Add state to track if context was automatically added
   const [autoAddedContext, setAutoAddedContext] = useState<{
-    lectures: string[], 
-    chapters: string[], 
+    lectures: string[],
+    chapters: string[],
     homeworks: string[]
   }>({
     lectures: [],
     chapters: [],
     homeworks: []
   });
-  
+
   // Function to calculate simple text similarity based on shared words
   const calculateTextSimilarity = (text1: string, text2: string): number => {
     const words1 = text1.toLowerCase().split(/\W+/).filter(word => word.length > 2);
     const words2 = text2.toLowerCase().split(/\W+/).filter(word => word.length > 2);
-    
+
     // Count matching unique words
     const uniqueWords1 = new Set(words1);
     const uniqueWords2 = new Set(words2);
-    
+
     let matchCount = 0;
     uniqueWords1.forEach(word => {
       if (uniqueWords2.has(word)) matchCount++;
     });
-    
+
     // Calculate similarity score
     const totalUniqueWords = Array.from(uniqueWords1).concat(Array.from(uniqueWords2)).length;
     return totalUniqueWords > 0 ? matchCount / totalUniqueWords : 0;
   };
-  
+
   // Function to find relevant context based on user's question
   const findRelevantContext = (question: string) => {
     if (!question || question.length < 5) return null;
-    
+
     const relevantContext = {
       lectures: [] as string[],
       chapters: [] as string[],
       homeworks: [] as string[]
     };
-    
+
     // Match with lectures
     if (lectures) {
       const lectureMatches = lectures
@@ -199,11 +192,11 @@ export const MessageList = memo(({
         .filter(match => match.similarity > 0.15) // Set minimum similarity threshold
         .sort((a, b) => b.similarity - a.similarity)
         .slice(0, 2); // Get top 2 matches
-      
+
       relevantContext.lectures = lectureMatches.map(match => match.id);
       console.log('Lecture matches:', lectureMatches.map(m => `${m.name} (${(m.similarity * 100).toFixed(1)}%)`));
     }
-    
+
     // Match with chapters
     if (chapters) {
       const chapterMatches = chapters
@@ -215,11 +208,11 @@ export const MessageList = memo(({
         .filter(match => match.similarity > 0.15)
         .sort((a, b) => b.similarity - a.similarity)
         .slice(0, 2);
-      
+
       relevantContext.chapters = chapterMatches.map(match => match.id);
       console.log('Chapter matches:', chapterMatches.map(m => `${m.title} (${(m.similarity * 100).toFixed(1)}%)`));
     }
-    
+
     // Match with homeworks
     if (homeworks) {
       const homeworkMatches = homeworks
@@ -231,39 +224,39 @@ export const MessageList = memo(({
         .filter(match => match.similarity > 0.15)
         .sort((a, b) => b.similarity - a.similarity)
         .slice(0, 2);
-      
+
       relevantContext.homeworks = homeworkMatches.map(match => match.id);
       console.log('Homework matches:', homeworkMatches.map(m => `${m.title} (${(m.similarity * 100).toFixed(1)}%)`));
     }
-    
+
     // Only return context if we found any matches
-    const hasMatches = 
-      relevantContext.lectures.length > 0 || 
-      relevantContext.chapters.length > 0 || 
+    const hasMatches =
+      relevantContext.lectures.length > 0 ||
+      relevantContext.chapters.length > 0 ||
       relevantContext.homeworks.length > 0;
-    
+
     return hasMatches ? relevantContext : null;
   };
-  
+
   // Auto-add context when a new message is displayed without context
   useEffect(() => {
     if (!messages || messages.length === 0 || !activeChat) return;
-    
+
     // Only check the first message
     const firstMessage = messages[0];
-    
+
     // Skip if message already has context or if we've already added context
-    if ((firstMessage.lectures?.length || firstMessage.chapters?.length || firstMessage.homeworks?.length) || 
-        (autoAddedContext.lectures.length || autoAddedContext.chapters.length || autoAddedContext.homeworks.length)) {
+    if ((firstMessage.lectures?.length || firstMessage.chapters?.length || firstMessage.homeworks?.length) ||
+      (autoAddedContext.lectures.length || autoAddedContext.chapters.length || autoAddedContext.homeworks.length)) {
       return;
     }
-    
+
     // Find relevant context
     const relevantContext = findRelevantContext(firstMessage.question);
     if (relevantContext) {
       console.log('Auto-adding context based on question similarity:', relevantContext);
       setAutoAddedContext(relevantContext);
-      
+
       // Update active chat context - this will be used for future messages
       setActiveChat(prev => ({
         ...prev,
@@ -276,112 +269,7 @@ export const MessageList = memo(({
       }));
     }
   }, [messages]);
-  
-  // Function to render auto-added context badges for the first message
-  const renderAutoAddedContextBadges = () => {
-    if (!autoAddedContext || 
-        (!autoAddedContext.lectures.length && 
-         !autoAddedContext.chapters.length && 
-         !autoAddedContext.homeworks.length)) {
-      return null;
-    }
-    
-    return (
-      <Stack mt="xs" gap="xs">
-        <Group justify="space-between">
-          <Text size="xs" c="dimmed">AI automatically added relevant context:</Text>
-          <ActionIcon 
-            size="xs" 
-            color="gray" 
-            onClick={() => setAutoAddedContext({ lectures: [], chapters: [], homeworks: [] })}
-            title="Dismiss"
-          >
-            <IconX size={12} />
-          </ActionIcon>
-        </Group>
-        <Group gap="xs">
-          {/* Lecture badges */}
-          {autoAddedContext.lectures.map(lectureId => {
-            const lecture = lectures?.find(l => l.id === lectureId);
-            if (!lecture) return null;
-            
-            return (
-              <Badge 
-                key={`auto-lecture-${lectureId}`}
-                size="sm" 
-                color="blue"
-                radius="xl"
-                leftSection={<IconBulb size={12} />}
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  const document = lectureDocuments?.find(d => d.lecture === lectureId);
-                  if (document) {
-                    handleEnhancedDocumentClick('lectures', lectureId, document.id);
-                  }
-                }}
-              >
-                {lecture.name}
-              </Badge>
-            );
-          })}
-          
-          {/* Chapter badges */}
-          {autoAddedContext.chapters.map(chapterId => {
-            const chapter = chapters?.find(c => c.id === chapterId);
-            if (!chapter) return null;
-            
-            return (
-              <Badge 
-                key={`auto-chapter-${chapterId}`} 
-                size="sm" 
-                color="green"
-                leftSection={<IconBulb size={12} />}
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (chapter.textbook) {
-                    const document = chapterDocuments?.find(d => 
-                      d.chapter === chapterId && 
-                      d.page >= chapter.start_page && 
-                      d.page <= chapter.end_page
-                    );
-                    if (document) {
-                      handleEnhancedDocumentClick('chapters', chapterId, document.id, chapter.textbook);
-                    }
-                  }
-                }}
-              >
-                {chapter.chapter_number ? `Ch. ${chapter.chapter_number}` : chapter.title}
-              </Badge>
-            );
-          })}
-          
-          {/* Homework badges */}
-          {autoAddedContext.homeworks.map(homeworkId => {
-            const homework = homeworks?.find(h => h.id === homeworkId);
-            if (!homework) return null;
-            
-            return (
-              <Badge 
-                key={`auto-homework-${homeworkId}`} 
-                size="sm" 
-                color="orange"
-                leftSection={<IconBulb size={12} />}
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  const exercise = homeworkExercises?.find(e => e.homework === homeworkId);
-                  if (exercise) {
-                    handleEnhancedDocumentClick('homeworks', homeworkId, undefined, undefined, exercise.id);
-                  }
-                }}
-              >
-                {homework.homework_number ? `HW ${homework.homework_number}` : homework.title}
-              </Badge>
-            );
-          })}
-        </Group>
-      </Stack>
-    );
-  };
+
 
   // Check scroll position to show/hide scroll button
   const handleScroll = () => {
@@ -454,212 +342,12 @@ export const MessageList = memo(({
                     <Text>
                       Hi {profile?.first_name || 'there'}, how can I assist you today?
                     </Text>
-                    {/* {(profile?.admin || profile?.professor) && (
-                      <Group justify="flex-end">
-                        <Group gap="xs" align="center">
-                          <Badge size="xs" variant="light" color="blue">Teacher</Badge>
-                          <Checkbox
-                            size="xs"
-                            checked={activeChat.teacher}
-                            onChange={() => setActiveChat((prev) => ({
-                              ...prev,
-                              teacher: !prev.teacher,
-                              chatType: prev.teacher ? 'general-student' : 'general-teacher'
-                            }))}
-                          />
-                        </Group>
-                      </Group>
-                    )} */}
-                  </Flex>
-                  <Flex justify="space-between" align="center">
-                    <Group gap="xs">
-                      {!activeChat.teacher ? (
-                        <>
-                          {/* Student options */}
-                          <Button
-                            variant="light"
-                            color="green"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'concept'
-                            }))}
-                          >
-                            Learn
-                          </Button>
-                        <Button
-                          variant="light"
-                          color="indigo"
-                          onClick={() => setActiveChat((prev) => ({
-                            ...prev,
-                            chatType: 'homework-student'
-                          }))}
-                        >
-                          Homework
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="cyan"
-                          onClick={() => setActiveChat((prev) => ({
-                            ...prev,
-                            chatType: 'review'
-                          }))}
-                        >
-                          Test-Prep
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        {/* Teacher options */}
-                        <Button
-                          variant="light"
-                          color="green"
-                          onClick={() => setActiveChat((prev) => ({
-                            ...prev,
-                            chatType: 'method'
-                          }))}
-                        >
-                          Methodology
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="indigo"
-                          onClick={() => setActiveChat((prev) => ({
-                            ...prev,
-                            chatType: 'homework-professor'
-                          }))}
-                        >
-                          Homework
-                        </Button>
-                        <Button
-                          variant="light"
-                          color="cyan"
-                          onClick={() => setActiveChat((prev) => ({
-                            ...prev,
-                            chatType: 'generate'
-                          }))}
-                        >
-                          Generate
-                        </Button>
-                      </>
-                      )}
-                    </Group>
-                    {/* Clear button in bottom right */}
-                    {activeChat.chatType &&
-                      !activeChat.chatType.startsWith('general') && (
-                        <Group justify="flex-end" mt="xs">
-                          <ActionIcon
-                            variant="subtle"
-                            color="red"
-                            size="sm"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: prev.teacher ? 'general-student' : 'general-teacher'
-                            }))}
-                            title="Clear Selection"
-                          >
-                            <IconRefresh size={16} />
-                          </ActionIcon>
-                        </Group>
-                      )}
                   </Flex>
                 </Stack>
               </Card>
             </Stack>
           </Flex>
         )}
-
-        {/* Only show follow-up message if:
-            1. It's a new chat with a non-general chat type, OR
-            2. It's an existing chat with a non-general chat type */}
-        {((existingChat && !existingChat.type.startsWith('general')) ||
-          (!existingChat && activeChat.chatType && !activeChat.chatType.startsWith('general'))) && (
-            <Flex gap="md" align="flex-start">
-              <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
-                <Group gap="xs" align="center">
-                  <Avatar
-                    src={professor ? getAvatarUrl(professor.id) : undefined}
-                    size="sm"
-                    radius="xl"
-                    alt="AI Assistant"
-                  />
-                  <Text size="sm" c="dimmed">
-                    {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                  </Text>
-                </Group>
-
-                <Card
-                  padding="sm"
-                  radius="md"
-                  style={{
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                    minWidth: "200px",
-                    width: "100%",
-                    maxWidth: "100%",
-                    border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
-                    position: "relative"
-                  }}
-                >
-                  <Text>
-                    {!(existingChat ? existingChat.teacher : activeChat.teacher)  ? (
-                      <>
-                        {/* Student follow-up text */}
-                        {existingChat ? (
-                          // Use existingChat data when available
-                          existingChat.type === 'concept' ? (
-                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                          ) : existingChat.type === 'homework-student' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                          ) : existingChat.type === 'review' ? (
-                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        ) : (
-                          // Fall back to activeChat data for new chats
-                          activeChat.chatType === 'concept' ? (
-                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                          ) : activeChat.chatType === 'homework-student' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                          ) : activeChat.chatType === 'review' ? (
-                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {/* Teacher follow-up text */}
-                        {existingChat ? (
-                          // Use existingChat data when available
-                          existingChat.type === 'method' ? (
-                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                          ) : existingChat.type === 'homework-professor' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                          ) : existingChat.type === 'generate' ? (
-                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        ) : (
-                          // Fall back to activeChat data for new chats
-                          activeChat.chatType === 'method' ? (
-                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                          ) : activeChat.chatType === 'homework-professor' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                          ) : activeChat.chatType === 'generate' ? (
-                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        )}
-                      </>
-                    )}
-                  </Text>
-                </Card>
-              </Stack>
-            </Flex>
-          )}
       </Stack>
     );
   };
@@ -669,19 +357,20 @@ export const MessageList = memo(({
     type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise',
     doc?: Document,
     exercise?: Exercise,
+    range?: string
   ): string => {
     if (type === 'lecture' && doc) {
       const lecture = lectures?.find(l => l.id === doc.lecture);
-      return `${lecture?.name ?? 'Lecture'} p.${doc.page}`;
+      return `${lecture?.name ?? 'Lecture'} ${range ? `p.${range}` : `p.${doc.page}`}`;
     } else if (type === 'chapter' && doc) {
       const textbook = textbooks?.find(t => t.id === doc.textbook);
-      return `${textbook?.title ?? 'Textbook'} p.${doc.page}`;
+      return `${textbook?.title ?? 'Textbook'} ${range ? `p.${range}` : `p.${doc.page}`}`;
     } else if (type === 'chapter-exercise' && exercise) {
       const chapter = chapters?.find(c => c.id === exercise.chapter);
-      return `Ch.${chapter?.chapter_number ?? '?'} Ex.${exercise.exercise_number}`;
+      return `Ch.${chapter?.chapter_number ?? '?'} Ex.${exercise.exercise_number} ${range ? `p.${range}` : ''}`;
     } else if (type === 'homework-problem' && exercise) {
       const homework = homeworks?.find(h => h.id === exercise.homework);
-      return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number}`;
+      return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number} ${range ? `p.${range}` : ''}`;
     }
     return 'Document Reference';
   };
@@ -726,7 +415,7 @@ export const MessageList = memo(({
     // Add other properties as needed
     [key: string]: any;
   }
-  
+
   // Define proper drop handler that matches the context click behavior
   const handleContextDrop = (item: { id: string, type: string }) => {
     if (item && item.id && item.type) {
@@ -738,21 +427,21 @@ export const MessageList = memo(({
           [item.type]: [...prev.context[item.type as keyof typeof prev.context] || [], item.id]
         }
       }));
-      
+
       console.log(`Added context: ${item.type} - ${item.id}`);
       return { dropped: true };
     }
     return { dropped: false };
   };
-  
+
   // Set up drop functionality with the correct item type
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     // Accept the CONTEXT_ITEM type - this must match what's used in ContextPanel
     accept: 'CONTEXT_ITEM',
-    
+
     // Handle the drop event
     drop: handleContextDrop,
-    
+
     // Collect properties to determine the current state
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -771,40 +460,63 @@ export const MessageList = memo(({
     exerciseId?: string
   ) => {
     console.log(`Opening ${contextType} with ID: ${contextId}`);
-    
+
     // For lectures
     if (contextType === 'lectures' && documentId) {
       // Use the setViewerMode function prop instead of directly setting state
-      setViewerMode({
+      setViewerMode(prev => ({
         active: true,
+        open: true,
         documentId,
         lectureId: contextId,
-      });
+        exerciseId: undefined,
+        textbookId: undefined,
+        chapterId: undefined,
+        homeworkId: undefined,
+      }));
+    }
+    else if (contextType === 'chapters' && exerciseId) {
+      setViewerMode(prev => ({
+        ...prev,
+        active: true,
+        open: true,
+        chapterId: contextId,
+        exerciseId,
+        lectureId: undefined,
+        textbookId: undefined,
+        homeworkId: undefined,
+        documentId: undefined,
+      }));
     }
     // For chapters
     else if (contextType === 'chapters' && textbookId) {
-      setViewerMode({
+      setViewerMode(prev => ({
+        ...prev,
         active: true,
+        open: true,
         documentId: documentId || undefined,
         textbookId,
         chapterId: contextId,
-      });
+        exerciseId: undefined,
+        lectureId: undefined,
+        homeworkId: undefined,
+      }));
     }
     // For chapter exercises
-    else if (contextType === 'chapters' && exerciseId) {
-      setViewerMode({
-        active: true,
-        chapterId: contextId,
-        exerciseId,
-      });
-    }
+
     // For homework exercises
     else if (contextType === 'homeworks' && exerciseId) {
-      setViewerMode({
+      setViewerMode(prev => ({
+        ...prev,
         active: true,
+        open: true,
         homeworkId: contextId,
         exerciseId,
-      });
+        textbookId: undefined,
+        chapterId: undefined,
+        lectureId: undefined,
+        documentId: undefined,
+      }));
     }
   };
 
@@ -831,11 +543,11 @@ export const MessageList = memo(({
         {hasLectures && message.lectures.map((lectureId: string) => {
           const lecture = lectures?.find(l => l.id === lectureId);
           if (!lecture) return null;
-          
+
           return (
-            <Badge 
+            <Badge
               key={`lecture-${lectureId}`}
-              size="md" 
+              size="md"
               color="blue"
               radius="xl"
               styles={{ root: { borderColor: 'white' } }}
@@ -851,23 +563,23 @@ export const MessageList = memo(({
             </Badge>
           );
         })}
-        
+
         {/* Render chapter badges */}
         {hasChapters && message.chapters.map((chapterId: string) => {
           const chapter = chapters?.find(c => c.id === chapterId);
           if (!chapter) return null;
-          
+
           return (
-            <Badge 
-              key={`chapter-${chapterId}`} 
-              size="md" 
+            <Badge
+              key={`chapter-${chapterId}`}
+              size="md"
               color="green"
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 if (chapter.textbook) {
-                  const document = textbookDocuments?.find(d => 
-                    d.chapter === chapterId && 
-                    d.page >= chapter.start_page && 
+                  const document = textbookDocuments?.find(d =>
+                    d.chapter === chapterId &&
+                    d.page >= chapter.start_page &&
                     d.page <= chapter.end_page
                   );
                   if (document) {
@@ -880,16 +592,16 @@ export const MessageList = memo(({
             </Badge>
           );
         })}
-        
+
         {/* Render homework badges */}
         {hasHomeworks && message.homeworks.map((homeworkId: string) => {
           const homework = homeworks?.find(h => h.id === homeworkId);
           if (!homework) return null;
-          
+
           return (
-            <Badge 
-              key={`homework-${homeworkId}`} 
-              size="md" 
+            <Badge
+              key={`homework-${homeworkId}`}
+              size="md"
               color="orange"
               style={{ cursor: 'pointer' }}
               onClick={() => {
@@ -907,213 +619,6 @@ export const MessageList = memo(({
     );
   };
 
-  // Add state for chunked AI responses
-  const [messageChunks, setMessageChunks] = useState<{ text: string, index: number }[]>([]);
-  const [visibleChunks, setVisibleChunks] = useState<number[]>([]);
-  const [lastVisibleMessage, setLastVisibleMessage] = useState<number | null>(null);
-  const [chunkTypingComplete, setChunkTypingComplete] = useState<Record<number, boolean>>({});
-  
-  // Process messages into chunks when they change or when immersive mode is toggled
-  useEffect(() => {
-    if (!immersiveMode || !messages || messages.length === 0) return;
-
-    const chunks: { text: string, index: number }[] = [];
-    
-    // Process only AI responses into chunks for immersive mode
-    messages.forEach((message, messageIndex) => {
-      if (!message.response) return;
-      
-      // Split response into logical chunks (paragraphs or sentences)
-      const messageText = message.response.trim();
-      const paragraphs = messageText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
-      
-      // Temporary array to hold paragraphs before committing them to chunks
-      let tempChunks: string[] = [];
-      
-      for (let i = 0; i < paragraphs.length; i++) {
-        const paragraph = paragraphs[i];
-        
-        // Check if this is a small header-like text (e.g., "1." or "Step 1:")
-        const isSmallHeader = /^(\d+\.|\w+\s*\d+:)$/i.test(paragraph.trim()) && paragraph.length < 15;
-        const isNumberedItemStart = /^\d+\.\s*\w+/.test(paragraph.trim());
-        
-        // If it's a small header and there's a next paragraph, combine them
-        if (isSmallHeader && i + 1 < paragraphs.length) {
-          tempChunks.push(`${paragraph}\n\n${paragraphs[i + 1]}`);
-          i++; // Skip the next paragraph as we've combined it
-        }
-        // If it's a numbered item with content, keep as is
-        else if (isNumberedItemStart || paragraph.length >= 30) {
-          tempChunks.push(paragraph);
-        }
-        // If it's a very short paragraph, try to combine with the next one
-        else if (paragraph.length < 30 && i + 1 < paragraphs.length && paragraphs[i + 1].length < 100) {
-          tempChunks.push(`${paragraph}\n\n${paragraphs[i + 1]}`);
-          i++;
-        }
-        // Otherwise, keep as is
-        else {
-          tempChunks.push(paragraph);
-        }
-      }
-      
-      // Process the temporary chunks into final chunks
-      tempChunks.forEach(text => {
-        // For longer paragraphs, split by sentences
-        if (text.length > 300) {
-          const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
-          
-          let currentSentenceGroup = "";
-          sentences.forEach((sentence, idx) => {
-            // Check if this is a numbered item or a small fragment
-            const isSmallFragment = sentence.length < 30 && /^\d+\./.test(sentence.trim());
-            
-            // If it's a small numbered item and there's a next sentence, combine them
-            if (isSmallFragment && idx + 1 < sentences.length) {
-              currentSentenceGroup = sentence + " " + sentences[idx + 1];
-              chunks.push({ text: currentSentenceGroup.trim(), index: messageIndex });
-              currentSentenceGroup = "";
-              // Skip the next sentence as we've combined it
-              sentences[idx + 1] = "";
-            }
-            // If current sentence is not empty (wasn't used in a previous combination)
-            else if (sentence.trim()) {
-              // If it's very short, try to combine with next sentence
-              if (sentence.length < 15 && idx + 1 < sentences.length) {
-                currentSentenceGroup = sentence + " " + sentences[idx + 1];
-                chunks.push({ text: currentSentenceGroup.trim(), index: messageIndex });
-                currentSentenceGroup = "";
-                // Skip the next sentence as we've used it
-                sentences[idx + 1] = "";
-              } else {
-                chunks.push({ text: sentence.trim(), index: messageIndex });
-              }
-            }
-          });
-        } else {
-          chunks.push({ text: text.trim(), index: messageIndex });
-        }
-      });
-    });
-    
-    setMessageChunks(chunks);
-    
-    // Initialize with only the first chunk visible
-    if (chunks.length > 0) {
-      setVisibleChunks([0]);
-      setLastVisibleMessage(chunks[0].index);
-    }
-  }, [messages, immersiveMode]);
-  
-  // Update visible chunks when currentChunkIndex changes
-  useEffect(() => {
-    if (!immersiveMode || messageChunks.length === 0) return;
-    
-    // Show chunks up to current index
-    const newVisibleChunks = Array.from({ length: currentChunkIndex + 1 }, (_, i) => i)
-      .filter(i => i < messageChunks.length);
-      
-    setVisibleChunks(newVisibleChunks);
-    
-    // Update last visible message
-    if (newVisibleChunks.length > 0) {
-      const lastChunkIndex = newVisibleChunks[newVisibleChunks.length - 1];
-      setLastVisibleMessage(messageChunks[lastChunkIndex].index);
-    }
-  }, [currentChunkIndex, messageChunks, immersiveMode]);
-  
-  // Handle spacebar press in immersive mode
-  useHotkeys([
-    ['space', () => {
-      if (immersiveMode && !isUserInterrupting && setCurrentChunkIndex) {
-        const latestChunkIndex = visibleChunks[visibleChunks.length - 1];
-        // Only advance to next chunk if current chunk has finished typing
-        if (chunkTypingComplete[latestChunkIndex] && currentChunkIndex < messageChunks.length - 1) {
-          setCurrentChunkIndex(prev => prev + 1);
-        } else if (!chunkTypingComplete[latestChunkIndex]) {
-          // If typing is not complete, mark it as complete to skip animation
-          setChunkTypingComplete(prev => ({ ...prev, [latestChunkIndex]: true }));
-        }
-      }
-    }],
-  ]);
-  
-  // Scroll to the latest chunk when it becomes visible
-  useEffect(() => {
-    if (immersiveMode && visibleChunks.length > 0) {
-      const lastVisibleChunk = visibleChunks[visibleChunks.length - 1];
-      const element = document.getElementById(`chunk-${lastVisibleChunk}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-  }, [visibleChunks, immersiveMode]);
-
-  // Render immersive mode view
-  const renderImmersiveView = () => {
-    if (!messages || messages.length === 0) {
-      return (
-        <Flex justify="center" align="center" style={{ height: '100%' }}>
-          <Text size="lg" c="dimmed">No messages yet. Start typing to begin the conversation.</Text>
-        </Flex>
-      );
-    }
-
-    return (
-      <Stack align="center" justify="center" style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px' }}>
-        {messageChunks
-          .filter((_, index) => visibleChunks.includes(index))
-          .map((chunk, index) => {
-            const isLatestChunk = index === visibleChunks[visibleChunks.length - 1];
-            
-            return (
-              <Card
-                key={`chunk-${index}`}
-                id={`chunk-${index}`}
-                shadow="sm"
-                padding="lg"
-                radius="md"
-                style={{
-                  width: '100%',
-                  opacity: 1,
-                  transform: 'translateY(0)',
-                  animation: 'fadeIn 0.5s ease-out',
-                  marginBottom: '20px',
-                  minHeight: '80px', // Add minimum height to prevent layout shifts
-                }}
-              >
-                {isLatestChunk && !chunkTypingComplete[index] ? (
-                  <TypeAnimation
-                    sequence={[
-                      chunk.text,
-                      () => setChunkTypingComplete(prev => ({ ...prev, [index]: true }))
-                    ]}
-                    wrapper="div"
-                    cursor={true}
-                    repeat={0}
-                    speed={60}
-                    style={{ fontSize: '1.125rem', whiteSpace: 'pre-wrap' }}
-                    className="latex-wrapper"
-                    omitDeletionAnimation={true}
-                  />
-                ) : (
-                  <Text size="lg" className="latex-wrapper" style={{ whiteSpace: 'pre-wrap' }}>
-                    <Latex>{chunk.text}</Latex>
-                  </Text>
-                )}
-              </Card>
-            );
-          })}
-          
-        {currentChunkIndex < messageChunks.length - 1 && chunkTypingComplete[visibleChunks[visibleChunks.length - 1]] && (
-          <Text size="sm" c="dimmed" style={{ marginTop: '20px', animation: 'pulse 1.5s infinite' }}>
-            Press space to continue...
-          </Text>
-        )}
-      </Stack>
-    );
-  };
-  
   // Add CSS animation for pulse effect
   useEffect(() => {
     // Create style element for animations
@@ -1133,11 +638,249 @@ export const MessageList = memo(({
       }
     `;
     document.head.appendChild(styleEl);
-    
+
     return () => {
       document.head.removeChild(styleEl);
     };
   }, []);
+
+  // Add this helper function to generate page ranges
+  const getPageRanges = (documents: Document[], exercises: Exercise[]): { startDocument: Document | null, startExercise: Exercise | null, range: string }[] => {
+    if (!documents.length && !exercises.length) return [];
+
+    const pageRanges: { startDocument: Document | null, startExercise: Exercise | null, range: string }[] = [];
+
+
+    if (documents.length > 0) {
+      // Remove duplicates and sort
+      const uniquePages = Array.from(new Set(documents.map(doc => doc.page))).sort((a, b) => a - b);
+      let start = uniquePages[0];
+      let prev = uniquePages[0];
+
+      for (let i = 1; i <= uniquePages.length; i++) {
+        if (i === uniquePages.length || uniquePages[i] !== prev + 1) {
+          const document = documents.find(doc => doc.page === start);
+          if (document) {
+            pageRanges.push({ startDocument: document, startExercise: null, range: start === prev ? `${start}` : `${start}-${prev}` });
+          }
+          if (i < uniquePages.length) {
+            start = uniquePages[i];
+            prev = uniquePages[i];
+          }
+        } else {
+          prev = uniquePages[i];
+        }
+      }
+    } else {
+      // Remove duplicates and sort
+      const uniqueChapterPages = Array.from(new Set(exercises.map(e => e.exercise_number))).sort((a, b) => a - b);
+      let chapterStart = uniqueChapterPages[0];
+      let chapterPrev = uniqueChapterPages[0];
+
+      for (let i = 1; i <= uniqueChapterPages.length; i++) {
+        if (i === uniqueChapterPages.length || uniqueChapterPages[i] !== chapterPrev + 1) {
+          const exercise = exercises.find(e => e.exercise_number === chapterStart);
+          if (exercise) {
+            pageRanges.push({ startDocument: null, startExercise: exercise, range: chapterStart === chapterPrev ? `${chapterStart}` : `${chapterStart}-${chapterPrev}` });
+          }
+          if (i < uniqueChapterPages.length) {
+            chapterStart = uniqueChapterPages[i];
+            chapterPrev = uniqueChapterPages[i];
+          }
+        } else {
+          chapterPrev = uniqueChapterPages[i];
+        }
+      }
+
+      const uniqueHomeworkPages = Array.from(new Set(exercises.map(e => e.problem_number))).sort((a, b) => a - b);
+      let homeworkStart = uniqueHomeworkPages[0];
+      let homeworkPrev = uniqueHomeworkPages[0];
+
+      for (let i = 1; i <= uniqueHomeworkPages.length; i++) {
+        if (i === uniqueHomeworkPages.length || uniqueHomeworkPages[i] !== homeworkPrev + 1) {
+          const exercise = exercises.find(e => e.problem_number === homeworkStart);
+          if (exercise) {
+            pageRanges.push({ startDocument: null, startExercise: exercise, range: homeworkStart === homeworkPrev ? `${homeworkStart}` : `${homeworkStart}-${homeworkPrev}` });
+          }
+          if (i < uniqueHomeworkPages.length) {
+            homeworkStart = uniqueHomeworkPages[i];
+            homeworkPrev = uniqueHomeworkPages[i];
+          }
+        } else {
+          homeworkPrev = uniqueHomeworkPages[i];
+        }
+      }
+
+    }
+
+    return pageRanges;
+  };
+
+  const renderBadges = (group: {
+    text: string;
+    documents: Document[];
+    exercises: Exercise[];
+  }) => {
+    // find all of the distinct lectures and chapters in the group
+    const groupLectures = Array.from(new Set(group.documents.filter(doc => doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
+    const groupChapters = Array.from(new Set(group.documents.filter(doc => doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
+
+    // get the page ranges for each lecture and chapter
+    const lecturePageRanges = groupLectures.map(lecture => getPageRanges(group.documents.filter(doc => doc.lecture === lecture), [])).flat()
+    const chapterPageRanges = groupChapters.map(chapter => getPageRanges(group.documents.filter(doc => doc.chapter === chapter), [])).flat()
+
+    // combine the page ranges for each lecture and chapter
+    const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges]
+
+    // find all of the distinct exercises and chapters in the group
+    const groupExercises = Array.from(new Set(group.exercises.map(exercise => exercise.homework).filter((homeworkId) => homeworkId !== null)))
+
+    // get the page ranges for each lecture and chapter
+    const exercisePageRanges = groupExercises.map(homework => getPageRanges([], group.exercises.filter(exercise => exercise.homework === homework))).flat()
+
+    return (
+      <Flex gap="xs" wrap="wrap">
+        {allDocumentPageRanges.length > 0 && allDocumentPageRanges.map((pageRange, pageRangeIndex) => {
+          const lectureDocument: boolean = pageRange.startDocument?.lecture !== null;
+          const chapterDocument: boolean = pageRange.startDocument?.textbook !== null && pageRange.startDocument?.chapter !== null;
+
+          if (lectureDocument) {
+            return (
+              <Badge
+                key={pageRangeIndex}
+                color="blue"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (pageRange.startDocument?.lecture) {
+                    handleEnhancedDocumentClick('lectures', pageRange.startDocument.lecture, pageRange.startDocument.id);
+                  }
+                }}
+                leftSection={
+                  <Avatar
+                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${pageRange.startDocument?.lecture}/${pageRange.startDocument?.id}.png`}
+                    size="xs"
+                    radius="sm"
+                  />
+                }
+                rightSection={
+                  <IconChevronRight size={16} />
+                }
+              >
+                {getDocumentLabel(
+                  'lecture',
+                  pageRange.startDocument ?? undefined,
+                  undefined,
+                  pageRange.range
+                )}
+              </Badge>
+            );
+          } else if (chapterDocument) {
+            return (
+              <Badge
+                key={pageRangeIndex}
+                color="green"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (pageRange.startDocument?.chapter) {
+                    handleEnhancedDocumentClick('chapters', pageRange.startDocument.chapter, pageRange.startDocument.id, pageRange.startDocument.textbook || undefined);
+                  }
+                }}
+                leftSection={
+                  <Avatar
+                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${pageRange.startDocument?.textbook}/${pageRange.startDocument?.id}.png`}
+                    size="xs"
+                    radius="sm"
+                  />
+                }
+                rightSection={
+                  <IconChevronRight size={16} />
+                }
+              >
+                {getDocumentLabel(
+                  'chapter',
+                  pageRange.startDocument ?? undefined,
+                  undefined,
+                  pageRange.range
+                )}
+              </Badge>
+            );
+          } else {
+            return null;
+          }
+        })}
+        {exercisePageRanges.length > 0 && exercisePageRanges.map((pageRange, pageRangeIndex) => {
+          const chapterExercise: boolean = pageRange.startExercise?.chapter !== null;
+          const homeworkExercise: boolean = pageRange.startExercise?.homework !== null;
+
+          if (homeworkExercise) {
+            return (
+              <Badge
+                key={pageRangeIndex}
+                color="orange"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (pageRange.startExercise?.homework) {
+                    handleEnhancedDocumentClick('homeworks', pageRange.startExercise.homework, undefined, undefined, pageRange.startExercise.id);
+                  }
+                }}
+                leftSection={
+                  <Avatar
+                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${pageRange.startExercise?.homework}/${pageRange.startExercise?.id}.png`}
+                    size="xs"
+                    radius="sm"
+                  />
+                }
+                rightSection={
+                  <IconChevronRight size={16} />
+                }
+              >
+                {getDocumentLabel(
+                  'homework-problem',
+                  undefined,
+                  pageRange.startExercise ?? undefined
+                )}
+              </Badge>
+            );
+          } if (chapterExercise) {
+            return (
+              <Badge
+                key={pageRangeIndex}
+                color="teal"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (pageRange.startExercise?.chapter) {
+                    // Get the textbook ID for this chapter
+                    const textbookId = getTextbookForChapter(pageRange.startExercise.chapter);
+                    handleEnhancedDocumentClick('chapters', pageRange.startExercise.chapter, undefined, textbookId || undefined, pageRange.startExercise.id);
+                  }
+                }}
+                leftSection={
+                  <Avatar
+                    src={pageRange.startExercise?.chapter ?
+                      `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${getTextbookForChapter(pageRange.startExercise.chapter)}/${pageRange.startExercise.id}.png` :
+                      '/placeholder_image.svg'}
+                    size="xs"
+                    radius="sm"
+                  />
+                }
+                rightSection={
+                  <IconChevronRight size={16} />
+                }
+              >
+                {getDocumentLabel(
+                  'chapter-exercise',
+                  undefined,
+                  pageRange.startExercise ?? undefined
+                )}
+              </Badge>
+            );
+          } else {
+            return null;
+          }
+        })}
+      </Flex>
+    )
+  }
 
   return (
 
@@ -1146,7 +889,7 @@ export const MessageList = memo(({
       ref={(el) => {
         // Use the drop function which returns a ref function
         drop(el);
-        
+
         // Update container ref without directly assigning to .current
         if (containerRef) {
           // Store the reference for scrolling functionality
@@ -1157,150 +900,163 @@ export const MessageList = memo(({
         flex: 1,
         overflowY: "auto",
         marginBottom: "1rem",
-        maxHeight: immersiveMode ? "calc(90vh - 150px)" : "calc(80vh - 150px)",
+        maxHeight: fullscreen ? "calc(90vh - 150px)" : "calc(80vh - 150px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
         transition: "all 0.2s ease-in-out",
-        border: !immersiveMode && isOver ? `2px dashed ${canDrop ? '#228be6' : '#fa5252'}` : '2px solid transparent',
-        backgroundColor: !immersiveMode && isOver && canDrop ? (colorScheme === "dark" ? 'rgba(34, 139, 230, 0.1)' : 'rgba(34, 139, 230, 0.05)') : 'transparent',
-        padding: immersiveMode ? '20px 0' : (isOver ? '8px' : '10px'),
+        border: isOver ? `2px dashed ${canDrop ? '#228be6' : '#fa5252'}` : '2px solid transparent',
+        backgroundColor: isOver && canDrop ? (colorScheme === "dark" ? 'rgba(34, 139, 230, 0.1)' : 'rgba(34, 139, 230, 0.05)') : 'transparent',
+        padding: isOver ? '8px' : '10px',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
-      {immersiveMode ? (
-        renderImmersiveView()
-      ) : (
-        // Regular view - existing code
+      {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
         <>
-          {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
-            <>
-              {renderWelcomeMessages()}
-              {messages?.map((message, index) => (
-                <Stack key={`${message.id}`}>
-                  {/* User message */}
-                  <Flex gap="md" justify="flex-end" align="flex-start">
-                    <Stack gap="xs" align="flex-end">
-                      {/* User info container */}
-                      <Group gap="xs" align="center">
-                        <Text size="sm" c="dimmed">
-                          {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
-                        </Text>
-                        <Avatar
-                          src={profile ? getAvatarUrl(profile.id) : undefined}
-                          radius="xl"
-                          size="sm"
-                          alt={`${profile?.first_name} ${profile?.last_name}`}
-                        />
-                      </Group>
+          {renderWelcomeMessages()}
+          {messages?.map((message, index) => (
+            <Stack key={`${message.id}`}>
+              {/* User message */}
+              <Flex gap="md" justify="flex-end" align="flex-start">
+                <Stack gap="xs" align="flex-end">
+                  {/* User info container */}
+                  <Group gap="xs" align="center">
+                    <Text size="sm" c="dimmed">
+                      {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
+                    </Text>
+                    <Avatar
+                      src={profile ? getAvatarUrl(profile.id) : undefined}
+                      radius="xl"
+                      size="sm"
+                      alt={`${profile?.first_name} ${profile?.last_name}`}
+                    />
+                  </Group>
 
-                      {/* Message container */}
-                      <Card
-                        padding="sm"
-                        radius="md"
-                        style={{
-                          backgroundColor: "#228be6",
-                          maxWidth: "100%"
-                        }}
-                      >
-                        <Text c="white">
-                          {message.question}
-                        </Text>
-                        
-                        {/* Display message-specific context badges */}
-                        {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0) &&
-                          renderMessageContext(message)
-                        }
-                        
-                        {/* Show auto-added context badges only for the first message */}
-                        {index === 0 && !message.lectures?.length && !message.chapters?.length && !message.homeworks?.length &&
+                  {/* Message container */}
+                  <Card
+                    padding="sm"
+                    radius="md"
+                    style={{
+                      backgroundColor: "#228be6",
+                      maxWidth: "100%"
+                    }}
+                  >
+                    <Text c="white">
+                      {message.question}
+                    </Text>
+
+                    {/* Display message-specific context badges */}
+                    {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0) &&
+                      renderMessageContext(message)
+                    }
+
+                    {/* Show auto-added context badges only for the first message */}
+                    {/* {index === 0 && !message.lectures?.length && !message.chapters?.length && !message.homeworks?.length &&
                           renderAutoAddedContextBadges()
-                        }
-                      </Card>
-                    </Stack>
-                  </Flex>
+                        } */}
+                  </Card>
+                </Stack>
+              </Flex>
 
-                  {/* AI response */}
-                  <Flex gap="md" align="flex-start">
-                    <Stack gap="xs" align="flex-start">
-                      {/* AI info container */}
-                      <Group gap="xs" align="center">
-                        <Avatar
-                          src={professor ? getAvatarUrl(professor.id) : undefined}
-                          size="sm"
-                          radius="xl"
-                          alt="AI Assistant"
-                        />
-                        <Text size="sm" c="dimmed">
-                          {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                        </Text>
+              {/* AI response */}
+              <Flex gap="md" align="flex-start">
+                <Stack gap="xs" align="flex-start">
+                  {/* AI info container */}
+                  <Group gap="xs" align="center">
+                    <Avatar
+                      src={professor ? getAvatarUrl(professor.id) : undefined}
+                      size="sm"
+                      radius="xl"
+                      alt="AI Assistant"
+                    />
+                    <Text size="sm" c="dimmed">
+                      {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                    </Text>
 
-                        {/* Admin-only file link icon. Temporary disabled. */}
-                        {profile?.admin && (
-                          <ActionIcon
-                            component="a"
-                            href={`${process.env.NEXT_PUBLIC_API_URL}/files/messages/${message.id}.txt`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="View message file"
-                            variant="subtle"
-                            size="sm"
-                          >
-                            <IconFileText size={16} />
-                          </ActionIcon>
-                        )}
-                      </Group>
-
-                      {/* Message container */}
-                      <Card
-                        padding="sm"
-                        radius="md"
-                        style={{
-                          backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                          minWidth: "200px",
-                          maxWidth: "100%",
-                          border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                        }}
+                    {/* Admin-only file link icon. Temporary disabled. */}
+                    {profile?.admin && (
+                      <ActionIcon
+                        component="a"
+                        href={`${process.env.NEXT_PUBLIC_API_URL}/files/messages/${message.id}.txt`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View message file"
+                        variant="subtle"
+                        size="sm"
                       >
-                        {!message.response || message.response.trim() === '' ? (
-                          <Group justify="center">
-                            <Loader size="sm" />
-                          </Group>
-                        ) : (
-                          <Stack gap="xs">
-                            {groupConsecutiveDocuments(
-                              splitTextByDocuments(
-                                splitTextByFigures(filterCodeBlocks(message.response))
-                                  .map(segment => segment.figureId
-                                    ? `<FIGURE>${segment.figureId}</FIGURE>`
-                                    : segment.text)
-                                  .join('')
-                              ),
-                              lectureDocuments ?? [],
-                              chapterDocuments ?? [],
-                              chapterExercises ?? [],
-                              homeworkExercises ?? []
-                            ).map((group, index) => (
+                        <IconFileText size={16} />
+                      </ActionIcon>
+                    )}
+                  </Group>
+
+                  {/* Message container */}
+
+                  {!message.response || message.response.trim() === '' ? (
+                    <Group justify="center">
+                      <Loader size="sm" />
+                    </Group>
+                  ) : (
+                    <Stack gap="xs">
+                      {groupConsecutiveDocuments(
+                        splitTextByDocuments(
+                          splitTextByFigures(filterCodeBlocks(message.response))
+                            .map(segment => segment.figureId
+                              ? `<FIGURE>${segment.figureId}</FIGURE>`
+                              : segment.text)
+                            .join('')
+                        ),
+                        lectureDocuments ?? [],
+                        chapterDocuments ?? [],
+                        chapterExercises ?? [],
+                        homeworkExercises ?? []
+                      ).map((group, index) => (
+                        <>
+                          {group.text && (
+                            <Card
+                              padding="sm"
+                              radius="md"
+                              style={{
+                                backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                minWidth: "200px",
+                                maxWidth: "100%",
+                                border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                              }}
+                            >
                               <Box key={index}>
-                                {group.text && (
-                                  <Stack gap="xs">
-                                    {splitTextByFigures(group.text).map((segment, figIndex) => (
-                                      <Box key={figIndex}>
-                                        {segment.text && <Latex>{segment.text}</Latex>}
-                                        {segment.figureId && (
-                                          <Box
-                                            pos="relative"
-                                            style={{
-                                              maxWidth: '100%',
-                                              display: 'flex',
-                                              justifyContent: 'center',
-                                              margin: 0,
-                                              padding: 0
-                                            }}
-                                          >
-                                            <Box style={{ width: '100%', position: 'relative' }}>
-                                              {segment.figureId === 'code-placeholder' ? (
-                                                // Code placeholder - show a skeleton without trying to load an image
+                                <Stack gap="xs">
+                                  {splitTextByFigures(group.text).map((segment, figIndex) => (
+                                    <Box key={figIndex}>
+                                      {segment.text && <Latex>{segment.text}</Latex>}
+                                      {segment.figureId && (
+                                        <Box
+                                          pos="relative"
+                                          style={{
+                                            maxWidth: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            margin: 0,
+                                            padding: 0
+                                          }}
+                                        >
+                                          <Box style={{ width: '100%', position: 'relative' }}>
+                                            {segment.figureId === 'code-placeholder' ? (
+                                              // Code placeholder - show a skeleton without trying to load an image
+                                              <Skeleton
+                                                visible={true}
+                                                height={"100%"}
+                                                radius="md"
+                                                style={{
+                                                  position: 'absolute',
+                                                  top: 0,
+                                                  left: 0,
+                                                  maxWidth: '60%',
+                                                  display: 'block',
+                                                  margin: 0
+                                                }}
+                                              />
+                                            ) : (
+                                              // Regular figure - show the image with loading skeleton
+                                              <>
                                                 <Skeleton
                                                   visible={true}
                                                   height={"100%"}
@@ -1314,223 +1070,61 @@ export const MessageList = memo(({
                                                     margin: 0
                                                   }}
                                                 />
-                                              ) : (
-                                                // Regular figure - show the image with loading skeleton
-                                                <>
-                                                  <Skeleton
-                                                    visible={true}
-                                                    height={"100%"}
-                                                    radius="md"
-                                                    style={{
-                                                      position: 'absolute',
-                                                      top: 0,
-                                                      left: 0,
-                                                      maxWidth: '60%',
-                                                      display: 'block',
-                                                      margin: 0
-                                                    }}
-                                                  />
-                                                  <Image
-                                                    src={getFigureUrl(segment.figureId)}
-                                                    alt="Figure"
-                                                    width={800}
-                                                    height={600}
-                                                    style={{
-                                                      maxWidth: '60%',
-                                                      height: 'auto',
-                                                      borderRadius: '24px',
-                                                      objectFit: 'contain',
-                                                      opacity: 0,
-                                                      transition: 'opacity 0.2s',
-                                                      padding: '1rem'
-                                                    }}
-                                                    onLoad={(e) => {
-                                                      const img = e.target as HTMLImageElement;
-                                                      const aspectRatio = img.naturalWidth / img.naturalHeight;
-                                                      if (aspectRatio > 1.5) {
-                                                        img.style.padding = '0.5rem';
-                                                      }
-                                                      img.style.opacity = '1';
-                                                      const skeleton = img.parentElement?.querySelector('.mantine-Skeleton-root');
-                                                      if (skeleton) {
-                                                        (skeleton as HTMLElement).style.display = 'none';
-                                                      }
-                                                    }}
-                                                    priority={false}
-                                                  />
-                                                </>
-                                              )}
-                                            </Box>
+                                                <Image
+                                                  src={getFigureUrl(segment.figureId)}
+                                                  alt="Figure"
+                                                  width={800}
+                                                  height={600}
+                                                  style={{
+                                                    maxWidth: '60%',
+                                                    height: 'auto',
+                                                    borderRadius: '24px',
+                                                    objectFit: 'contain',
+                                                    opacity: 0,
+                                                    transition: 'opacity 0.2s',
+                                                    padding: '1rem'
+                                                  }}
+                                                  onLoad={(e) => {
+                                                    const img = e.target as HTMLImageElement;
+                                                    const aspectRatio = img.naturalWidth / img.naturalHeight;
+                                                    if (aspectRatio > 1.5) {
+                                                      img.style.padding = '0.5rem';
+                                                    }
+                                                    img.style.opacity = '1';
+                                                    const skeleton = img.parentElement?.querySelector('.mantine-Skeleton-root');
+                                                    if (skeleton) {
+                                                      (skeleton as HTMLElement).style.display = 'none';
+                                                    }
+                                                  }}
+                                                  priority={false}
+                                                />
+                                              </>
+                                            )}
                                           </Box>
-                                        )}
-                                      </Box>
-                                    ))}
-                                  </Stack>
-                                )}
-                                <Group gap="xs" pt={group.text ? "xs" : 0}>
-                                  {group.documents.length > 0 && (
-                                    <>
-                                      {Array.from(new Map(group.documents.map(doc => [doc.id, doc])).values()).slice(0, 3).map((doc, docIndex) => {
-                                        const lectureDocument: boolean = doc.lecture !== null;
-                                        const chapterDocument: boolean = doc.textbook !== null && doc.chapter !== null;
-
-                                        if (lectureDocument) {
-                                          return (
-                                            <Badge
-                                              key={docIndex}
-                                              color="blue"
-                                              style={{ cursor: 'pointer' }}
-                                              onClick={() => {
-                                                if (doc.lecture) {
-                                                  handleEnhancedDocumentClick('lectures', doc.lecture, doc.id);
-                                                }
-                                              }}
-                                              leftSection={
-                                                <Avatar 
-                                                  src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${doc.lecture}/${doc.id}.png`}
-                                                  size="xs"
-                                                  radius="sm"
-                                                />
-                                              }
-                                              rightSection={
-                                                <IconChevronRight size={16} />
-                                              }
-                                            >
-                                              {getDocumentLabel(
-                                                'lecture',
-                                                doc,
-                                                undefined
-                                              )}
-                                            </Badge>
-                                          );
-                                        } else if (chapterDocument) {
-                                          return (
-                                            <Badge
-                                              key={docIndex}
-                                              color="green"
-                                              style={{ cursor: 'pointer' }}
-                                              onClick={() => {
-                                                if (doc.chapter) {
-                                                  handleEnhancedDocumentClick('chapters', doc.chapter, doc.id, doc.textbook || undefined);
-                                                }
-                                              }}
-                                              leftSection={
-                                                <Avatar 
-                                                  src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${doc.textbook}/${doc.id}.png`}
-                                                  size="xs"
-                                                  radius="sm"
-                                                />
-                                              }
-                                              rightSection={
-                                                <IconChevronRight size={16} />
-                                              }
-                                            >
-                                              {getDocumentLabel(
-                                                'chapter',
-                                                doc,
-                                                undefined
-                                              )}
-                                            </Badge>
-                                          );
-                                        } else {
-                                          return null;
-                                        }
-                                      })}
-                                    </>
-                                  )}
-                                  {group.exercises.length > 0 && (
-                                    <>
-                                      {Array.from(new Map(group.exercises.map(exercise => [exercise.id, exercise])).values()).slice(0, 3).map((exercise, exerciseIndex) => {
-                                        const chapterExercise: boolean = exercise.chapter !== null;
-                                        const homeworkExercise: boolean = exercise.homework !== null;
-
-                                        if (homeworkExercise) {
-                                          return (
-                                            <Badge
-                                              key={exerciseIndex}
-                                              color="orange"
-                                              style={{ cursor: 'pointer' }}
-                                              onClick={() => {
-                                                if (exercise.homework) {
-                                                  handleEnhancedDocumentClick('homeworks', exercise.homework, undefined, undefined, exercise.id);
-                                                }
-                                              }}
-                                              leftSection={
-                                                <Avatar 
-                                                  src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`}
-                                                  size="xs"
-                                                  radius="sm"
-                                                />
-                                              }
-                                              rightSection={
-                                                <IconChevronRight size={16} />
-                                              }
-                                            >
-                                              {getDocumentLabel(
-                                                'homework-problem',
-                                                undefined,
-                                                exercise
-                                              )}
-                                            </Badge>
-                                          );
-                                        } if (chapterExercise) {
-                                          return (
-                                            <Badge
-                                              key={exerciseIndex}
-                                              color="teal"
-                                              style={{ cursor: 'pointer' }}
-                                              onClick={() => {
-                                                if (exercise.chapter) {
-                                                  // Get the textbook ID for this chapter
-                                                  const textbookId = getTextbookForChapter(exercise.chapter);
-                                                  handleEnhancedDocumentClick('chapters', exercise.chapter, undefined, textbookId || undefined, exercise.id);
-                                                }
-                                              }}
-                                              leftSection={
-                                                <Avatar 
-                                                  src={exercise.chapter ? 
-                                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png` : 
-                                                    '/placeholder_image.svg'}
-                                                  size="xs"
-                                                  radius="sm"
-                                                />
-                                              }
-                                              rightSection={
-                                                <IconChevronRight size={16} />
-                                              }
-                                            >
-                                              {getDocumentLabel(
-                                                'chapter-exercise',
-                                                undefined,
-                                                exercise
-                                              )}
-                                            </Badge>
-                                          );
-                                        } else {
-                                          return null;
-                                        }
-                                      })}
-                                    </>
-                                  )}
-                                </Group>
+                                        </Box>
+                                      )}
+                                    </Box>
+                                  ))}
+                                </Stack>
                               </Box>
-                            ))}
-
-                          </Stack>
-                        )}
-                      </Card>
+                            </Card>
+                          )}
+                          {renderBadges(group)}
+                        </>
+                      ))}
                     </Stack>
-                  </Flex>
+                  )}
                 </Stack>
-              ))}
-            </>
-          )}
+              </Flex>
+            </Stack>
+          ))}
         </>
       )}
+
       <div ref={messagesEndRef} />
 
       {/* Scroll to bottom button - only show in normal mode */}
-      {!immersiveMode && showScrollButton && (
+      {showScrollButton && (
         <ActionIcon
           variant="filled"
           color="blue"

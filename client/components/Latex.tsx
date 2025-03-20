@@ -24,7 +24,6 @@ export default function Latex({ children }: { children: string }) {
                 .latex-container {
                     font-size: 1rem;
                     line-height: 1.75;
-                    max-width: 65ch;
                 }
                 
                 .prose-p {

@@ -21,12 +21,14 @@ import { Profile, Class } from "@/types";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+
 interface ClassLayoutProps {
     children: ReactNode;
     classId: string | null;
+    showHeader?: boolean;
 }
 
-export function ClassLayout({ children, classId }: ClassLayoutProps) {
+export function ClassLayout({ children, classId, showHeader = true }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const supabase = useSupabaseBrowser();
 
@@ -55,7 +57,7 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
         <ClassMenuProvider classId={classId}>
             <DndProvider backend={HTML5Backend}>
                 <AppShell
-                    header={{ height: 60 }}
+                    header={{ height: showHeader ? 60 : 0 }}
                     navbar={{
                         width: profile && (profile.professor || profile.admin) ? {
                             base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
@@ -70,9 +72,11 @@ export function ClassLayout({ children, classId }: ClassLayoutProps) {
                         },
                     })}
                 >
-                    <AppShell.Header>
-                        <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
-                    </AppShell.Header>
+                    {showHeader && (
+                        <AppShell.Header>
+                            <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
+                        </AppShell.Header>
+                    )}
 
                     {profile && (profile.professor || profile.admin) && (
                         <AppShell.Navbar>

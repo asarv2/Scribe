@@ -501,196 +501,6 @@ export default function Textbook({ params }: { params: { classId: string, textbo
             ex.start_page <= currentDocument.page &&
             ex.end_page >= currentDocument.page
         );
-
-    // Main viewer component
-    const MainViewer = () => {
-        // If an exercise is selected, show the exercise image with styling from ExerciseViewer
-        if (selectedExercise) {
-            const currentExercise = exercises?.find(ex => ex.id === selectedExercise);
-
-            return (
-                <Card padding="md" pos="relative" withBorder style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image
-                        src={getExerciseImage(selectedExercise, true)}
-                        alt={`Exercise ${currentExercise?.exercise_number || ''}`}
-                        width={500}
-                        height={500}
-                        style={{
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: "contain",
-                            cursor: "zoom-in"
-                        }}
-                        sizes="100vw"
-                        placeholder="blur"
-                        blurDataURL="/placeholder_image.svg"
-                        onClick={() => setIsImageModalOpen(true)}
-                        onLoadingComplete={() => setIsImageLoading(false)}
-                        unoptimized={true}
-                    />
-
-                    <ActionIcon
-                        size="lg"
-                        variant="filled"
-                        color={colorScheme === "dark" ? "gray" : "dark"}
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: 5,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handlePrevExercise();
-                        }}
-                        disabled={!exercises || !selectedExercise || exercises.filter(ex => ex.chapter === selectedChapter).findIndex(ex => ex.id === selectedExercise) === 0}
-                        aria-label="Previous Exercise"
-                    >
-                        <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
-                    </ActionIcon>
-
-                    <ActionIcon
-                        size="lg"
-                        variant="filled"
-                        color="gray"
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            right: 5,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleNextExercise();
-                        }}
-                        disabled={!exercises || !selectedExercise || exercises.filter(ex => ex.chapter === selectedChapter).findIndex(ex => ex.id === selectedExercise) === exercises.filter(ex => ex.chapter === selectedChapter).length - 1}
-                        aria-label="Next Exercise"
-                    >
-                        <IconArrowRight size={24} />
-                    </ActionIcon>
-
-                    <Box
-                        pos="absolute"
-                        bottom={5}
-                        right={5}
-                        p={4}
-                        style={{
-                            zIndex: 100,
-                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                            borderRadius: "4px",
-                        }}
-                    >
-                        <Text
-                            size="xs"
-                            fw={500}
-                            style={{
-                                color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ?
-                                    "0px 0px 4px rgba(0,0,0,0.5)" :
-                                    "0px 0px 4px rgba(255,255,255,0.5)"
-                            }}
-                        >
-                            Exercise {currentExercise?.exercise_number}
-                        </Text>
-                    </Box>
-                </Card>
-            );
-        }
-
-        // Otherwise show the regular document with styling from ChapterViewer
-        return (
-            <Card padding="md" pos="relative" withBorder style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Image
-                    src={getActiveImage(activeDocumentId, true)}
-                    alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page || ''}`}
-                    width={500}
-                    height={500}
-                    style={{
-                        maxWidth: '100%',
-                        maxHeight: '100%',
-                        objectFit: "contain",
-                        cursor: "zoom-in"
-                    }}
-                    sizes="100vw"
-                    placeholder="blur"
-                    blurDataURL="/placeholder_image.svg"
-                    onClick={() => setIsImageModalOpen(true)}
-                    onLoadingComplete={() => setIsImageLoading(false)}
-                    unoptimized={true}
-                />
-
-                <ActionIcon
-                    size="lg"
-                    variant="filled"
-                    color={colorScheme === "dark" ? "gray" : "dark"}
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: 5,
-                        transform: 'translateY(-50%)',
-                        zIndex: 100,
-                    }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handlePrevPage();
-                    }}
-                    disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
-                    aria-label="Previous Page"
-                >
-                    <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
-                </ActionIcon>
-
-                <ActionIcon
-                    size="lg"
-                    variant="filled"
-                    color="gray"
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        right: 5,
-                        transform: 'translateY(-50%)',
-                        zIndex: 100,
-                    }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleNextPage();
-                    }}
-                    disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
-                    aria-label="Next Page"
-                >
-                    <IconArrowRight size={24} />
-                </ActionIcon>
-
-                <Box
-                    pos="absolute"
-                    bottom={5}
-                    right={5}
-                    p={4}
-                    style={{
-                        zIndex: 100,
-                        backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                        borderRadius: "4px",
-                    }}
-                >
-                    <Text
-                        size="xs"
-                        fw={500}
-                        style={{
-                            color: colorScheme === "dark" ? "white" : "black",
-                            textShadow: colorScheme === "dark" ?
-                                "0px 0px 4px rgba(0,0,0,0.5)" :
-                                "0px 0px 4px rgba(255,255,255,0.5)"
-                        }}
-                    >
-                        Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
-                    </Text>
-                </Box>
-            </Card>
-        );
-    };
-
     // Add these navigation helper functions
     const handlePrevPage = () => {
         if (!activeDocumentId || !filteredDocuments) return;
@@ -708,105 +518,6 @@ export default function Textbook({ params }: { params: { classId: string, textbo
         if (currentIndex < filteredDocuments.length - 1) {
             setActiveDocumentId(filteredDocuments[currentIndex + 1].id);
         }
-    };
-
-    // Preview strip component - updated to handle both documents and exercises with optimized images
-    const PreviewStrip = () => {
-        // If an exercise is selected, show exercise thumbnails
-        if (selectedExercise && exercises) {
-            const chapterExercises = exercises
-                .filter(ex => ex.chapter === selectedChapter)
-                .sort((a, b) => (a.exercise_number || 0) - (b.exercise_number || 0));
-
-            return (
-                <Flex
-                    ref={previewScrollRef}
-                    gap={4}
-                    style={{
-                        overflowX: 'auto',
-                        padding: '2px',
-                        height: '100%',
-                        width: '100%'
-                    }}
-                >
-                    {chapterExercises.map((ex) => (
-                        <Box
-                            key={ex.id}
-                            data-image={ex.id}
-                            style={{
-                                cursor: 'pointer',
-                                width: 35,
-                                height: 35,
-                                position: 'relative',
-                                flexShrink: 0,
-                                borderRadius: '4px',
-                                overflow: 'hidden',
-                            }}
-                            onClick={() => handleExerciseSelect(ex.id)}
-                        >
-                            <Image
-                                src={getExerciseImage(ex.id, false)}
-                                alt={`Exercise ${ex.exercise_number}`}
-                                width={35}
-                                height={35}
-                                style={{
-                                    objectFit: 'cover',
-                                    outline: ex.id === selectedExercise ? '2px solid skyblue' : 'none',
-                                    outlineOffset: '-2px',
-                                }}
-                                sizes="35px"
-                                unoptimized={true}
-                            />
-                        </Box>
-                    ))}
-                </Flex>
-            );
-        }
-
-        // Otherwise show document thumbnails
-        return (
-            <Flex
-                ref={previewScrollRef}
-                gap={4}
-                style={{
-                    overflowX: 'auto',
-                    padding: '2px',
-                    height: '100%',
-                    width: '100%'
-                }}
-            >
-                {filteredDocuments?.map((doc) => (
-                    <Box
-                        key={doc.id}
-                        data-image={doc.id}
-                        style={{
-                            cursor: 'pointer',
-                            width: 35,
-                            height: 35,
-                            position: 'relative',
-                            flexShrink: 0,
-                            borderRadius: '4px',
-                            overflow: 'hidden',
-                        }}
-                        onClick={() => handlePageClick(doc.id)}
-                    >
-                        <Image
-                            src={getActiveImage(doc.id, false)}
-                            alt={`Page ${doc.page}`}
-                            width={35}
-                            height={35}
-                            style={{
-                                objectFit: 'cover',
-                                outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
-                                outlineOffset: '-2px',
-                            }}
-                            sizes="35px"
-                            unoptimized={true}
-                        />
-                    </Box>
-                ))}
-            </Flex>
-        );
     };
 
     // Description component
@@ -1157,9 +868,266 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                         </>
                                     ) : (
                                         <>
-                                            <MainViewer />
+                                            {selectedExercise && currentExercise ? (
+                                                <Card padding="md" pos="relative" withBorder style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Image
+                                                        src={getExerciseImage(selectedExercise, true)}
+                                                        alt={`Exercise ${currentExercise?.exercise_number || ''}`}
+                                                        width={500}
+                                                        height={500}
+                                                        style={{
+                                                            maxWidth: '100%',
+                                                            maxHeight: '100%',
+                                                            objectFit: "contain",
+                                                            cursor: "zoom-in"
+                                                        }}
+                                                        sizes="100vw"
+                                                        placeholder="blur"
+                                                        blurDataURL="/placeholder_image.svg"
+                                                        onClick={() => setIsImageModalOpen(true)}
+                                                        onLoadingComplete={() => setIsImageLoading(false)}
+                                                        unoptimized={true}
+                                                    />
+
+                                                    <ActionIcon
+                                                        size="lg"
+                                                        variant="filled"
+                                                        color={colorScheme === "dark" ? "gray" : "dark"}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            left: 5,
+                                                            transform: 'translateY(-50%)',
+                                                            zIndex: 100,
+                                                        }}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handlePrevExercise();
+                                                        }}
+                                                        disabled={!exercises || !selectedExercise || exercises.filter(ex => ex.chapter === selectedChapter).findIndex(ex => ex.id === selectedExercise) === 0}
+                                                        aria-label="Previous Exercise"
+                                                    >
+                                                        <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                                                    </ActionIcon>
+
+                                                    <ActionIcon
+                                                        size="lg"
+                                                        variant="filled"
+                                                        color="gray"
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            right: 5,
+                                                            transform: 'translateY(-50%)',
+                                                            zIndex: 100,
+                                                        }}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleNextExercise();
+                                                        }}
+                                                        disabled={!exercises || !selectedExercise || exercises.filter(ex => ex.chapter === selectedChapter).findIndex(ex => ex.id === selectedExercise) === exercises.filter(ex => ex.chapter === selectedChapter).length - 1}
+                                                        aria-label="Next Exercise"
+                                                    >
+                                                        <IconArrowRight size={24} />
+                                                    </ActionIcon>
+
+                                                    <Box
+                                                        pos="absolute"
+                                                        bottom={5}
+                                                        right={5}
+                                                        p={4}
+                                                        style={{
+                                                            zIndex: 100,
+                                                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                                            borderRadius: "4px",
+                                                        }}
+                                                    >
+                                                        <Text
+                                                            size="xs"
+                                                            fw={500}
+                                                            style={{
+                                                                color: colorScheme === "dark" ? "white" : "black",
+                                                                textShadow: colorScheme === "dark" ?
+                                                                    "0px 0px 4px rgba(0,0,0,0.5)" :
+                                                                    "0px 0px 4px rgba(255,255,255,0.5)"
+                                                            }}
+                                                        >
+                                                            Exercise {currentExercise?.exercise_number}
+                                                        </Text>
+                                                    </Box>
+                                                </Card>
+                                            ) : <Card padding="md" pos="relative" withBorder style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                <Image
+                                                    src={getActiveImage(activeDocumentId, true)}
+                                                    alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page || ''}`}
+                                                    width={500}
+                                                    height={500}
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%',
+                                                        objectFit: "contain",
+                                                        cursor: "zoom-in"
+                                                    }}
+                                                    sizes="100vw"
+                                                    placeholder="blur"
+                                                    blurDataURL="/placeholder_image.svg"
+                                                    onClick={() => setIsImageModalOpen(true)}
+                                                    onLoadingComplete={() => setIsImageLoading(false)}
+                                                    unoptimized={true}
+                                                />
+
+                                                <ActionIcon
+                                                    size="lg"
+                                                    variant="filled"
+                                                    color={colorScheme === "dark" ? "gray" : "dark"}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: 5,
+                                                        transform: 'translateY(-50%)',
+                                                        zIndex: 100,
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handlePrevPage();
+                                                    }}
+                                                    disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
+                                                    aria-label="Previous Page"
+                                                >
+                                                    <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                                                </ActionIcon>
+
+                                                <ActionIcon
+                                                    size="lg"
+                                                    variant="filled"
+                                                    color="gray"
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: 5,
+                                                        transform: 'translateY(-50%)',
+                                                        zIndex: 100,
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleNextPage();
+                                                    }}
+                                                    disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
+                                                    aria-label="Next Page"
+                                                >
+                                                    <IconArrowRight size={24} />
+                                                </ActionIcon>
+
+                                                <Box
+                                                    pos="absolute"
+                                                    bottom={5}
+                                                    right={5}
+                                                    p={4}
+                                                    style={{
+                                                        zIndex: 100,
+                                                        backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                                        borderRadius: "4px",
+                                                    }}
+                                                >
+                                                    <Text
+                                                        size="xs"
+                                                        fw={500}
+                                                        style={{
+                                                            color: colorScheme === "dark" ? "white" : "black",
+                                                            textShadow: colorScheme === "dark" ?
+                                                                "0px 0px 4px rgba(0,0,0,0.5)" :
+                                                                "0px 0px 4px rgba(255,255,255,0.5)"
+                                                        }}
+                                                    >
+                                                        Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
+                                                    </Text>
+                                                </Box>
+                                            </Card>}
                                             <Box style={{ flexShrink: 0, height: '40px', marginBottom: '4px' }}>
-                                                <PreviewStrip />
+                                                {selectedExercise && currentExercise && exercises ? (
+                                                    <Flex
+                                                        ref={previewScrollRef}
+                                                        gap={4}
+                                                        style={{
+                                                            overflowX: 'auto',
+                                                            padding: '2px',
+                                                            height: '100%',
+                                                            width: '100%'
+                                                        }}
+                                                    >
+                                                        {exercises
+                                                            .filter(ex => ex.chapter === selectedChapter)
+                                                            .sort((a, b) => (a.exercise_number || 0) - (b.exercise_number || 0)).map((ex) => (
+                                                                <Box
+                                                                    key={ex.id}
+                                                                    data-image={ex.id}
+                                                                    style={{
+                                                                        cursor: 'pointer',
+                                                                        width: 35,
+                                                                        height: 35,
+                                                                        position: 'relative',
+                                                                        flexShrink: 0,
+                                                                        borderRadius: '4px',
+                                                                        overflow: 'hidden',
+                                                                    }}
+                                                                    onClick={() => handleExerciseSelect(ex.id)}
+                                                                >
+                                                                    <Image
+                                                                        src={getExerciseImage(ex.id, false)}
+                                                                        alt={`Exercise ${ex.exercise_number}`}
+                                                                        width={35}
+                                                                        height={35}
+                                                                        style={{
+                                                                            objectFit: 'cover',
+                                                                            outline: ex.id === selectedExercise ? '2px solid skyblue' : 'none',
+                                                                            outlineOffset: '-2px',
+                                                                        }}
+                                                                        sizes="35px"
+                                                                        unoptimized={true}
+                                                                    />
+                                                                </Box>
+                                                            ))}
+                                                    </Flex>) : <Flex
+                                                        ref={previewScrollRef}
+                                                        gap={4}
+                                                        style={{
+                                                            overflowX: 'auto',
+                                                            padding: '2px',
+                                                            height: '100%',
+                                                            width: '100%'
+                                                        }}
+                                                    >
+                                                    {filteredDocuments?.map((doc) => (
+                                                        <Box
+                                                            key={doc.id}
+                                                            data-image={doc.id}
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                width: 35,
+                                                                height: 35,
+                                                                position: 'relative',
+                                                                flexShrink: 0,
+                                                                borderRadius: '4px',
+                                                                overflow: 'hidden',
+                                                            }}
+                                                            onClick={() => handlePageClick(doc.id)}
+                                                        >
+                                                            <Image
+                                                                src={getActiveImage(doc.id, false)}
+                                                                alt={`Page ${doc.page}`}
+                                                                width={35}
+                                                                height={35}
+                                                                style={{
+                                                                    objectFit: 'cover',
+                                                                    outline: doc.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                                                    outlineOffset: '-2px',
+                                                                }}
+                                                                sizes="35px"
+                                                                unoptimized={true}
+                                                            />
+                                                        </Box>
+                                                    ))}
+                                                </Flex>}
                                             </Box>
                                         </>
                                     )}

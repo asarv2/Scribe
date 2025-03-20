@@ -9,10 +9,20 @@
 "use client";
 
 import ChatCanvas from "@/components/Chat/Canvas/ChatCanvas";
+import { useFullscreen } from "@mantine/hooks";
+import { useEffect } from "react";
 
 export default function ChatPage({ params }: { params: { classId: string, chatId: string } }) {
     const classId = params.classId;
     const chatId = params.chatId;
-    return <ChatCanvas classId={classId} chatId={chatId} />;
+    const {toggle, fullscreen} = useFullscreen();
+
+    useEffect(() => {
+        if (document.fullscreenElement) {
+            toggle();
+        }
+    }, []);
+
+    return <ChatCanvas classId={classId} chatId={chatId} toggle={toggle} fullscreen={fullscreen} />;
 }
 

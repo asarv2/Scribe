@@ -273,31 +273,47 @@ export const handleDocumentClick = (
 ) => {
     // For lectures
     if (contextType === 'lectures' && documentId) {
-        setViewerMode({
+        setViewerMode(prev => ({
+            ...prev,
             active: true,
             documentId: documentId,
             lectureId: contextId,
-        });
+            chapterId: undefined,
+            textbookId: undefined,
+            exerciseId: undefined,
+            homeworkId: undefined,
+        }));
     }
     // For chapters
     else if (contextType === 'chapters' && documentId && textbookId) {
-        setViewerMode({
+        setViewerMode(prev => ({
+            ...prev,
             active: true,
             documentId: documentId,
             textbookId: textbookId,
             chapterId: contextId,
-        });
-    } else if (contextType === 'chapters' && exerciseId) {
-        setViewerMode({
+            lectureId: undefined,
+            exerciseId: undefined,
+            homeworkId: undefined,
+        }));
+    } else if (contextType === 'chapters' && exerciseId && textbookId) {
+        setViewerMode(prev => ({
+            ...prev,
             active: true,
             chapterId: contextId,
             exerciseId: exerciseId,
-        });
+            textbookId: textbookId,
+            lectureId: undefined,
+            homeworkId: undefined,
+            documentId: undefined,
+        }));
     } else if (contextType === 'homeworks' && exerciseId) {
-        setViewerMode({
+        setViewerMode(prev => ({
+            ...prev,
             active: true,
             homeworkId: contextId,
             exerciseId: exerciseId,
-        });
+            lectureId: undefined,
+        }));
     }
 };

@@ -60,6 +60,20 @@ class ChatProcessor(BaseProcessor):
             "3. Address any misconceptions from earlier in the conversation"
         )
     
+
+    def practice_problem_prompt(self) -> str:
+        """Get the prompt for the practice problem generation"""
+        return (
+        "Furthermore, if the student asks for the generation of practice problems, use <PROBLEM></PROBLEM> tags to specify the format for each of the problems.\n"
+        "1. Use <PARTS>x</PARTS> tags to specify the number of parts in the problem. For example, if the problem has 3 parts, you should write <PARTS>3</PARTS>. In most cases, the number of parts is 1.\n"
+        "2. Use <TYPE>y</TYPE> tags to specify the type of problem. There are currently only 2 types of problems, 'CONCEPTUAL' and 'COMPUTATIONAL'. You should only use 'CONCEPTUAL' if the student asks for a conceptual question, and you should only use 'COMPUTATIONAL' if the student asks for a computational question.\n"
+        "3. Use <FORMAT>z</FORMAT> tags to specify the format of the problem. There are currently only 2 formats, 'MCQ' and 'FRQ'. You should only use 'MCQ' if the student asks for a multiple choice question, and you should only use 'FRQ' if the student asks for a free response question.\n"
+        "Here is a full example of an example problem tag: \n\n"
+        "4. Use <INFO>x</INFO> tags to specify any additional information about the nature of the problem to be generated. This will be extremely helpful for making a precise and accurate problem."
+        "Here is an example of a problem tag with all the tags filled in: \n\n"
+        "<PROBLEM><PARTS>1</PARTS><TYPE>CONCEPTUAL</TYPE><FORMAT>MCQ</FORMAT><INFO>A problem highlighting the intricaies of the simplex method and the concept of degeneracy</INFO></PROBLEM>.\n\n"
+        )
+    
     def get_critical_instructions(self, output_rules: str) -> str:
         """Get the rules for the chat processor"""
         return (
@@ -68,6 +82,7 @@ class ChatProcessor(BaseProcessor):
             "FORMATTING:\n\n"
             "Only if you find it useful, or the student asks use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
             "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
+            + self.practice_problem_prompt() + "\n\n"
             "Moreover, if you use the content from the chapter, use <CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER> tags, where x is the chapter number and a, b, c are the page numbers. If you cite any exercises from the chapter, use <CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER> tags, where x is the chapter number and a, b, c are the exercise numbers."
             "Lastly, if you use the homework, use <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK> tags, where x is the homework number and a, b, c are the problem numbers. "
             "Put this at the end of your response. Do not include periods after your citations, add it before the tags.\n\n"

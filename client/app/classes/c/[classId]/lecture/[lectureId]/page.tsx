@@ -358,49 +358,6 @@ export default function Lecture({ params }: LectureProps) {
         );
     };
 
-    const PreviewStrip = () => (
-        <Flex
-            ref={previewScrollRef}
-            gap={4}
-            style={{
-                overflowX: 'auto',
-                padding: '2px',
-                height: '100%',
-                width: '100%'
-            }}
-        >
-            {images.map((img) => (
-                <Box
-                    key={img.id}
-                    data-image={img.id}
-                    style={{
-                        cursor: 'pointer',
-                        width: 35,
-                        height: 35,
-                        position: 'relative',
-                        flexShrink: 0,
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                    }}
-                    onClick={() => setActiveDocumentId(img.id)}
-                >
-                    <Image
-                        src={img.src}
-                        alt={img.alt}
-                        width={35}
-                        height={35}
-                        style={{
-                            objectFit: 'cover',
-                            outline: img.id === activeDocumentId ? '2px solid skyblue' : 'none',
-                            outlineOffset: '-2px',
-                        }}
-                        sizes="100vw"
-                    />
-                </Box>
-            ))}
-        </Flex>
-    );
-
     // Update the intersection observer settings
     const { ref: chatsIntersection, entry: chatsEntry } = useIntersection({
         root: null,
@@ -449,249 +406,288 @@ export default function Lecture({ params }: LectureProps) {
                                         <>
                                             <MainViewer />
                                             <Box style={{ flexShrink: 0, height: '40px', marginBottom: '4px' }}>
-                                                <PreviewStrip />
-                                            </Box>
-                                </>
-                            )}
-                        </Stack>
-                    </Box>
-                </Grid.Col>
-                <Grid.Col span={isMobile ? 12 : 6}>
-                    <Box style={{
-                        position: 'relative',
-                        overflow: 'auto',
-                        maxHeight: 'calc(100vh - 55px)'
-                    }}>
-                        <Stack style={{ paddingBottom: '20px' }}>
-
-                            <Box
-                                ref={settingsIntersection}
-                                style={{
-                                    transition: 'transform 0.3s ease, opacity 0.3s ease',
-                                    transform: settingsEntry?.isIntersecting ? 'translateY(0)' : 'translateY(20px)',
-                                    opacity: settingsEntry?.isIntersecting ? 1 : 0.5,
-                                }}
-                            >
-                                <Skeleton visible={loadingLecture}>
-                                    <Stack gap="md">
-                                        <Stack gap="xs">
-                                            <Text size="sm" fw={500}>Lecture Name</Text>
-                                            <Group justify="space-between">
-                                                <TextInput
-                                                    value={lectureName}
-                                                    onChange={(e) => setLectureName(e.currentTarget.value)}
-                                                    placeholder="Enter lecture name"
-                                                    style={{ flex: 1 }}
-                                                />
-                                                <Button
-                                                    onClick={handleUpdateLectureName}
-                                                    loading={isNameUpdating}
-                                                    disabled={!lectureName.trim() || lectureName === lecture?.name}
-                                                >
-                                                    Save
-                                                </Button>
-                                            </Group>
-                                        </Stack>
-
-                                        <Stack gap="xs">
-                                            <Text size="sm" fw={500}>Lecture Time</Text>
-                                            <Group justify="space-between">
-                                                <DateTimePicker
-                                                    placeholder="Select date and time"
-                                                    valueFormat="DD MMM YYYY hh:mm A"
-                                                    value={lectureDate}
-                                                    onChange={setLectureDate}
-                                                    style={{ flex: 1 }}
-                                                />
-                                                <Button
-                                                    onClick={handleUpdateLectureDate}
-                                                    loading={isDateUpdating}
-                                                    disabled={!lectureDate || Boolean(lecture?.lecture_date && new Date(lecture.lecture_date).getTime() === lectureDate.getTime())}
-                                                >
-                                                    Save
-                                                </Button>
-                                            </Group>
-                                        </Stack>
-
-                                        <Stack gap="xs">
-                                            <Text size="sm" fw={500}>AI Instructions</Text>
-                                            <Group justify="space-between">
-                                                <Textarea
-                                                    value={aiInstructions}
-                                                    onChange={(event) => setAiInstructions(event.currentTarget.value)}
-                                                    placeholder="Example: Focus on explaining the key concepts in simple terms"
-                                                    autosize
-                                                    minRows={3}
-                                                    maxRows={5}
-                                                    style={{ flex: 1 }}
-                                                />
-                                                <Button
-                                                    onClick={handleSaveAiInstructions}
-                                                    loading={loading}
-                                                    disabled={aiInstructions === lecture?.additional_info}
-                                                >
-                                                    Save
-                                                </Button>
-                                            </Group>
-                                        </Stack>
-                                    </Stack>
-                                </Skeleton>
-                            </Box>
-
-                            <Divider my="sm" />
-
-                            {!loadingDocuments && documents?.find(doc => doc.id === activeDocumentId)?.description && (
-                                <>
-                                    <Box>
-                                        <Text fw={700} mb="md">Page Description</Text>
-                                        <Card withBorder p="md">
-                                            <Text fw={500} size="sm">
-                                                <Latex>{documents?.find(doc => doc.id === activeDocumentId)?.description ?? ""}</Latex>
-                                            </Text>
-                                        </Card>
-                                    </Box>
-                                    <Divider my="sm" />
-                                </>
-                            )}
-
-                            <Box
-                                ref={chatsIntersection}
-                                style={{
-                                    transition: 'transform 0.3s ease, opacity 0.3s ease',
-                                    transform: chatsEntry?.isIntersecting ? 'translateY(0)' : 'translateY(20px)',
-                                    opacity: chatsEntry?.isIntersecting ? 1 : 0.5,
-                                }}
-                            >
-                                <Text fw={700} mb="md">Related Chats</Text>
-                                {loadingChats || loadingMessages ? (
-                                    <Box
-                                        style={{
-                                            overflowX: 'auto',
-                                            overflowY: 'hidden',
-                                            paddingBottom: '16px', // Space for potential scrollbar
-                                        }}
-                                    >
-                                        <Flex gap="md" wrap="nowrap">
-                                            {[1, 2, 3, 4].map((i) => (
-                                                <Card
-                                                    key={i}
-                                                    withBorder
-                                                    padding="sm"
+                                                <Flex
+                                                    ref={previewScrollRef}
+                                                    gap={4}
                                                     style={{
-                                                        width: '180px',
-                                                        minWidth: '180px',
-                                                        height: '180px'
+                                                        overflowX: 'auto',
+                                                        padding: '2px',
+                                                        height: '100%',
+                                                        width: '100%'
                                                     }}
                                                 >
-                                                    <Skeleton height={100} width="100%" radius="sm" mb="sm" />
-                                                    <Skeleton height={15} width="70%" radius="sm" mb="sm" />
-                                                    <Skeleton height={10} width="90%" radius="sm" />
-                                                </Card>
-                                            ))}
-                                        </Flex>
-                                    </Box>
-                                ) : relatedChats.length > 0 ? (
-                                    <Box
-                                        style={{
-                                            overflowX: 'auto',
-                                            overflowY: 'hidden',
-                                            paddingBottom: '16px', // Space for potential scrollbar
-                                        }}
-                                    >
-                                        <Flex gap="md" wrap="nowrap">
-                                            {relatedChats.map(chat => {
-                                                // Use the first available image from the lecture
-                                                const firstImage = images[0]?.src || "/placeholder_image.svg";
-
-                                                return (
-                                                    <Card
-                                                        key={chat.id}
-                                                        withBorder
-                                                        padding="sm"
-                                                        component="a"
-                                                        href={`/classes/c/${params.classId}/chat/${chat.id}`}
-                                                        style={{
-                                                            width: '180px',
-                                                            minWidth: '180px',
-                                                            height: '180px',
-                                                            textDecoration: 'none',
-                                                            color: 'inherit',
-                                                            display: 'flex',
-                                                            flexDirection: 'column'
-                                                        }}
-                                                    >
-                                                        <Card.Section style={{ height: '100px', overflow: 'hidden' }}>
+                                                    {images.map((img) => (
+                                                        <Box
+                                                            key={img.id}
+                                                            data-image={img.id}
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                width: 35,
+                                                                height: 35,
+                                                                position: 'relative',
+                                                                flexShrink: 0,
+                                                                borderRadius: '4px',
+                                                                overflow: 'hidden',
+                                                            }}
+                                                            onClick={() => setActiveDocumentId(img.id)}
+                                                        >
                                                             <Image
-                                                                src={firstImage}
-                                                                alt={chat.name || "Chat preview"}
-                                                                width={180}
-                                                                height={100}
+                                                                src={img.src}
+                                                                alt={img.alt}
+                                                                width={35}
+                                                                height={35}
                                                                 style={{
                                                                     objectFit: 'cover',
-                                                                    width: '100%',
-                                                                    height: '100%'
+                                                                    outline: img.id === activeDocumentId ? '2px solid skyblue' : 'none',
+                                                                    outlineOffset: '-2px',
                                                                 }}
+                                                                sizes="100vw"
                                                             />
-                                                        </Card.Section>
-
-                                                        <Stack mt="xs" gap="xs" style={{ flex: 1 }}>
-                                                            <Text 
-                                                                fw={500} 
-                                                                lineClamp={2}
-                                                                style={{ flex: 1 }} 
-                                                                size="sm"
-                                                            >
-                                                                {chat.name || "Untitled Chat"}
-                                                            </Text>
-                                                            <Badge size="xs" variant="light">
-                                                                {new Date(chat.created_at).toLocaleDateString()}
-                                                            </Badge>
-                                                        </Stack>
-                                                    </Card>
-                                                );
-                                            })}
-                                        </Flex>
-                                    </Box>
-                                ) : (
-                                    <Text c="dimmed">No chats mention this lecture yet</Text>
-                                )}
+                                                        </Box>
+                                                    ))}
+                                                </Flex>
+                                            </Box>
+                                        </>
+                                    )}
+                                </Stack>
                             </Box>
-                        </Stack>
-                    </Box>
-                </Grid.Col>
-            </Grid>
-        </Stack>
-    </Container>
+                        </Grid.Col>
+                        <Grid.Col span={isMobile ? 12 : 6}>
+                            <Box style={{
+                                position: 'relative',
+                                overflow: 'auto',
+                                maxHeight: 'calc(100vh - 55px)'
+                            }}>
+                                <Stack style={{ paddingBottom: '20px' }}>
 
-    {/* Full-size image modal */}
-    <Modal
-        opened={isImageModalOpen}
-        onClose={() => setIsImageModalOpen(false)}
-        size="xl"
-        padding="md"
-        centered
-        title={images.find(img => img.id === activeDocumentId)?.label || ""}
-    >
-        <Box style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '80vh'
-        }}>
-            <Image
-                src={images.find(img => img.id === activeDocumentId)?.src || "/placeholder_image.svg"}
-                alt={images.find(img => img.id === activeDocumentId)?.alt || ""}
-                width={1200}
-                height={1200}
-                style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    objectFit: "contain"
-                }}
-                sizes="100vw"
-            />
-        </Box>
-    </Modal>
-</ClassLayout>
+                                    <Box
+                                        ref={settingsIntersection}
+                                        style={{
+                                            transition: 'transform 0.3s ease, opacity 0.3s ease',
+                                            transform: settingsEntry?.isIntersecting ? 'translateY(0)' : 'translateY(20px)',
+                                            opacity: settingsEntry?.isIntersecting ? 1 : 0.5,
+                                        }}
+                                    >
+                                        <Skeleton visible={loadingLecture}>
+                                            <Stack gap="md">
+                                                <Stack gap="xs">
+                                                    <Text size="sm" fw={500}>Lecture Name</Text>
+                                                    <Group justify="space-between">
+                                                        <TextInput
+                                                            value={lectureName}
+                                                            onChange={(e) => setLectureName(e.currentTarget.value)}
+                                                            placeholder="Enter lecture name"
+                                                            style={{ flex: 1 }}
+                                                        />
+                                                        <Button
+                                                            onClick={handleUpdateLectureName}
+                                                            loading={isNameUpdating}
+                                                            disabled={!lectureName.trim() || lectureName === lecture?.name}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </Group>
+                                                </Stack>
+
+                                                <Stack gap="xs">
+                                                    <Text size="sm" fw={500}>Lecture Time</Text>
+                                                    <Group justify="space-between">
+                                                        <DateTimePicker
+                                                            placeholder="Select date and time"
+                                                            valueFormat="DD MMM YYYY hh:mm A"
+                                                            value={lectureDate}
+                                                            onChange={setLectureDate}
+                                                            style={{ flex: 1 }}
+                                                        />
+                                                        <Button
+                                                            onClick={handleUpdateLectureDate}
+                                                            loading={isDateUpdating}
+                                                            disabled={!lectureDate || Boolean(lecture?.lecture_date && new Date(lecture.lecture_date).getTime() === lectureDate.getTime())}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </Group>
+                                                </Stack>
+
+                                                <Stack gap="xs">
+                                                    <Text size="sm" fw={500}>AI Instructions</Text>
+                                                    <Group justify="space-between">
+                                                        <Textarea
+                                                            value={aiInstructions}
+                                                            onChange={(event) => setAiInstructions(event.currentTarget.value)}
+                                                            placeholder="Example: Focus on explaining the key concepts in simple terms"
+                                                            autosize
+                                                            minRows={3}
+                                                            maxRows={5}
+                                                            style={{ flex: 1 }}
+                                                        />
+                                                        <Button
+                                                            onClick={handleSaveAiInstructions}
+                                                            loading={loading}
+                                                            disabled={aiInstructions === lecture?.additional_info}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </Group>
+                                                </Stack>
+                                            </Stack>
+                                        </Skeleton>
+                                    </Box>
+
+                                    <Divider my="sm" />
+
+                                    {!loadingDocuments && documents?.find(doc => doc.id === activeDocumentId)?.description && (
+                                        <>
+                                            <Box>
+                                                <Text fw={700} mb="md">Page Description</Text>
+                                                <Card withBorder p="md">
+                                                    <Text fw={500} size="sm">
+                                                        <Latex>{documents?.find(doc => doc.id === activeDocumentId)?.description ?? ""}</Latex>
+                                                    </Text>
+                                                </Card>
+                                            </Box>
+                                            <Divider my="sm" />
+                                        </>
+                                    )}
+
+                                    <Box
+                                        ref={chatsIntersection}
+                                        style={{
+                                            transition: 'transform 0.3s ease, opacity 0.3s ease',
+                                            transform: chatsEntry?.isIntersecting ? 'translateY(0)' : 'translateY(20px)',
+                                            opacity: chatsEntry?.isIntersecting ? 1 : 0.5,
+                                        }}
+                                    >
+                                        <Text fw={700} mb="md">Related Chats</Text>
+                                        {loadingChats || loadingMessages ? (
+                                            <Box
+                                                style={{
+                                                    overflowX: 'auto',
+                                                    overflowY: 'hidden',
+                                                    paddingBottom: '16px', // Space for potential scrollbar
+                                                }}
+                                            >
+                                                <Flex gap="md" wrap="nowrap">
+                                                    {[1, 2, 3, 4].map((i) => (
+                                                        <Card
+                                                            key={i}
+                                                            withBorder
+                                                            padding="sm"
+                                                            style={{
+                                                                width: '180px',
+                                                                minWidth: '180px',
+                                                                height: '180px'
+                                                            }}
+                                                        >
+                                                            <Skeleton height={100} width="100%" radius="sm" mb="sm" />
+                                                            <Skeleton height={15} width="70%" radius="sm" mb="sm" />
+                                                            <Skeleton height={10} width="90%" radius="sm" />
+                                                        </Card>
+                                                    ))}
+                                                </Flex>
+                                            </Box>
+                                        ) : relatedChats.length > 0 ? (
+                                            <Box
+                                                style={{
+                                                    overflowX: 'auto',
+                                                    overflowY: 'hidden',
+                                                    paddingBottom: '16px', // Space for potential scrollbar
+                                                }}
+                                            >
+                                                <Flex gap="md" wrap="nowrap">
+                                                    {relatedChats.map(chat => {
+                                                        // Use the first available image from the lecture
+                                                        const firstImage = images[0]?.src || "/placeholder_image.svg";
+
+                                                        return (
+                                                            <Card
+                                                                key={chat.id}
+                                                                withBorder
+                                                                padding="sm"
+                                                                component="a"
+                                                                href={`/classes/c/${params.classId}/chat/${chat.id}`}
+                                                                style={{
+                                                                    width: '180px',
+                                                                    minWidth: '180px',
+                                                                    height: '180px',
+                                                                    textDecoration: 'none',
+                                                                    color: 'inherit',
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column'
+                                                                }}
+                                                            >
+                                                                <Card.Section style={{ height: '100px', overflow: 'hidden' }}>
+                                                                    <Image
+                                                                        src={firstImage}
+                                                                        alt={chat.name || "Chat preview"}
+                                                                        width={180}
+                                                                        height={100}
+                                                                        style={{
+                                                                            objectFit: 'cover',
+                                                                            width: '100%',
+                                                                            height: '100%'
+                                                                        }}
+                                                                    />
+                                                                </Card.Section>
+
+                                                                <Stack mt="xs" gap="xs" style={{ flex: 1 }}>
+                                                                    <Text
+                                                                        fw={500}
+                                                                        lineClamp={2}
+                                                                        style={{ flex: 1 }}
+                                                                        size="sm"
+                                                                    >
+                                                                        {chat.name || "Untitled Chat"}
+                                                                    </Text>
+                                                                    <Badge size="xs" variant="light">
+                                                                        {new Date(chat.created_at).toLocaleDateString()}
+                                                                    </Badge>
+                                                                </Stack>
+                                                            </Card>
+                                                        );
+                                                    })}
+                                                </Flex>
+                                            </Box>
+                                        ) : (
+                                            <Text c="dimmed">No chats mention this lecture yet</Text>
+                                        )}
+                                    </Box>
+                                </Stack>
+                            </Box>
+                        </Grid.Col>
+                    </Grid>
+                </Stack>
+            </Container>
+
+            {/* Full-size image modal */}
+            <Modal
+                opened={isImageModalOpen}
+                onClose={() => setIsImageModalOpen(false)}
+                size="xl"
+                padding="md"
+                centered
+                title={images.find(img => img.id === activeDocumentId)?.label || ""}
+            >
+                <Box style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '80vh'
+                }}>
+                    <Image
+                        src={images.find(img => img.id === activeDocumentId)?.src || "/placeholder_image.svg"}
+                        alt={images.find(img => img.id === activeDocumentId)?.alt || ""}
+                        width={1200}
+                        height={1200}
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: "contain"
+                        }}
+                        sizes="100vw"
+                    />
+                </Box>
+            </Modal>
+        </ClassLayout>
     );
 }

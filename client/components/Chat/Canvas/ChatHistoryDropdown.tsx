@@ -176,8 +176,8 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
         ?.filter(chat => chat.id !== currentChatId && chat.id !== "new")
         ?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     
-    // If no other chats, don't show the dropdown
-    if (otherChats?.length === 0) return null;
+    // // If no other chats, don't show the dropdown
+    // if (otherChats?.length === 0) return null;
     
     return (
         <Menu position="bottom-start" shadow="md">

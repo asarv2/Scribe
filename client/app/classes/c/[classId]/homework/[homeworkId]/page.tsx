@@ -248,348 +248,6 @@ export default function HomeworkPage({ params }: HomeworkProps) {
         setIsImageModalOpen(true);
     };
 
-    // Main components
-    const MainViewer = ({ height = 500 }: { height?: number }) => {
-        const [isImageLoading, setIsImageLoading] = useState(false);
-        const currentExercise = exercises?.find(ex => ex.id === activeExerciseId);
-        const sortedExercises = exercises ? sortExercises(exercises) : [];
-        const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
-
-        return (
-            <Card padding="md" pos="relative" withBorder>
-                <Stack>
-                    <Box style={{
-                        position: 'relative',
-                        width: '100%',
-                        height,
-                        overflow: "hidden",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}
-                        onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
-                        onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
-                    >
-                        {isImageLoading && (
-                            <Skeleton
-                                height="100%"
-                                width="100%"
-                                radius="md"
-                                style={{
-                                    position: 'absolute',
-                                    zIndex: 1
-                                }}
-                            />
-                        )}
-                        <Image
-                            src={getActiveImage(activeExerciseId)}
-                            alt={`Exercise ${currentExercise?.title}`}
-                            width={500}
-                            height={500}
-                            style={{
-                                maxWidth: '100%',
-                                maxHeight: '100%',
-                                borderRadius: "10px",
-                                objectFit: "contain",
-                                padding: "10px",
-                                opacity: isImageLoading ? 0 : 1,
-                                transition: 'opacity 0.2s ease-in-out',
-                                cursor: "zoom-in" // Add cursor to indicate clickable
-                            }}
-                            sizes="100vw"
-                            onLoadingComplete={() => setIsImageLoading(false)}
-                            onLoadStart={() => setIsImageLoading(true)}
-                            priority
-                            onClick={openImageModal} // Add click handler to open modal
-                        />
-                        <ActionIcon
-                            size={"xl"}
-                            variant="filled"
-                            color={colorScheme === "dark" ? "gray" : "dark"}
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: 10,
-                                transform: 'translateY(-50%)',
-                                zIndex: 100,
-                            }}
-                            onClick={() => {
-                                const sortedExercises = exercises ? sortExercises(exercises) : [];
-                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
-                                if (currentIndex > 0) {
-                                    handleExerciseClick(sortedExercises[currentIndex - 1].id);
-                                }
-                            }}
-                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
-                            aria-label="Previous Exercise"
-                        >
-                            <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
-                        </ActionIcon>
-                        <ActionIcon
-                            size={"xl"}
-                            variant="filled"
-                            color="gray"
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                right: 10,
-                                transform: 'translateY(-50%)',
-                                zIndex: 100,
-                            }}
-                            onClick={() => {
-                                const sortedExercises = exercises ? sortExercises(exercises) : [];
-                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
-                                if (currentIndex < sortedExercises.length - 1) {
-                                    handleExerciseClick(sortedExercises[currentIndex + 1].id);
-                                }
-                            }}
-                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === sortExercises(exercises).length - 1}
-                            aria-label="Next Exercise"
-                        >
-                            <IconArrowRight size={24} />
-                        </ActionIcon>
-                        <Box
-                            pos="absolute"
-                            bottom={10}
-                            right={10}
-                            p={8}
-                            style={{
-                                zIndex: 100,
-                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Text
-                                size={"xs"}
-                                fw={500}
-                                style={{
-                                    color: colorScheme === "dark" ? "white" : "black",
-                                    textShadow: colorScheme === "dark" ?
-                                        "0px 0px 4px rgba(0,0,0,0.5)" :
-                                        "0px 0px 4px rgba(255,255,255,0.5)"
-                                }}
-                            >
-                                {`Problem ${currentExercise?.problem_number}${currentExercise?.problem_multipart ? `.${currentExercise?.problem_part_number}` : ""}`}
-                            </Text>
-                        </Box>
-                    </Box>
-                </Stack>
-            </Card>
-        );
-    };
-
-    const PreviewStrip = () => (
-        <Flex
-            ref={previewScrollRef}
-            gap="0.5rem"
-            style={{
-                overflowX: 'auto',
-                padding: '0.5rem',
-            }}
-        >
-            {exercises && sortExercises(exercises).map((exercise) => (
-                <Box
-                    key={exercise.id}
-                    data-exercise={exercise.id}
-                    style={{
-                        cursor: 'pointer',
-                        width: 50,
-                        height: 50,
-                        position: 'relative',
-                        flexShrink: 0,
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                    }}
-                    onClick={() => handleExerciseClick(exercise.id)}
-                >
-                    <Image
-                        src={getActiveImage(exercise.id)}
-                        alt={`Exercise ${exercise.problem_number}`}
-                        width={50}
-                        height={50}
-                        style={{
-                            objectFit: 'cover',
-                            outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
-                            outlineOffset: '-2px',
-                        }}
-                        sizes="100vw"
-                    />
-                </Box>
-            ))}
-        </Flex>
-    );
-
-    const Description = () => {
-        const currentExercise = exercises?.find(ex => ex.id === activeExerciseId);
-        const currentDocument = documents?.find(doc => doc.exercises.includes(activeExerciseId ?? ""));
-        const relatedDocuments = documents?.filter(doc =>
-            // Document must be for the same exercise
-            doc.exercises.includes(activeExerciseId ?? "") &&
-            // Document must be from the same homework
-            doc.homeworks.includes(homeworkId) &&
-            // Document must have a page number
-            doc.page &&
-            currentExercise?.start_page &&
-            currentExercise?.end_page &&
-            // Document's page must be OUTSIDE the range of current exercise
-            (doc.page < currentExercise.start_page || doc.page > currentExercise.end_page)
-        )?.reduce((unique: any[], doc) => {
-            const exists = unique.find(item => item.page === doc.page);
-            if (!exists) {
-                unique.push(doc);
-            }
-            return unique;
-        }, [])?.sort((a, b) => (a.page || 0) - (b.page || 0));
-
-        if (!currentExercise) return null;
-
-        const getDocumentImage = (document: any) => {
-            if (!document) return "/placeholder_image.svg";
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`;
-        };
-
-        return (
-            <Stack>
-                <Text fw={500}>Problem {currentExercise.problem_number}{currentExercise.problem_part_number !== 1 ?
-                    `${String.fromCharCode(96 + currentExercise.problem_part_number)})` :
-                    ""}</Text>
-
-                {/* Add problem number editing UI */}
-                <Card withBorder p="md">
-                    <Stack gap="xs">
-                        <Group justify="space-between">
-                            <Text size="sm" fw={500}>Problem Number</Text>
-                            <Group>
-                                <Text size="xs">Multipart</Text>
-                                <Switch 
-                                    checked={isMultipart}
-                                    onChange={(event) => setIsMultipart(event.currentTarget.checked)}
-                                />
-                            </Group>
-                        </Group>
-                        <Group justify="space-between">
-                            <Group style={{ flex: 1 }}>
-                                <NumberInput
-                                    value={exerciseProblemNumber ?? ""}
-                                    onChange={(value) => setExerciseProblemNumber(Number(value))}
-                                    placeholder="Problem #"
-                                    min={1}
-                                    style={{ flex: isMultipart ? 0.5 : 1 }}
-                                />
-                                {isMultipart && (
-                                    <NumberInput
-                                        value={problemPartNumber ?? ""}
-                                        onChange={(value) => setProblemPartNumber(Number(value))}
-                                        placeholder="Part #"
-                                        min={1}
-                                        style={{ flex: 0.5 }}
-                                    />
-                                )}
-                            </Group>
-                            <Button
-                                onClick={handleUpdateExerciseProblemNumber}
-                                loading={isProblemNumberUpdating}
-                                disabled={exerciseProblemNumber === null || 
-                                    (exerciseProblemNumber === currentExercise.problem_number && 
-                                    (isMultipart ? problemPartNumber : 1) === currentExercise.problem_part_number)}
-                            >
-                                Save
-                            </Button>
-                        </Group>
-                    </Stack>
-                </Card>
-
-                {currentExercise.info && (
-                    <Box>
-                        <Text fw={600} mb={4}>Information:</Text>
-                        <Text><Latex>{currentExercise.info}</Latex></Text>
-                    </Box>
-                )}
-
-                {currentExercise.given && (
-                    <Box>
-                        <Text fw={600} mb={4}>Given:</Text>
-                        <Text><Latex>{currentExercise.given}</Latex></Text>
-                    </Box>
-                )}
-                {currentExercise.description && (
-                    <Box>
-                        <Text fw={600} mb={4}>Description:</Text>
-                        <Text><Latex>{currentExercise.description}</Latex></Text>
-                    </Box>
-                )}
-
-                {currentDocument?.description && (
-                    <Box>
-                        <Text><Latex>{currentDocument.description}</Latex></Text>
-                    </Box>
-                )}
-
-                {relatedDocuments && relatedDocuments.length > 0 && (
-                    <Box>
-                        <Text fw={600} mb={4}>Additional Context:</Text>
-                        <Box
-                            style={{
-                                overflowX: 'auto',
-                                overflowY: 'hidden',
-                                whiteSpace: 'nowrap',
-                                padding: '4px'
-                            }}
-                        >
-                            <Flex gap="md" wrap="nowrap">
-                                {relatedDocuments.map((doc) => (
-                                    <Box
-                                        key={doc.id}
-                                        style={{
-                                            display: 'inline-block',
-                                            verticalAlign: 'top',
-                                            width: '200px',
-                                            flexShrink: 0
-                                        }}
-                                    >
-                                        <Text size="sm" c="dimmed" mb={4}>
-                                            Page {doc.page || 'Unknown'}
-                                        </Text>
-                                        <Card p="xs" withBorder>
-                                            <Image
-                                                src={getDocumentImage(doc)}
-                                                alt={`Page ${doc.page}`}
-                                                width={180}
-                                                height={240}
-                                                style={{
-                                                    width: '100%',
-                                                    height: '240px',
-                                                    objectFit: 'contain',
-                                                    borderRadius: '4px'
-                                                }}
-                                            />
-                                            {doc.description && (
-                                                <Text
-                                                    mt={4}
-                                                    size="sm"
-                                                    style={{
-                                                        whiteSpace: 'normal',
-                                                        overflow: 'hidden',
-                                                        textOverflow: 'ellipsis',
-                                                        display: '-webkit-box',
-                                                        WebkitLineClamp: 3,
-                                                        WebkitBoxOrient: 'vertical',
-                                                        lineHeight: '1.4'
-                                                    }}
-                                                >
-                                                    <Latex>{doc.description}</Latex>
-                                                </Text>
-                                            )}
-                                        </Card>
-                                    </Box>
-                                ))}
-                            </Flex>
-                        </Box>
-                    </Box>
-                )}
-            </Stack>
-        );
-    };
 
     const getActiveImage = (exerciseId: string | null) => {
         if (!exerciseId) return "/placeholder_image.svg";
@@ -601,30 +259,6 @@ export default function HomeworkPage({ params }: HomeworkProps) {
         }
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exerciseId}.png`;
     };
-
-    const getExerciseInfo = (exercise: Exercise | undefined) => {
-        if (!exercise) return "";
-        return (
-            <Stack>
-                {exercise.info && (
-                    <Box>
-                        <Text fw={600} mb={4}>Information:</Text>
-                        <Text><Latex>{exercise.info}</Latex></Text>
-                    </Box>
-                )}
-                {exercise.info && exercise.description && (
-                    <Divider />
-                )}
-
-                {exercise.description && (
-                    <Box>
-                        {/* <Text fw={600} mb={4}>Description:</Text> */}
-                        <Text><Latex>{exercise.description}</Latex></Text>
-                    </Box>
-                )}
-            </Stack>
-        )
-    }
 
     const handleUpdateHomeworkName = async () => {
         if (!homeworkName.trim()) return;
@@ -765,8 +399,148 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                         </>
                                     ) : (
                                         <>
-                                            <MainViewer />
-                                            <PreviewStrip />
+                                            <Card padding="md" pos="relative" withBorder>
+                                                <Stack>
+                                                    <Box style={{
+                                                        position: 'relative',
+                                                        width: '100%',
+                                                        height: 500,
+                                                        overflow: "hidden",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center"
+                                                    }}
+                                                        onTouchStart={(e) => setTouchStartX(e.changedTouches[0].clientX)}
+                                                        onTouchEnd={(e) => handleSwipe(e.changedTouches[0].clientX)}
+                                                    >
+                                                        <Image
+                                                            src={getActiveImage(activeExerciseId)}
+                                                            alt={`Exercise ${exercises?.find(ex => ex.id === activeExerciseId)?.title}`}
+                                                            width={500}
+                                                            height={500}
+                                                            style={{
+                                                                maxWidth: '100%',
+                                                                maxHeight: '100%',
+                                                                borderRadius: "10px",
+                                                                objectFit: "contain",
+                                                                padding: "10px",
+                                                                cursor: "zoom-in" // Add cursor to indicate clickable
+                                                            }}
+                                                            sizes="100vw"
+                                                            priority
+                                                            onClick={openImageModal} // Add click handler to open modal
+                                                        />
+                                                        <ActionIcon
+                                                            size={"xl"}
+                                                            variant="filled"
+                                                            color={colorScheme === "dark" ? "gray" : "dark"}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '50%',
+                                                                left: 10,
+                                                                transform: 'translateY(-50%)',
+                                                                zIndex: 100,
+                                                            }}
+                                                            onClick={() => {
+                                                                const sortedExercises = exercises ? sortExercises(exercises) : [];
+                                                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
+                                                                if (currentIndex > 0) {
+                                                                    handleExerciseClick(sortedExercises[currentIndex - 1].id);
+                                                                }
+                                                            }}
+                                                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
+                                                            aria-label="Previous Exercise"
+                                                        >
+                                                            <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                                                        </ActionIcon>
+                                                        <ActionIcon
+                                                            size={"xl"}
+                                                            variant="filled"
+                                                            color="gray"
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '50%',
+                                                                right: 10,
+                                                                transform: 'translateY(-50%)',
+                                                                zIndex: 100,
+                                                            }}
+                                                            onClick={() => {
+                                                                const sortedExercises = exercises ? sortExercises(exercises) : [];
+                                                                const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
+                                                                if (currentIndex < sortedExercises.length - 1) {
+                                                                    handleExerciseClick(sortedExercises[currentIndex + 1].id);
+                                                                }
+                                                            }}
+                                                            disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === sortExercises(exercises).length - 1}
+                                                            aria-label="Next Exercise"
+                                                        >
+                                                            <IconArrowRight size={24} />
+                                                        </ActionIcon>
+                                                        <Box
+                                                            pos="absolute"
+                                                            bottom={10}
+                                                            right={10}
+                                                            p={8}
+                                                            style={{
+                                                                zIndex: 100,
+                                                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                                                borderRadius: "4px",
+                                                            }}
+                                                        >
+                                                            <Text
+                                                                size={"xs"}
+                                                                fw={500}
+                                                                style={{
+                                                                    color: colorScheme === "dark" ? "white" : "black",
+                                                                    textShadow: colorScheme === "dark" ?
+                                                                        "0px 0px 4px rgba(0,0,0,0.5)" :
+                                                                        "0px 0px 4px rgba(255,255,255,0.5)"
+                                                                }}
+                                                            >
+                                                                {`Problem ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}${exercises?.find(ex => ex.id === activeExerciseId)?.problem_multipart ? `.${exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number}` : ""}`}
+                                                            </Text>
+                                                        </Box>
+                                                    </Box>
+                                                </Stack>
+                                            </Card>
+                                            <Flex
+                                                ref={previewScrollRef}
+                                                gap="0.5rem"
+                                                style={{
+                                                    overflowX: 'auto',
+                                                    padding: '0.5rem',
+                                                }}
+                                            >
+                                                {exercises && sortExercises(exercises).map((exercise) => (
+                                                    <Box
+                                                        key={exercise.id}
+                                                        data-exercise={exercise.id}
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            width: 50,
+                                                            height: 50,
+                                                            position: 'relative',
+                                                            flexShrink: 0,
+                                                            borderRadius: '4px',
+                                                            overflow: 'hidden',
+                                                        }}
+                                                        onClick={() => handleExerciseClick(exercise.id)}
+                                                    >
+                                                        <Image
+                                                            src={getActiveImage(exercise.id)}
+                                                            alt={`Exercise ${exercise.problem_number}`}
+                                                            width={50}
+                                                            height={50}
+                                                            style={{
+                                                                objectFit: 'cover',
+                                                                outline: exercise.id === activeExerciseId ? '2px solid skyblue' : 'none',
+                                                                outlineOffset: '-2px',
+                                                            }}
+                                                            sizes="100vw"
+                                                        />
+                                                    </Box>
+                                                ))}
+                                            </Flex>
                                         </>
                                     )}
                                 </Stack>
@@ -813,7 +587,7 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                                         <Text size="sm" fw={500}>Problem Number</Text>
                                                         <Group>
                                                             <Text size="xs">Multipart</Text>
-                                                            <Switch 
+                                                            <Switch
                                                                 checked={isMultipart}
                                                                 onChange={(event) => setIsMultipart(event.currentTarget.checked)}
                                                             />
@@ -841,10 +615,10 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                                         <Button
                                                             onClick={handleUpdateExerciseProblemNumber}
                                                             loading={isProblemNumberUpdating}
-                                                            disabled={exerciseProblemNumber === null || 
-                                                                (exerciseProblemNumber === exercises?.find(ex => ex.id === activeExerciseId)?.problem_number && 
-                                                                isMultipart === ((exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number ?? 1) !== 1) &&
-                                                                problemPartNumber === (exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number ?? 1))}
+                                                            disabled={exerciseProblemNumber === null ||
+                                                                (exerciseProblemNumber === exercises?.find(ex => ex.id === activeExerciseId)?.problem_number &&
+                                                                    isMultipart === ((exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number ?? 1) !== 1) &&
+                                                                    problemPartNumber === (exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number ?? 1))}
                                                         >
                                                             Save
                                                         </Button>

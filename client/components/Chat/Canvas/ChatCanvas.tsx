@@ -6,10 +6,10 @@
 import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff, IconMaximize, IconMaximizeOff, IconColumnsOff, IconArrowRight, IconClearAll, IconCategoryPlus, IconCategoryMinus } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMediaQuery } from "@mantine/hooks";
+import { useFullscreen, useMediaQuery } from "@mantine/hooks";
 import { em } from "@mantine/core";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getChat } from "@/utils/queries/get-chat";
@@ -40,31 +40,14 @@ import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
 
-export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
+export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
-    const [welcomeMessages, setWelcomeMessages] = useState({ followUp: chatId === "new" ? false : true });
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
-        active: false
+        active: false,
+        open: chatId === "new"
     });
     const [loading, setLoading] = useState(false);
-    
-    // Add state for context panel visibility
-    const [isContextPanelVisible, setIsContextPanelVisible] = useState(() => {
-        // For new chats, show the panel by default
-        if (chatId === "new") return true;
-        
-        // For existing chats, check localStorage first, otherwise default based on if it's a new user session
-        const savedVisibility = localStorage.getItem(`context-panel-visible-${classId}`);
-        return savedVisibility === null ? true : savedVisibility === 'true';
-    });
-    
-    // Add state to track the animation of panel collapse/expand
-    const [isPanelAnimating, setIsPanelAnimating] = useState(false);
-    const [panelWidth, setPanelWidth] = useState(isContextPanelVisible ? 4 : 0);
-    
-    // Add state to track if user has sent their first message
-    const [hasUserSentFirstMessage, setHasUserSentFirstMessage] = useState(chatId !== "new");
 
     // Search and expansion states
     const [searchQuery, setSearchQuery] = useState("");
@@ -98,32 +81,15 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         enabled: !!user?.id
     });
 
-    const { data: professor } = useQuery({
-        queryKey: ["professor", classId],
-        queryFn: () => getProfessor(supabase, classId),
-    });
-
     // Queries for data
     const { data: lectures } = useQuery({
         queryKey: ["lectures", classId],
         queryFn: () => getLectures(supabase, [classId])
     });
 
-    const { data: lectureDocuments } = useQuery({
-        queryKey: ["lectureDocuments", classId],
-        queryFn: () => getLectureDocuments(supabase, lectures!.map(l => l.id)),
-        enabled: !!lectures
-    });
-
     const { data: textbooks } = useQuery({
         queryKey: ["textbooks", classId],
         queryFn: () => getTextbooks(supabase, [classId]),
-    });
-
-    const { data: textbookDocuments } = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks
     });
 
     const { data: chapters } = useQuery({
@@ -132,26 +98,14 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         enabled: !!textbooks
     });
 
-    const { data: subchapters } = useQuery({
-        queryKey: ["subchapters", classId],
-        queryFn: () => getSubchapters(supabase, chapters!.map(c => c.id)),
-        enabled: !!chapters
-    });
-
     const { data: homeworkData } = useQuery({
         queryKey: ["homeworks", classId],
         queryFn: () => getHomeworks(supabase, [classId]),
     });
 
-    const { data: problems } = useQuery({
-        queryKey: ["problems", classId],
-        queryFn: () => getProblems(supabase, homeworkData!.map(h => h.id)),
-        enabled: !!homeworkData
-    });
-
     const { data: exercises } = useQuery({
         queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, chapters?.map(c => c.id) ?? [], homeworkData?.map(h => h.id) ?? []),
+        queryFn: () => getExercises(supabase, chapters!.map(c => c.id), homeworkData!.map(h => h.id)),
         enabled: !!chapters && !!homeworkData
     });
 
@@ -163,8 +117,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             lectures: [],
             chapters: [],
             homeworks: [],
+            exercises: [],
         },
-        chatType: 'general-student',
+        chatType: 'review',
         teacher: false,
         rating: null
     });
@@ -176,10 +131,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
     const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
 
     // Add this state to track message submission
-
-    // Add state for the thank you message
-    const [showThankYou, setShowThankYou] = useState(false);
-
     const getLectureContext = () => {
         const previousMessagesLectures = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
@@ -196,7 +147,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             Array.isArray(message.chapters) ? message.chapters : []
         ) ?? [];
 
-        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...previousMessagesChapters]));
+        const exerciseChapters = activeChat.context.exercises.map(e => exercises?.find(ex => ex.id === e)?.chapter).filter((chapter): chapter is string => chapter !== undefined);
+
+        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...previousMessagesChapters, ...exerciseChapters]));
         return allChapters;
     }
 
@@ -237,6 +190,14 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             }
         });
 
+        // Add exercise context
+        activeChat.context.exercises.forEach(exerciseId => {
+            const exercise = exercises?.find(e => e.id === exerciseId);
+            if (exercise) {
+                contextParts.push(`Exercise ${exercise.exercise_number}: ${exercise.title}`);
+            }
+        });
+
         // If there's any context, add a prefix
         if (contextParts.length > 0) {
             return `\n\nContext:\n\n${contextParts.join('\n')}\n`;
@@ -257,9 +218,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             setLoading(true);
             let profileId = profile?.id;
             let newChatId = chatId;
-            
-            // Save current immersive mode state before potential navigation
-            const currentImmersiveMode = immersiveMode;
 
             const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
 
@@ -274,17 +232,10 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     responseUrl
                 );
                 newChatId = chat.id;
-                
+
                 // Instead of directly using router.replace which causes a full page transition,
                 // use router.push with shallow option to preserve state
                 router.push(`/classes/c/${classId}/chat/${chat.id}`);
-                
-                // After the navigation, restore the immersive mode state
-                setTimeout(() => {
-                    if (currentImmersiveMode) {
-                        setImmersiveMode(true);
-                    }
-                }, 100);
             }
 
             const additionalContextForBareQuestion = getAdditionalContextForBareQuestion();
@@ -331,15 +282,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                     lectures: [],
                     chapters: [],
                     homeworks: [],
+                    exercises: [],
                 }
             });
-            
-            // Only collapse the context panel on the first message
-            if (!hasUserSentFirstMessage) {
-                localStorage.setItem(`context-panel-visible-${classId}`, 'false');
-                animateContextPanel(false);
-                setHasUserSentFirstMessage(true);
-            }
 
         } catch (error) {
             console.error("Error in message processing:", error);
@@ -379,16 +324,26 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     // Modify addContextToChat to remove drag-related state updates
     const addContextToChat = (contextType: keyof ChatMessage['context'], contextId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            context: {
-                ...prev.context,
-                [contextType]: [...prev.context[contextType], contextId]
-            }
-        }));
+        if (contextType === "exercises") {
+            const chapterExercises = exercises?.filter(e => e.chapter === contextId);
+            setActiveChat(prev => ({
+                ...prev,
+                context: {
+                    ...prev.context,
+                    exercises: [...prev.context.exercises, ...chapterExercises?.map(e => e.id) ?? []],
+                }
+            }));
+        } else {
+            setActiveChat(prev => ({
+                ...prev,
+                context: {
+                    ...prev.context,
+                    [contextType]: [...prev.context[contextType], contextId]
+                }
+            }));
+        }
     };
 
-    // Remove context from chat
     const removeContextFromChat = (contextType: keyof ChatMessage['context'], contextId: string) => {
         setActiveChat(prev => ({
             ...prev,
@@ -399,23 +354,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }));
     };
 
-    const scrollToSection = (sectionId: string) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    const handleRemoveContext = useCallback((contextType: keyof ChatMessage['context'], contextId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            context: {
-                ...prev.context,
-                [contextType]: prev.context[contextType].filter(id => id !== contextId)
-            }
-        }));
-    }, []);
-
     const handleScrollToSection = useCallback((sectionId: string) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -423,52 +361,11 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     }, []);
 
-    const handleOptionClick = useCallback((type: ChatType, isTeacherMode: boolean = false, teacherOption: string = '') => {
+    const handleOptionClick = useCallback((type: ChatType) => {
         setActiveChat(prev => ({
             ...prev,
             chatType: type,
-            teacher: isTeacherMode || prev.teacher
         }));
-        setWelcomeMessages({ followUp: true });
-    }, []);
-
-    const handleContextClick = useCallback((
-        contextType: 'lectures' | 'chapters' | 'homeworks',
-        contextId: string,
-        setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>,
-        documentId?: string,
-        textbookId?: string,
-        exerciseId?: string,
-    ) => {
-        // For lectures
-        if (contextType === 'lectures' && documentId) {
-            setViewerMode({
-                active: true,
-                documentId: documentId,
-                lectureId: contextId,
-            });
-        }
-        // For chapters
-        else if (contextType === 'chapters' && documentId && textbookId) {
-            setViewerMode({
-                active: true,
-                documentId: documentId,
-                textbookId: textbookId,
-                chapterId: contextId,
-            });
-        } else if (contextType === 'chapters' && exerciseId) {
-            setViewerMode({
-                active: true,
-                chapterId: contextId,
-                exerciseId: exerciseId,
-            });
-        } else if (contextType === 'homeworks' && exerciseId) {
-            setViewerMode({
-                active: true,
-                homeworkId: contextId,
-                exerciseId: exerciseId,
-            });
-        }
     }, []);
 
     // Set up realtime subscription for messages
@@ -537,7 +434,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                 {
                     event: '*',
                     schema: 'prod',
-                    table: 'chats', 
+                    table: 'chats',
                     filter: `id=eq.${chatId}`
                 },
                 async (payload) => {
@@ -581,53 +478,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         };
     }, [chatId, queryClient, supabase]);
 
-    // useEffect(() => {
-    //     if (profile) {
-    //         setActiveChat(prev => ({
-    //             ...prev,
-    //             chatType: profile.admin || profile.professor ? 'general-teacher' : 'general-student',
-    //             teacher: profile.admin || profile.professor
-    //         }));
-    //     }
-    // }, [profile]);
-
-    // Handle rating change
-    const handleRatingChange = async (value: number) => {
-        // Set the rating and show thank you message immediately
-        setShowThankYou(true);
-
-        // If we have an existing chat, update the rating in the database
-        if (existingChat && chatId !== "new") {
-            try {
-                const { success, error } = await updateChatRating(chatId, value);
-                if (!success) {
-                    throw new Error(error);
-                }
-
-                // Invalidate the query to refresh the chat data
-                await queryClient.invalidateQueries({
-                    queryKey: ["chat", chatId],
-                    exact: true
-                });
-            } catch (error) {
-                console.error("Error updating rating:", error);
-                notifications.show({
-                    title: "Error",
-                    message: "Failed to save your rating. Please try again.",
-                    color: "red"
-                });
-                // Reset thank you message on error
-                setShowThankYou(false);
-                return;
-            }
-        }
-
-        // Hide the thank you message after 3 seconds
-        setTimeout(() => {
-            setShowThankYou(false);
-        }, 3000);
-    };
-
     // Add this function to handle chat selection
     const handleChatSelect = (selectedChatId: string) => {
         if (selectedChatId !== chatId) {
@@ -635,155 +485,47 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     };
 
-    // Add this handler for dropped items
-    const handleDrop = (item: { type: keyof ChatMessage['context'], id: string }) => {
-        if (item && item.type && item.id) {
-            addContextToChat(item.type, item.id);
-        }
-    };
-
-    // Handle panel visibility change with animation
-    const animateContextPanel = (shouldShow: boolean) => {
-        setIsPanelAnimating(true);
-        
-        // If we're showing the panel, make it visible immediately but animate the width
-        if (shouldShow) {
-            setIsContextPanelVisible(true);
-            // Start animation to expand
-            setTimeout(() => setPanelWidth(4), 50);
-        } else {
-            // Start animation to collapse
-            setPanelWidth(0);
-            // After animation completes, hide the panel completely
-            setTimeout(() => {
-                setIsContextPanelVisible(false);
-                setIsPanelAnimating(false);
-            }, 300); // Match this with the CSS transition duration
-        }
-    };
-
-    // Toggle context panel visibility and save to localStorage
-    const toggleContextPanel = () => {
-        const newVisibility = !isContextPanelVisible;
-        localStorage.setItem(`context-panel-visible-${classId}`, String(newVisibility));
-        animateContextPanel(newVisibility);
-    };
-
-    // Also update the useEffect to properly initialize hasUserSentFirstMessage based on messages
-    // and apply the correct panel visibility
-    useEffect(() => {
-        // If there are existing messages, we know the user has sent messages before
-        if (messages && messages.length > 0) {
-            setHasUserSentFirstMessage(true);
-        }
-    }, [messages]);
-
-    // Properly initialize panel width when component mounts or isContextPanelVisible changes
-    useEffect(() => {
-        setPanelWidth(isContextPanelVisible ? 4 : 0);
-    }, []);
-
-    const handleViewerModeChange = (newViewerMode: ViewerMode) => {
-        // When a viewer is activated, always show the panel
-        if (newViewerMode.active) {
-            // Ensure the panel is visible
-            setIsContextPanelVisible(true);
-            setPanelWidth(4);
-            
-            // Store this in localStorage too
-            localStorage.setItem(`context-panel-visible-${classId}`, 'true');
-            
-            // Remove animating state to avoid timing issues
-            setIsPanelAnimating(false);
-        } 
-        // When viewer is deactivated, close the entire panel
-        else if (viewerMode.active) { // This checks if we're actually closing an active viewer
-            // Start animation to collapse panel
-            animateContextPanel(false);
-            
-            // Store this state in localStorage
-            localStorage.setItem(`context-panel-visible-${classId}`, 'false');
-            setIsContextPanelVisible(false);
-        }
-        
-        // Update the viewer mode
-        setViewerMode(newViewerMode);
-    };
-
-    // Add state for immersive mode with persistence
-    const [immersiveMode, setImmersiveMode] = useState(() => {
-        // Try to retrieve the state from sessionStorage
-        if (typeof window !== 'undefined') {
-            const savedState = sessionStorage.getItem(`immersive-mode-${classId}`);
-            return savedState === 'true';
-        }
-        return false;
-    });
-    
-    // When immersive mode changes, save it to sessionStorage
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem(`immersive-mode-${classId}`, immersiveMode.toString());
-        }
-    }, [immersiveMode, classId]);
-    
-    const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
-    const [isUserInterrupting, setIsUserInterrupting] = useState(false);
-    
-    // Toggle immersive mode function with persistence
-    const toggleImmersiveMode = () => {
-        setImmersiveMode(prev => {
-            const newValue = !prev;
-            // Save to session storage immediately
-            if (typeof window !== 'undefined') {
-                sessionStorage.setItem(`immersive-mode-${classId}`, newValue.toString());
-            }
-            return newValue;
-        });
-        
-        // Reset chunk index when toggling mode
-        setCurrentChunkIndex(0);
-        setIsUserInterrupting(false);
-    };
-    
-    // Handle user interruption in immersive mode
-    const handleUserInterruption = (isInterrupting: boolean) => {
-        setIsUserInterrupting(isInterrupting);
-    };
-
     return (
-        <ClassLayout classId={classId}>
-            <Container fluid style={{ marginTop: "30px" }}>
+        <ClassLayout classId={classId} showHeader={!fullscreen}>
+            <Container fluid>
                 <Stack>
                     <Flex justify="space-between" align="center">
-                        {/* Only show title and badges when not in immersive mode */}
-                        {!immersiveMode && (
-                            <>
-                                <Group>
-                                    <Text size="xl" fw={700} mb={6}>
-                                        {existingChat ? (
-                                            <TypeAnimation
-                                                key={`${existingChat.id}-${receivedRealtimeUpdate}`}
-                                                sequence={[
-                                                    existingChat.name || '',
-                                                ]}
-                                                wrapper="span"
-                                                cursor={false}
-                                                repeat={0}
-                                                speed={50}
-                                                preRenderFirstString={!receivedRealtimeUpdate}
-                                                style={{
-                                                    fontSize: '1.25rem',
-                                                    fontWeight: 700,
-                                                    display: 'inline-block',
-                                                }}
-                                            />
-                                        ) : (
-                                            activeChat.title
-                                        )}
-                                    </Text>
+                        <Group gap="sm">
+                            {chatId !== "new" && <Tooltip label="New chat">
+                                <ActionIcon
+                                    variant="subtle"
+                                    size="md"
+                                    aria-label="Start a new chat"
+                                    onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                    mb={3}
+                                >
+                                    <IconPlus size={18} />
+                                </ActionIcon>
+                            </Tooltip>}
+                            <Text size="xl" fw={700} mb={6}>
+                                {existingChat ? (
+                                    <TypeAnimation
+                                        key={`${existingChat.id}-${receivedRealtimeUpdate}`}
+                                        sequence={[
+                                            existingChat.name || '',
+                                        ]}
+                                        wrapper="span"
+                                        cursor={false}
+                                        repeat={0}
+                                        speed={50}
+                                        preRenderFirstString={!receivedRealtimeUpdate}
+                                        style={{
+                                            fontSize: '1.25rem',
+                                            fontWeight: 700,
+                                            display: 'inline-block',
+                                        }}
+                                    />
+                                ) : (
+                                    activeChat.title
+                                )}
+                            </Text>
 
-                                    {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
+                            {/* {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                         <Badge color={
                                             existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
                                                 existingChat.type === 'concept' ? 'cyan' :
@@ -805,10 +547,10 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                                 ? 'Other'
                                                                 : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
                                         </Badge>
-                                    )}
-                                </Group>
+                                    )} */}
+                        </Group>
 
-                                {existingChat && existingChat.rating !== null && (
+                        {/* {existingChat && existingChat.rating !== null && (
                                     <Group>
                                         <Rating
                                             value={existingChat.rating}
@@ -816,72 +558,59 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                             size="md"
                                         />
                                     </Group>
-                                )}
-                            </>
-                        )}
+                                )} */}
+                        <Group gap="xs">
+                            <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
+                                <ActionIcon
+                                    variant="subtle"
+                                    size="md"
+                                    onClick={toggle}
+                                    aria-label="Toggle fullscreen"
+                                >
+                                    {fullscreen ? <IconMaximizeOff size={18} /> : <IconMaximize size={18} />}
+                                </ActionIcon>
+                            </Tooltip>
+                        </Group>
                     </Flex>
 
                     <Grid>
-                        <Grid.Col 
-                            span={isMobile ? 12 : (viewerMode.active || isContextPanelVisible) && !immersiveMode ? 8 : 12} 
+                        <Grid.Col
+                            span={isMobile ? 12 : (viewerMode.open) ? 8 : 12}
                             style={{
                                 transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
                             }}
                         >
                             <Card
-                                shadow={immersiveMode ? "none" : "sm"}
-                                padding={immersiveMode ? "0" : "lg"}
+                                shadow={"sm"}
+                                padding={"lg"}
                                 radius="md"
-                                withBorder={!immersiveMode}
+                                withBorder={true}
                                 style={{
-                                    height: immersiveMode ? "90vh" : "80vh",
-                                    background: immersiveMode ? "transparent" : undefined,
-                                    border: immersiveMode ? "none" : undefined
+                                    height: fullscreen ? "90vh" : "80vh"
                                 }}
                             >
                                 {/* Show controls only when not in immersive mode */}
-                                {!immersiveMode && (
-                                    <Flex justify="space-between" align="center" mb={10}>
-                                        {/* Rating component - only show if not yet rated */}
-                                        {existingChat && existingChat.rating === null && (
-                                            <Group>
-                                                {/* ...existing code... */}
-                                            </Group>
-                                        )}
-                                        
-                                        {/* Chat history, context toggle, and new chat buttons */}
-                                        <Group gap="xs" ml="auto">
-                                            {/* Add immersive mode toggle button */}
-                                            <Tooltip label="Enter immersive mode">
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={toggleImmersiveMode}
-                                                    aria-label="Toggle immersive mode"
-                                                >
-                                                    <IconEye size={18} />
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        
-                                            {/* Context panel toggle */}
-                                            <Tooltip label={isContextPanelVisible ? "Hide context panel" : "Show context panel"}>
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={toggleContextPanel}
-                                                    aria-label="Toggle context panel"
-                                                >
-                                                    <IconMenu2 size={18} />
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        
-                                            <ChatHistoryDropdown 
-                                                currentChatId={chatId} 
-                                                onChatSelect={handleChatSelect} 
-                                                classId={classId}
-                                            />
-                                            
-                                            <Tooltip label="Start a new chat">
+                                <Flex justify="space-between" align="center" mb={10}>
+                                    {/* Chat history, context toggle, and new chat buttons */}
+                                    <Group gap="xs" ml="auto">
+                                        <ChatHistoryDropdown
+                                            currentChatId={chatId}
+                                            onChatSelect={handleChatSelect}
+                                            classId={classId}
+                                        />
+                                        {/* Context panel toggle */}
+                                        <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
+                                            <ActionIcon
+                                                variant="subtle"
+                                                size="md"
+                                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
+                                                aria-label="Toggle context panel"
+                                            >
+                                                {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
+                                            </ActionIcon>
+                                        </Tooltip>
+
+                                        {/* <Tooltip label="Start a new chat">
                                                 <ActionIcon 
                                                     variant="subtle" 
                                                     size="md" 
@@ -891,27 +620,9 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                 >
                                                     <IconPlus size={18} />
                                                 </ActionIcon>
-                                            </Tooltip>
-                                        </Group>
-                                    </Flex>
-                                )}
-                                
-                                {/* Add exit button when in immersive mode */}
-                                {immersiveMode && (
-                                    <Group justify="flex-end" p="sm">
-                                        <Tooltip label="Exit immersive mode">
-                                            <ActionIcon
-                                                variant="light"
-                                                color="gray"
-                                                size="md"
-                                                onClick={toggleImmersiveMode}
-                                                style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 100 }}
-                                            >
-                                                <IconEyeOff size={18} />
-                                            </ActionIcon>
-                                        </Tooltip>
+                                            </Tooltip> */}
                                     </Group>
-                                )}
+                                </Flex>
 
                                 <MessageList
                                     chatId={chatId}
@@ -921,13 +632,10 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     activeChat={activeChat}
                                     setActiveChat={setActiveChat}
                                     onOptionClick={handleOptionClick}
-                                    setViewerMode={handleViewerModeChange}
+                                    setViewerMode={setViewerMode}
                                     isInitializing={isInitializing}
                                     loading={loading}
-                                    immersiveMode={immersiveMode}
-                                    currentChunkIndex={currentChunkIndex}
-                                    setCurrentChunkIndex={setCurrentChunkIndex}
-                                    isUserInterrupting={isUserInterrupting}
+                                    fullscreen={fullscreen}
                                 />
 
                                 <ChatInput
@@ -936,52 +644,47 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     classId={classId}
                                     onPromptChange={handlePromptChange}
                                     onSend={handleChat}
-                                    onRemoveContext={handleRemoveContext}
+                                    onRemoveContext={removeContextFromChat}
                                     onScrollToSection={handleScrollToSection}
                                     setViewerMode={setViewerMode}
                                     expandedSections={expandedSections}
                                     toggleSection={toggleSection}
-                                    immersiveMode={immersiveMode}
-                                    onUserInterruption={handleUserInterruption}
                                 />
                             </Card>
                         </Grid.Col>
 
                         {/* Only show context panel in normal mode */}
-                        {!immersiveMode && (
-                            <Grid.Col 
-                                span={isMobile ? 12 : 4} 
-                                style={{
-                                    display: (viewerMode.active || isContextPanelVisible || isPanelAnimating) ? 'block' : 'none',
-                                    transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
-                                    opacity: (viewerMode.active || panelWidth > 0) ? 1 : 0,
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                {viewerMode.active ? (
-                                    <ViewerPanel
-                                        viewerMode={viewerMode}
-                                        setViewerMode={handleViewerModeChange}
-                                        classId={classId}
-                                    />
-                                ) : (
-                                    <ContextPanel
-                                        classId={classId}
-                                        isMobile={isMobile ?? false}
-                                        searchQuery={searchQuery}
-                                        setSearchQuery={setSearchQuery}
-                                        expandedSections={expandedSections}
-                                        toggleSection={toggleSection}
-                                        addContextToChat={addContextToChat}
-                                        expandedNodes={expandedNodes}
-                                        toggleNode={toggleNode}
-                                        activeChat={activeChat}
-                                        scrollToSection={scrollToSection}
-                                        makeDraggable={true}
-                                    />
-                                )}
-                            </Grid.Col>
-                        )}
+                        <Grid.Col
+                            span={isMobile ? 12 : 4}
+                            style={{
+                                display: (viewerMode.open) ? 'block' : 'none',
+                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
+                                opacity: (viewerMode.open) ? 1 : 0,
+                                overflow: 'hidden',
+                            }}
+                        >
+                            {viewerMode.active ? (
+                                <ViewerPanel
+                                    viewerMode={viewerMode}
+                                    setViewerMode={setViewerMode}
+                                    addContextToChat={addContextToChat}
+                                    classId={classId}
+                                    fullscreen={fullscreen}
+                                    activeChat={activeChat}
+                                />
+                            ) : (
+                                <ContextPanel
+                                    classId={classId}
+                                    searchQuery={searchQuery}
+                                    setSearchQuery={setSearchQuery}
+                                    addContextToChat={addContextToChat}
+                                    activeChat={activeChat}
+                                    makeDraggable={true}
+                                    fullscreen={fullscreen}
+                                    setViewerMode={setViewerMode}
+                                />
+                            )}
+                        </Grid.Col>
                     </Grid>
                 </Stack>
             </Container>

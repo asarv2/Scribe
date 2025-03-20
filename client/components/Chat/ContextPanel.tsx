@@ -20,9 +20,10 @@ import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
-import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage } from "@/types";
+import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, ViewerMode, Document } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useDrag } from 'react-dnd';
+import { handleDocumentClick } from "@/utils/chat/chat-helpers";
 declare global {
     interface Window {
         scrollToFirstItem?: (type: string) => void;
@@ -31,17 +32,13 @@ declare global {
 
 interface ContextPanelProps {
     classId: string;
-    isMobile: boolean;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
-    expandedSections: Set<string>;
-    toggleSection: (section: string) => void;
     addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void;
-    expandedNodes: Set<string>;
-    toggleNode: (nodeId: string) => void;
     activeChat: ChatMessage;
-    scrollToSection: (sectionId: string) => void;
     makeDraggable?: boolean;
+    fullscreen?: boolean;
+    setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
 }
 
 // Define consistent colors for different content types
@@ -77,7 +74,7 @@ function DraggableWrapper({
     }
 
     return (
-        <div 
+        <div
             ref={(drag as unknown) as React.LegacyRef<HTMLDivElement>}
             style={{
                 opacity: isDragging ? 0.5 : 1,
@@ -86,7 +83,7 @@ function DraggableWrapper({
             }}
         >
             {children}
-            {isDragging && (
+            {/* {isDragging && (
                 <div style={{
                     position: 'absolute',
                     top: 0,
@@ -100,7 +97,7 @@ function DraggableWrapper({
                 }}>
                     Dragging
                 </div>
-            )}
+            )} */}
         </div>
     );
 }
@@ -112,14 +109,26 @@ const ItemCard = ({
     contextType,
     addContextToChat,
     isVisible,
-    makeDraggable = false
+    makeDraggable = false,
+    setViewerMode,
+    lectureDocuments,
+    textbookDocuments,
+    exercises,
+    chapters,
+    textbooks
 }: {
     item: any,
     color: string,
     contextType: keyof ChatMessage['context'],
     addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void,
     isVisible: boolean,
-    makeDraggable?: boolean
+    makeDraggable?: boolean,
+    setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
+    lectureDocuments?: Document[],
+    textbookDocuments?: Document[],
+    exercises?: Exercise[],
+    chapters?: Chapter[],
+    textbooks?: Textbook[]
 }) => {
     const { colorScheme } = useMantineColorScheme();
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -141,11 +150,32 @@ const ItemCard = ({
                 e.stopPropagation();
                 if (!makeDraggable) {
                     addContextToChat(contextType, item.id);
-                    
-                } else {
-                    addContextToChat(contextType, item.id);
+
+                } else if (setViewerMode) {
+                    if (contextType === 'lectures') {
+                        const document = lectureDocuments?.find(d => d.lecture === item.id) // first page of the lecture
+                        if (document) {
+                            handleDocumentClick('lectures', item.id, setViewerMode, document.id);
+                        }
+                    } else if (contextType === 'chapters') {
+                        const chapter = chapters?.find(c => c.id === item.id)
+                        if (chapter) {
+                            const textbook = textbooks?.find(t => t.id === chapter.textbook)
+                            if (textbook) {
+                                const document = textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === textbook.id) // first page of the chapter
+                                if (document) {
+                                    handleDocumentClick('chapters', item.id, setViewerMode, document.id, textbook.id);
+                                }
+                            }
+                        }
+                    } else if (contextType === 'homeworks') {
+                        const exercise = exercises?.find(e => e.homework === item.id) // find first exercise of the homework
+                        if (exercise) {
+                            handleDocumentClick('homeworks', item.id, setViewerMode, undefined, undefined, exercise.id);
+                        }
+                    }
                 }
-                
+
             }}
         >
             <Group>
@@ -177,7 +207,7 @@ const ItemCard = ({
                 )}
                 <Stack style={{ flex: 1 }}>
                     <Group justify="space-between">
-                        <Text 
+                        <Text
                             size="sm"
                             lineClamp={2}
                             title={item.newName}
@@ -225,17 +255,13 @@ const SectionSkeleton = () => (
 
 export function ContextPanel({
     classId,
-    isMobile,
     searchQuery,
     setSearchQuery,
-    expandedSections,
-    toggleSection,
     addContextToChat,
-    expandedNodes,
-    toggleNode,
     activeChat,
-    scrollToSection,
-    makeDraggable = false
+    makeDraggable = false,
+    fullscreen = false,
+    setViewerMode
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const { colorScheme } = useMantineColorScheme();
@@ -376,14 +402,14 @@ export function ContextPanel({
                 item.title?.toLowerCase().includes(query)) {
                 return true;
             }
-            
+
             // Check item numbers (note_number, homework_number, chapter_number)
             if ((item.note_number !== undefined && item.note_number.toString().includes(query)) ||
                 (item.homework_number !== undefined && item.homework_number.toString().includes(query)) ||
                 (item.chapter_number !== undefined && item.chapter_number.toString().includes(query))) {
                 return true;
             }
-            
+
             // Check for type keywords (lecture, chapter, homework)
             if ((query.includes('lecture') && item.hasOwnProperty('note_number')) ||
                 (query.includes('chapter') && item.hasOwnProperty('chapter_number')) ||
@@ -572,53 +598,7 @@ export function ContextPanel({
             elements.forEach(el => observer.unobserve(el));
         };
     }, [rowVirtualizer.getVirtualItems()]);
-
-    // Add a method to scroll to the first item of a specific type
-    const scrollToFirstItem = (type: 'lectures' | 'chapters' | 'homeworks') => {
-        let itemId = null;
-
-        switch (type) {
-            case 'lectures':
-                itemId = firstLectureRef.current;
-                break;
-            case 'chapters':
-                itemId = firstChapterRef.current;
-                break;
-            case 'homeworks':
-                itemId = firstHomeworkRef.current;
-                break;
-        }
-
-        if (itemId) {
-            const virtualItemId = `${type}-${itemId}`;
-            const element = containerRef.current?.querySelector(`[data-id="${virtualItemId}"]`);
-
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-    };
-
-    // Expose the scroll method through a ref or effect
-    useEffect(() => {
-        // This makes the scrollToFirstItem method available to the parent component
-        // through the scrollToSection prop
-        if (scrollToSection && typeof scrollToSection === 'function') {
-            // Update the parent's scrollToSection to include our new functionality
-            const originalScrollToSection = scrollToSection;
-
-            // Override the scrollToSection to handle our special section IDs
-            (window as any).scrollToFirstItem = (type: string) => {
-                if (['lectures', 'chapters', 'homeworks'].includes(type)) {
-                    scrollToFirstItem(type as 'lectures' | 'chapters' | 'homeworks');
-                } else {
-                    // Call the original function for other section IDs
-                    originalScrollToSection(type);
-                }
-            };
-        }
-    }, [scrollToSection, firstLectureRef.current, firstChapterRef.current, firstHomeworkRef.current]);
-
+    
     return (
         <Card
             shadow="sm"
@@ -626,14 +606,11 @@ export function ContextPanel({
             radius="md"
             withBorder
             style={{
-                height: "80vh",
+                height: fullscreen ? "90vh" : "80vh",
                 overflowY: "auto"
             }}
         >
             <Stack>
-                <Text size="xs" c="dimmed" ta="center" mt="-10px" mb="-10px">
-                    Click or drag to add context
-                </Text>
                 <TextInput
                     placeholder="Search context..."
                     value={localSearchQuery}
@@ -646,7 +623,7 @@ export function ContextPanel({
                         }
                     })}
                 />
-                
+
                 {isLoading ? (
                     <>
                         <SectionSkeleton />
@@ -658,7 +635,7 @@ export function ContextPanel({
                     <div
                         ref={containerRef}
                         style={{
-                            height: 'calc(80vh - 100px)',
+                            height: fullscreen ? 'calc(90vh - 100px)' : 'calc(80vh - 100px)',
                             overflow: 'auto',
                             position: 'relative'
                         }}
@@ -667,7 +644,7 @@ export function ContextPanel({
                         <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="chapters-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                        
+
                         {allContentItems.length > 0 ? (
                             <div
                                 style={{
@@ -680,9 +657,9 @@ export function ContextPanel({
                                     const item = allContentItems[virtualRow.index];
                                     const itemId = `${item.type}-${item.id}`;
                                     const isItemVisible = visibleItems.has(itemId);
-                                    
+
                                     // Add section-specific IDs to the first item of each type
-                                    const isFirstOfType = 
+                                    const isFirstOfType =
                                         (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
                                         (item.type === 'chapters' && item.id === firstChapterItem?.id) ||
                                         (item.type === 'homeworks' && item.id === firstHomeworkItem?.id);
@@ -708,6 +685,12 @@ export function ContextPanel({
                                                 addContextToChat={addContextToChat}
                                                 isVisible={isItemVisible || localSearchQuery.length > 0}
                                                 makeDraggable={makeDraggable}
+                                                setViewerMode={setViewerMode}
+                                                lectureDocuments={lectureDocuments}
+                                                textbookDocuments={textbookDocuments}
+                                                exercises={exercises}
+                                                chapters={chapters}
+                                                textbooks={textbooks}
                                             />
                                         </div>
                                     );

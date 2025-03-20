@@ -34,6 +34,7 @@ export interface ChatMessage {
         lectures: string[];     // lecture IDs
         chapters: string[];    // chapter IDs
         homeworks: string[];   // homework IDs
+        exercises: string[];   // exercise IDs
     };
     chatType: ChatType;
     teacher: boolean; // whether the chat is a teacher chat
@@ -41,7 +42,8 @@ export interface ChatMessage {
 }
 
 export interface ViewerMode {
-    active: boolean;
+    active: boolean; // whether we are on a document
+    open: boolean; // whether the viewer is open
     documentId?: string; // this goes with either lecture or chapter
     lectureId?: string; // source of truth for lecture
     textbookId?: string; // used soley for chapter convienence

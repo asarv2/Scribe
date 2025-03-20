@@ -1101,36 +1101,39 @@ export default function ContentPage({ params }: { params: { classId: string } })
                         ref={lectureInputRef}
                         onChange={(e) => {
                             e.preventDefault();
-                            if (e.target.files?.[0]) {
-                                handleUploadLecture(e.target.files[0]);
+                            if (e.target.files?.length) {
+                                Array.from(e.target.files).forEach(file => handleUploadLecture(file));
                             }
                         }}
                         accept="application/pdf"
                         style={{ display: 'none' }}
+                        multiple
                     />
                     <input
                         type="file"
                         ref={textbookInputRef}
                         onChange={(e) => {
                             e.preventDefault();
-                            if (e.target.files?.[0]) {
-                                handleUploadTextbook(e.target.files[0]);
+                            if (e.target.files?.length) {
+                                Array.from(e.target.files).forEach(file => handleUploadTextbook(file));
                             }
                         }}
                         accept="application/pdf"
                         style={{ display: 'none' }}
+                        multiple
                     />
                     <input
                         type="file"
                         ref={homeworkInputRef}
                         onChange={(e) => {
                             e.preventDefault();
-                            if (e.target.files?.[0]) {
-                                handleUploadHomework(e.target.files[0]);
+                            if (e.target.files?.length) {
+                                Array.from(e.target.files).forEach(file => handleUploadHomework(file));
                             }
                         }}
                         accept="application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         style={{ display: 'none' }}
+                        multiple
                     />
                 </Stack>
             </Container>
