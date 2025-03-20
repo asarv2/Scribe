@@ -61,7 +61,7 @@ export default function Login() {
                 if (!profile) {
                     throw new Error("Profile not found")
                 }
-                const filteredClasses = classes?.filter((c: Class) => (profile.classes.includes(c.id)))
+                const filteredClasses = classes?.filter((c: Class) => (profile.classes.includes(c.id) || profile.admin))
                 if (filteredClasses?.length === 0) {
                     throw new Error("No classes found")
                 }
