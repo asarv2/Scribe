@@ -102,14 +102,17 @@ async def download_questions_get(
         # Format questions data for the downloader
         questions_data = []
         for question in questions_response.data:
-            if question.get('type') == 'mcq':
+            frq_question = question.get('frq', False)  # Default to frq if type not specified
+            
+            if not frq_question:
                 # MCQ question
                 mcq_question = {
                     "id": question.get('id'),
+                    "question_type": "mcq",  # Add explicit question_type field
                     "question": question.get('problem', ''),
-                    "options": question.get('options', {}),
-                    "answers": question.get('answers', {}),
-                    "explanations": question.get('explanations', {}),
+                    "options": question.get('options', []),
+                    "answers": question.get('answers', []),
+                    "explanations": question.get('explanations', []),
                     "tags": question.get('tags', []),
                     "lecture_references": question.get('lecture_references', []),
                     "chapter_references": question.get('chapter_references', []),
@@ -122,6 +125,7 @@ async def download_questions_get(
                 # FRQ question
                 frq_question = {
                     "id": question.get('id'),
+                    "question_type": "frq",  # Add explicit question_type field
                     "question": question.get('problem', ''),
                     "solution": question.get('solution', ''),
                     "tags": question.get('tags', []),

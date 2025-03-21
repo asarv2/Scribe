@@ -9,7 +9,7 @@ import { Container, Flex } from "@mantine/core";
 import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff, IconMaximize, IconMaximizeOff, IconColumnsOff, IconArrowRight, IconClearAll, IconCategoryPlus, IconCategoryMinus } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFullscreen, useMediaQuery } from "@mantine/hooks";
+import { useFullscreen, useMediaQuery, useHotkeys } from "@mantine/hooks";
 import { em } from "@mantine/core";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getChat } from "@/utils/queries/get-chat";
@@ -38,15 +38,12 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
-import Immersive from "../Immersive/Immersive";
-import { ImmersiveMessageList } from "../Immersive/ImmersiveMessageList";
-import { ImmersiveChatInput } from "../Immersive/ImmersiveChatInput";
 
 export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
-        immersive: false,
+        immersive: fullscreen,
         active: false,
         open: chatId === "new"
     });
@@ -493,6 +490,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         setViewerMode(prev => ({
             ...prev,
             immersive: true,
+            open: false,
         }));
         toggle();
     };
@@ -504,8 +502,23 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         }));
         toggle();
     };
+
+    // Add keyboard shortcuts
+    useHotkeys([
+        ['mod+I', () => {
+            if (viewerMode.immersive) {
+                exitImmersive();
+            } else {
+                enterImmersive();
+            }
+        }],
+        ['mod+M', () => {
+            setViewerMode(prev => ({ ...prev, open: !prev.open }));
+        }],
+    ]);
+
     return (
-        <ClassLayout classId={classId} showHeader={!fullscreen}>
+        <ClassLayout classId={classId} showHeader={!viewerMode.immersive}>
             <Container fluid>
                 <Stack>
                     <Flex justify="space-between" align="center">
@@ -570,118 +583,75 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                         </Group>
                     </Flex>
                     <Grid>
-                        {viewerMode.immersive ?
-                            <>
-                                <Grid.Col span={3} />
-                                <Grid.Col span={6}>
-                                    <Stack>
-                                        <ImmersiveMessageList
-                                            chatId={chatId}
-                                            classId={classId}
-                                            colorScheme={colorScheme}
-                                            existingChat={existingChat ?? null}
-                                            activeChat={activeChat}
-                                            setActiveChat={setActiveChat}
-                                            onOptionClick={handleOptionClick}
-                                            setViewerMode={setViewerMode}
-                                            isInitializing={isInitializing}
-                                            loading={loading}
-                                            fullscreen={fullscreen}
-                                        />
-                                        <ImmersiveChatInput
-                                            activeChat={activeChat}
-                                            loading={loading}
-                                            classId={classId}
-                                            onPromptChange={handlePromptChange}
-                                            onSend={handleChat}
-                                            onRemoveContext={removeContextFromChat}
-                                            onScrollToSection={handleScrollToSection}
-                                            setViewerMode={setViewerMode}
-                                            expandedSections={expandedSections}
-                                            toggleSection={toggleSection}
-                                        />
-                                    </Stack>
-                                </Grid.Col>
-                            </> :
-                            <Grid.Col
-                                span={isMobile ? 12 : (viewerMode.open) ? 8 : 12}
+                        {viewerMode.immersive && <Grid.Col span={3} />}
+                        <Grid.Col
+                            span={isMobile ? 12 : (viewerMode.immersive ? 6 : (viewerMode.open ? 8 : 12))}
+                            style={{
+                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
+                            }}
+                        >
+                            <Card
+                                shadow={viewerMode.immersive ? "none" : "sm"}
+                                padding={viewerMode.immersive ? "none" : "lg"}
+                                radius={viewerMode.immersive ? "none" : "md"}
+                                withBorder={viewerMode.immersive ? false : true}
                                 style={{
-                                    transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
+                                    height: viewerMode.immersive ? "90vh" : "80vh"
                                 }}
                             >
-                                <Card
-                                    shadow={"sm"}
-                                    padding={"lg"}
-                                    radius="md"
-                                    withBorder={true}
-                                    style={{
-                                        height: fullscreen ? "90vh" : "80vh"
-                                    }}
-                                >
-                                    {/* Show controls only when not in immersive mode */}
-                                    <Flex justify="space-between" align="center" mb={10}>
-                                        {/* Chat history, context toggle, and new chat buttons */}
-                                        <Group gap="xs" ml="auto">
-                                            {chatId !== "new" && <Tooltip label="New chat">
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    aria-label="Start a new chat"
-                                                    onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
-                                                    mb={3}
-                                                >
-                                                    <IconPlus size={18} />
-                                                </ActionIcon>
-                                            </Tooltip>}
-                                            <ChatHistoryDropdown
-                                                currentChatId={chatId}
-                                                onChatSelect={handleChatSelect}
-                                                classId={classId}
-                                            />
-                                            {/* Context panel toggle */}
-                                            {/* <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                                    aria-label="Toggle context panel"
-                                                >
-                                                    {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
-                                                </ActionIcon>
-                                            </Tooltip> */}
-                                        </Group>
-                                    </Flex>
+                                {/* Show controls only when not in immersive mode */}
+                                {!viewerMode.immersive && <Flex justify="space-between" align="center" mb={10}>
+                                    {/* Chat history, context toggle, and new chat buttons */}
+                                    <Group gap="xs" ml="auto">
+                                        {chatId !== "new" && <Tooltip label="New chat">
+                                            <ActionIcon
+                                                variant="subtle"
+                                                size="md"
+                                                aria-label="Start a new chat"
+                                                onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                                mb={3}
+                                            >
+                                                <IconPlus size={18} />
+                                            </ActionIcon>
+                                        </Tooltip>}
+                                        <ChatHistoryDropdown
+                                            currentChatId={chatId}
+                                            onChatSelect={handleChatSelect}
+                                            classId={classId}
+                                        />
+                                    </Group>
+                                </Flex>}
 
-                                    <MessageList
-                                        chatId={chatId}
-                                        classId={classId}
-                                        colorScheme={colorScheme}
-                                        existingChat={existingChat ?? null}
-                                        activeChat={activeChat}
-                                        setActiveChat={setActiveChat}
-                                        onOptionClick={handleOptionClick}
-                                        setViewerMode={setViewerMode}
-                                        isInitializing={isInitializing}
-                                        loading={loading}
-                                        fullscreen={fullscreen}
-                                    />
+                                <MessageList
+                                    chatId={chatId}
+                                    classId={classId}
+                                    colorScheme={colorScheme}
+                                    existingChat={existingChat ?? null}
+                                    activeChat={activeChat}
+                                    setActiveChat={setActiveChat}
+                                    onOptionClick={handleOptionClick}
+                                    viewerMode={viewerMode}
+                                    setViewerMode={setViewerMode}
+                                    isInitializing={isInitializing}
+                                    loading={loading}
+                                />
 
-                                    <ChatInput
-                                        activeChat={activeChat}
-                                        loading={loading}
-                                        classId={classId}
-                                        onPromptChange={handlePromptChange}
-                                        onSend={handleChat}
-                                        onRemoveContext={removeContextFromChat}
-                                        onScrollToSection={handleScrollToSection}
-                                        setViewerMode={setViewerMode}
-                                        expandedSections={expandedSections}
-                                        toggleSection={toggleSection}
-                                        toggleImmersive={enterImmersive}
-                                    />
-                                </Card>
-                            </Grid.Col>}
-
+                                <ChatInput
+                                    activeChat={activeChat}
+                                    loading={loading}
+                                    classId={classId}
+                                    onPromptChange={handlePromptChange}
+                                    onSend={handleChat}
+                                    onRemoveContext={removeContextFromChat}
+                                    onScrollToSection={handleScrollToSection}
+                                    viewerMode={viewerMode}
+                                    setViewerMode={setViewerMode}
+                                    expandedSections={expandedSections}
+                                    toggleSection={toggleSection}
+                                    toggleImmersive={enterImmersive}
+                                />
+                            </Card>
+                        </Grid.Col>
                         <Grid.Col
                             span={isMobile ? 12 : (viewerMode.immersive) ? 3 : 4}
                             style={{
@@ -697,7 +667,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     setViewerMode={setViewerMode}
                                     addContextToChat={addContextToChat}
                                     classId={classId}
-                                    fullscreen={fullscreen}
                                     activeChat={activeChat}
                                 />
                             ) : (
@@ -708,7 +677,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     addContextToChat={addContextToChat}
                                     activeChat={activeChat}
                                     makeDraggable={true}
-                                    fullscreen={fullscreen}
+                                    viewerMode={viewerMode}
                                     setViewerMode={setViewerMode}
                                 />
                             )}

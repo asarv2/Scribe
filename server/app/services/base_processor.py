@@ -23,9 +23,10 @@ class Summary(TypedDict):
 class MCQQuestion(TypedDict):
     id: str
     question: str
-    options: Dict[str, str]
-    answers: Dict[str, bool]
-    explanations: Dict[str, str]
+    question_type: Literal["mcq"]
+    options: List[str]
+    answers: List[str]
+    explanations: List[str]
     tags: List[str]
     lecture_references: List[str]
     chapter_references: List[str]
@@ -36,6 +37,7 @@ class MCQQuestion(TypedDict):
 class FRQQuestion(TypedDict):
     id: str
     question: str
+    question_type: Literal["frq"]
     solution: str
     tags: List[str]
     lecture_references: List[str]

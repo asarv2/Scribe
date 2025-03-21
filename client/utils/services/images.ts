@@ -17,16 +17,16 @@ export const getFigureUrl = (figureId: string) => {
     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${figureId}.png`
 }
 
-export const getQuestionTextUrl = (questionId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?questions_id=${questionId}&format=text`;
+export const getQuestionTextUrl = (messageId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?message_id=${messageId}&format=text`;
 }
 
-export const getQuestionPDFUrl = (questionId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?questions_id=${questionId}&format=pdf`;
+export const getQuestionPDFUrl = (messageId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?message_id=${messageId}&format=pdf`;
 }
 
-export const getQuestionTeXUrl = (questionId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?questions_id=${questionId}&format=latex`;
+export const getQuestionTeXUrl = (messageId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?message_id=${messageId}&format=latex`;
 }
 
 export const getSummaryTextUrl = (summaryId: string): string => {

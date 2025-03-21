@@ -11,13 +11,14 @@ import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile }
 import Latex from '../Latex';
 import { getSummaryPDFUrl, getSummaryTeXUrl, getSummaryTextUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
-
+import { ViewerMode } from '../../types';
 interface SummaryViewerProps {
     classId: string;
     summary: Summary;
+    viewerMode: ViewerMode;
 }
 
-const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary }) => {
+const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerMode }) => {
 
     const [loading, setLoading] = useState(false);
 
@@ -143,7 +144,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary }) => {
     };
 
     return (
-        <Card withBorder p="md" w={700}>
+        <Card withBorder p="md" w={viewerMode.immersive ? '100%' : 700}>
             {renderContent()}
         </Card>
     );

@@ -32,17 +32,17 @@ class QuestionsDownloader:
                     f.write(f"{i}. Multi-part question:\n")
                     for j, part in enumerate(question_group, 1):
                         f.write(f"  {j}. {part['question']}\n")
-                        for opt in ['A', 'B', 'C', 'D', 'E']:
-                            if opt in part['options']:
-                                f.write(f"     {opt}. {part['options'][opt]}\n")
+                        for idx, option_text in enumerate(part['options']):
+                            option_letter = chr(65 + idx)  # A, B, C, D, E...
+                            f.write(f"     {option_letter}. {option_text}\n")
                         f.write("\n")
                 else:
                     # Single question
                     part = question_group[0]
                     f.write(f"{i}. {part['question']}\n")
-                    for opt in ['A', 'B', 'C', 'D', 'E']:
-                        if opt in part['options']:
-                            f.write(f"   {opt}. {part['options'][opt]}\n")
+                    for idx, option_text in enumerate(part['options']):
+                        option_letter = chr(65 + idx)  # A, B, C, D, E...
+                        f.write(f"   {option_letter}. {option_text}\n")
                     f.write("\n")
             
             f.write("\nANSWERS:\n\n")
@@ -53,21 +53,21 @@ class QuestionsDownloader:
                     f.write(f"{i}. Multi-part question answers:\n")
                     for j, part in enumerate(question_group, 1):
                         f.write(f"  {j}. {part['question']}\n")
-                        for opt in ['A', 'B', 'C', 'D', 'E']:
-                            if opt in part['options']:
-                                explanation = part['explanations'].get(opt, '')
-                                correct = part['answers'].get(opt, False)
-                                f.write(f"     {opt}. {'CORRECT: ' if correct else 'INCORRECT: '}{explanation}\n")
+                        for idx, option_text in enumerate(part['options']):
+                            option_letter = chr(65 + idx)  # A, B, C, D, E...
+                            explanation = part['explanations'][idx] if idx < len(part['explanations']) else ""
+                            is_correct = str(idx) in part['answers']
+                            f.write(f"     {option_letter}. {'CORRECT: ' if is_correct else 'INCORRECT: '}{explanation}\n")
                         f.write("\n")
                 else:
                     # Single question answers
                     part = question_group[0]
                     f.write(f"{i}. {part['question']}\n")
-                    for opt in ['A', 'B', 'C', 'D', 'E']:
-                        if opt in part['options']:
-                            explanation = part['explanations'].get(opt, '')
-                            correct = part['answers'].get(opt, False)
-                            f.write(f"   {opt}. {'CORRECT: ' if correct else 'INCORRECT: '}{explanation}\n")
+                    for idx, option_text in enumerate(part['options']):
+                        option_letter = chr(65 + idx)  # A, B, C, D, E...
+                        explanation = part['explanations'][idx] if idx < len(part['explanations']) else ""
+                        is_correct = str(idx) in part['answers']
+                        f.write(f"   {option_letter}. {'CORRECT: ' if is_correct else 'INCORRECT: '}{explanation}\n")
                     f.write("\n")
         
         return filepath
@@ -101,38 +101,7 @@ class QuestionsDownloader:
 
     def save(self, name: str, questions: list[list[dict]], base_filename: str, pdf: bool = True):
         """
-        Save processed questions to a LaTeX PDF file using PyLaTeX. We will have one section titled 'Questions' for questions, and one section titled 'Answers' for answers. The answers should be in the same format as the questions, but the options should have the answer explanation in red text instead of the answer stem.
-        
-        Args:
-            questions (list[list[dict]]): A list of lists of dictionaries for a given lecture as keys and slide numbers as values. Example: [[
-                [
-                    {
-                        "question": "According to the Klee-Minty example, how many steps does the Largest Coefficient Rule require in the worst case?",
-                        "options": {
-                        "A": "n steps",
-                        "B": "2n steps", 
-                        "C": "2^n - 1 steps",
-                        "D": "3m/2 steps",
-                        "E": "3m steps"
-                    },
-                    "answers": {
-                        "A": false,
-                        "B": false,
-                        "C": true,
-                        "D": false,
-                        "E": false
-                    },
-                    "explanations": {
-                        "A": "Answer A is incorrect because the Smallest Coefficient Rule requires n steps, not the Largest Coefficient Rule.",
-                        "B": "Answer B is incorrect because the Largest Coefficient Rule does not require 2n steps.",
-                        "C": "Answer C is correct because the Klee-Minty example shows that the Largest Coefficient Rule requires 2^n - 1 steps in the worst case.",
-                        "D": "Answer D is incorrect because 3m/2 steps is the average case for the simplex method, not the worst case for the Largest Coefficient Rule.",
-                        "E": "Answer E is incorrect because 3m steps is the rare case for the simplex method, not the worst case for the Largest Coefficient Rule."
-                    },
-                    "type": "conceptual",
-                }
-            ]]
-        }
+        Save processed questions to a LaTeX PDF file using PyLaTeX.
         """
         geometry_options = {
             "margin": "1in",
@@ -185,26 +154,34 @@ class QuestionsDownloader:
                     
                     for part in question_group:
                         doc.append(NoEscape(f'\\item {part["question"]}'))
-                        doc.append(NoEscape(r'\begin{enumerate}'))
                         
-                        for opt in ['A', 'B', 'C', 'D', 'E']:
-                            if opt in part['options']:
-                                doc.append(NoEscape(f'\\item {part["options"][opt]}'))
+                        # Only process options for MCQ questions
+                        if part.get("question_type") == "mcq" and "options" in part:
+                            doc.append(NoEscape(r'\begin{enumerate}'))
+                            
+                            for idx, option_text in enumerate(part['options']):
+                                option_letter = chr(65 + idx)  # A, B, C, D, E...
+                                doc.append(NoEscape(f'\\item {option_text}'))
+                            
+                            doc.append(NoEscape(r'\end{enumerate}'))
                         
-                        doc.append(NoEscape(r'\end{enumerate}'))
                         doc.append(NoEscape(r'\vspace{0.5em}'))
                     
                     doc.append(NoEscape(r'\end{enumerate}'))
                 else:
                     # Single question
-                    doc.append(NoEscape(f'\\item {question_group[0]["question"]}'))
-                    doc.append(NoEscape(r'\begin{enumerate}'))
+                    part = question_group[0]
+                    doc.append(NoEscape(f'\\item {part["question"]}'))
                     
-                    for opt in ['A', 'B', 'C', 'D', 'E']:
-                        if opt in question_group[0]['options']:
-                            doc.append(NoEscape(f'\\item {question_group[0]["options"][opt]}'))
+                    # Only process options for MCQ questions
+                    if part.get("question_type") == "mcq" and "options" in part:
+                        doc.append(NoEscape(r'\begin{enumerate}'))
+                        
+                        for idx, option_text in enumerate(part['options']):
+                            doc.append(NoEscape(f'\\item {option_text}'))
+                        
+                        doc.append(NoEscape(r'\end{enumerate}'))
                     
-                    doc.append(NoEscape(r'\end{enumerate}'))
                     doc.append(NoEscape(r'\vspace{1em}'))
             
             doc.append(NoEscape(r'\end{enumerate}'))
@@ -221,17 +198,23 @@ class QuestionsDownloader:
                     
                     for part in question_group:
                         doc.append(NoEscape(f'\\item {part["question"]}'))
-                        doc.append(NoEscape(r'\begin{enumerate}'))
                         
-                        for opt in ['A', 'B', 'C', 'D', 'E']:
-                            if opt in part['options']:
-                                explanation = part['explanations'].get(opt, '')
-                                if part['answers'].get(opt, False):
+                        if part.get("question_type") == "mcq" and "options" in part:
+                            doc.append(NoEscape(r'\begin{enumerate}'))
+                            
+                            for idx, option_text in enumerate(part['options']):
+                                explanation = part['explanations'][idx] if idx < len(part.get('explanations', [])) else ""
+                                is_correct = str(idx) in part.get('answers', [])
+                                
+                                if is_correct:
                                     doc.append(NoEscape(f'\\item {explanation}'))
                                 else:
                                     doc.append(NoEscape(f'\\item \\incorrect{{{explanation}}}'))
+                            
+                            doc.append(NoEscape(r'\end{enumerate}'))
+                        elif part.get("question_type") == "frq" and "solution" in part:
+                            doc.append(NoEscape(f'\\item Solution: {part["solution"]}'))
                         
-                        doc.append(NoEscape(r'\end{enumerate}'))
                         doc.append(NoEscape(r'\vspace{0.5em}'))
                     
                     doc.append(NoEscape(r'\end{enumerate}'))
@@ -239,17 +222,23 @@ class QuestionsDownloader:
                     # Single question answers
                     part = question_group[0]
                     doc.append(NoEscape(f'\\item {part["question"]}'))
-                    doc.append(NoEscape(r'\begin{enumerate}'))
                     
-                    for opt in ['A', 'B', 'C', 'D', 'E']:
-                        if opt in part['options']:
-                            explanation = part['explanations'].get(opt, '')
-                            if part['answers'].get(opt, False):
+                    if part.get("question_type") == "mcq" and "options" in part:
+                        doc.append(NoEscape(r'\begin{enumerate}'))
+                        
+                        for idx, option_text in enumerate(part['options']):
+                            explanation = part['explanations'][idx] if idx < len(part.get('explanations', [])) else ""
+                            is_correct = str(idx) in part.get('answers', [])
+                            
+                            if is_correct:
                                 doc.append(NoEscape(f'\\item {explanation}'))
                             else:
                                 doc.append(NoEscape(f'\\item \\incorrect{{{explanation}}}'))
+                        
+                        doc.append(NoEscape(r'\end{enumerate}'))
+                    elif part.get("question_type") == "frq" and "solution" in part:
+                        doc.append(NoEscape(f'Solution: {part["solution"]}'))
                     
-                    doc.append(NoEscape(r'\end{enumerate}'))
                     doc.append(NoEscape(r'\vspace{1em}'))
             
             doc.append(NoEscape(r'\end{enumerate}'))

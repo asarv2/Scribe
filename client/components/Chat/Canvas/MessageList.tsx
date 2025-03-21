@@ -47,6 +47,7 @@ interface MessageListProps {
   activeChat: ChatMessage;
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
   onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
+  viewerMode: ViewerMode;
   setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
   loading?: boolean;
@@ -60,6 +61,7 @@ export const MessageList = memo(({
   activeChat,
   setActiveChat,
   setViewerMode,
+  viewerMode,
   existingChat,
   isInitializing = false,
   loading,
@@ -377,7 +379,7 @@ export const MessageList = memo(({
         {(!existingChat && (chatId === 'new')) && (
           <Flex gap="md" align="flex-start">
             <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
-              <Group gap="xs" align="center">
+              {!viewerMode.immersive && <Group gap="xs" align="center">
                 <Avatar
                   src={professor ? getAvatarUrl(professor.id) : undefined}
                   size="sm"
@@ -387,7 +389,7 @@ export const MessageList = memo(({
                 <Text size="sm" c="dimmed">
                   {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
                 </Text>
-              </Group>
+              </Group>}
 
               <Card
                 padding="sm"
@@ -529,9 +531,9 @@ export const MessageList = memo(({
     if (contextType === 'lectures' && documentId) {
       // Use the setViewerMode function prop instead of directly setting state
       setViewerMode(prev => ({
+        ...prev,
         active: true,
         open: true,
-        immersive: false,
         documentId,
         lectureId: contextId,
         exerciseId: undefined,
@@ -545,7 +547,6 @@ export const MessageList = memo(({
         ...prev,
         active: true,
         open: true,
-        immersive: false,
         chapterId: contextId,
         exerciseId,
         lectureId: undefined,
@@ -560,7 +561,6 @@ export const MessageList = memo(({
         ...prev,
         active: true,
         open: true,
-        immersive: false,
         documentId: documentId || undefined,
         textbookId,
         chapterId: contextId,
@@ -577,7 +577,6 @@ export const MessageList = memo(({
         ...prev,
         active: true,
         open: true,
-        immersive: false,
         homeworkId: contextId,
         exerciseId,
         textbookId: undefined,
@@ -964,11 +963,12 @@ export const MessageList = memo(({
           containerRef.current = el;
         }
       }}
+      key={viewerMode.immersive ? "immersive" : "normal"}
       style={{
         flex: 1,
         overflowY: "auto",
         marginBottom: "1rem",
-        maxHeight: fullscreen ? "calc(90vh - 150px)" : "calc(80vh - 150px)",
+        maxHeight: viewerMode.immersive ? "calc(100vh - 150px)" : "calc(80vh - 150px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
         transition: "all 0.2s ease-in-out",
@@ -977,15 +977,18 @@ export const MessageList = memo(({
         padding: isOver ? '8px' : '10px',
         display: 'flex',
         flexDirection: 'column',
+        alignItems: viewerMode.immersive ? 'center' : 'none',
       }}
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
         <>
           {renderWelcomeMessages()}
           {(messages)?.map((message, index) => (
-            <Stack key={`${message.id}`}>
+            <Stack key={`${message.id}`} style={{
+              marginTop: viewerMode.immersive && index !== 0 ? '5rem' : 'auto',
+            }}>
               {/* User message */}
-              <Flex gap="md" justify="flex-end" align="flex-start">
+              {!viewerMode.immersive && <Flex gap="md" justify="flex-end" align="flex-start">
                 <Stack gap="xs" align="flex-end">
                   {/* User info container */}
                   <Group gap="xs" align="center">
@@ -1024,13 +1027,13 @@ export const MessageList = memo(({
                     renderMessageContext(message)
                   }
                 </Stack>
-              </Flex>
+              </Flex>}
 
               {/* AI response */}
               <Flex gap="md" align="flex-start">
                 <Stack gap="xs" align="flex-start">
                   {/* AI info container */}
-                  <Group gap="xs" align="center">
+                  {!viewerMode.immersive && <Group gap="xs" align="center">
                     <Avatar
                       src={professor ? getAvatarUrl(professor.id) : undefined}
                       size="sm"
@@ -1055,10 +1058,9 @@ export const MessageList = memo(({
                         <IconFileText size={16} />
                       </ActionIcon>
                     )}
-                  </Group>
+                  </Group>}
 
                   {/* Message container */}
-
                   {!message.response || message.response.trim() === '' ? (
                     <Group justify="center">
                       <Loader size="sm" />
@@ -1172,13 +1174,13 @@ export const MessageList = memo(({
                               } else if (segment.summaryId && summaries) {
                                 return (
                                   summaries.find(s => s.id === segment.summaryId) && (
-                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} />
+                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} />
                                   )
                                 )
                               } else if (segment.questionId && questions) {
                                 return (
                                   questions.find(q => q.id === segment.questionId) && (
-                                    <QuestionViewer question={questions.find(q => q.id === segment.questionId)!} />
+                                    <QuestionViewer classId={classId} question={questions.find(q => q.id === segment.questionId)!} viewerMode={viewerMode} />
                                   )
                                 )
                               }

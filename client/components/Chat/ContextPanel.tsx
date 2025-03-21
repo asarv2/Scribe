@@ -36,7 +36,7 @@ interface ContextPanelProps {
     addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void;
     activeChat: ChatMessage;
     makeDraggable?: boolean;
-    fullscreen?: boolean;
+    viewerMode: ViewerMode;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
 }
 
@@ -259,7 +259,7 @@ export function ContextPanel({
     addContextToChat,
     activeChat,
     makeDraggable = false,
-    fullscreen = false,
+    viewerMode,
     setViewerMode
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
@@ -605,7 +605,7 @@ export function ContextPanel({
             radius="md"
             withBorder
             style={{
-                height: fullscreen ? "90vh" : "80vh",
+                height: viewerMode.immersive ? "90vh" : "80vh",
                 overflowY: "auto"
             }}
         >
@@ -615,12 +615,6 @@ export function ContextPanel({
                     value={localSearchQuery}
                     onChange={(e) => setLocalSearchQuery(e.target.value)}
                     leftSection={<IconSearch size={16} />}
-                    styles={(theme) => ({
-                        input: {
-                            backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
-                            borderColor: colorScheme === "dark" ? "#373A40" : undefined
-                        }
-                    })}
                 />
 
                 {isLoading ? (
@@ -634,7 +628,7 @@ export function ContextPanel({
                     <div
                         ref={containerRef}
                         style={{
-                            height: fullscreen ? 'calc(90vh - 100px)' : 'calc(80vh - 100px)',
+                            height: viewerMode.immersive ? 'calc(90vh - 100px)' : 'calc(80vh - 100px)',
                             overflow: 'auto',
                             position: 'relative'
                         }}

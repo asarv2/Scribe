@@ -155,6 +155,7 @@ class ChatProcessor(BaseProcessor):
         
         Args:
             result: The response string containing summary tags
+            response_url: The URL of the response to the message
 
         Returns:
             List of summary prompt dictionaries ready for the SummaryProcessor
@@ -168,7 +169,9 @@ class ChatProcessor(BaseProcessor):
             result,
             re.DOTALL
         )
-
+        
+        # Store matches and their spans for later replacement
+        matches_data = []
         for match in summary_matches:
             summary_prompt = {
                 "additional_info": match.group(1).strip()
@@ -183,11 +186,17 @@ class ChatProcessor(BaseProcessor):
             }).execute()
             summary_id = summary_response.data[0]["id"]
 
-            # replace <SUMMARY> tags with <SUMMARY_GENERATION>x</SUMMARY_GENERATION> tags, where x is the id of the created summary
-            result = result.replace(f"<SUMMARY>{summary_prompt['additional_info']}</SUMMARY>", f"<SUMMARY_GENERATION>{summary_id}</SUMMARY_GENERATION>")
-
             # update the summary prompt with the id
             summary_prompt["id"] = summary_id
+            
+            # Store the full match and its position for replacement
+            matches_data.append((match.group(0), match.span(), summary_id))
+        
+        # Replace matches from end to beginning to avoid position shifts
+        matches_data.sort(key=lambda x: x[1][0], reverse=True)
+        for full_match, (start, end), summary_id in matches_data:
+            replacement = f"<SUMMARY_GENERATION>{summary_id}</SUMMARY_GENERATION>"
+            result = result[:start] + replacement + result[end:]
 
         return summary_prompts, result
 

@@ -14,6 +14,7 @@ interface ChatInputProps {
   onSend: () => void;
   onRemoveContext: (contextType: keyof ChatMessage['context'], contextId: string) => void;
   onScrollToSection: (sectionId: string) => void;
+  viewerMode: ViewerMode;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   expandedSections: Set<string>;
   toggleSection: (section: string) => void;
@@ -28,6 +29,7 @@ export const ChatInput = memo(({
   onSend,
   onRemoveContext,
   onScrollToSection,
+  viewerMode,
   setViewerMode,
   expandedSections,
   toggleSection,
@@ -92,13 +94,15 @@ export const ChatInput = memo(({
           value={activeChat.prompt}
           onChange={(e) => onPromptChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={"Type your message here..."}
+          placeholder={viewerMode.immersive ? "" : "Type your message here..."}
           autosize
+          size={viewerMode.immersive ? "lg" : "sm"}
           style={{ paddingRight: '40px' }}
+          variant={viewerMode.immersive ? "unstyled" : "filled"}
         />
 
         {/* Only show send icon in normal mode */}
-        {!!activeChat.prompt.trim() ?
+        {!viewerMode.immersive && (!!activeChat.prompt.trim() ?
           <Tooltip label="Send">
             <ActionIcon
               onClick={onSend}
@@ -124,8 +128,7 @@ export const ChatInput = memo(({
             >
               <IconEye size={18} />
             </ActionIcon>
-          </Tooltip>
-        }
+          </Tooltip>)}
       </Box>
     </Stack>
   );

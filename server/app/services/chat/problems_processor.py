@@ -1,4 +1,3 @@
-
 import re
 from typing import TypedDict, Dict, List, Union, Any, Optional, Callable, Awaitable, Tuple
 from app.services.base_processor import BaseProcessor, Message, MCQQuestion, FRQQuestion
@@ -595,29 +594,34 @@ class ProblemsProcessor(BaseProcessor):
             return None
         question = question_match.group(1).strip()
 
-        # Extract options
-        options: Dict[str, str] = {}
+        # Extract options - now as a list
+        options: List[str] = []
         for opt in ['A', 'B', 'C', 'D', 'E']:
             opt_match = re.search(f'<OPTION_{opt}>(.*?)</OPTION_{opt}>', block, re.DOTALL)
             if opt_match:
-                options[opt] = opt_match.group(1).strip()
+                options.append(opt_match.group(1).strip())
 
-        # Extract answers and explanations
-        answers = {opt: False for opt in ['A', 'B', 'C', 'D', 'E']}
-        explanations: Dict[str, str] = {}
+        # Extract answers and explanations - now as lists
+        answers: List[str] = []
+        explanations: List[str] = []
 
-        for opt in ['A', 'B', 'C', 'D', 'E']:
+        for i, opt in enumerate(['A', 'B', 'C', 'D', 'E']):
             correct_match = re.search(f'<CORRECT_{opt}>(.*?)</CORRECT_{opt}>', block, re.DOTALL)
             incorrect_match = re.search(f'<INCORRECT_{opt}>(.*?)</INCORRECT_{opt}>', block, re.DOTALL)
             
             if correct_match:
-                answers[opt] = True
-                explanations[opt] = correct_match.group(1).strip()
+                answers.append(str(i))  # Store index as string
+                explanations.append(correct_match.group(1).strip())
             elif incorrect_match:
-                explanations[opt] = incorrect_match.group(1).strip()
+                explanations.append(incorrect_match.group(1).strip())
+            else:
+                # Ensure explanations list has same length as options
+                if i < len(options):
+                    explanations.append("")
 
         return {
             "id": question_id,
+            "question_type": "mcq",
             "question": question,
             "options": options,
             "answers": answers,
@@ -656,6 +660,7 @@ class ProblemsProcessor(BaseProcessor):
 
         return {
             "id": question_id,
+            "question_type": "frq",
             "question": question,
             "solution": solution,
             "tags": tags,

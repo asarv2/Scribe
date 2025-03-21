@@ -25,10 +25,9 @@ interface ViewerPanelProps {
     activeChat: ChatMessage;
     addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void;
     classId: string;
-    fullscreen?: boolean;
 }
 
-export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, classId, fullscreen = false, activeChat }: ViewerPanelProps) => {
+export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, classId, activeChat }: ViewerPanelProps) => {
     const supabase = useSupabaseBrowser();
 
     const { data: lectures } = useQuery({
@@ -92,7 +91,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
             padding="lg"
             radius="md"
             withBorder
-            style={{ height: fullscreen ? "90vh" : "80vh" }}
+            style={{ height: viewerMode.immersive ? "90vh" : "80vh" }}
         >
             <Stack style={{ height: "100%" }}>
                 <Group justify="space-between" wrap="nowrap">

@@ -9,7 +9,7 @@ from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncG
 from pydantic import BaseModel
 from app.extensions import supabase
 from app.services.chat.chat_processor import ChatProcessor
-from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
+from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content, fetch_message_resources
 import json
 import re
 from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor
@@ -129,6 +129,17 @@ async def handle_chat(
             message_context.append(chapter_content)
         if homework_content:
             message_context.append(homework_content)
+
+        # ADD HERE - Fetch and add message resources for context
+        message_resources = await fetch_message_resources(supabase, message_id)
+        
+        # Add summaries to context
+        for summary in message_resources.get("summaries", []):
+            message_context.append(summary["text"])
+        
+        # Add questions to context
+        for question in message_resources.get("questions", []):
+            message_context.append(question["text"])
 
         # Initialize processor and response
         processor = ChatProcessor(
@@ -460,6 +471,9 @@ async def process_questions(
         else:
             prompts = [QuestionPrompt(
                 id=practice_problem.get('id'),
+                mcq=not practice_problem.get('frq'),
+                multi_part=practice_problem.get('multi') is not None,
+                computational=practice_problem.get('computational'),
                 additional_info=practice_problem.get('prompt'),
             ) for practice_problem in practice_problems]
 
@@ -505,26 +519,28 @@ async def process_questions(
         processor = ProblemsProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises)
 
         try:
-
-            def on_batch_complete(questions: List[List[Union[MCQQuestion, FRQQuestion]]]):
+            # Change this function to be async
+            async def on_batch_complete(questions: List[List[Union[MCQQuestion, FRQQuestion]]]):
                 # Prepare summaries for updating
                 questions_to_upsert = []
                 for question_group in questions:
                     for question in question_group:
-                        if type(question) == MCQQuestion:
+                        if question.get('question_type') == 'mcq':
+                            print("MCQ question:", question)
                             questions_to_upsert.append({
                                 "id": question['id'],
-                                "question": question['question'],
+                                "problem": question['question'],
                                 "answers": question['answers'],
                                 "options": question['options'],
                                 "explanations": question['explanations'],
                                 "generation_status": "complete",
                                 "generation_error": ""
                             })
-                        elif type(question) == FRQQuestion:
+                        elif question.get('question_type') == 'frq':
+                            print("FRQ question:", question)
                             questions_to_upsert.append({
                                 "id": question['id'],
-                                "question": question['question'],
+                                "problem": question['question'],
                                 "solution": question['solution'],
                                 "generation_status": "complete",
                                 "generation_error": ""

@@ -186,3 +186,137 @@ async def fetch_homework_resources(supabase, homework_ids):
         "homeworks": all_homeworks,
         "exercises": all_exercises
     }
+
+
+# this is still a WORK IN PROGRESS
+async def fetch_message_resources(supabase, message_id):
+    """
+    Fetch message resources, their text for the summaries and questions generated.
+    
+    Returns a dictionary with messages, their documents, and exercises.
+    """
+    try:
+        # Fetch the message to get class_id
+        message_response = supabase.table("messages").select("*").eq("id", message_id).execute()
+        if not message_response.data:
+            return {"error": "Message not found"}
+        
+        message = message_response.data[0]
+        class_id = message.get("class_id")
+        
+        # Initialize result dictionary
+        result = {
+            "message": message,
+            "summaries": [],
+            "questions": [],
+            "documents": [],
+            "exercises": []
+        }
+        
+        # Fetch summaries related to this message
+        summaries_response = supabase.table("summaries").select("*").eq("message", message_id).execute()
+        if summaries_response.data:
+            for summary in summaries_response.data:
+                summary_text = f"Summary: {summary.get('title', 'Untitled')}\n\n"
+                
+                if summary.get('preamble'):
+                    summary_text += f"Preamble:\n{summary['preamble']}\n\n"
+                
+                if summary.get('body'):
+                    summary_text += f"Content:\n{summary['body']}\n\n"
+                
+                if summary.get('conclusion'):
+                    summary_text += f"Conclusion:\n{summary['conclusion']}\n\n"
+                
+                result["summaries"].append({
+                    "id": summary.get('id'),
+                    "text": summary_text,
+                    "created_at": summary.get('created_at'),
+                    "lecture_references": summary.get('lecture_references', []),
+                    "chapter_references": summary.get('chapter_references', []),
+                    "chapter_exercise_references": summary.get('chapter_exercise_references', []),
+                    "homework_exercise_references": summary.get('homework_exercise_references', [])
+                })
+        
+        # Fetch questions related to this message
+        questions_response = supabase.table("questions").select("*").eq("message", message_id).execute()
+        if questions_response.data:
+            for question in questions_response.data:
+                question_text = f"Question: {question.get('problem', 'No problem statement')}\n\n"
+                
+                # Handle MCQ questions
+                if not question.get('frq', False):
+                    options = question.get('options', [])
+                    answers = question.get('answers', [])
+                    explanations = question.get('explanations', [])
+                    
+                    if options:
+                        question_text += "Options:\n"
+                        for idx, option in enumerate(options):
+                            option_letter = chr(65 + idx)  # A, B, C, D, E...
+                            question_text += f"{option_letter}. {option}\n"
+                        question_text += "\n"
+                    
+                    if answers:
+                        correct_letters = [chr(65 + int(ans)) for ans in answers]
+                        question_text += f"Correct Answer(s): {', '.join(correct_letters)}\n\n"
+                    
+                    if explanations:
+                        question_text += "Explanations:\n"
+                        for idx, explanation in enumerate(explanations):
+                            option_letter = chr(65 + idx)
+                            is_correct = str(idx) in answers
+                            question_text += f"{option_letter}. {'(CORRECT) ' if is_correct else ''}{explanation}\n"
+                        question_text += "\n"
+                
+                # Handle FRQ questions
+                else:
+                    if question.get('solution'):
+                        question_text += f"Solution:\n{question['solution']}\n\n"
+                
+                result["questions"].append({
+                    "id": question.get('id'),
+                    "text": question_text,
+                    "created_at": question.get('created_at'),
+                    "tags": question.get('tags', []),
+                    "lecture_references": question.get('lecture_references', []),
+                    "chapter_references": question.get('chapter_references', []),
+                    "chapter_exercise_references": question.get('chapter_exercise_references', []),
+                    "homework_exercise_references": question.get('homework_exercise_references', [])
+                })
+        
+        # Fetch referenced documents
+        if class_id:
+            # Get all document IDs referenced in summaries and questions
+            document_ids = set()
+            
+            # Add lecture references
+            for item in result["summaries"] + result["questions"]:
+                document_ids.update(item.get("lecture_references", []))
+                document_ids.update(item.get("chapter_references", []))
+            
+            # Fetch documents
+            if document_ids:
+                documents_response = supabase.table("documents").select("*").in_("id", list(document_ids)).execute()
+                if documents_response.data:
+                    result["documents"] = documents_response.data
+            
+            # Get all exercise IDs referenced in summaries and questions
+            exercise_ids = set()
+            
+            # Add exercise references
+            for item in result["summaries"] + result["questions"]:
+                exercise_ids.update(item.get("chapter_exercise_references", []))
+                exercise_ids.update(item.get("homework_exercise_references", []))
+            
+            # Fetch exercises
+            if exercise_ids:
+                exercises_response = supabase.table("exercises").select("*").in_("id", list(exercise_ids)).execute()
+                if exercises_response.data:
+                    result["exercises"] = exercises_response.data
+        
+        return result
+    
+    except Exception as e:
+        print(f"Error fetching message resources: {str(e)}")
+        return {"error": str(e)}
