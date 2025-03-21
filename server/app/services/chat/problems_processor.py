@@ -4,17 +4,15 @@ from typing import TypedDict, Dict, List, Union, Any, Optional, Callable, Awaita
 from app.services.base_processor import BaseProcessor, Message
 from app.extensions import QUESTIONS_DIR
 import os
-# from pylatex import Document, Section, Subsection, Command, Package
-# from pylatex.base_classes import Container
-# from pylatex.utils import NoEscape, bold
-# from pylatex.base_classes import Environment
+from pylatex import Document, Section, Command, Package
+from pylatex.utils import NoEscape
 
 class QuestionPrompt(TypedDict):
     id: str
     mcq: bool
     multi_part: bool
     computational: bool
-    additional_info: str
+    additional_info: str 
 
 class MCQQuestion(TypedDict):
     id: str
@@ -88,8 +86,7 @@ class ProblemsProcessor(BaseProcessor):
         2. Put the options in tags corresponding to the answer choice, e.g. <OPTION_A> and </OPTION_A>, with the text describing the option in the center.
         3. Put the answer in a tag if it is correct and incorrect ones with an explanation in a tag. For example, if answer A is correct, place the explanation in <CORRECT_A> and </CORRECT_A> tags. 
         4. If the answer is incorrect, place the explanation in <INCORRECT_B> and </INCORRECT_B> tags.
-        5. For any slides, that you use, add <SLIDE x> tags, where x is the slide number. Remember to place the <SLIDE x> tags at the end of each question.
-        6. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations."""
+        5. Use <OUTPUT> and </OUTPUT> tags to encapsulate the question, options, answers, and explanations."""
 
         multi_part_prompt = f"""TASK: You will be generating multi-part questions to test comprehension of the material. 
         
@@ -697,6 +694,8 @@ class ProblemsProcessor(BaseProcessor):
 
     async def process_problems(
         self,
+        question: str,
+        message_id: str,
         question_prompts: List[QuestionPrompt],
         clean_figures_and_references: Callable[[Any], Any] = None,
         on_batch_complete: Callable[[List[List[Union[MCQQuestion, FRQQuestion]]]], Awaitable[None]] = None
@@ -754,7 +753,7 @@ class ProblemsProcessor(BaseProcessor):
                 )
             
             # clean the result, get the figures and references, of type ChatMessage
-            figures_and_references = clean_figures_and_references(result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
+            figures_and_references = clean_figures_and_references(question, message_id, result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
 
             print(f"Figures and references: {figures_and_references}")
 
@@ -793,624 +792,233 @@ class ProblemsProcessor(BaseProcessor):
     def export_to_json(self, filename: str) -> None:
         """Export the questions to a JSON file"""
         import json
-        with open(filename, 'w') as f:
+        with open(os.path.join(QUESTIONS_DIR, filename), 'w') as f:
             json.dump(self.to_json(), f, indent=2)
-
-
-    # # Common utility methods
-    # def format_url_for_latex(self, url: str) -> str:
-    #     """
-    #     Format URL for LaTeX hyperref package.
-    #     """
-    #     # Replace problematic characters in URLs
-    #     url = url.replace('%', '\\%')
-    #     url = url.replace('#', '\\#')
-    #     url = url.replace('&', '\\&')
-    #     url = url.replace('_', '\\_')
-            
-    #     return url
     
-    # def process_math_term(self, term: str) -> str:
-    #     """Enhanced math term processing with better handling of nested expressions"""
-    #     if not term:
-    #         return ""
-
-    #     # Remove HTML tags and escaped sequences that cause issues
-    #     cleanup_replacements = {
-    #         'textasciicircum{}': '^',
-    #         'textbackslash{}': '',
-    #         '\\\\': '\\',
-    #         '\\_SAT': '_SAT'
-    #     }
+    def to_pdf(self, name: str, questions: list[list[dict]], base_filename: str):
+        """
+        Save processed questions to a LaTeX PDF file using PyLaTeX. We will have one section titled 'Questions' for questions, and one section titled 'Answers' for answers. The answers should be in the same format as the questions, but the options should have the answer explanation in red text instead of the answer stem.
         
-    #     for old, new in cleanup_replacements.items():
-    #         term = term.replace(old, new)
-
-    #     # Detect if term is already in math mode
-    #     # Count occurrences of single $; if odd, it's partially in math mode.
-    #     is_math_mode = (term.count('$') % 2 == 1)
-
-    #     # Store and protect existing math blocks
-    #     math_blocks = []
-    #     # Use a non-greedy regex to ensure minimal capturing between $...$
-    #     term = re.sub(r'\$(.*?)\$',
-    #                   lambda m: self._store_math(m.group(1), math_blocks),
-    #                   term, flags=re.DOTALL)
-
-    #     # Special cases, longer patterns first
-    #     special_cases = {
-    #         # Basic math operations
-    #         'log(1 + e^(-z))': r'\log(1 + e^{-z})',
-    #         '(0, 0)': r'$(0, 0)$',
-    #         '^T': r'^T',
-
-    #         # Greek letters
-    #         'alpha': r'$\alpha$',
-    #         'beta': r'$\beta$',
-    #         'gamma': r'$\gamma$',
-    #         'delta': r'$\delta$',
-    #         'epsilon': r'$\epsilon$',
-    #         'theta': r'$\theta$',
-    #         'lambda': r'$\lambda$',
-    #         'mu': r'$\mu$',
-    #         'sigma': r'$\sigma$',
-    #         'omega': r'$\omega$',
-
-    #         # Function notation
-    #         'sigma(x)': r'$\sigma(x)$',
-    #         'sigma(z)': r'$\sigma(z)$',
-    #         "sigma'(z)": r'$\sigma\'(z)$',
-    #         'f(x)': r'$f(x)$',
-    #         'g(x)': r'$g(x)$',
-
-    #         # Subscripts and superscripts
-    #         'x_0': r'$x_0$',
-    #         '-x_0': r'$-x_0$',
-    #         'x_i': r'$x_i$',
-    #         'y_i': r'$y_i$',
-    #         '_i': r'$_i$',
-    #         '_j': r'$_j$',
-    #         '_n': r'$_n$',
-    #         '_p': r'$_p$',
-
-    #         # Matrix notation
-    #         'c^T': r'$c^T$',
-    #         'b^T': r'$b^T$',
-    #         'A^T': r'$A^T$',
-    #         '^{-1}': r'^{-1}',
-    #         '^{T}': r'^{T}',
-
-    #         # Special functions and operators
-    #         'mathbb{1}': r'$\mathbb{1}$',
-    #         'frac{': r'$\frac{',
-    #         'sum_{': r'$\sum_{',
-    #         'prod_{': r'$\prod_{',
-    #         'int_{': r'$\int_{',
-
-    #         # Logical operators
-    #         'implies': r'$\implies$',
-    #         'iff': r'$\iff$',
-    #         'forall': r'$\forall$',
-    #         'exists': r'$\exists$',
-    #         'ne': r'$\ne$',
-
-    #         # Arrows and symbols
-    #         'leftarrow': r'$\leftarrow$',
-    #         'rightarrow': r'$\rightarrow$',
-    #         'leftrightarrow': r'$\leftrightarrow$',
-    #         'Leftarrow': r'$\Leftarrow$',
-    #         'Rightarrow': r'$\Rightarrow$',
-    #         'cdot': r'$\cdot$',
-
-    #         # Norms and spaces
-    #         'L^1': r'$L^1$',
-    #         'L^2': r'$L^2$',
-    #         'L^infty': r'$L^\infty$',
-    #         'L^∞': r'$L^\infty$',
-    #         '||': r'$\|$',
-
-    #         # HTML-style tags
-    #         '<sup>': r'^{',
-    #         '</sup>': r'}',
-    #         '<sub>': r'_{',
-    #         '</sub>': r'}',
-
-    #         # Special characters
-    #         '\\{': r'\{',
-    #         '\\}': r'\}',
-    #         'textbackslash': r'\textbackslash',
-
-    #         # Additional math expressions
-    #         'max{0, -z}': r'$\max\{0, -z\}$',
-    #         'max{0, 1-z}': r'$\max\{0, 1-z\}$',
-    #         'y(w^Tx)': r'$y(w^{T}x)$',
-    #         'w^T': r'$w^{T}$',
-    #         'e^(-z)': r'$e^{-z}$',
-    #         # Already included in a transformed version above, but ensure unique
-    #         'e^{-z}': r'$e^{-z}$'
-    #     }
-
-    #     # Process special cases longest first
-    #     for case in sorted(special_cases.keys(), key=len, reverse=True):
-    #         if case in term:
-    #             replacement = special_cases[case]
-    #             # If we are inside math mode and the replacement is also wrapped in $...$, remove extra $
-    #             if is_math_mode and replacement.startswith('$') and replacement.endswith('$'):
-    #                 replacement = replacement[1:-1]
-    #             term = term.replace(case, replacement)
-
-    #     # Clean up duplicate or empty math mode markers
-    #     term = re.sub(r'\${2,}', '$', term)  # collapse multiple $$ to single $
-    #     term = re.sub(r'(\$)\s*(\$)', r'\1\2', term)  # Remove spaces between $ $
-    #     # Remove isolated $ pairs with no content
-    #     term = re.sub(r'\$\$', '$', term)
-
-    #     try:
-    #         # Instead of '\\+\\', use a quantifier to mean multiple backslashes.
-    #         # '\\+\{' means one or more backslashes followed by '{'
-    #         # '\\+\}' means one or more backslashes followed by '}'
-    #         # '\\{2,}' means two or more backslashes
-    #         term = re.sub(r'\\+\{', '{', term)
-    #         term = re.sub(r'\\+\}', '}', term)
-    #         term = re.sub(r'\\{2,}', r'\\', term)
-    #     except re.error as e:
-    #         print(f"Regex error while cleaning braces and backslashes: {e}")
-    #         # If needed, handle the error by logging, raising a different exception, or returning the unmodified term.
-    #         return term
-
-    #     # If not in math mode and term contains math-y chars, wrap in $
-    #     if not is_math_mode and any(c in term for c in '_^\\{}'):
-    #         if not term.strip().startswith('$'):
-    #             term = f'${term}$'
-
-    #     # Restore protected math blocks
-    #     term = self._restore_math(term, math_blocks)
-
-    #     # Final normalization of math mode delimiters
-    #     # Ensure balanced math mode (if not balanced, we could try to fix it)
-    #     if term.count('$') % 2 != 0:
-    #         # Add a trailing $ if odd count
-    #         term += '$'
-
-    #     return term
-
-    # def sanitize_latex(self, text: str) -> str:
-    #     """Enhanced sanitization for LaTeX output"""
-    #     if not text:
-    #         return ""
+        Args:
+            questions (list[list[dict]]): A list of lists of dictionaries for a given lecture as keys and slide numbers as values. Example: [[
+                [
+                    {
+                        "question": "According to the Klee-Minty example, how many steps does the Largest Coefficient Rule require in the worst case?",
+                        "options": {
+                        "A": "n steps",
+                        "B": "2n steps", 
+                        "C": "2^n - 1 steps",
+                        "D": "3m/2 steps",
+                        "E": "3m steps"
+                    },
+                    "answers": {
+                        "A": false,
+                        "B": false,
+                        "C": true,
+                        "D": false,
+                        "E": false
+                    },
+                    "explanations": {
+                        "A": "Answer A is incorrect because the Smallest Coefficient Rule requires n steps, not the Largest Coefficient Rule.",
+                        "B": "Answer B is incorrect because the Largest Coefficient Rule does not require 2n steps.",
+                        "C": "Answer C is correct because the Klee-Minty example shows that the Largest Coefficient Rule requires 2^n - 1 steps in the worst case.",
+                        "D": "Answer D is incorrect because 3m/2 steps is the average case for the simplex method, not the worst case for the Largest Coefficient Rule.",
+                        "E": "Answer E is incorrect because 3m steps is the rare case for the simplex method, not the worst case for the Largest Coefficient Rule."
+                    },
+                    "type": "conceptual",
+                }
+            ]]
+        }
+        """
+        geometry_options = {
+            "margin": "1in",
+            "headheight": "14pt",
+            "headsep": "25pt"
+        }
+        doc = Document(geometry_options=geometry_options)
         
-    #     math_blocks = []
-    #     # Protect existing math
-    #     text = re.sub(r'\$(.*?)\$',
-    #                   lambda m: self._store_math(m.group(1), math_blocks),
-    #                   text, flags=re.DOTALL)
+        # Add packages
+        for pkg in ['hyperref', 'enumitem', 'fancyhdr', 'xcolor', 'url', 'breakurl']:
+            doc.packages.append(Package(pkg))
 
-    #     # Unicode math replacements
-    #     unicode_math = {
-    #         '\u2212': r'-',
-    #         '∧': r'\wedge',
-    #         '\u2228': r'\vee',
-    #         '↔': r'\leftrightarrow',
-    #         '¬': r'\neg',
-    #         '⊗': r'\otimes',
-    #         '⊕': r'\oplus',
-    #         '∈': r'\in',
-    #         '∉': r'\notin',
-    #         '∀': r'\forall',
-    #         '∃': r'\exists',
-    #         '≤': r'\leq',
-    #         '≥': r'\geq',
-    #         '≠': r'\neq',
-    #         '≈': r'\approx',
-    #         '∞': r'\infty'
-    #     }
-    #     for symbol, replacement in unicode_math.items():
-    #         # Insert in math mode
-    #         text = text.replace(symbol, f'${replacement}$')
-
-    #     # General replacements (outside math mode)
-    #     # Note: We must be careful with $ and other chars that we already handled
-    #     replacements = {
-    #         '%': r'\%',
-    #         '&': r'\&',
-    #         '#': r'\#',
-    #         '~': r'\textasciitilde{}',
-    #         '^': r'\textasciicircum{}',
-    #         '<': r'\textless{}',
-    #         # unicode arrow replacements done above
-    #         '→': r'$\rightarrow$',
-    #         '←': r'$\leftarrow$',
-    #         '≠': r'$\neq$',
-    #         '∑': r'$\sum$',
-    #         '⇒': r'$\implies$',
-    #         '·': r'$\cdot$',
-    #         '…': r'\ldots',
-    #         # Smart quotes handling
-    #         '"': '``',
-    #         '"': "''",
-    #         '"': "''",
-    #         '\u2019': "'",
-    #         '\u2018': "`",
-    #         '—': '---'
-    #     }
-
-    #     for char, replacement in replacements.items():
-    #         text = text.replace(char, replacement)
-
-    #     # Restore math blocks
-    #     text = self._restore_math(text, math_blocks)
-
-    #     # Ensure balanced math mode after restoration
-    #     if text.count('$') % 2 != 0:
-    #         # Attempt simple fix by adding a trailing $
-    #         text += '$'
-
-    #     return text
-
-    # def sanitize_section_title(self, title: str) -> str:
-    #     """Sanitize section titles specifically"""
-    #     # Handle special characters in section titles
-    #     title = title.replace('&', r'\&')
-    #     title = title.replace('\\', '')  # Remove backslashes
-    #     title = title.replace('{', r'\{')
-    #     title = title.replace('}', r'\}')
-    #     title = title.replace('_', r'\_')
-    #     title = title.replace('^', r'\textasciicircum{}')
-    #     title = title.replace('~', r'\textasciitilde{}')
-    #     title = title.replace('<', r'\textless{}')
-    #     title = title.replace('>', r'\textgreater{}')
-    #     # Replace {-} with simple hyphen
-    #     title = title.replace('{-}', '-')
-    #     return title
-    
-    # def save_questions_latex(self, name: str, questions: list[list[dict]], base_filename: str):
-    #     """
-    #     Save processed questions to a LaTeX PDF file using PyLaTeX. We will have one section titled 'Questions' for questions, and one section titled 'Answers' for answers. The answers should be in the same format as the questions, but the options should have the answer explanation in red text instead of the answer stem.
-        
-    #     Args:
-    #         questions (list[list[dict]]): A list of lists of dictionaries for a given lecture as keys and slide numbers as values. Example: [[
-    #             [
-    #                 {
-    #                     "question": "According to the Klee-Minty example, how many steps does the Largest Coefficient Rule require in the worst case?",
-    #                     "options": {
-    #                     "A": "n steps",
-    #                     "B": "2n steps", 
-    #                     "C": "2^n - 1 steps",
-    #                     "D": "3m/2 steps",
-    #                     "E": "3m steps"
-    #                 },
-    #                 "answers": {
-    #                     "A": false,
-    #                     "B": false,
-    #                     "C": true,
-    #                     "D": false,
-    #                     "E": false
-    #                 },
-    #                 "explanations": {
-    #                     "A": "Answer A is incorrect because the Smallest Coefficient Rule requires n steps, not the Largest Coefficient Rule.",
-    #                     "B": "Answer B is incorrect because the Largest Coefficient Rule does not require 2n steps.",
-    #                     "C": "Answer C is correct because the Klee-Minty example shows that the Largest Coefficient Rule requires 2^n - 1 steps in the worst case.",
-    #                     "D": "Answer D is incorrect because 3m/2 steps is the average case for the simplex method, not the worst case for the Largest Coefficient Rule.",
-    #                     "E": "Answer E is incorrect because 3m steps is the rare case for the simplex method, not the worst case for the Largest Coefficient Rule."
-    #                 },
-    #                 "type": "conceptual",
-    #                 "slides": [
-    #                     3
-    #                 ]
-    #             }
-    #         ]]
-    #     }
-    #     """
-    #     geometry_options = {
-    #         "margin": "1in",
-    #         "headheight": "14pt",
-    #         "headsep": "25pt"
-    #     }
-    #     doc = Document(geometry_options=geometry_options)
-        
-    #     # Add packages
-    #     for pkg in ['hyperref', 'enumitem', 'fancyhdr', 'xcolor', 'url', 'breakurl']:
-    #         doc.packages.append(Package(pkg))
-
-    #     doc.preamble.append(NoEscape(r'''
-    #         \hypersetup{
-    #             colorlinks=true,
-    #             linkcolor=blue,
-    #             filecolor=magenta,
-    #             urlcolor=blue
-    #         }
-    #         \pagestyle{fancy}
-    #         \fancyhf{}
-    #         \rhead{Generated on \today}
-    #         \cfoot{\thepage}
+        doc.preamble.append(NoEscape(r'''
+            \hypersetup{
+                colorlinks=true,
+                linkcolor=blue,
+                filecolor=magenta,
+                urlcolor=blue
+            }
+            \pagestyle{fancy}
+            \fancyhf{}
+            \rhead{Generated on \today}
+            \cfoot{\thepage}
             
-    #         % Configure enumeration settings
-    #         \setlist[enumerate,1]{label=\arabic*.}
-    #         \setlist[enumerate,2]{label=\alph*.}
-    #         \setlist[enumerate,3]{label=\Alph*.}
-    #         \setlist[enumerate]{itemsep=0.5em}
+            % Configure enumeration settings
+            \setlist[enumerate,1]{label=\arabic*.}
+            \setlist[enumerate,2]{label=\alph*.}
+            \setlist[enumerate,3]{label=\Alph*.}
+            \setlist[enumerate]{itemsep=0.5em}
             
-    #         % Define a command for red text
-    #         \newcommand{\incorrect}[1]{\textcolor{red}{#1}}
-    #     '''))
-    #     doc.preamble.append(Command('lhead', f'{name}'))
+            % Define a command for red text
+            \newcommand{\incorrect}[1]{\textcolor{red}{#1}}
+        '''))
+        doc.preamble.append(Command('lhead', f'{name}'))
         
-    #     # Title
-    #     doc.preamble.append(Command('title', f'Practice Questions for {name}'))
-    #     doc.preamble.append(Command('author', 'Generated by Scribe.AI'))
-    #     doc.preamble.append(Command('date', NoEscape(r'\today')))
-    #     doc.append(NoEscape(r'\maketitle'))
+        # Title
+        doc.preamble.append(Command('title', f'Practice Questions for {name}'))
+        doc.preamble.append(Command('author', 'Generated by Scribe.AI'))
+        doc.preamble.append(Command('date', NoEscape(r'\today')))
+        doc.append(NoEscape(r'\maketitle'))
 
-    #     # Questions Section
-    #     with doc.create(Section('Questions')):
-    #         doc.append(NoEscape(r'\begin{enumerate}'))
-    #         for question_group in questions:
-    #             if len(question_group) > 1:
-    #                 # Multipart question
-    #                 doc.append(NoEscape(r'\item'))
-    #                 doc.append(NoEscape(r'\begin{enumerate}'))
+        # Questions Section
+        with doc.create(Section('Questions')):
+            doc.append(NoEscape(r'\begin{enumerate}'))
+            for question_group in questions:
+                if len(question_group) > 1:
+                    # Multipart question
+                    doc.append(NoEscape(r'\item'))
+                    doc.append(NoEscape(r'\begin{enumerate}'))
                     
-    #                 for part in question_group:
-    #                     doc.append(NoEscape(f'\\item {part["question"]}'))
-    #                     doc.append(NoEscape(r'\begin{enumerate}'))
+                    for part in question_group:
+                        doc.append(NoEscape(f'\\item {part["question"]}'))
+                        doc.append(NoEscape(r'\begin{enumerate}'))
                         
-    #                     for opt in ['A', 'B', 'C', 'D', 'E']:
-    #                         if opt in part['options']:
-    #                             doc.append(NoEscape(f'\\item {part["options"][opt]}'))
+                        for opt in ['A', 'B', 'C', 'D', 'E']:
+                            if opt in part['options']:
+                                doc.append(NoEscape(f'\\item {part["options"][opt]}'))
                         
-    #                     doc.append(NoEscape(r'\end{enumerate}'))
-    #                     doc.append(NoEscape(r'\vspace{0.5em}'))
+                        doc.append(NoEscape(r'\end{enumerate}'))
+                        doc.append(NoEscape(r'\vspace{0.5em}'))
                     
-    #                 doc.append(NoEscape(r'\end{enumerate}'))
-    #             else:
-    #                 # Single question
-    #                 doc.append(NoEscape(f'\\item {question_group[0]["question"]}'))
-    #                 doc.append(NoEscape(r'\begin{enumerate}'))
+                    doc.append(NoEscape(r'\end{enumerate}'))
+                else:
+                    # Single question
+                    doc.append(NoEscape(f'\\item {question_group[0]["question"]}'))
+                    doc.append(NoEscape(r'\begin{enumerate}'))
                     
-    #                 for opt in ['A', 'B', 'C', 'D', 'E']:
-    #                     if opt in question_group[0]['options']:
-    #                         doc.append(NoEscape(f'\\item {question_group[0]["options"][opt]}'))
+                    for opt in ['A', 'B', 'C', 'D', 'E']:
+                        if opt in question_group[0]['options']:
+                            doc.append(NoEscape(f'\\item {question_group[0]["options"][opt]}'))
                     
-    #                 doc.append(NoEscape(r'\end{enumerate}'))
-    #                 doc.append(NoEscape(r'\vspace{1em}'))
+                    doc.append(NoEscape(r'\end{enumerate}'))
+                    doc.append(NoEscape(r'\vspace{1em}'))
             
-    #         doc.append(NoEscape(r'\end{enumerate}'))
+            doc.append(NoEscape(r'\end{enumerate}'))
 
-    #     # Answers Section
-    #     doc.append(NoEscape(r'\newpage'))
-    #     with doc.create(Section('Answers')):
-    #         doc.append(NoEscape(r'\begin{enumerate}'))
-    #         for question_group in questions:
-    #             if len(question_group) > 1:
-    #                 # Multipart question answers
-    #                 doc.append(NoEscape(r'\item'))
-    #                 doc.append(NoEscape(r'\begin{enumerate}'))
+        # Answers Section
+        doc.append(NoEscape(r'\newpage'))
+        with doc.create(Section('Answers')):
+            doc.append(NoEscape(r'\begin{enumerate}'))
+            for question_group in questions:
+                if len(question_group) > 1:
+                    # Multipart question answers
+                    doc.append(NoEscape(r'\item'))
+                    doc.append(NoEscape(r'\begin{enumerate}'))
                     
-    #                 for part in question_group:
-    #                     doc.append(NoEscape(f'\\item {part["question"]}'))
-    #                     doc.append(NoEscape(r'\begin{enumerate}'))
+                    for part in question_group:
+                        doc.append(NoEscape(f'\\item {part["question"]}'))
+                        doc.append(NoEscape(r'\begin{enumerate}'))
                         
-    #                     for opt in ['A', 'B', 'C', 'D', 'E']:
-    #                         if opt in part['options']:
-    #                             explanation = part['explanations'].get(opt, '')
-    #                             if part['answers'].get(opt, False):
-    #                                 doc.append(NoEscape(f'\\item {explanation}'))
-    #                             else:
-    #                                 doc.append(NoEscape(f'\\item \\incorrect{{{explanation}}}'))
+                        for opt in ['A', 'B', 'C', 'D', 'E']:
+                            if opt in part['options']:
+                                explanation = part['explanations'].get(opt, '')
+                                if part['answers'].get(opt, False):
+                                    doc.append(NoEscape(f'\\item {explanation}'))
+                                else:
+                                    doc.append(NoEscape(f'\\item \\incorrect{{{explanation}}}'))
                         
-    #                     doc.append(NoEscape(r'\end{enumerate}'))
-    #                     doc.append(NoEscape(r'\vspace{0.5em}'))
+                        doc.append(NoEscape(r'\end{enumerate}'))
+                        doc.append(NoEscape(r'\vspace{0.5em}'))
                     
-    #                 doc.append(NoEscape(r'\end{enumerate}'))
-    #             else:
-    #                 # Single question answers
-    #                 part = question_group[0]
-    #                 doc.append(NoEscape(f'\\item {part["question"]}'))
-    #                 doc.append(NoEscape(r'\begin{enumerate}'))
+                    doc.append(NoEscape(r'\end{enumerate}'))
+                else:
+                    # Single question answers
+                    part = question_group[0]
+                    doc.append(NoEscape(f'\\item {part["question"]}'))
+                    doc.append(NoEscape(r'\begin{enumerate}'))
                     
-    #                 for opt in ['A', 'B', 'C', 'D', 'E']:
-    #                     if opt in part['options']:
-    #                         explanation = part['explanations'].get(opt, '')
-    #                         if part['answers'].get(opt, False):
-    #                             doc.append(NoEscape(f'\\item {explanation}'))
-    #                         else:
-    #                             doc.append(NoEscape(f'\\item \\incorrect{{{explanation}}}'))
+                    for opt in ['A', 'B', 'C', 'D', 'E']:
+                        if opt in part['options']:
+                            explanation = part['explanations'].get(opt, '')
+                            if part['answers'].get(opt, False):
+                                doc.append(NoEscape(f'\\item {explanation}'))
+                            else:
+                                doc.append(NoEscape(f'\\item \\incorrect{{{explanation}}}'))
                     
-    #                 doc.append(NoEscape(r'\end{enumerate}'))
-    #                 doc.append(NoEscape(r'\vspace{1em}'))
+                    doc.append(NoEscape(r'\end{enumerate}'))
+                    doc.append(NoEscape(r'\vspace{1em}'))
             
-    #         doc.append(NoEscape(r'\end{enumerate}'))
+            doc.append(NoEscape(r'\end{enumerate}'))
 
-    #     filename = os.path.join(self.content_dir, name, base_filename)
+        filename = os.path.join(QUESTIONS_DIR, name, base_filename)
         
-    #     log_dir = "_logs"
-    #     # Generate PDF with logs in separate directory
-    #     try:
-    #         # Generate PDF with logs in separate directory
-    #         doc.generate_pdf(
-    #             filename,
-    #             clean_tex=False,
-    #             compiler='latexmk',
-    #             compiler_args=[
-    #                 '-pdf',
-    #                 '-interaction=nonstopmode',
-    #                 '-file-line-error',
-    #                 '-shell-escape',
-    #                 '-8bit',
-    #                 # Separate auxiliary files into logs directory
-    #                 f'-aux-directory={log_dir}',
-    #                 '-recorder',
-    #                 '-verbose'
-    #             ]
-    #         )
+        log_dir = "_logs"
+        # Generate PDF with logs in separate directory
+        try:
+            # Generate PDF with logs in separate directory
+            doc.generate_pdf(
+                filename,
+                clean_tex=False,
+                compiler='latexmk',
+                compiler_args=[
+                    '-pdf',
+                    '-interaction=nonstopmode',
+                    '-file-line-error',
+                    '-shell-escape',
+                    '-8bit',
+                    # Separate auxiliary files into logs directory
+                    f'-aux-directory={log_dir}',
+                    '-recorder',
+                    '-verbose'
+                ]
+            )
             
-    #         # Handle log files
-    #         log_extensions = ['.log', '.aux', '.out', '.fls']
-    #         for ext in log_extensions:
-    #             src_file = os.path.join(self.content_dir, name, log_dir, f"{base_filename}{ext}")
-    #             if os.path.exists(src_file):
-    #                 # Display log content for debugging
-    #                 if ext == '.log':
-    #                     print(f"\nContents of log file:")
-    #                     with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
-    #                         lines = f.readlines()
-    #                         print("..." if len(lines) > 50 else "")
-    #                         for line in lines[-50:]:
-    #                             if "!" in line or "Error" in line or "Warning" in line:
-    #                                 print(f"ERROR/WARNING: {line.strip()}")
+            # Handle log files
+            log_extensions = ['.log', '.aux', '.out', '.fls']
+            for ext in log_extensions:
+                src_file = os.path.join(QUESTIONS_DIR, name, log_dir, f"{base_filename}{ext}")
+                if os.path.exists(src_file):
+                    # Display log content for debugging
+                    if ext == '.log':
+                        print(f"\nContents of log file:")
+                        with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
+                            lines = f.readlines()
+                            print("..." if len(lines) > 50 else "")
+                            for line in lines[-50:]:
+                                if "!" in line or "Error" in line or "Warning" in line:
+                                    print(f"ERROR/WARNING: {line.strip()}")
                 
-    #         print(f"PDF generated successfully: {filename}.pdf")
-    #         # Clean up the .tex file if successful
-    #         if os.path.exists(f"{filename}.tex"):
-    #             os.remove(f"{filename}.tex")
-    #         return True
+            print(f"PDF generated successfully: {filename}.pdf")
+            # Clean up the .tex file if successful
+            if os.path.exists(f"{filename}.tex"):
+                os.remove(f"{filename}.tex")
+            return True
 
-    #     except Exception as e:
-    #         error_msg = str(e)
-    #         print(f"Error during compilation: {error_msg}")
+        except Exception as e:
+            error_msg = str(e)
+            print(f"Error during compilation: {error_msg}")
             
-    #         # Error analysis and log display
-    #         if "! LaTeX Error:" in error_msg:
-    #             latex_error = re.search(r'! LaTeX Error:(.*?)\n', error_msg)
-    #             if latex_error:
-    #                 print(f"LaTeX Error: {latex_error.group(1).strip()}")
-    #         elif "! Package" in error_msg:
-    #             package_error = re.search(r'! Package (.*?) Error:(.*?)\n', error_msg)
-    #             if package_error:
-    #                 print(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
-    #         elif "! Missing" in error_msg:
-    #             missing_error = re.search(r'! Missing (.*?) inserted', error_msg)
-    #             if missing_error:
-    #                 print(f"Missing character error: {missing_error.group(1)}")
+            # Error analysis and log display
+            if "! LaTeX Error:" in error_msg:
+                latex_error = re.search(r'! LaTeX Error:(.*?)\n', error_msg)
+                if latex_error:
+                    print(f"LaTeX Error: {latex_error.group(1).strip()}")
+            elif "! Package" in error_msg:
+                package_error = re.search(r'! Package (.*?) Error:(.*?)\n', error_msg)
+                if package_error:
+                    print(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
+            elif "! Missing" in error_msg:
+                missing_error = re.search(r'! Missing (.*?) inserted', error_msg)
+                if missing_error:
+                    print(f"Missing character error: {missing_error.group(1)}")
             
-    #         # Check log files in the log directory
-    #         for ext in ['.log', '.aux', '.out']:
-    #             log_file = os.path.join(self.content_dir, name, log_dir, f"{base_filename}{ext}")
-    #             if os.path.exists(log_file):
-    #                 print(f"\nContents of {log_file}:")
-    #                 with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
-    #                     for line in f:
-    #                         if any(marker in line for marker in ["!", "Error", "Warning"]):
-    #                             print(line.strip())
-    #         return False
-        
-    # def save_summary_latex(self, name: str, summary: str, base_filename: str):
-    #     """
-    #     Save processed summary to a LaTeX PDF file using PyLaTeX.
-    #     """
-    #     geometry_options = {
-    #         "margin": "1in",
-    #         "headheight": "14pt",
-    #         "headsep": "25pt"
-    #     }
-    #     doc = Document(geometry_options=geometry_options)
-        
-    #     # Add packages
-    #     for pkg in ['hyperref', 'enumitem', 'fancyhdr', 'xcolor', 'url', 'breakurl']:
-    #         doc.packages.append(Package(pkg))
-
-    #     doc.preamble.append(NoEscape(r'''
-    #         \hypersetup{
-    #             colorlinks=true,
-    #             linkcolor=blue,
-    #             filecolor=magenta,
-    #             urlcolor=blue
-    #         }
-    #         \pagestyle{fancy}
-    #         \fancyhf{}
-    #         \rhead{Generated on \today}
-    #         \cfoot{\thepage}
-            
-    #         % Configure enumeration settings
-    #         \setlist[enumerate,1]{label=\arabic*.}
-    #         \setlist[enumerate,2]{label=\alph*.}
-    #         \setlist[enumerate,3]{label=\Alph*.}
-    #         \setlist[enumerate]{itemsep=0.5em}
-            
-    #         % Define a command for red text
-    #         \newcommand{\incorrect}[1]{\textcolor{red}{#1}}
-    #     '''))
-    #     doc.preamble.append(Command('lhead', f'{name}'))
-        
-    #     # Title
-    #     doc.preamble.append(Command('title', f'Summary for {name}'))
-    #     doc.preamble.append(Command('author', 'Generated by Scribe.AI'))
-    #     doc.preamble.append(Command('date', NoEscape(r'\today')))
-    #     doc.append(NoEscape(r'\maketitle'))
-
-    #     # Questions Section
-    #     with doc.create(Section('Summary')):
-    #         doc.append(NoEscape(summary))
-
-    #     filename = os.path.join(self.content_dir, name, base_filename)
-
-    #     log_dir = "_logs"
-    #     # Generate PDF with logs in separate directory
-    #     try:
-    #         # Generate PDF with logs in separate directory
-    #         doc.generate_pdf(
-    #             filename,
-    #             clean_tex=False,
-    #             compiler='latexmk',
-    #             compiler_args=[
-    #                 '-pdf',
-    #                 '-interaction=nonstopmode',
-    #                 '-file-line-error',
-    #                 '-shell-escape',
-    #                 '-8bit',
-    #                 # Separate auxiliary files into logs directory
-    #                 f'-aux-directory={log_dir}',
-    #                 '-recorder',
-    #                 '-verbose'
-    #             ]
-    #         )
-            
-    #         # Handle log files
-    #         log_extensions = ['.log', '.aux', '.out', '.fls']
-    #         for ext in log_extensions:
-    #             src_file = os.path.join(self.content_dir, name, log_dir, f"{base_filename}{ext}")
-    #             if os.path.exists(src_file):
-    #                 # Display log content for debugging
-    #                 if ext == '.log':
-    #                     print(f"\nContents of log file:")
-    #                     with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
-    #                         lines = f.readlines()
-    #                         print("..." if len(lines) > 50 else "")
-    #                         for line in lines[-50:]:
-    #                             if "!" in line or "Error" in line or "Warning" in line:
-    #                                 print(f"ERROR/WARNING: {line.strip()}")
-                
-    #         print(f"PDF generated successfully: {filename}.pdf")
-    #         # Clean up the .tex file if successful
-    #         if os.path.exists(f"{filename}.tex"):
-    #             os.remove(f"{filename}.tex")
-    #         return True
-
-    #     except Exception as e:
-    #         error_msg = str(e)
-    #         print(f"Error during compilation: {error_msg}")
-            
-    #         # Error analysis and log display
-    #         if "! LaTeX Error:" in error_msg:
-    #             latex_error = re.search(r'! LaTeX Error:(.*?)\n', error_msg)
-    #             if latex_error:
-    #                 print(f"LaTeX Error: {latex_error.group(1).strip()}")
-    #         elif "! Package" in error_msg:
-    #             package_error = re.search(r'! Package (.*?) Error:(.*?)\n', error_msg)
-    #             if package_error:
-    #                 print(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
-    #         elif "! Missing" in error_msg:
-    #             missing_error = re.search(r'! Missing (.*?) inserted', error_msg)
-    #             if missing_error:
-    #                 print(f"Missing character error: {missing_error.group(1)}")
-            
-    #         # Check log files in the log directory
-    #         for ext in ['.log', '.aux', '.out']:
-    #             log_file = os.path.join(self.content_dir, name, log_dir, f"{base_filename}{ext}")
-    #             if os.path.exists(log_file):
-    #                 print(f"\nContents of {log_file}:")
-    #                 with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
-    #                     for line in f:
-    #                         if any(marker in line for marker in ["!", "Error", "Warning"]):
-    #                             print(line.strip())
-    #         return False
+            # Check log files in the log directory
+            for ext in ['.log', '.aux', '.out']:
+                log_file = os.path.join(QUESTIONS_DIR, name, log_dir, f"{base_filename}{ext}")
+                if os.path.exists(log_file):
+                    print(f"\nContents of {log_file}:")
+                    with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
+                        for line in f:
+                            if any(marker in line for marker in ["!", "Error", "Warning"]):
+                                print(line.strip())
+            return False

@@ -263,14 +263,15 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 throw new Error("No message data returned");
             }
 
+            // use form data instead of json
+            const formData = new FormData();
+            formData.append("chat_id", newChatId);
+            formData.append("message_id", messageData.id);
+
             // Trigger generation, no need to wait for response
             fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: newChatId,
-                    message_id: messageData.id
-                })
+                body: formData
             });
 
             // Reset states

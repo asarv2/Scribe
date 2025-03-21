@@ -1,16 +1,20 @@
 import asyncio
 import os
-from fastapi import APIRouter, HTTPException
+import uuid
+from fastapi import APIRouter, HTTPException, Request, Form
 from fastapi.responses import StreamingResponse
 from datetime import datetime
 import traceback
 from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncGenerator
 from pydantic import BaseModel
-from app.extensions import supabase, QUESTIONS_DIR
-from app.services.chat.chat_processor import ChatProcessor, ChatMessage
+from app.extensions import supabase
+from app.services.chat.chat_processor import ChatProcessor
 from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
 import json
 import re
+from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor, Summary
+from app.services.chat.problems_processor import QuestionPrompt, ProblemsProcessor, FRQQuestion, MCQQuestion
+from app.utils.chat import get_critical_instructions, clean_result, ChatMessage
 
 router = APIRouter()
 
@@ -18,14 +22,63 @@ class ChatRequest(BaseModel):
     chat_id: str
     message_id: str
 
+class SummaryRequest(BaseModel):
+    class_id: str
+    message_id: str
+
+class QuestionRequest(BaseModel):
+    class_id: str
+    message_id: str
+
+
+
+async def fetch_output_rules(supabase, class_id):
+    """
+    Fetch output formatting rules from Supabase for the given class.
+    
+    Returns a formatted string with instructions for the LLM about how to format its output.
+    """
+    try:
+        # Fetch rules from the class_rules table
+        rules_response = supabase.table("rules").select("*").eq("class", class_id).eq("enabled", True).execute()
+        rules = rules_response.data or []
+        
+        if not rules:
+            return ""
+        
+        # Format the rules as instructions
+        rules_text = "RULES: The following are the rules for the output formatting, created by the professor. Please follow these rules:\n\n"
+        
+        for rule in rules:
+            rule_text = rule.get('rule', '')
+            if rule_text:
+                rules_text += f"- {rule_text}\n"
+        
+        # Add citation instructions which are always required
+        # rules_text += (
+        #     "\nWhen citing course content:\n"
+        #     "- For lectures: Use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags\n"
+        #     "- For textbooks: Use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags\n"
+        #     "- Place citations at the end of your response\n"
+        #     "- Add any period before the citation tags, not after"
+        # )
+        
+        return rules_text
+    
+    except Exception as e:
+        print(f"Error fetching output rules: {str(e)}")
+        # Return basic formatting instructions if there's an error
+        return "Format your response clearly with appropriate citations to course materials."
+
 @router.post('/chat')
-async def handle_message(request: ChatRequest):
+async def handle_chat(
+    request: Request,
+    chat_id: str = Form(...),
+    message_id: str = Form(...)
+):
     """Handle chat for a class with streaming support."""
     try:
         print("Starting handle-chat function...")
-        chat_id = request.chat_id
-        message_id = request.message_id
-
         # Mark message as generating
         supabase.table("messages").update({
             "generation_status": "generating",
@@ -173,13 +226,33 @@ async def handle_message(request: ChatRequest):
             ):
                 pass  # We're handling updates in the callback
 
+            # Extract and remove the summary prompts from the response
+            summary_prompts, total_response = processor.extract_summary_prompts(total_response, current_message['response_url'])
+            if len(summary_prompts) > 0:
+                # call the generate_summaries function
+                await request.app.state.add_task(
+                    process_summaries_internally,
+                    message_id,
+                    class_id,
+                    current_message['response_url']
+                )
 
             # Extract and remove the practice problem prompts from the response
-            practice_problem_prompts, reference_response = processor.extract_practice_problem_prompts(total_response)
+            practice_problem_prompts, total_response = processor.extract_practice_problem_prompts(total_response, current_message['response_url'])
+
+            if len(practice_problem_prompts) > 0:
+                await request.app.state.add_task(
+                    process_questions_internally,
+                    message_id,
+                    class_id,
+                    current_message['response_url']
+                )
 
             # Clean the response and extract document references
-            cleaned_result = processor.clean_result(
-                reference_response,
+            cleaned_result = clean_result(
+                current_message['bare_question'],
+                message_id,
+                total_response,
                 all_lectures=all_lectures,
                 all_chapters=all_chapters,
                 all_homeworks=all_homeworks,
@@ -200,25 +273,6 @@ async def handle_message(request: ChatRequest):
                 "generation_status": "complete",
                 "generation_error": ""
             }).eq("id", message_id).execute()
-
-            # generate practice problems
-            practice_problems = await processor.generate_practice_problems(
-                practice_problem_prompts,
-                output_rules,
-                message_context,
-                all_lectures,
-                all_chapters,
-                all_homeworks,
-                all_lecture_documents,
-                all_chapter_documents,
-                all_chapter_exercises,
-                all_homework_exercises,
-            )
-
-            # save the practice problems to the questions directory
-            for problem in practice_problems:
-                with open(os.path.join(QUESTIONS_DIR, f"{problem['id']}.json"), "w") as f:
-                    json.dump(problem, f)
 
             return {"status": "success", "message_id": message_id}
 
@@ -246,41 +300,317 @@ async def handle_message(request: ChatRequest):
                 "name": type(error).__name__
             }
         )
+    
 
-async def fetch_output_rules(supabase, class_id):
-    """
-    Fetch output formatting rules from Supabase for the given class.
-    
-    Returns a formatted string with instructions for the LLM about how to format its output.
-    """
+@router.post('/summaries')
+async def process_summaries(
+    request: Request,
+    message_id: str = Form(...),
+    class_id: str = Form(...)
+):
+    """Generate summaries for a given message ID."""
     try:
-        # Fetch rules from the class_rules table
-        rules_response = supabase.table("rules").select("*").eq("class", class_id).eq("enabled", True).execute()
-        rules = rules_response.data or []
+
+        # Mark summaries as generating
+        supabase.table("summaries").update({
+            "generation_status": "generating",
+            "generation_error": "",
+            "last_generation_attempt": datetime.now().isoformat()
+        }).eq("message", message_id).execute()
+
+        class_response = supabase.table("classes").select(
+            "title, course_description"
+        ).eq("id", class_id).single().execute()
+        class_title = class_response.data.get('title')
+
+        message_response = supabase.table("messages").select("*").eq("id", message_id).execute()
+        message = message_response.data[0]
+
+        # Get output formatting rules for this class
+        output_rules = await fetch_output_rules(supabase, class_id)
+
+        # get the summaries from the summaries table
+        summaries_response = supabase.table("summaries").select("*").eq("message", message_id).execute()
+        summaries = summaries_response.data
+
+        if len(summaries) == 0:
+            print("No summaries found for message ID:", message_id)
+            prompts = []
+        else:
+            prompts = [SummaryPrompt(
+                id=summary['id'],
+                additional_info=summary['prompt'],
+            ) for summary in summaries]
+
+        # Get resource IDs from the message
+        lecture_ids = message.get('lectures', []) or []
+        chapter_ids = message.get('chapters', []) or []
+        homework_ids = message.get('homeworks', []) or []
+
+        # Fetch resources and their documents
+        lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
+        chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
+        homework_resources = await fetch_homework_resources(supabase, homework_ids)
         
-        if not rules:
-            return ""
+        # Extract the individual components
+        all_lectures = lecture_resources.get('lectures', [])
+        all_chapters = chapter_resources.get('chapters', [])
+        all_homeworks = homework_resources.get('homeworks', [])
         
-        # Format the rules as instructions
-        rules_text = "RULES: The following are the rules for the output formatting, created by the professor. Please follow these rules:\n\n"
+        # Get documents for each resource type
+        all_lecture_documents = lecture_resources.get('documents', [])
+        all_chapter_documents = chapter_resources.get('documents', [])
+        all_chapter_exercises = chapter_resources.get('exercises', [])
+        all_homework_exercises = homework_resources.get('exercises', [])
+
+        # Generate textual content for context
+        lecture_content = await fetch_lecture_content(supabase, lecture_ids)
+        chapter_content = await fetch_chapter_content(supabase, chapter_ids)
+        homework_content = await fetch_homework_content(supabase, homework_ids)
         
-        for rule in rules:
-            rule_text = rule.get('rule', '')
-            if rule_text:
-                rules_text += f"- {rule_text}\n"
+        # Combine all content for context
+        message_context = []
+        if lecture_content:
+            message_context.append(lecture_content)
+        if chapter_content:
+            message_context.append(chapter_content)
+        if homework_content:
+            message_context.append(homework_content)
+
+         # initialize the critical instructions
+        critical_instructions = get_critical_instructions(output_rules)
+
+        # Initialize the summary processor
+        processor = SummaryProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises) 
         
-        # Add citation instructions which are always required
-        # rules_text += (
-        #     "\nWhen citing course content:\n"
-        #     "- For lectures: Use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags\n"
-        #     "- For textbooks: Use <TEXTBOOK x><PAGE a><PAGE b><PAGE c></TEXTBOOK> tags\n"
-        #     "- Place citations at the end of your response\n"
-        #     "- Add any period before the citation tags, not after"
-        # )
+        # Process the summaries
+        try:
+            async def on_batch_complete(generated_summary: Summary):
+                # Prepare summaries for updating
+                summaries_to_upsert = []
+                print("Generated summary:", generated_summary)
+                summaries_to_upsert.append({
+                    "id": generated_summary["id"],
+                    "preamble": generated_summary["preamble"],
+                    "body": generated_summary["content"],
+                    "conclusion": generated_summary["conclusion"],
+                    "generation_status": "complete",
+                    "generation_error": ""
+                })
+                print("Summaries to upsert:", summaries_to_upsert)
+                # Update existing topics
+                if summaries_to_upsert:
+                    upsert_response = supabase.table("summaries").upsert(summaries_to_upsert).execute()
+                    print("Upsert response:", upsert_response)
+
+            generated_summaries = await processor.process_summaries(prompts, message.get('bare_question'), message_id, clean_result, on_batch_complete)
+
+            # print the generated summaries
+            print("Generated summaries:", generated_summaries)
+
+            # save the summaries to the summaries directory
+            processor.export_to_json(f"{message_id}.json")
+
+            return {"status": "success", "message_id": message_id}
+        except Exception as e:
+            raise e
         
-        return rules_text
-    
     except Exception as e:
-        print(f"Error fetching output rules: {str(e)}")
-        # Return basic formatting instructions if there's an error
-        return "Format your response clearly with appropriate citations to course materials."
+        print("Error in generate-summaries function:", {
+            "name": type(e).__name__,
+            "message": str(e),
+            "stack": traceback.format_exc()
+        })
+
+
+        # Update summaries status to error, if they are not already complete
+        supabase.table("summaries").update({
+            "generation_status": "error",
+            "generation_error": str(e),
+        }).eq("message", message_id).eq("generation_status", "generating").execute()
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": str(e),
+                "stack": traceback.format_exc(),
+                "name": type(e).__name__
+            }
+        )
+
+
+@router.post('/questions')
+async def process_questions(
+    request: Request,
+    message_id: str = Form(...),
+    class_id: str = Form(...)
+):
+    """Generate questions for a given message ID."""
+    try:
+
+        # Mark questions as generating
+        supabase.table("questions").update({
+            "generation_status": "generating",
+            "generation_error": "",
+            "last_generation_attempt": datetime.now().isoformat()
+        }).eq("message", message_id).execute()
+
+        class_response = supabase.table("classes").select(
+            "title, course_description"
+        ).eq("id", class_id).single().execute()
+        class_title = class_response.data.get('title')
+
+        message_response = supabase.table("messages").select("*").eq("id", message_id).execute()
+        message = message_response.data[0]
+
+        output_rules = await fetch_output_rules(supabase, class_id)
+
+        # get the practice problems from the practice_problems table
+        practice_problems_response = supabase.table("questions").select("*").eq("message", message_id).execute()
+        practice_problems = practice_problems_response.data
+
+        if len(practice_problems) == 0:
+            print("No practice problems found for message ID:", message_id)
+            prompts = []
+        else:
+            prompts = [QuestionPrompt(
+                id=practice_problem.get('id'),
+                additional_info=practice_problem.get('prompt'),
+            ) for practice_problem in practice_problems]
+
+        # Get resource IDs from the message
+        lecture_ids = message.get('lectures', []) or []
+        chapter_ids = message.get('chapters', []) or []
+        homework_ids = message.get('homeworks', []) or []
+
+        # Fetch resources and their documents
+        lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
+        chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
+        homework_resources = await fetch_homework_resources(supabase, homework_ids)
+        
+        # Extract the individual components
+        all_lectures = lecture_resources.get('lectures', [])
+        all_chapters = chapter_resources.get('chapters', [])
+        all_homeworks = homework_resources.get('homeworks', [])
+        
+        # Get documents for each resource type
+        all_lecture_documents = lecture_resources.get('documents', [])
+        all_chapter_documents = chapter_resources.get('documents', [])
+        all_chapter_exercises = chapter_resources.get('exercises', [])
+        all_homework_exercises = homework_resources.get('exercises', [])
+
+        # Generate textual content for context
+        lecture_content = await fetch_lecture_content(supabase, lecture_ids)
+        chapter_content = await fetch_chapter_content(supabase, chapter_ids)
+        homework_content = await fetch_homework_content(supabase, homework_ids)
+        
+        # Combine all content for context
+        message_context = []
+        if lecture_content:
+            message_context.append(lecture_content)
+        if chapter_content:
+            message_context.append(chapter_content)
+        if homework_content:
+            message_context.append(homework_content)
+
+        # initialize the critical instructions
+        critical_instructions = get_critical_instructions(output_rules)
+
+        # Initialize the practice problem processor
+        processor = ProblemsProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises)
+
+        try:
+
+            def on_batch_complete(questions: List[List[Union[MCQQuestion, FRQQuestion]]]):
+                # Prepare summaries for updating
+                questions_to_upsert = []
+                for question_group in questions:
+                    for question in question_group:
+                        if type(question) == MCQQuestion:
+                            questions_to_upsert.append({
+                                "id": question['id'],
+                                "question": question['question'],
+                                "answers": question['answers'],
+                                "options": question['options'],
+                                "explanations": question['explanations'],
+                                "generation_status": "complete",
+                                "generation_error": ""
+                            })
+                        elif type(question) == FRQQuestion:
+                            questions_to_upsert.append({
+                                "id": question['id'],
+                                "question": question['question'],
+                                "solution": question['solution'],
+                                "generation_status": "complete",
+                                "generation_error": ""
+                            })
+                # Update existing topics
+                if questions_to_upsert:
+                    supabase.table("questions").upsert(questions_to_upsert).execute()
+            
+            generated_questions = await processor.process_problems(message.get('bare_question'), message_id, prompts, clean_result, on_batch_complete)
+
+            # print the generated questions
+            print("Generated questions:", generated_questions)
+
+            # save the questions to the questions directory
+            processor.export_to_json(f"{message_id}.json")
+            return {"status": "success", "message_id": message_id}
+        except Exception as e:
+            raise e
+            
+
+    except Exception as e:
+        print("Error in generate-questions function:", {
+            "name": type(e).__name__,
+            "message": str(e),
+            "stack": traceback.format_exc()
+        })
+
+        # Update questions status to error, if they are not already complete
+        supabase.table("questions").update({
+            "generation_status": "error",
+            "generation_error": str(e),
+        }).eq("message", message_id).eq("generation_status", "generating").execute()
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": str(e),
+                "stack": traceback.format_exc(),
+                "name": type(e).__name__
+            }
+        )
+
+
+async def process_summaries_internally(message_id: str, class_id: str, response_url: str):
+    """Helper function to call the summaries endpoint internally."""
+    import httpx
+    
+    # Prepare form data
+    form_data = {
+        "message_id": message_id,
+        "class_id": class_id,
+    }
+    
+    # Call the endpoint
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{response_url}/generate/summaries", data=form_data)
+        print(f"Summaries processing response: {response.text}")
+
+async def process_questions_internally(message_id: str, class_id: str, response_url: str):
+    """Helper function to call the questions endpoint internally."""
+    import httpx
+    
+    # Prepare form data
+    form_data = {
+        "message_id": message_id,
+        "class_id": class_id,
+    }
+    
+    # Call the endpoint
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{response_url}/generate/questions", data=form_data)
+        print(f"Questions processing response: {response.text}")
+        
+    

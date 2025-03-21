@@ -41,3 +41,7 @@ os.makedirs(COURSES_DIR, exist_ok=True)
 QUESTIONS_DIR = os.path.join(UPLOAD_FOLDER, 'questions')
 os.makedirs(QUESTIONS_DIR, exist_ok=True)
 
+# make summaries directory if it doesn't exist, under the uploads directory
+SUMMARIES_DIR = os.path.join(UPLOAD_FOLDER, 'summaries')
+os.makedirs(SUMMARIES_DIR, exist_ok=True)
+

@@ -17,6 +17,10 @@ RUN apt-get update && apt-get install -y \
     swig \
     build-essential \
     python3-dev \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    latexmk \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

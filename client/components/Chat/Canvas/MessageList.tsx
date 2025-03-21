@@ -17,7 +17,7 @@ import {
   groupConsecutiveDocuments,
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getProfessor } from "@/utils/queries/get-professor";
@@ -34,6 +34,10 @@ import { Checkbox } from "@mantine/core";
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { useHotkeys } from '@mantine/hooks';
 import { TypeAnimation } from 'react-type-animation'; // Make sure this is imported
+import { getSummaries } from "@/utils/queries/get-summaries";
+import { getQuestions } from "@/utils/queries/get-questions";
+import SummaryViewer from "@/components/Viewer/SummaryViewer";
+import QuestionViewer from "@/components/Viewer/QuestionViewer";
 
 interface MessageListProps {
   chatId: string;
@@ -62,6 +66,7 @@ export const MessageList = memo(({
   fullscreen = false,
 }: MessageListProps) => {
   const supabase = useSupabaseBrowser();
+  const queryClient = useQueryClient();
 
   const { data: messages, isLoading: isLoadingMessages } = useQuery({
     queryKey: ["messages", chatId],
@@ -135,6 +140,18 @@ export const MessageList = memo(({
     queryKey: ["homeworkExercises", classId],
     queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
     enabled: !!homeworks
+  });
+
+  const { data: summaries } = useQuery({
+    queryKey: ["summaries", chatId],
+    queryFn: () => getSummaries(supabase, messages!.map(m => m.id)),
+    enabled: !!messages
+  });
+
+  const { data: questions } = useQuery({
+    queryKey: ["questions", chatId],
+    queryFn: () => getQuestions(supabase, messages!.map(m => m.id)),
+    enabled: !!messages
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -306,6 +323,53 @@ export const MessageList = memo(({
       scrollToBottom();
     }
   }, [messages]);
+
+  // realtime subscriptions for summaries and questions
+  // Add realtime subscriptions for course-specific data when viewing a course
+  useEffect(() => {
+    if (!user || !messages) return;
+    // Create channels for lectures, textbooks, and homeworks
+    const summariesChannel = supabase
+      .channel('realtime-summaries')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'prod',
+          table: 'summaries',
+          filter: `message=in.(${messages.map(m => m.id).join(',')})`
+        },
+        () => {
+          queryClient.invalidateQueries({
+            queryKey: ["summaries"]
+          });
+        }
+      )
+      .subscribe();
+
+    const questionsChannel = supabase
+      .channel('realtime-questions')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'prod',
+          table: 'questions',
+          filter: `message=in.(${messages.map(m => m.id).join(',')})`
+        },
+        () => {
+          queryClient.invalidateQueries({
+            queryKey: ["questions"]
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(summariesChannel);
+      supabase.removeChannel(questionsChannel);
+    };
+  }, [user, queryClient, messages]);
 
   const renderWelcomeMessages = () => {
     return (
@@ -1101,6 +1165,20 @@ export const MessageList = memo(({
                                               </>
                                             )}
                                           </Box>
+                                        </Box>
+                                      )}
+                                      {segment.summaryId && summaries && (
+                                        <Box my="md">
+                                          {summaries.find(s => s.id === segment.summaryId) && (
+                                            <SummaryViewer summary={summaries.find(s => s.id === segment.summaryId)!} />
+                                          )}
+                                        </Box>
+                                      )}
+                                      {segment.questionId && questions && (
+                                        <Box my="md">
+                                          {questions.find(q => q.id === segment.questionId) && (
+                                            <QuestionViewer question={questions.find(q => q.id === segment.questionId)!} />
+                                          )}
                                         </Box>
                                       )}
                                     </Box>

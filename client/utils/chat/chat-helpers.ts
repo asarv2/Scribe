@@ -36,6 +36,59 @@ export const filterCodeBlocks = (text: string): string => {
         currentIndex = endIndex + 7; // 7 is length of '</CODE>'
     }
 
+    // Handle <SUMMARY> tags
+    while (true) {
+        const startIndex = result.indexOf('<SUMMARY>', currentIndex);
+        if (startIndex === -1) {
+            break;
+        }
+
+        // Add text before the summary
+        result += text.slice(currentIndex, startIndex);
+
+        // Find the closing tag
+        const endIndex = result.indexOf('</SUMMARY>', startIndex);
+        if (endIndex === -1) {
+            // No closing tag found, add placeholder and stop
+            result += '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>';
+            break;
+        }
+
+        // Add placeholder for the summary
+        result += '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>';
+
+        // Move the current index past the summary
+        currentIndex = startIndex + 11; // 11 is length of '</SUMMARY>'
+    }
+
+    // Handle <QUESTION> tags
+    while (true) {
+        const startIndex = result.indexOf('<QUESTION>', currentIndex);
+        if (startIndex === -1) {
+            // No more question tags, add the remaining text
+            result += text.slice(currentIndex);
+            break;
+        }
+
+        // Add text before the question
+        result += text.slice(currentIndex, startIndex);
+
+        // Find the closing tag
+        const endIndex = result.indexOf('</QUESTION>', startIndex);
+        if (endIndex === -1) {
+            // No closing tag found, add placeholder and stop
+            result += '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>';
+            break;
+        }
+
+        // Add placeholder for the question
+        result += '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>';
+
+        // Move the current index past the question
+        currentIndex = startIndex + 18; // 18 is length of '</QUESTION_GENERATION>'
+
+    }
+
     // Also filter out triple backtick code blocks
     return filterTripleBacktickCodeBlocks(result);
 };
@@ -135,54 +188,133 @@ export const splitTextByDocuments = (text: string): { text: string; documentId: 
 };
 
 // Split text by figure references
-export const splitTextByFigures = (text: string): { text: string; figureId: string | null }[] => {
+export const splitTextByFigures = (text: string): { text: string; figureId: string | null; summaryId: string | null; questionId: string | null }[] => {
     if (!text) return [];
 
-    const result: { text: string; figureId: string | null }[] = [];
+    const result: { text: string; figureId: string | null; summaryId: string | null; questionId: string | null }[] = [];
     let currentIndex = 0;
 
     while (true) {
-        // Find the next figure tag
-        const startIndex = text.indexOf('<FIGURE>', currentIndex);
+        // Find the next tag (figure, summary, or question)
+        const figureStartIndex = text.indexOf('<FIGURE>', currentIndex);
+        const summaryStartIndex = text.indexOf('<SUMMARY_GENERATION>', currentIndex);
+        const questionStartIndex = text.indexOf('<QUESTION_GENERATION>', currentIndex);
+        
+        // Find the earliest tag
+        let startIndex = -1;
+        let tagType = '';
+        
+        if (figureStartIndex !== -1 && (summaryStartIndex === -1 || figureStartIndex < summaryStartIndex) && 
+            (questionStartIndex === -1 || figureStartIndex < questionStartIndex)) {
+            startIndex = figureStartIndex;
+            tagType = 'figure';
+        } else if (summaryStartIndex !== -1 && (questionStartIndex === -1 || summaryStartIndex < questionStartIndex)) {
+            startIndex = summaryStartIndex;
+            tagType = 'summary';
+        } else if (questionStartIndex !== -1) {
+            startIndex = questionStartIndex;
+            tagType = 'question';
+        }
+        
         if (startIndex === -1) {
-            // No more figure tags, add the remaining text if any
+            // No more tags, add the remaining text if any
             if (currentIndex < text.length) {
                 result.push({
                     text: text.slice(currentIndex),
-                    figureId: null
+                    figureId: null,
+                    summaryId: null,
+                    questionId: null
                 });
             }
             break;
         }
 
-        // Add the text before the figure tag
+        // Add the text before the tag
         if (startIndex > currentIndex) {
             result.push({
                 text: text.slice(currentIndex, startIndex),
-                figureId: null
+                figureId: null,
+                summaryId: null,
+                questionId: null
             });
         }
 
-        // Find the closing tag
-        const endIndex = text.indexOf('</FIGURE>', startIndex);
-        if (endIndex === -1) {
-            // No closing tag found, add remaining text and stop
+        if (tagType === 'figure') {
+            // Handle figure tag
+            const endIndex = text.indexOf('</FIGURE>', startIndex);
+            if (endIndex === -1) {
+                // No closing tag found, add remaining text and stop
+                result.push({
+                    text: text.slice(currentIndex),
+                    figureId: null,
+                    summaryId: null,
+                    questionId: null
+                });
+                break;
+            }
+
+            // Extract the figure ID
+            const figureId = text.slice(startIndex + 8, endIndex);
             result.push({
-                text: text.slice(currentIndex),
-                figureId: null
+                text: '',
+                figureId,
+                summaryId: null,
+                questionId: null
             });
-            break;
+
+            // Move the current index past the figure tag
+            currentIndex = endIndex + 9; // 9 is length of '</FIGURE>'
+        } else if (tagType === 'summary') {
+            // Handle summary tag
+            const endIndex = text.indexOf('</SUMMARY_GENERATION>', startIndex);
+            if (endIndex === -1) {
+                // No closing tag found, add remaining text and stop
+                result.push({
+                    text: text.slice(currentIndex),
+                    figureId: null,
+                    summaryId: null,
+                    questionId: null
+                });
+                break;
+            }
+
+            // Extract the summary ID
+            const summaryId = text.slice(startIndex + 19, endIndex);
+            result.push({
+                text: '',
+                figureId: null,
+                summaryId,
+                questionId: null
+            });
+
+            // Move the current index past the summary tag
+            currentIndex = endIndex + 21; // 21 is length of '</SUMMARY_GENERATION>'
+        } else if (tagType === 'question') {
+            // Handle question tag
+            const endIndex = text.indexOf('</QUESTION_GENERATION>', startIndex);
+            if (endIndex === -1) {
+                // No closing tag found, add remaining text and stop
+                result.push({
+                    text: text.slice(currentIndex),
+                    figureId: null,
+                    summaryId: null,
+                    questionId: null
+                });
+                break;
+            }
+
+            // Extract the question ID
+            const questionId = text.slice(startIndex + 20, endIndex);
+            result.push({
+                text: '',
+                figureId: null,
+                summaryId: null,
+                questionId
+            });
+
+            // Move the current index past the question tag
+            currentIndex = endIndex + 22; // 22 is length of '</QUESTION_GENERATION>'
         }
-
-        // Extract the figure ID
-        const figureId = text.slice(startIndex + 8, endIndex);
-        result.push({
-            text: '',  // No text content for figure references
-            figureId
-        });
-
-        // Move the current index past the figure tag
-        currentIndex = endIndex + 9; // 9 is length of '</FIGURE>'
     }
 
     return result;

@@ -944,6 +944,56 @@ export type Database = {
         }
         Relationships: []
       }
+      questions: {
+        Row: {
+          answers: string[]
+          computational: boolean
+          created_at: string
+          frq: boolean
+          id: string
+          message: string
+          multi: string | null
+          options: string[]
+          problem: string
+          prompt: string
+          solution: string
+        }
+        Insert: {
+          answers?: string[]
+          computational?: boolean
+          created_at?: string
+          frq?: boolean
+          id?: string
+          message: string
+          multi?: string | null
+          options?: string[]
+          problem?: string
+          prompt?: string
+          solution?: string
+        }
+        Update: {
+          answers?: string[]
+          computational?: boolean
+          created_at?: string
+          frq?: boolean
+          id?: string
+          message?: string
+          multi?: string | null
+          options?: string[]
+          problem?: string
+          prompt?: string
+          solution?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rules: {
         Row: {
           chapters: string[]
@@ -1025,6 +1075,44 @@ export type Database = {
             columns: ["chapter"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      summaries: {
+        Row: {
+          body: string
+          conclusion: string
+          created_at: string
+          id: string
+          message: string | null
+          preamble: string
+          prompt: string
+        }
+        Insert: {
+          body?: string
+          conclusion?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          preamble?: string
+          prompt?: string
+        }
+        Update: {
+          body?: string
+          conclusion?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          preamble?: string
+          prompt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summaries_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
         ]
