@@ -955,6 +955,11 @@
   resolved "https://registry.npmjs.org/@vercel/analytics/-/analytics-1.4.1.tgz"
   integrity sha512-ekpL4ReX2TH3LnrRZTUKjHHNpNy9S1I7QmS+g/RQXoSUQ8ienzosuX7T9djZ/s8zPhBx1mpHP/Rw5875N+zQIQ==
 
+"@wavesurfer/react@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@wavesurfer/react/-/react-1.0.9.tgz#7ee038d48ba22293858dd575b38c6db153c886f7"
+  integrity sha512-HD3x+p48kWITd3tCOA7KG+6zae8btulNjSTdnRmgrtp9/XPzXc61ZCaPgbqT0gioPGhIcvBcpXZAmnhE8lUDBw==
+
 "@xyflow/react@^12.3.5":
   version "12.3.5"
   resolved "https://registry.npmjs.org/@xyflow/react/-/react-12.3.5.tgz"
@@ -4340,6 +4345,11 @@ warning@^4.0.0:
   integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
   dependencies:
     loose-envify "^1.0.0"
+
+wavesurfer.js@^7.9.3:
+  version "7.9.3"
+  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-7.9.3.tgz#174d65da0075c97740409c9de82ec6a27f294f9a"
+  integrity sha512-GgYIQjZYu4Q2tm+qrFhBCoQm+K7+SGqulEsKXndIjmJ4b/drA1umjgQlDc+wGotGAef/8hH/gu5f3bf19yDyxw==
 
 web-namespaces@^2.0.0:
   version "2.0.1"

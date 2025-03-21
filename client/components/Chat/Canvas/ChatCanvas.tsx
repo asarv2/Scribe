@@ -38,11 +38,15 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
+import Immersive from "../Immersive/Immersive";
+import { ImmersiveMessageList } from "../Immersive/ImmersiveMessageList";
+import { ImmersiveChatInput } from "../Immersive/ImmersiveChatInput";
 
 export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
+        immersive: false,
         active: false,
         open: chatId === "new"
     });
@@ -485,48 +489,75 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         }
     };
 
+    const enterImmersive = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            immersive: true,
+        }));
+        toggle();
+    };
+
+    const exitImmersive = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            immersive: false,
+        }));
+        toggle();
+    };
     return (
         <ClassLayout classId={classId} showHeader={!fullscreen}>
             <Container fluid>
                 <Stack>
                     <Flex justify="space-between" align="center">
-                        <Group gap="sm">
-                            {chatId !== "new" && <Tooltip label="New chat">
-                                <ActionIcon
-                                    variant="subtle"
-                                    size="md"
-                                    aria-label="Start a new chat"
-                                    onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
-                                    mb={3}
-                                >
-                                    <IconPlus size={18} />
-                                </ActionIcon>
-                            </Tooltip>}
-                            <Text size="xl" fw={700} mb={6}>
-                                {existingChat ? (
-                                    <TypeAnimation
-                                        key={`${existingChat.id}-${receivedRealtimeUpdate}`}
-                                        sequence={[
-                                            existingChat.name || '',
-                                        ]}
-                                        wrapper="span"
-                                        cursor={false}
-                                        repeat={0}
-                                        speed={50}
-                                        preRenderFirstString={!receivedRealtimeUpdate}
-                                        style={{
-                                            fontSize: '1.25rem',
-                                            fontWeight: 700,
-                                            display: 'inline-block',
-                                        }}
-                                    />
-                                ) : (
-                                    activeChat.title
-                                )}
-                            </Text>
-                        </Group>
+                        {viewerMode.immersive ? <div /> :
+                            <Group gap="sm">
+                                <Text size="xl" fw={700} mb={6}>
+                                    {existingChat ? (
+                                        <TypeAnimation
+                                            key={`${existingChat.id}-${receivedRealtimeUpdate}`}
+                                            sequence={[
+                                                existingChat.name || '',
+                                            ]}
+                                            wrapper="span"
+                                            cursor={false}
+                                            repeat={0}
+                                            speed={50}
+                                            preRenderFirstString={!receivedRealtimeUpdate}
+                                            style={{
+                                                fontSize: '1.25rem',
+                                                fontWeight: 700,
+                                                display: 'inline-block',
+                                            }}
+                                        />
+                                    ) : (
+                                        activeChat.title
+                                    )}
+                                </Text>
+                            </Group>}
                         <Group gap="xs">
-                            <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
+                            {viewerMode.immersive ?
+                                <Tooltip label="Exit immersive">
+                                    <ActionIcon
+                                        variant="subtle"
+                                        size="md"
+                                        onClick={exitImmersive}
+                                        aria-label="Toggle immersive"
+                                    >
+                                        <IconEyeOff size={18} />
+                                    </ActionIcon>
+                                </Tooltip> : <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
+                                    <ActionIcon
+                                        variant="subtle"
+                                        size="md"
+                                        onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
+                                        aria-label="Toggle context panel"
+                                    >
+                                        {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
+                                    </ActionIcon>
+                                </Tooltip>
+                            }
+
+                            {/* <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
                                 <ActionIcon
                                     variant="subtle"
                                     size="md"
@@ -535,81 +566,124 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                 >
                                     {fullscreen ? <IconMaximizeOff size={18} /> : <IconMaximize size={18} />}
                                 </ActionIcon>
-                            </Tooltip>
+                            </Tooltip> */}
                         </Group>
                     </Flex>
-
                     <Grid>
-                        <Grid.Col
-                            span={isMobile ? 12 : (viewerMode.open) ? 8 : 12}
-                            style={{
-                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
-                            }}
-                        >
-                            <Card
-                                shadow={"sm"}
-                                padding={"lg"}
-                                radius="md"
-                                withBorder={true}
+                        {viewerMode.immersive ?
+                            <>
+                                <Grid.Col span={3} />
+                                <Grid.Col span={6}>
+                                    <Stack>
+                                        <ImmersiveMessageList
+                                            chatId={chatId}
+                                            classId={classId}
+                                            colorScheme={colorScheme}
+                                            existingChat={existingChat ?? null}
+                                            activeChat={activeChat}
+                                            setActiveChat={setActiveChat}
+                                            onOptionClick={handleOptionClick}
+                                            setViewerMode={setViewerMode}
+                                            isInitializing={isInitializing}
+                                            loading={loading}
+                                            fullscreen={fullscreen}
+                                        />
+                                        <ImmersiveChatInput
+                                            activeChat={activeChat}
+                                            loading={loading}
+                                            classId={classId}
+                                            onPromptChange={handlePromptChange}
+                                            onSend={handleChat}
+                                            onRemoveContext={removeContextFromChat}
+                                            onScrollToSection={handleScrollToSection}
+                                            setViewerMode={setViewerMode}
+                                            expandedSections={expandedSections}
+                                            toggleSection={toggleSection}
+                                        />
+                                    </Stack>
+                                </Grid.Col>
+                            </> :
+                            <Grid.Col
+                                span={isMobile ? 12 : (viewerMode.open) ? 8 : 12}
                                 style={{
-                                    height: fullscreen ? "90vh" : "80vh"
+                                    transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
                                 }}
                             >
-                                {/* Show controls only when not in immersive mode */}
-                                <Flex justify="space-between" align="center" mb={10}>
-                                    {/* Chat history, context toggle, and new chat buttons */}
-                                    <Group gap="xs" ml="auto">
-                                        <ChatHistoryDropdown
-                                            currentChatId={chatId}
-                                            onChatSelect={handleChatSelect}
-                                            classId={classId}
-                                        />
-                                        {/* Context panel toggle */}
-                                        <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
-                                            <ActionIcon
-                                                variant="subtle"
-                                                size="md"
-                                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                                aria-label="Toggle context panel"
-                                            >
-                                                {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
-                                            </ActionIcon>
-                                        </Tooltip>
-                                    </Group>
-                                </Flex>
+                                <Card
+                                    shadow={"sm"}
+                                    padding={"lg"}
+                                    radius="md"
+                                    withBorder={true}
+                                    style={{
+                                        height: fullscreen ? "90vh" : "80vh"
+                                    }}
+                                >
+                                    {/* Show controls only when not in immersive mode */}
+                                    <Flex justify="space-between" align="center" mb={10}>
+                                        {/* Chat history, context toggle, and new chat buttons */}
+                                        <Group gap="xs" ml="auto">
+                                            {chatId !== "new" && <Tooltip label="New chat">
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    aria-label="Start a new chat"
+                                                    onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                                    mb={3}
+                                                >
+                                                    <IconPlus size={18} />
+                                                </ActionIcon>
+                                            </Tooltip>}
+                                            <ChatHistoryDropdown
+                                                currentChatId={chatId}
+                                                onChatSelect={handleChatSelect}
+                                                classId={classId}
+                                            />
+                                            {/* Context panel toggle */}
+                                            {/* <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
+                                                    aria-label="Toggle context panel"
+                                                >
+                                                    {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
+                                                </ActionIcon>
+                                            </Tooltip> */}
+                                        </Group>
+                                    </Flex>
 
-                                <MessageList
-                                    chatId={chatId}
-                                    classId={classId}
-                                    colorScheme={colorScheme}
-                                    existingChat={existingChat ?? null}
-                                    activeChat={activeChat}
-                                    setActiveChat={setActiveChat}
-                                    onOptionClick={handleOptionClick}
-                                    setViewerMode={setViewerMode}
-                                    isInitializing={isInitializing}
-                                    loading={loading}
-                                    fullscreen={fullscreen}
-                                />
+                                    <MessageList
+                                        chatId={chatId}
+                                        classId={classId}
+                                        colorScheme={colorScheme}
+                                        existingChat={existingChat ?? null}
+                                        activeChat={activeChat}
+                                        setActiveChat={setActiveChat}
+                                        onOptionClick={handleOptionClick}
+                                        setViewerMode={setViewerMode}
+                                        isInitializing={isInitializing}
+                                        loading={loading}
+                                        fullscreen={fullscreen}
+                                    />
 
-                                <ChatInput
-                                    activeChat={activeChat}
-                                    loading={loading}
-                                    classId={classId}
-                                    onPromptChange={handlePromptChange}
-                                    onSend={handleChat}
-                                    onRemoveContext={removeContextFromChat}
-                                    onScrollToSection={handleScrollToSection}
-                                    setViewerMode={setViewerMode}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                />
-                            </Card>
-                        </Grid.Col>
+                                    <ChatInput
+                                        activeChat={activeChat}
+                                        loading={loading}
+                                        classId={classId}
+                                        onPromptChange={handlePromptChange}
+                                        onSend={handleChat}
+                                        onRemoveContext={removeContextFromChat}
+                                        onScrollToSection={handleScrollToSection}
+                                        setViewerMode={setViewerMode}
+                                        expandedSections={expandedSections}
+                                        toggleSection={toggleSection}
+                                        toggleImmersive={enterImmersive}
+                                    />
+                                </Card>
+                            </Grid.Col>}
 
-                        {/* Only show context panel in normal mode */}
                         <Grid.Col
-                            span={isMobile ? 12 : 4}
+                            span={isMobile ? 12 : (viewerMode.immersive) ? 3 : 4}
                             style={{
                                 display: (viewerMode.open) ? 'block' : 'none',
                                 transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',

@@ -47,6 +47,7 @@ export interface ChatMessage {
 export interface ViewerMode {
     active: boolean; // whether we are on a document
     open: boolean; // whether the viewer is open
+    immersive: boolean; // whether the viewer is in immersive mode
     documentId?: string; // this goes with either lecture or chapter
     lectureId?: string; // source of truth for lecture
     textbookId?: string; // used soley for chapter convienence

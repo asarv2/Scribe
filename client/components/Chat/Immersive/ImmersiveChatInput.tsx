@@ -1,12 +1,12 @@
 import { ChatMessage, Subchapter, Document, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box } from "@mantine/core";
-import { ContextBadges } from "./ContextBadges";
+import { ContextBadges } from "../Canvas/ContextBadges";
 import { memo, useRef, useState, useEffect } from "react";
 import { Chapter } from "@/types";
 import { useMantineColorScheme } from "@mantine/core";
 import { IconSend, IconEye } from "@tabler/icons-react";
 
-interface ChatInputProps {
+interface ImmersiveChatInputProps {
   activeChat: ChatMessage;
   loading: boolean;
   classId: string;
@@ -17,10 +17,9 @@ interface ChatInputProps {
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   expandedSections: Set<string>;
   toggleSection: (section: string) => void;
-  toggleImmersive: () => void;
 }
 
-export const ChatInput = memo(({
+export const ImmersiveChatInput = memo(({
   activeChat,
   loading,
   classId,
@@ -31,8 +30,7 @@ export const ChatInput = memo(({
   setViewerMode,
   expandedSections,
   toggleSection,
-  toggleImmersive,
-}: ChatInputProps) => {
+}: ImmersiveChatInputProps) => {
   const { colorScheme } = useMantineColorScheme();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -92,43 +90,17 @@ export const ChatInput = memo(({
           value={activeChat.prompt}
           onChange={(e) => onPromptChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={"Type your message here..."}
+          placeholder={""}
           autosize
+          size="lg"
           style={{ paddingRight: '40px' }}
+          variant="unstyled"
         />
 
         {/* Only show send icon in normal mode */}
-        {!!activeChat.prompt.trim() ?
-          <Tooltip label="Send">
-            <ActionIcon
-              onClick={onSend}
-              style={{
-                position: 'absolute',
-                right: '0',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            >
-              <IconSend size={18} />
-            </ActionIcon>
-          </Tooltip> :
-          <Tooltip label="Immersive">
-            <ActionIcon
-              onClick={toggleImmersive}
-              style={{
-                position: 'absolute',
-                right: '0',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            >
-              <IconEye size={18} />
-            </ActionIcon>
-          </Tooltip>
-        }
       </Box>
     </Stack>
   );
 });
 
-ChatInput.displayName = 'ChatInput';
+ImmersiveChatInput.displayName = 'ImmersiveChatInput';

@@ -531,6 +531,7 @@ export const MessageList = memo(({
       setViewerMode(prev => ({
         active: true,
         open: true,
+        immersive: false,
         documentId,
         lectureId: contextId,
         exerciseId: undefined,
@@ -544,6 +545,7 @@ export const MessageList = memo(({
         ...prev,
         active: true,
         open: true,
+        immersive: false,
         chapterId: contextId,
         exerciseId,
         lectureId: undefined,
@@ -558,6 +560,7 @@ export const MessageList = memo(({
         ...prev,
         active: true,
         open: true,
+        immersive: false,
         documentId: documentId || undefined,
         textbookId,
         chapterId: contextId,
@@ -574,6 +577,7 @@ export const MessageList = memo(({
         ...prev,
         active: true,
         open: true,
+        immersive: false,
         homeworkId: contextId,
         exerciseId,
         textbookId: undefined,
@@ -978,7 +982,7 @@ export const MessageList = memo(({
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
         <>
           {renderWelcomeMessages()}
-          {messages?.map((message, index) => (
+          {(messages)?.map((message, index) => (
             <Stack key={`${message.id}`}>
               {/* User message */}
               <Flex gap="md" justify="flex-end" align="flex-start">

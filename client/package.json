@@ -32,6 +32,7 @@
     "@tanstack/react-virtual": "^3.13.2",
     "@types/pdfjs-dist": "^2.10.378",
     "@vercel/analytics": "^1.4.1",
+    "@wavesurfer/react": "^1.0.9",
     "@xyflow/react": "^12.3.5",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
@@ -62,7 +63,8 @@
     "react-type-animation": "^3.2.0",
     "recharts": "2",
     "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
+    "remark-math": "^6.0.0",
+    "wavesurfer.js": "^7.9.3"
   },
   "devDependencies": {
     "@types/html-to-pdfmake": "^2.4.4",

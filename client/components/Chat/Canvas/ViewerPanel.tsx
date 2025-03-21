@@ -72,10 +72,18 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
 
     // Modify the close handler to fully close the panel
     const handleClose = () => {
-        setViewerMode(prev => ({
-            ...prev,
-            active: false,
-        }));
+        if (viewerMode.immersive) {
+            setViewerMode(prev => ({
+                ...prev,
+                active: false,
+                open: false,
+            }));
+        } else {
+            setViewerMode(prev => ({
+                ...prev,
+                active: false,
+            }));
+        }
     };
 
     return (
