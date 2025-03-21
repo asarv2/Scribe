@@ -1,11 +1,12 @@
 import asyncio
+import os
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from datetime import datetime
 import traceback
 from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncGenerator
 from pydantic import BaseModel
-from app.extensions import supabase
+from app.extensions import supabase, QUESTIONS_DIR
 from app.services.chat.chat_processor import ChatProcessor, ChatMessage
 from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
 import json
@@ -172,9 +173,13 @@ async def handle_message(request: ChatRequest):
             ):
                 pass  # We're handling updates in the callback
 
+
+            # Extract and remove the practice problem prompts from the response
+            practice_problem_prompts, reference_response = processor.extract_practice_problem_prompts(total_response)
+
             # Clean the response and extract document references
             cleaned_result = processor.clean_result(
-                total_response,
+                reference_response,
                 all_lectures=all_lectures,
                 all_chapters=all_chapters,
                 all_homeworks=all_homeworks,
@@ -195,6 +200,25 @@ async def handle_message(request: ChatRequest):
                 "generation_status": "complete",
                 "generation_error": ""
             }).eq("id", message_id).execute()
+
+            # generate practice problems
+            practice_problems = await processor.generate_practice_problems(
+                practice_problem_prompts,
+                output_rules,
+                message_context,
+                all_lectures,
+                all_chapters,
+                all_homeworks,
+                all_lecture_documents,
+                all_chapter_documents,
+                all_chapter_exercises,
+                all_homework_exercises,
+            )
+
+            # save the practice problems to the questions directory
+            for problem in practice_problems:
+                with open(os.path.join(QUESTIONS_DIR, f"{problem['id']}.json"), "w") as f:
+                    json.dump(problem, f)
 
             return {"status": "success", "message_id": message_id}
 

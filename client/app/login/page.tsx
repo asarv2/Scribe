@@ -69,7 +69,11 @@ export default function Login() {
                 if (!firstClass) {
                     throw new Error("No classes found")
                 }
-                router.push(`/classes/c/${firstClass.id}`)
+                if (profile.admin || profile.professor) {
+                    router.push(`/classes/c/${firstClass.id}`)
+                } else {
+                    router.push(`/classes/c/${firstClass.id}/chat/new`)
+                }
             }
 
             notifications.show({

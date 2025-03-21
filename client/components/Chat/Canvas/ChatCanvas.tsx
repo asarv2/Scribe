@@ -32,7 +32,6 @@ import { createMessages } from "@/utils/services/messages";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { getChapters } from "@/utils/queries/get-chapters";
-import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getExercises } from "@/utils/queries/get-exercises";
@@ -524,41 +523,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     activeChat.title
                                 )}
                             </Text>
-
-                            {/* {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
-                                        <Badge color={
-                                            existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'blue' :
-                                                existingChat.type === 'concept' ? 'cyan' :
-                                                    existingChat.type === 'review' ? 'teal' :
-                                                        existingChat.type === 'method' ? 'green' :
-                                                            existingChat.type === 'generate' ? 'indigo' :
-                                                                existingChat.type === 'other' ? 'orange' :
-                                                                    'gray'
-                                        }>
-                                            {existingChat.type.startsWith('homework-')
-                                                ? 'Homework'
-                                                : existingChat.type === 'concept'
-                                                    ? 'Conceptual'
-                                                    : existingChat.type === 'method'
-                                                        ? 'Approach'
-                                                        : existingChat.type === 'generate'
-                                                            ? 'Generated'
-                                                            : existingChat.type === 'other'
-                                                                ? 'Other'
-                                                                : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
-                                        </Badge>
-                                    )} */}
                         </Group>
-
-                        {/* {existingChat && existingChat.rating !== null && (
-                                    <Group>
-                                        <Rating
-                                            value={existingChat.rating}
-                                            readOnly
-                                            size="md"
-                                        />
-                                    </Group>
-                                )} */}
                         <Group gap="xs">
                             <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
                                 <ActionIcon
@@ -609,18 +574,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                                 {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
                                             </ActionIcon>
                                         </Tooltip>
-
-                                        {/* <Tooltip label="Start a new chat">
-                                                <ActionIcon 
-                                                    variant="subtle" 
-                                                    size="md" 
-                                                    aria-label="Start a new chat"
-                                                    onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
-                                                    disabled={chatId === "new"}
-                                                >
-                                                    <IconPlus size={18} />
-                                                </ActionIcon>
-                                            </Tooltip> */}
                                     </Group>
                                 </Flex>
 

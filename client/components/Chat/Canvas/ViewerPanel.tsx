@@ -167,10 +167,10 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                             />
 
                         </Box>
-                        <Button
+                        {activeChat.context.homeworks.includes(viewerMode.homeworkId ?? "") ? null : <Button
                             leftSection={<IconPlus size={16} />}
                             onClick={() => addContextToChat("homeworks", viewerMode.homeworkId ?? "")}
-                        >Add Homework to Chat</Button>
+                        >Add Homework to Chat</Button>}
                     </>
                 ) : null}
 

@@ -16,7 +16,6 @@ import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getChapters } from "@/utils/queries/get-chapters";
-import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";

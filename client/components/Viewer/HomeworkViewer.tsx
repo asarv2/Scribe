@@ -240,16 +240,16 @@ export default function HomeworkViewer({
                         onClick={openImageModal} // Add click handler to open modal
                     />
                     <ActionIcon
-                        size="lg"
-                        variant="filled"
-                        color={colorScheme === "dark" ? "gray" : "dark"}
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: 5,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
+                       size={"lg"}
+                       variant="filled"
+                       color="gray"
+                       style={{
+                           position: 'absolute',
+                           top: '50%',
+                           left: 5,
+                           transform: 'translateY(-50%)',
+                           zIndex: 100,
+                       }}
                         onClick={() => {
                             const sortedExercises = exercises ? sortExercises(exercises) : [];
                             const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
@@ -260,7 +260,7 @@ export default function HomeworkViewer({
                         disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
                         aria-label="Previous Exercise"
                     >
-                        <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                        <IconArrowLeft size={24} />
                     </ActionIcon>
                     <ActionIcon
                         size="lg"
@@ -292,7 +292,7 @@ export default function HomeworkViewer({
                         p={4}
                         style={{
                             zIndex: 100,
-                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                            backgroundColor: "rgba(0,0,0,0.7)",
                             borderRadius: "4px",
                         }}
                     >
@@ -300,10 +300,8 @@ export default function HomeworkViewer({
                             size="xs"
                             fw={500}
                             style={{
-                                color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ?
-                                    "0px 0px 4px rgba(0,0,0,0.5)" :
-                                    "0px 0px 4px rgba(255,255,255,0.5)"
+                                    color: "white",
+                                    textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
                             }}
                         >
                             Problem {exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}

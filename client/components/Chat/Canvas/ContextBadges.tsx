@@ -11,7 +11,6 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { getChapters } from "@/utils/queries/get-chapters";
-import { getSubchapters } from "@/utils/queries/get-subchapters";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getExercises } from "@/utils/queries/get-exercises";
@@ -68,12 +67,6 @@ export const ContextBadges = memo(({
         queryKey: ["chapters", classId],
         queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
         enabled: !!textbooks
-    });
-
-    const { data: subchapters } = useQuery({
-        queryKey: ["subchapters", classId],
-        queryFn: () => getSubchapters(supabase, chapters!.map(c => c.id)),
-        enabled: !!chapters
     });
 
     const { data: homeworkData } = useQuery({

@@ -527,7 +527,7 @@ export const MessageList = memo(({
   };
 
   // Function to render context badges for user messages
-  const renderMessageContext = (message: any) => {
+  const renderMessageContext = (message: Message) => {
     // Check if this message has any context attached
     const hasLectures = message.lectures && message.lectures.length > 0;
     const hasChapters = message.chapters && message.chapters.length > 0;
@@ -538,7 +538,7 @@ export const MessageList = memo(({
     }
 
     return (
-      <Group gap="xs" mt="xs" style={{ justifyContent: 'flex-end' }}>
+      <Group gap="xs" style={{ justifyContent: 'flex-end' }}>
         {/* Render lecture badges */}
         {hasLectures && message.lectures.map((lectureId: string) => {
           const lecture = lectures?.find(l => l.id === lectureId);
@@ -946,15 +946,15 @@ export const MessageList = memo(({
                     </Text>
 
                     {/* Display message-specific context badges */}
-                    {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0) &&
-                      renderMessageContext(message)
-                    }
 
                     {/* Show auto-added context badges only for the first message */}
                     {/* {index === 0 && !message.lectures?.length && !message.chapters?.length && !message.homeworks?.length &&
                           renderAutoAddedContextBadges()
                         } */}
                   </Card>
+                  {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0) &&
+                    renderMessageContext(message)
+                  }
                 </Stack>
               </Flex>
 

@@ -179,8 +179,8 @@ async def fetch_homework_resources(supabase, homework_ids):
         all_exercises = exercises_response.data or []
         
 
-    print("All homeworks: ", all_homeworks)
-    print("All exercises: ", all_exercises)
+    # print("All homeworks: ", all_homeworks)
+    # print("All exercises: ", all_exercises)
     
     return {
         "homeworks": all_homeworks,

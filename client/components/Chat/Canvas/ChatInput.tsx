@@ -21,11 +21,11 @@ interface ChatInputProps {
   onUserInterruption?: (isInterrupting: boolean) => void;
 }
 
-export const ChatInput = memo(({ 
-  activeChat, 
-  loading, 
+export const ChatInput = memo(({
+  activeChat,
+  loading,
   classId,
-  onPromptChange, 
+  onPromptChange,
   onSend,
   onRemoveContext,
   onScrollToSection,
@@ -45,20 +45,41 @@ export const ChatInput = memo(({
     }
   };
 
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      // Only trigger if focus is not already on an input or contenteditable element
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      // Check if the key is a single character and not a modifier key (optional)
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // Focus the text area if not already focused
+        textareaRef.current?.focus();
+        // Optionally, you could also add the pressed key to the current value:
+        // onPromptChange(activeChat.prompt + e.key);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
   return (
     <Stack gap={"md"}>
       {/* Show context badges in normal mode only */}
-        <Box>
-          <ContextBadges 
-            activeChat={activeChat}
-            classId={classId}
-            onRemoveContext={onRemoveContext}
-            onScrollToSection={onScrollToSection}
-            setViewerMode={setViewerMode}
-            expandedSections={expandedSections}
-            toggleSection={toggleSection}
-          />
-        </Box>
+      <Box>
+        <ContextBadges
+          activeChat={activeChat}
+          classId={classId}
+          onRemoveContext={onRemoveContext}
+          onScrollToSection={onScrollToSection}
+          setViewerMode={setViewerMode}
+          expandedSections={expandedSections}
+          toggleSection={toggleSection}
+        />
+      </Box>
 
       <Box
         style={{
@@ -75,20 +96,20 @@ export const ChatInput = memo(({
           autosize
           style={{ paddingRight: '40px' }}
         />
-        
+
         {/* Only show send icon in normal mode */}
-          <ActionIcon
-            disabled={loading || !activeChat.prompt.trim()}
-            onClick={onSend}
-            style={{
-              position: 'absolute',
-              right: '0',
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            <IconSend size={18} />
-          </ActionIcon>
+        <ActionIcon
+          disabled={loading || !activeChat.prompt.trim()}
+          onClick={onSend}
+          style={{
+            position: 'absolute',
+            right: '0',
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}
+        >
+          <IconSend size={18} />
+        </ActionIcon>
       </Box>
     </Stack>
   );

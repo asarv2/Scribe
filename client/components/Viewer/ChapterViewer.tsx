@@ -222,7 +222,7 @@ export default function ChapterViewer({
                     <ActionIcon
                         size="lg"
                         variant="filled"
-                        color={colorScheme === "dark" ? "gray" : "dark"}
+                        color="gray"
                         style={{
                             position: 'absolute',
                             top: '50%',
@@ -239,7 +239,7 @@ export default function ChapterViewer({
                         disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
                         aria-label="Previous Page"
                     >
-                        <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                        <IconArrowLeft size={24} />
                     </ActionIcon>
                     <ActionIcon
                         size="lg"
@@ -270,7 +270,7 @@ export default function ChapterViewer({
                         p={4}
                         style={{
                             zIndex: 100,
-                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                            backgroundColor: "rgba(0,0,0,0.7)",
                             borderRadius: "4px",
                         }}
                     >
@@ -278,10 +278,8 @@ export default function ChapterViewer({
                             size="xs"
                             fw={500}
                             style={{
-                                color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ?
-                                    "0px 0px 4px rgba(0,0,0,0.5)" :
-                                    "0px 0px 4px rgba(255,255,255,0.5)"
+                                color: "white",
+                                textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
                             }}
                         >
                             Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
