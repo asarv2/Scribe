@@ -68,11 +68,13 @@ from app.routes.parse import router as parse_router
 from app.routes.evaluate import router as evaluate_router
 from app.routes.generate import router as generate_router
 from app.routes.upload import router as upload_router
+from app.routes.download import router as download_router
 # Include routers
 app.include_router(parse_router, prefix="/parse")
 app.include_router(evaluate_router, prefix="/evaluate")
 app.include_router(generate_router, prefix="/generate")
 app.include_router(upload_router, prefix="/upload")
+app.include_router(download_router, prefix="/download")
 
 @app.get("/", response_class=HTMLResponse)
 async def index():

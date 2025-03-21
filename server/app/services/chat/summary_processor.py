@@ -1,26 +1,12 @@
-import json
 import os
 import re
 from typing import Dict, List, TypedDict, Any, Callable, Awaitable
 from app.extensions import SUMMARIES_DIR
-from app.services.base_processor import BaseProcessor, Message
-from pylatex import Document, Section, Command, Package
-from pylatex.utils import NoEscape
+from app.services.base_processor import BaseProcessor, Message, Summary
 
 class SummaryPrompt(TypedDict):
     id: str
     additional_info: str
-
-class Summary(TypedDict):
-    id: str
-    preamble: str
-    content: str
-    conclusion: str
-    lecture_references: List[str]
-    chapter_references: List[str]
-    chapter_exercise_references: List[str]
-    homework_exercise_references: List[str]
-    figures: List[str]
 
 class SummaryProcessor(BaseProcessor):
     def __init__(
@@ -71,7 +57,6 @@ class SummaryProcessor(BaseProcessor):
             f"1. Use <PREAMBLE> and </PREAMBLE> tags to encapsulate the preamble.\n"
             f"2. Use <SUMMARY> and </SUMMARY> tags to encapsulate the summary.\n"
             f"3. Use <CONCLUSION> and </CONCLUSION> tags to encapsulate the conclusion.\n"
-            f"4. Use <OUTPUT> and </OUTPUT> tags to encapsulate the summary."
         )
 
         summary_formatting_prompt = (
@@ -103,7 +88,6 @@ class SummaryProcessor(BaseProcessor):
 
         example = (
             f"Here is a complete example of a summary for the content of the class.\n\n"
-            f"<OUTPUT>\n"
             f"<PREAMBLE>\n"
             f"This explores the simplex method and its variants for solving linear programming problems. The simplex method iteratively moves from one vertex of the feasible region to another, improving the objective function value at each step until the optimal solution is found.\n"
             f"</PREAMBLE>\n"
@@ -127,7 +111,6 @@ class SummaryProcessor(BaseProcessor):
             f"<CONCLUSION>\n"
             f"This also covers the network simplex method (both primal and dual), which leverages the network structure of certain linear programs for efficient solution. The algorithm iteratively improves the solution by modifying the spanning tree and updating primal and dual flows. Different variants of the network simplex method are discussed, including two-phased approaches that combine primal and dual methods to handle infeasible starting points.\n"
             f"</CONCLUSION>\n"
-            f"</OUTPUT>"
             f"<LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3><SLIDE 4><SLIDE 5></LECTURE>\n"
         )
 
@@ -202,12 +185,6 @@ class SummaryProcessor(BaseProcessor):
         try:
             # Clean XML code blocks
             result = result.replace("```xml", "").replace("```", "")
-
-            # Extract content between <OUTPUT> tags
-            output_match = re.search(r"<OUTPUT>(.*?)</OUTPUT>", result, re.DOTALL)
-            if not output_match:
-                raise ValueError("No output content found")
-            result = output_match.group(1).strip()
 
             # Extract preamble, summary, and conclusion
             preamble_match = re.search(r"<PREAMBLE>(.*?)</PREAMBLE>", result, re.DOTALL)
@@ -289,145 +266,6 @@ class SummaryProcessor(BaseProcessor):
 
         return self.summaries  # Return all summaries, not just the last one
     
-    def to_json(self) -> Dict:
-        """Convert the summaries to a JSON object"""
-        result = {}
-        for summary_id, summary_groups in self.summaries.items():
-            result[summary_id] = summary_groups
-        return result
-    
-    
-    def export_to_json(self, filename: str) -> None:
-        """Export the summaries to a JSON file"""
-        with open(os.path.join(SUMMARIES_DIR, filename), "w") as f:
-            json.dump(self.to_json(), f)
 
-    def to_pdf(self, name: str, summary: str, base_filename: str):
-        """
-        Save processed summary to a LaTeX PDF file using PyLaTeX.
-        """
-        geometry_options = {
-            "margin": "1in",
-            "headheight": "14pt",
-            "headsep": "25pt"
-        }
-        doc = Document(geometry_options=geometry_options)
-        
-        # Add packages
-        for pkg in ['hyperref', 'enumitem', 'fancyhdr', 'xcolor', 'url', 'breakurl']:
-            doc.packages.append(Package(pkg))
 
-        doc.preamble.append(NoEscape(r'''
-            \hypersetup{
-                colorlinks=true,
-                linkcolor=blue,
-                filecolor=magenta,
-                urlcolor=blue
-            }
-            \pagestyle{fancy}
-            \fancyhf{}
-            \rhead{Generated on \today}
-            \cfoot{\thepage}
             
-            % Configure enumeration settings
-            \setlist[enumerate,1]{label=\arabic*.}
-            \setlist[enumerate,2]{label=\alph*.}
-            \setlist[enumerate,3]{label=\Alph*.}
-            \setlist[enumerate]{itemsep=0.5em}
-            
-            % Define a command for red text
-            \newcommand{\incorrect}[1]{\textcolor{red}{#1}}
-        '''))
-        doc.preamble.append(Command('lhead', f'{name}'))
-        
-        # Title
-        doc.preamble.append(Command('title', f'Summary for {name}'))
-        doc.preamble.append(Command('author', 'Generated by Scribe.AI'))
-        doc.preamble.append(Command('date', NoEscape(r'\today')))
-        doc.append(NoEscape(r'\maketitle'))
-
-        # Questions Section
-        with doc.create(Section('Summary')):
-            doc.append(NoEscape(summary))
-
-        filename = os.path.join(SUMMARIES_DIR, name, base_filename)
-
-        log_dir = "_logs"
-        # Generate PDF with logs in separate directory
-        try:
-            # Generate PDF with logs in separate directory
-            doc.generate_pdf(
-                filename,
-                clean_tex=False,
-                compiler='latexmk',
-                compiler_args=[
-                    '-pdf',
-                    '-interaction=nonstopmode',
-                    '-file-line-error',
-                    '-shell-escape',
-                    '-8bit',
-                    # Separate auxiliary files into logs directory
-                    f'-aux-directory={log_dir}',
-                    '-recorder',
-                    '-verbose'
-                ]
-            )
-            
-            # Handle log files
-            log_extensions = ['.log', '.aux', '.out', '.fls']
-            for ext in log_extensions:
-                src_file = os.path.join(SUMMARIES_DIR, name, log_dir, f"{base_filename}{ext}")
-                if os.path.exists(src_file):
-                    # Display log content for debugging
-                    if ext == '.log':
-                        print(f"\nContents of log file:")
-                        with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
-                            lines = f.readlines()
-                            print("..." if len(lines) > 50 else "")
-                            for line in lines[-50:]:
-                                if "!" in line or "Error" in line or "Warning" in line:
-                                    print(f"ERROR/WARNING: {line.strip()}")
-                
-            print(f"PDF generated successfully: {filename}.pdf")
-            # Clean up the .tex file if successful
-            if os.path.exists(f"{filename}.tex"):
-                os.remove(f"{filename}.tex")
-            return True
-
-        except Exception as e:
-            error_msg = str(e)
-            print(f"Error during compilation: {error_msg}")
-            
-            # Error analysis and log display
-            if "! LaTeX Error:" in error_msg:
-                latex_error = re.search(r'! LaTeX Error:(.*?)\n', error_msg)
-                if latex_error:
-                    print(f"LaTeX Error: {latex_error.group(1).strip()}")
-            elif "! Package" in error_msg:
-                package_error = re.search(r'! Package (.*?) Error:(.*?)\n', error_msg)
-                if package_error:
-                    print(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
-            elif "! Missing" in error_msg:
-                missing_error = re.search(r'! Missing (.*?) inserted', error_msg)
-                if missing_error:
-                    print(f"Missing character error: {missing_error.group(1)}")
-            
-            # Check log files in the log directory
-            for ext in ['.log', '.aux', '.out']:
-                log_file = os.path.join(SUMMARIES_DIR, name, log_dir, f"{base_filename}{ext}")
-                if os.path.exists(log_file):
-                    print(f"\nContents of {log_file}:")
-                    with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
-                        for line in f:
-                            if any(marker in line for marker in ["!", "Error", "Warning"]):
-                                print(line.strip())
-            return False
-        
-    def export_to_pdf(self):
-        """Export the summaries to a LaTeX file"""
-        for summary_id, summary_groups in self.summaries.items():
-            preamble = summary_groups['preamble']
-            summary = summary_groups['content']
-            conclusion = summary_groups['conclusion']
-            content = preamble + "\n\n" + summary + "\n\n" + conclusion
-            self.to_pdf(summary_id, content, f"{summary_id}.pdf")

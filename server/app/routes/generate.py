@@ -12,24 +12,12 @@ from app.services.chat.chat_processor import ChatProcessor
 from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
 import json
 import re
-from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor, Summary
-from app.services.chat.problems_processor import QuestionPrompt, ProblemsProcessor, FRQQuestion, MCQQuestion
+from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor
+from app.services.chat.problems_processor import QuestionPrompt, ProblemsProcessor
 from app.utils.chat import get_critical_instructions, clean_result, ChatMessage
+from app.services.base_processor import MCQQuestion, FRQQuestion, Summary
 
 router = APIRouter()
-
-class ChatRequest(BaseModel):
-    chat_id: str
-    message_id: str
-
-class SummaryRequest(BaseModel):
-    class_id: str
-    message_id: str
-
-class QuestionRequest(BaseModel):
-    class_id: str
-    message_id: str
-
 
 
 async def fetch_output_rules(supabase, class_id):
@@ -408,9 +396,6 @@ async def process_summaries(
             # print the generated summaries
             print("Generated summaries:", generated_summaries)
 
-            # save the summaries to the summaries directory
-            processor.export_to_json(f"{message_id}.json")
-
             return {"status": "success", "message_id": message_id}
         except Exception as e:
             raise e
@@ -553,8 +538,6 @@ async def process_questions(
             # print the generated questions
             print("Generated questions:", generated_questions)
 
-            # save the questions to the questions directory
-            processor.export_to_json(f"{message_id}.json")
             return {"status": "success", "message_id": message_id}
         except Exception as e:
             raise e

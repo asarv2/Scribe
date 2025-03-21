@@ -5,90 +5,17 @@ import { Dispatch, SetStateAction } from "react";
 export const filterCodeBlocks = (text: string): string => {
     if (!text) return '';
 
-    let result = '';
-    let currentIndex = 0;
-
-    // Handle <CODE> tags
-    while (true) {
-        // Find the next code block start
-        const startIndex = text.indexOf('<CODE>', currentIndex);
-        if (startIndex === -1) {
-            // No more code blocks, add the remaining text
-            result += text.slice(currentIndex);
-            break;
-        }
-
-        // Add the text before the code block
-        result += text.slice(currentIndex, startIndex);
-
-        // Find the closing tag
-        const endIndex = text.indexOf('</CODE>', startIndex);
-        if (endIndex === -1) {
-            // No closing tag found, add placeholder and stop
-            result += '<FIGURE>code-placeholder</FIGURE>';
-            break;
-        }
-
-        // Add placeholder for the code block
-        result += '<FIGURE>code-placeholder</FIGURE>';
-
-        // Move the current index past the code block
-        currentIndex = endIndex + 7; // 7 is length of '</CODE>'
-    }
-
-    // Handle <SUMMARY> tags
-    while (true) {
-        const startIndex = result.indexOf('<SUMMARY>', currentIndex);
-        if (startIndex === -1) {
-            break;
-        }
-
-        // Add text before the summary
-        result += text.slice(currentIndex, startIndex);
-
-        // Find the closing tag
-        const endIndex = result.indexOf('</SUMMARY>', startIndex);
-        if (endIndex === -1) {
-            // No closing tag found, add placeholder and stop
-            result += '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>';
-            break;
-        }
-
-        // Add placeholder for the summary
-        result += '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>';
-
-        // Move the current index past the summary
-        currentIndex = startIndex + 11; // 11 is length of '</SUMMARY>'
-    }
-
-    // Handle <QUESTION> tags
-    while (true) {
-        const startIndex = result.indexOf('<QUESTION>', currentIndex);
-        if (startIndex === -1) {
-            // No more question tags, add the remaining text
-            result += text.slice(currentIndex);
-            break;
-        }
-
-        // Add text before the question
-        result += text.slice(currentIndex, startIndex);
-
-        // Find the closing tag
-        const endIndex = result.indexOf('</QUESTION>', startIndex);
-        if (endIndex === -1) {
-            // No closing tag found, add placeholder and stop
-            result += '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>';
-            break;
-        }
-
-        // Add placeholder for the question
-        result += '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>';
-
-        // Move the current index past the question
-        currentIndex = startIndex + 18; // 18 is length of '</QUESTION_GENERATION>'
-
-    }
-
+    let result = text;
+    
+    // Replace <CODE> tags with placeholders
+    result = result.replace(/<CODE>[\s\S]*?<\/CODE>/g, '<FIGURE>code-placeholder</FIGURE>');
+    
+    // Replace <SUMMARY> tags with placeholders
+    result = result.replace(/<SUMMARY>[\s\S]*?<\/SUMMARY>/g, '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>');
+    
+    // Replace <QUESTION> tags with placeholders
+    result = result.replace(/<QUESTION>[\s\S]*?<\/QUESTION>/g, '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>');
+    
     // Also filter out triple backtick code blocks
     return filterTripleBacktickCodeBlocks(result);
 };
@@ -187,134 +114,66 @@ export const splitTextByDocuments = (text: string): { text: string; documentId: 
     return result;
 };
 
-// Split text by figure references
-export const splitTextByFigures = (text: string): { text: string; figureId: string | null; summaryId: string | null; questionId: string | null }[] => {
+// Split text by figure references and other special tags
+export const splitTextByTags = (text: string): { text: string; figureId: string | null; summaryId: string | null; questionId: string | null }[] => {
     if (!text) return [];
 
     const result: { text: string; figureId: string | null; summaryId: string | null; questionId: string | null }[] = [];
-    let currentIndex = 0;
-
-    while (true) {
-        // Find the next tag (figure, summary, or question)
-        const figureStartIndex = text.indexOf('<FIGURE>', currentIndex);
-        const summaryStartIndex = text.indexOf('<SUMMARY_GENERATION>', currentIndex);
-        const questionStartIndex = text.indexOf('<QUESTION_GENERATION>', currentIndex);
+    
+    // Use regex to properly extract tags and content
+    const tagPattern = /<(FIGURE|SUMMARY_GENERATION|QUESTION_GENERATION)>(.*?)<\/(FIGURE|SUMMARY_GENERATION|QUESTION_GENERATION)>/g;
+    let lastIndex = 0;
+    let match;
+    
+    while ((match = tagPattern.exec(text)) !== null) {
+        const [fullMatch, tagType, content, _] = match;
+        const startIndex = match.index;
         
-        // Find the earliest tag
-        let startIndex = -1;
-        let tagType = '';
-        
-        if (figureStartIndex !== -1 && (summaryStartIndex === -1 || figureStartIndex < summaryStartIndex) && 
-            (questionStartIndex === -1 || figureStartIndex < questionStartIndex)) {
-            startIndex = figureStartIndex;
-            tagType = 'figure';
-        } else if (summaryStartIndex !== -1 && (questionStartIndex === -1 || summaryStartIndex < questionStartIndex)) {
-            startIndex = summaryStartIndex;
-            tagType = 'summary';
-        } else if (questionStartIndex !== -1) {
-            startIndex = questionStartIndex;
-            tagType = 'question';
-        }
-        
-        if (startIndex === -1) {
-            // No more tags, add the remaining text if any
-            if (currentIndex < text.length) {
-                result.push({
-                    text: text.slice(currentIndex),
-                    figureId: null,
-                    summaryId: null,
-                    questionId: null
-                });
-            }
-            break;
-        }
-
-        // Add the text before the tag
-        if (startIndex > currentIndex) {
+        // Add text before the tag if there is any
+        if (startIndex > lastIndex) {
             result.push({
-                text: text.slice(currentIndex, startIndex),
+                text: text.slice(lastIndex, startIndex),
                 figureId: null,
                 summaryId: null,
                 questionId: null
             });
         }
-
-        if (tagType === 'figure') {
-            // Handle figure tag
-            const endIndex = text.indexOf('</FIGURE>', startIndex);
-            if (endIndex === -1) {
-                // No closing tag found, add remaining text and stop
-                result.push({
-                    text: text.slice(currentIndex),
-                    figureId: null,
-                    summaryId: null,
-                    questionId: null
-                });
-                break;
-            }
-
-            // Extract the figure ID
-            const figureId = text.slice(startIndex + 8, endIndex);
-            result.push({
-                text: '',
-                figureId,
-                summaryId: null,
-                questionId: null
+        
+        // Add the tag with its content
+        if (tagType === 'FIGURE') {
+            result.push({ 
+                text: '', 
+                figureId: content.trim(), 
+                summaryId: null, 
+                questionId: null 
             });
-
-            // Move the current index past the figure tag
-            currentIndex = endIndex + 9; // 9 is length of '</FIGURE>'
-        } else if (tagType === 'summary') {
-            // Handle summary tag
-            const endIndex = text.indexOf('</SUMMARY_GENERATION>', startIndex);
-            if (endIndex === -1) {
-                // No closing tag found, add remaining text and stop
-                result.push({
-                    text: text.slice(currentIndex),
-                    figureId: null,
-                    summaryId: null,
-                    questionId: null
-                });
-                break;
-            }
-
-            // Extract the summary ID
-            const summaryId = text.slice(startIndex + 19, endIndex);
-            result.push({
-                text: '',
-                figureId: null,
-                summaryId,
-                questionId: null
+        } else if (tagType === 'SUMMARY_GENERATION') {
+            result.push({ 
+                text: '', 
+                figureId: null, 
+                summaryId: content.trim(), 
+                questionId: null 
             });
-
-            // Move the current index past the summary tag
-            currentIndex = endIndex + 21; // 21 is length of '</SUMMARY_GENERATION>'
-        } else if (tagType === 'question') {
-            // Handle question tag
-            const endIndex = text.indexOf('</QUESTION_GENERATION>', startIndex);
-            if (endIndex === -1) {
-                // No closing tag found, add remaining text and stop
-                result.push({
-                    text: text.slice(currentIndex),
-                    figureId: null,
-                    summaryId: null,
-                    questionId: null
-                });
-                break;
-            }
-
-            // Extract the question ID
-            const questionId = text.slice(startIndex + 20, endIndex);
-            result.push({
-                text: '',
-                figureId: null,
-                summaryId: null,
-                questionId
+        } else if (tagType === 'QUESTION_GENERATION') {
+            result.push({ 
+                text: '', 
+                figureId: null, 
+                summaryId: null, 
+                questionId: content.trim() 
             });
-
-            // Move the current index past the question tag
-            currentIndex = endIndex + 22; // 22 is length of '</QUESTION_GENERATION>'
         }
+        
+        lastIndex = startIndex + fullMatch.length;
+    }
+    
+    // Add any remaining text after the last tag
+    if (lastIndex < text.length) {
+        result.push({
+            text: text.slice(lastIndex),
+            figureId: null,
+            summaryId: null,
+            questionId: null
+        });
     }
 
     return result;

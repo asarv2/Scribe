@@ -1,13 +1,48 @@
 # base_processor.py
 from enum import Enum
 import os
-from typing import List, Union, Literal, Dict, TypeAlias, AsyncGenerator
+from typing import List, Union, Literal, Dict, TypeAlias, AsyncGenerator, TypedDict
 import asyncio
 from app.services.rate_limiter import rate_limiter
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from dataclasses import dataclass
 import re
+
+class Summary(TypedDict):
+    id: str
+    preamble: str
+    content: str
+    conclusion: str
+    lecture_references: List[str]
+    chapter_references: List[str]
+    chapter_exercise_references: List[str]
+    homework_exercise_references: List[str]
+    figures: List[str]
+
+class MCQQuestion(TypedDict):
+    id: str
+    question: str
+    options: Dict[str, str]
+    answers: Dict[str, bool]
+    explanations: Dict[str, str]
+    tags: List[str]
+    lecture_references: List[str]
+    chapter_references: List[str]
+    chapter_exercise_references: List[str]
+    homework_exercise_references: List[str]
+    figures: List[str]
+
+class FRQQuestion(TypedDict):
+    id: str
+    question: str
+    solution: str
+    tags: List[str]
+    lecture_references: List[str]
+    chapter_references: List[str]
+    chapter_exercise_references: List[str]
+    homework_exercise_references: List[str]
+    figures: List[str]
 
 LiteralModel: TypeAlias = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b"]
 @dataclass

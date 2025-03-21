@@ -949,39 +949,54 @@ export type Database = {
           answers: string[]
           computational: boolean
           created_at: string
+          explanations: string[]
           frq: boolean
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
-          message: string
+          last_generation_attempt: string | null
+          message: string | null
           multi: string | null
           options: string[]
           problem: string
           prompt: string
+          response_url: string
           solution: string
         }
         Insert: {
           answers?: string[]
           computational?: boolean
           created_at?: string
+          explanations?: string[]
           frq?: boolean
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
-          message: string
+          last_generation_attempt?: string | null
+          message?: string | null
           multi?: string | null
           options?: string[]
           problem?: string
           prompt?: string
+          response_url?: string
           solution?: string
         }
         Update: {
           answers?: string[]
           computational?: boolean
           created_at?: string
+          explanations?: string[]
           frq?: boolean
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
-          message?: string
+          last_generation_attempt?: string | null
+          message?: string | null
           multi?: string | null
           options?: string[]
           problem?: string
           prompt?: string
+          response_url?: string
           solution?: string
         }
         Relationships: [
@@ -1084,28 +1099,40 @@ export type Database = {
           body: string
           conclusion: string
           created_at: string
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
+          last_generation_attempt: string | null
           message: string | null
           preamble: string
           prompt: string
+          response_url: string
         }
         Insert: {
           body?: string
           conclusion?: string
           created_at?: string
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
+          last_generation_attempt?: string | null
           message?: string | null
           preamble?: string
           prompt?: string
+          response_url?: string
         }
         Update: {
           body?: string
           conclusion?: string
           created_at?: string
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
+          last_generation_attempt?: string | null
           message?: string | null
           preamble?: string
           prompt?: string
+          response_url?: string
         }
         Relationships: [
           {

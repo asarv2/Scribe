@@ -17,28 +17,28 @@ export const getFigureUrl = (figureId: string) => {
     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${figureId}.png`
 }
 
-export const getQuestionTextUrl = (questionId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/questions/${questionId}.txt`
+export const getQuestionTextUrl = (questionId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?questions_id=${questionId}&format=text`;
 }
 
-export const getQuestionPDFUrl = (questionId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/questions/${questionId}.pdf`
+export const getQuestionPDFUrl = (questionId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?questions_id=${questionId}&format=pdf`;
 }
 
-export const getQuestionTeXUrl = (questionId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/questions/${questionId}.tex`
+export const getQuestionTeXUrl = (questionId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?questions_id=${questionId}&format=latex`;
 }
 
-export const getSummaryTextUrl = (summaryId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/summaries/${summaryId}.txt`
+export const getSummaryTextUrl = (summaryId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/summary?summary_id=${summaryId}&format=text`;
 }
 
-export const getSummaryPDFUrl = (summaryId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/summaries/${summaryId}.pdf`
+export const getSummaryPDFUrl = (summaryId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/summary?summary_id=${summaryId}&format=pdf`;
 }
 
-export const getSummaryTeXUrl = (summaryId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/summaries/${summaryId}.tex`
+export const getSummaryTeXUrl = (summaryId: string): string => {
+    return `${process.env.NEXT_PUBLIC_API_URL}/download/summary?summary_id=${summaryId}&format=latex`;
 }
 
 

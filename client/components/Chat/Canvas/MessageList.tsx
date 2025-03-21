@@ -13,8 +13,8 @@ import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
 import {
   filterCodeBlocks,
   splitTextByDocuments,
-  splitTextByFigures,
   groupConsecutiveDocuments,
+  splitTextByTags,
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -1063,48 +1063,60 @@ export const MessageList = memo(({
                     <Stack gap="xs">
                       {groupConsecutiveDocuments(
                         splitTextByDocuments(
-                          splitTextByFigures(filterCodeBlocks(message.response))
-                            .map(segment => segment.figureId
-                              ? `<FIGURE>${segment.figureId}</FIGURE>`
-                              : segment.text)
-                            .join('')
+                          filterCodeBlocks(message.response)
                         ),
                         lectureDocuments ?? [],
                         chapterDocuments ?? [],
                         chapterExercises ?? [],
                         homeworkExercises ?? []
                       ).map((group, index) => (
-                        <>
-                          {group.text && (
-                            <Card
-                              padding="sm"
-                              radius="md"
-                              style={{
-                                backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                                minWidth: "200px",
-                                maxWidth: "100%",
-                                border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
-                              }}
-                            >
-                              <Box key={index}>
-                                <Stack gap="xs">
-                                  {splitTextByFigures(group.text).map((segment, figIndex) => (
-                                    <Box key={figIndex}>
-                                      {segment.text && <Latex>{segment.text}</Latex>}
-                                      {segment.figureId && (
-                                        <Box
-                                          pos="relative"
-                                          style={{
-                                            maxWidth: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            margin: 0,
-                                            padding: 0
-                                          }}
-                                        >
-                                          <Box style={{ width: '100%', position: 'relative' }}>
-                                            {segment.figureId === 'code-placeholder' ? (
-                                              // Code placeholder - show a skeleton without trying to load an image
+                        <Box key={index}>
+                          <Stack>
+                            {splitTextByTags(group.text).map((segment, figIndex) => {
+                              if (segment.text) {
+                                return (
+                                  <Card
+                                    key={figIndex}
+                                    padding="sm"
+                                    radius="md"
+                                    style={{
+                                      backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                                      minWidth: "200px",
+                                      maxWidth: "100%",
+                                      border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef"
+                                    }}
+                                  >
+                                    {segment.text && <Latex>{segment.text}</Latex>}
+                                    {segment.figureId && (
+                                      <Box
+                                        pos="relative"
+                                        style={{
+                                          maxWidth: '100%',
+                                          display: 'flex',
+                                          justifyContent: 'center',
+                                          margin: 0,
+                                          padding: 0
+                                        }}
+                                      >
+                                        <Box style={{ width: '100%', position: 'relative' }}>
+                                          {segment.figureId === 'code-placeholder' ? (
+                                            // Code placeholder - show a skeleton without trying to load an image
+                                            <Skeleton
+                                              visible={true}
+                                              height={"100%"}
+                                              radius="md"
+                                              style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                maxWidth: '60%',
+                                                display: 'block',
+                                                margin: 0
+                                              }}
+                                            />
+                                          ) : (
+                                            // Regular figure - show the image with loading skeleton
+                                            <>
                                               <Skeleton
                                                 visible={true}
                                                 height={"100%"}
@@ -1118,77 +1130,58 @@ export const MessageList = memo(({
                                                   margin: 0
                                                 }}
                                               />
-                                            ) : (
-                                              // Regular figure - show the image with loading skeleton
-                                              <>
-                                                <Skeleton
-                                                  visible={true}
-                                                  height={"100%"}
-                                                  radius="md"
-                                                  style={{
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    left: 0,
-                                                    maxWidth: '60%',
-                                                    display: 'block',
-                                                    margin: 0
-                                                  }}
-                                                />
-                                                <Image
-                                                  src={getFigureUrl(segment.figureId)}
-                                                  alt="Figure"
-                                                  width={800}
-                                                  height={600}
-                                                  style={{
-                                                    maxWidth: '60%',
-                                                    height: 'auto',
-                                                    borderRadius: '24px',
-                                                    objectFit: 'contain',
-                                                    opacity: 0,
-                                                    transition: 'opacity 0.2s',
-                                                    padding: '1rem'
-                                                  }}
-                                                  onLoad={(e) => {
-                                                    const img = e.target as HTMLImageElement;
-                                                    const aspectRatio = img.naturalWidth / img.naturalHeight;
-                                                    if (aspectRatio > 1.5) {
-                                                      img.style.padding = '0.5rem';
-                                                    }
-                                                    img.style.opacity = '1';
-                                                    const skeleton = img.parentElement?.querySelector('.mantine-Skeleton-root');
-                                                    if (skeleton) {
-                                                      (skeleton as HTMLElement).style.display = 'none';
-                                                    }
-                                                  }}
-                                                  priority={false}
-                                                />
-                                              </>
-                                            )}
-                                          </Box>
-                                        </Box>
-                                      )}
-                                      {segment.summaryId && summaries && (
-                                        <Box my="md">
-                                          {summaries.find(s => s.id === segment.summaryId) && (
-                                            <SummaryViewer summary={summaries.find(s => s.id === segment.summaryId)!} />
+                                              <Image
+                                                src={getFigureUrl(segment.figureId)}
+                                                alt="Figure"
+                                                width={800}
+                                                height={600}
+                                                style={{
+                                                  maxWidth: '60%',
+                                                  height: 'auto',
+                                                  borderRadius: '24px',
+                                                  objectFit: 'contain',
+                                                  opacity: 0,
+                                                  transition: 'opacity 0.2s',
+                                                  padding: '1rem'
+                                                }}
+                                                onLoad={(e) => {
+                                                  const img = e.target as HTMLImageElement;
+                                                  const aspectRatio = img.naturalWidth / img.naturalHeight;
+                                                  if (aspectRatio > 1.5) {
+                                                    img.style.padding = '0.5rem';
+                                                  }
+                                                  img.style.opacity = '1';
+                                                  const skeleton = img.parentElement?.querySelector('.mantine-Skeleton-root');
+                                                  if (skeleton) {
+                                                    (skeleton as HTMLElement).style.display = 'none';
+                                                  }
+                                                }}
+                                                priority={false}
+                                              />
+                                            </>
                                           )}
                                         </Box>
-                                      )}
-                                      {segment.questionId && questions && (
-                                        <Box my="md">
-                                          {questions.find(q => q.id === segment.questionId) && (
-                                            <QuestionViewer question={questions.find(q => q.id === segment.questionId)!} />
-                                          )}
-                                        </Box>
-                                      )}
-                                    </Box>
-                                  ))}
-                                </Stack>
-                              </Box>
-                            </Card>
-                          )}
+                                      </Box>
+                                    )}
+                                  </Card>
+                                )
+                              } else if (segment.summaryId && summaries) {
+                                return (
+                                  summaries.find(s => s.id === segment.summaryId) && (
+                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} />
+                                  )
+                                )
+                              } else if (segment.questionId && questions) {
+                                return (
+                                  questions.find(q => q.id === segment.questionId) && (
+                                    <QuestionViewer question={questions.find(q => q.id === segment.questionId)!} />
+                                  )
+                                )
+                              }
+                            })}
+                          </Stack>
                           {renderBadges(group)}
-                        </>
+                        </Box>
                       ))}
                     </Stack>
                   )}
