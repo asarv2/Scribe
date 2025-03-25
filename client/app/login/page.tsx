@@ -7,7 +7,7 @@
 
 "use client"
 
-import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch } from "@mantine/core"
+import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch, useMantineColorScheme } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
 import { login, createAnonymousUser, signInWithMicrosoft } from "@/utils/services/auth";
@@ -27,7 +27,7 @@ export default function Login() {
     const supabase = useSupabaseBrowser()
     const queryClient = useQueryClient()
     const router = useRouter()
-
+    const { colorScheme } = useMantineColorScheme()
     const [lastName, setLastName] = useState("") // used for student login
     const [email, setEmail] = useState("") // used for both student and professor login
     const [password, setPassword] = useState("") // used for professor login
@@ -147,9 +147,9 @@ export default function Login() {
                             }
                             styles={{
                                 root: {
-                                    color: 'white',
+                                    color: colorScheme === 'dark' ? 'white' : 'black',
                                     '&:hover': {
-                                        backgroundColor: '#201F1F'
+                                        backgroundColor: colorScheme === 'dark' ? '#201F1F' : 'gray.1'
                                     }
                                 }
                             }}

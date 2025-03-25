@@ -6,14 +6,59 @@
  */
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { Button, Stack, Text, Input, PasswordInput, Switch } from "@mantine/core"
+import { Button, Stack, Text, Input, PasswordInput, Switch, Divider } from "@mantine/core"
 import type { User } from "~node_modules/@supabase/supabase-js/dist/module";
 import { sendToBackground } from "@plasmohq/messaging";
+import { Icons } from "./Icons";
 export default function Login() {
     const queryClient = useQueryClient()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false);
+
+    const handleSignInWithMicrosoft = async () => {
+        setMicrosoftButtonLoading(true);
+        try {
+            const response = await sendToBackground<
+                {},
+                { success: boolean; error: string; session: any | null }
+            >({
+                name: "microsoft-login",
+                body: {}
+            });
+            
+            if (response.success && response.session) {
+                console.log("Microsoft login successful:", response.session);
+                // Update your app state with the session
+                queryClient.invalidateQueries({
+                    queryKey: ["user"]
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["profile"]
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["classes"]
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["lectures"]
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["textbooks"]
+                });
+                queryClient.invalidateQueries({
+                    queryKey: ["homeworks"]
+                });
+            } else {
+                throw new Error(response.error || "Microsoft login failed");
+            }
+        } catch (error) {
+            console.error("Microsoft login error:", error);
+        } finally {
+            setMicrosoftButtonLoading(false);
+        }
+    }
+    
 
     const handleLogin = async () => {
         setLoading(true);
@@ -35,7 +80,7 @@ export default function Login() {
                 name: "login",
                 body: { email, password }
             });
-            
+
             console.log("Login response received:", response.success);
 
             if (!response.success || !response.user) {
@@ -72,7 +117,7 @@ export default function Login() {
     return (
         <Stack>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                <Text size="xl">Professor Login</Text>
+                <Text size="xl">Login</Text>
             </div>
 
             <Input
@@ -92,6 +137,25 @@ export default function Login() {
                 loading={loading}
             >
                 Login
+            </Button>
+            <Divider />
+            <Button
+                onClick={handleSignInWithMicrosoft}
+                loading={microsoftButtonLoading}
+                variant="outline"
+                leftSection={
+                    <Icons.Microsoft />
+                }
+                styles={{
+                    root: {
+                        color: 'white',
+                        '&:hover': {
+                            backgroundColor: '#201F1F'
+                        }
+                    }
+                }}
+            >
+                Login with Microsoft
             </Button>
         </Stack>
     )

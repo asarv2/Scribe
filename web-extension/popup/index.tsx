@@ -125,7 +125,7 @@ function IndexPopupContent() {
 
     const getFilteredClasses = (classes: Class[] | null, profile: Profile | null) => {
         if (!classes || !profile) return [];
-        return classes.filter((course) => (profile.admin || (profile.professor && profile.classes.includes(course.id))))
+        return classes.filter((course) => (profile.admin || (profile.classes.includes(course.id))))
     }
 
 

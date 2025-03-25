@@ -15,24 +15,37 @@ type User = {
   title: string | null;
 };
 
+// Configure CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*', // In production, replace with your extension ID
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-private-key',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+}
+
 Deno.serve(async (req) => {
-  // Get the secret key from the request header
-  const clientSecret = req.headers.get('x-private-key');
-  
-  // Get the environment secret (your project's secret)
-  const projectSecret = Deno.env.get('PRIVATE_KEY');
-  
-  // Check if the secret matches
-  if (!clientSecret || clientSecret !== projectSecret) {
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized: Invalid or missing secret' }),
-      { status: 401, headers: { 'Content-Type': 'application/json' } }
-    );
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log("CORS preflight request");
+    return new Response('ok', { headers: corsHeaders })
   }
 
-  const { alias } = await req.json();
-  
   try {
+    // Get the secret key from the request header
+    const clientSecret = req.headers.get('x-private-key');
+    
+    // Get the environment secret (your project's secret)
+    const projectSecret = Deno.env.get('PRIVATE_KEY');
+    
+    // Check if the secret matches
+    if (!clientSecret || clientSecret !== projectSecret) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Invalid or missing secret' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { alias } = await req.json();
+    
     if (!alias) {
       throw new Error("Alias is required");
     }
@@ -88,12 +101,12 @@ Deno.serve(async (req) => {
     // Return the student data as JSON
     return new Response(
       JSON.stringify(users),
-      { headers: { "Content-Type": "application/json" } },
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 400, headers: { "Content-Type": "application/json" } },
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });

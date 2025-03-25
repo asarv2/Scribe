@@ -6,6 +6,7 @@ interface UpdateDownloadsStatusRequest {
   classId: string
   enabled: boolean
   responseUrl: string
+  profileId: string
 }
 
 interface UpdateDownloadsStatusResponse {
@@ -18,7 +19,7 @@ const handler: PlasmoMessaging.MessageHandler<
   UpdateDownloadsStatusRequest,
   UpdateDownloadsStatusResponse
 > = async (req, res) => {
-  const { classId, enabled, responseUrl } = req.body;
+  const { classId, enabled, responseUrl, profileId } = req.body;
   
   try {
     const client = getSupabaseClient();
@@ -46,6 +47,7 @@ const handler: PlasmoMessaging.MessageHandler<
           updated_at: new Date().toISOString()
         })
         .eq('class', classId)
+        .eq('profile', profileId)
         .eq('status', 'pending');
       
       console.log(`[Background] Cancelled all pending downloads for class ${classId}`);
@@ -78,19 +80,20 @@ const handler: PlasmoMessaging.MessageHandler<
             download_time: scheduledDate.toISOString(),
             created_at: now.toISOString(),
             updated_at: now.toISOString(),
-            response_url: responseUrl
+            response_url: responseUrl,
+            profile: profileId
           });
       }
     }
     
-    // Update the class in the database
-    await client
-      .from('classes')
-      .update({
-        download: enabled,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', classId);
+    // // Update the class in the database
+    // await client
+    //   .from('classes')
+    //   .update({
+    //     download: enabled,
+    //     updated_at: new Date().toISOString()
+    //   })
+    //   .eq('id', classId);
     
     res.send({
       success: true,

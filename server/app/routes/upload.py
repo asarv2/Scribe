@@ -1,4 +1,5 @@
 import re
+import json
 from fastapi import APIRouter, File, UploadFile, Form, Request, BackgroundTasks
 from fastapi.responses import JSONResponse
 import os
@@ -31,7 +32,9 @@ async def create_course(
     course_descriptor: str = Form(...),
     syllabus_file: UploadFile = File(None),
     syllabus_filename: str = Form(None),
-    profile_id: str = Form(None)
+    profile_id: str = Form(None),
+    students: str = Form(None),
+    professors: str = Form(None)
 ):
     """
     Create a new course from syllabus information.
@@ -42,6 +45,8 @@ async def create_course(
     - syllabus_file: Optional syllabus file
     - syllabus_filename: Optional syllabus filename
     - profile_id: Profile ID
+    - students: Students emails in JSON format
+    - professors: Professors emails in JSON format
     Returns:
     - JSON with course information
     """
@@ -99,7 +104,7 @@ async def create_course(
             "title": course_info.get("course_title", course_descriptor),
             "brightspace_course_id": course_id,
             "brightspace_course_descriptor": course_descriptor,
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
         }
         
         # Add additional course info if available
@@ -115,9 +120,32 @@ async def create_course(
                     print(f"Warning: Could not parse course time: {course_time}")
             # insert_data["instructor"] = course_info.get("instructor", "")
             # insert_data["term"] = course_info.get("term", "")
+
+        # parse the students and professors
+        students = json.loads(students)
+        professors = json.loads(professors)
+
+        # add the students and professors to the class
+        insert_data["students"] = students
+        insert_data["professors"] = professors
         
         class_response = supabase.table("classes").insert(insert_data).execute()
         class_id = class_response.data[0]["id"]
+
+        # update all of these accounts in supabase, to add the class_id to their classes
+        all_emails = students + professors
+
+        # get the profiles from supabase
+        profile_response = supabase.table("profiles").select("*").in_("email", all_emails).execute()
+
+        # bulk upsert the profile
+        profile_insert_data = []
+        for profile in profile_response.data:
+            profile_insert_data.append({
+                "id": profile["id"],
+                "classes": list(set(profile["classes"]).union([class_id]))
+            })
+        supabase.table("profiles").upsert(profile_insert_data).execute()
     else:
         # update the class with the updated_at timestamp
         class_response = supabase.table("classes").update({

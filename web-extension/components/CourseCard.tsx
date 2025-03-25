@@ -51,7 +51,7 @@ export default function CourseCard({
     const storage = new Storage();
     const [scheduledTime, setScheduledTime] = useState<string>("08:00");
     const [isScheduling, setIsScheduling] = useState<boolean>(false);
-    const [isScheduled, setIsScheduled] = useState<boolean>(course.download === true);
+    const [isScheduled, setIsScheduled] = useState<boolean>(false);
 
     // Filter pending downloads for this class
     const pendingDownloads = downloads.filter(download => {
@@ -164,7 +164,7 @@ export default function CourseCard({
             if (!course.id) return;
 
             // Get download status from database
-            setIsScheduled(course.download === true);
+            setIsScheduled(downloads.some(d => d.class === course.id && d.status === 'pending' && d.profile === profile.id));
 
             // Get scheduled time if available
             if (course.download_time) {
@@ -184,7 +184,7 @@ export default function CourseCard({
         };
 
         checkScheduleStatus();
-    }, [course]);
+    }, [course, downloads, profile]);
 
 
     // Determine status color and icon
@@ -230,6 +230,7 @@ export default function CourseCard({
     // Updated toggle function to immediately update database
     const toggleScheduledSwitch = async () => {
         if (!course.id) return;
+        if (!profile.id) return;
 
         const newStatus = !isScheduled;
         setIsScheduled(newStatus);
@@ -241,7 +242,8 @@ export default function CourseCard({
                 body: {
                     classId: course.id,
                     enabled: newStatus,
-                    responseUrl: `${process.env.PLASMO_PUBLIC_API_URL}`
+                    responseUrl: `${process.env.PLASMO_PUBLIC_API_URL}`,
+                    profileId: profile.id
                 }
             });
 
@@ -268,10 +270,10 @@ export default function CourseCard({
     // Updated time change handler to always update database
     const handleTimeChange = async (event) => {
         if (!course.id) return;
-        
+
         const newTime = event.target.value;
         setScheduledTime(newTime);
-        
+
         try {
             // Update the time in Supabase directly
             const client = getSupabaseClient();
@@ -282,7 +284,7 @@ export default function CourseCard({
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', course.id);
-            
+
             // Only update the schedule in background if downloads are enabled
             if (isScheduled) {
                 await sendToBackground({
@@ -348,7 +350,7 @@ export default function CourseCard({
                             color="blue"
                             p={4}
                             onClick={() => {
-                                window.open(`https://scribe-lec.vercel.app/classes/c/${course.id}`, '_blank');
+                                window.open(`https://scribe.it.com/classes/c/${course.id}`, '_blank');
                             }}
                         >
                             <Icons.Eye />
@@ -434,7 +436,7 @@ export default function CourseCard({
                 )}
 
                 {/* Updated time picker section without save button */}
-                <Group mt="md" align="center">
+                {(course.download || profile.admin) && <Group mt="md" align="center">
                     <Switch
                         checked={isScheduled}
                         onChange={toggleScheduledSwitch}
@@ -444,8 +446,9 @@ export default function CourseCard({
                         value={scheduledTime}
                         onChange={handleTimeChange}
                         withSeconds={false}
+                        disabled={!profile.admin && !profile.professor}
                     />
-                </Group>
+                </Group>}
 
                 {/* Pending downloads section */}
                 {pendingDownloads.length > 0 && (
@@ -471,7 +474,7 @@ export default function CourseCard({
                 )}
 
                 {/* Download now button */}
-                <Button
+                {(course.download || profile.admin) && <Button
                     onClick={handleDownloadNow}
                     loading={isScheduling || isLoading}
                     leftSection={<Icons.Download />}
@@ -481,7 +484,7 @@ export default function CourseCard({
                     mt="md"
                 >
                     Download Now
-                </Button>
+                </Button>}
             </Stack>
         </Card>
     )

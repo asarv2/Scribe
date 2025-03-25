@@ -88,6 +88,7 @@ const handler: PlasmoMessaging.MessageHandler<
         updated_at: new Date().toISOString()
       })
       .eq('class', classId)
+      .eq('profile', profileId)
       .eq('status', 'pending');
       
     if (updateError) {
@@ -117,7 +118,8 @@ const handler: PlasmoMessaging.MessageHandler<
       .update({
         refreshed_at: new Date().toISOString()
       })
-      .eq('class', classId);
+      .eq('class', classId)
+      .eq('profile', profileId);
 
     if (downloadError) {
       console.error('[Background] Error updating download status:', downloadError);

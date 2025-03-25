@@ -150,7 +150,7 @@ export default function Landing() {
                 }}
               >
                 <Image
-                  src="/hero-image.jpg"
+                  src="/images/scribehome.png"
                   alt="Students using Scribe AI"
                   height={350}
                   fallbackSrc="https://placehold.co/600x350?text=Scribe+AI+Learning+Assistant"
@@ -351,7 +351,7 @@ export default function Landing() {
                     <Text size="xl" fw={700}>1</Text>
                   </Avatar>
                   <Image
-                    src="/microsoft-login.png"
+                    src="/images/scribe1.png"
                     alt="Microsoft Login"
                     width={120}
                     height={80}
@@ -373,7 +373,7 @@ export default function Landing() {
                     <Text size="xl" fw={700}>2</Text>
                   </Avatar>
                   <Image
-                    src="/brightspace-import.png"
+                    src="/images/scribe2.png"
                     alt="Brightspace Import"
                     width={120}
                     height={80}
@@ -395,7 +395,7 @@ export default function Landing() {
                     <Text size="xl" fw={700}>3</Text>
                   </Avatar>
                   <Image
-                    src="/ai-processing.png"
+                    src="/images/scribe3.png"
                     alt="AI Processing"
                     width={120}
                     height={80}
@@ -417,7 +417,7 @@ export default function Landing() {
                     <Text size="xl" fw={700}>4</Text>
                   </Avatar>
                   <Image
-                    src="/customize-settings.png"
+                    src="/images/scribe4.png"
                     alt="Customize Settings"
                     width={120}
                     height={80}

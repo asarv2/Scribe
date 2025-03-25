@@ -33,6 +33,7 @@ interface DownloadAlarmData {
 interface SSORefreshAlarmData {
   classId: string
   courseId: string
+  profileId: string
   lastRefresh: number // timestamp of last refresh
 }
 
@@ -86,10 +87,10 @@ const handler: PlasmoMessaging.MessageHandler<
   console.log(`[Background] Created alarm ${alarmName} to download course ${courseId} daily at ${scheduledTime}`);
   
   // Create a pending download entry for the next scheduled download
-  await createPendingDownload(classId, scheduledDate.toISOString());
+  await createPendingDownload(classId, scheduledDate.toISOString(), profileId);
   
   // Set up SSO refresh alarm to run hourly until the scheduled download
-  setupSSORefreshAlarm(courseId, classId, scheduledDate.getTime());
+  setupSSORefreshAlarm(courseId, classId, profileId, scheduledDate.getTime());
   
   // Start the first download immediately
   await performDownload(courseId, courseDescriptor, profileId, classId);
@@ -102,7 +103,7 @@ const handler: PlasmoMessaging.MessageHandler<
 };
 
 // Function to create a pending download entry
-async function createPendingDownload(classId: string, downloadTime: string) {
+async function createPendingDownload(classId: string, downloadTime: string, profileId: string) {
   try {
     const client = getSupabaseClient();
     const responseUrl = process.env.PLASMO_PUBLIC_API_URL || '';
@@ -114,7 +115,8 @@ async function createPendingDownload(classId: string, downloadTime: string) {
         status: 'pending',
         download_time: downloadTime,
         created_at: new Date().toISOString(),
-        response_url: responseUrl
+        response_url: responseUrl,
+        profile: profileId
       })
       .select()
       .single();
@@ -133,7 +135,7 @@ async function createPendingDownload(classId: string, downloadTime: string) {
 }
 
 // Function to set up SSO refresh alarm
-async function setupSSORefreshAlarm(courseId: string, classId: string, scheduledDownloadTime: number) {
+async function setupSSORefreshAlarm(courseId: string, classId: string, profileId: string, scheduledDownloadTime: number) {
   const ssoRefreshAlarmName = `sso_refresh_${classId}`;
   const storage = new Storage();
   
@@ -141,6 +143,7 @@ async function setupSSORefreshAlarm(courseId: string, classId: string, scheduled
   await storage.set(ssoRefreshAlarmName, {
     classId,
     courseId,
+    profileId,
     lastRefresh: Date.now()
   });
   
@@ -187,7 +190,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     const [hours, minutes] = alarmData.scheduledTime.split(":").map(Number);
     nextDownloadDate.setHours(hours, minutes, 0, 0);
     
-    await createPendingDownload(classId, nextDownloadDate.toISOString());
+    await createPendingDownload(classId, nextDownloadDate.toISOString(), alarmData.profileId);
   }
   else if (alarm.name.startsWith('sso_refresh_')) {
     const storage = new Storage();
@@ -213,7 +216,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     console.log(`[Background] SSO refresh alarm triggered for ${alarm.name}, refreshing credentials`);
     
     // Perform the SSO refresh
-    await refreshSSO(ssoData.courseId, classId);
+    await refreshSSO(ssoData.courseId, classId, ssoData.profileId);
     
     // Update last refresh timestamp
     await storage.set(alarm.name, {
@@ -224,7 +227,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 // Function to refresh SSO credentials
-async function refreshSSO(courseId: string, classId: string) {
+async function refreshSSO(courseId: string, classId: string, profileId: string) {
   try {
     console.log(`[Background] Refreshing SSO credentials for course ${courseId}`);
     const client = getSupabaseClient();
@@ -255,7 +258,8 @@ async function refreshSSO(courseId: string, classId: string) {
               .update({
                 refreshed_at: new Date().toISOString()
               })
-              .eq('class', classId);
+              .eq('class', classId)
+              .eq('profile', profileId);
               
             chrome.tabs.remove(tab.id).catch(() => {});
             resolve(true);
@@ -321,6 +325,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
       .from('downloads')
       .select('*')
       .eq('class', classId)
+      .eq('profile', profileId)
       .eq('status', 'pending')
       .order('download_time', { ascending: true })
       .limit(1);
@@ -356,7 +361,8 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
           class: classId,
           status: 'init',
           created_at: new Date().toISOString(),
-          response_url: responseUrl
+          response_url: responseUrl,
+          profile: profileId
         })
         .select()
         .single();
@@ -656,6 +662,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
         .from('downloads')
         .select('id')
         .eq('class', classId)
+        .eq('profile', profileId)
         .eq('status', 'init')
         .order('created_at', { ascending: false })
         .limit(1);

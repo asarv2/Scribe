@@ -5,12 +5,12 @@
  * 09.01.2024
  */
 
-import { Button, Container, Group } from '@mantine/core';
+import { ActionIcon, Button, Container, Group, Tooltip } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconMoon, IconSun } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getUser } from '@/utils/queries/get-user';
@@ -32,7 +32,7 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
     const [loading, setLoading] = useState(false);
     const supabase = useSupabaseBrowser();
     const pathname = usePathname();
-    const { colorScheme } = useMantineColorScheme();
+    const { colorScheme, setColorScheme } = useMantineColorScheme();
     const queryClient = useQueryClient();
     const router = useRouter();
 
@@ -57,10 +57,14 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
 
+    const toggleColorScheme = () => {
+        setColorScheme(colorScheme === 'dark' ? 'light' : 'dark');
+    };
+
     return (
         <Group h="100%" px="md" w="100%" justify="space-between">
             <Group>
-            <Link href="/">
+                <Link href="/">
                     <Image
                         src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
                         priority
@@ -70,24 +74,6 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
                         style={{ marginTop: '4px' }}
                     />
                 </Link>
-                {/* <Menu shadow="md" width={200}>
-                    <Menu.Target>
-                        <button className={classes.classSelector}>
-                            {displayText} <IconChevronDown size={16} color={colorScheme === "dark" ? "white" : "black"} />
-                        </button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {profile && classData && getFilteredClasses().map((classItem) => (
-                            <Menu.Item
-                                key={classItem.id}
-                                component={Link}
-                                href={`/classes/c/${classItem.id}`}
-                            >
-                                {classItem.class_code}
-                            </Menu.Item>
-                        ))}
-                    </Menu.Dropdown>
-                </Menu> */}
             </Group>
             <Group gap="md">
                 {getFilteredClasses(profile, classData).map((classItem) => (
@@ -107,6 +93,25 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
                 ))}
             </Group>
             <Group>
+                {colorScheme === 'dark' ? (
+                    <Tooltip label="Light Mode">
+                        <ActionIcon
+                            variant="subtle"
+                            onClick={toggleColorScheme}
+                    >
+                            <IconSun size={24} />
+                        </ActionIcon>
+                    </Tooltip>
+                ) : (
+                    <Tooltip label="Dark Mode">
+                        <ActionIcon
+                            variant="subtle"
+                            onClick={toggleColorScheme}
+                    >
+                        <IconMoon size={24} />
+                        </ActionIcon>
+                    </Tooltip>
+                )}
                 <AccountMenu profile={profile} />
             </Group>
         </Group>

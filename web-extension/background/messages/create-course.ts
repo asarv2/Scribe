@@ -117,6 +117,98 @@ const handler: PlasmoMessaging.MessageHandler<CreateCourseRequest, CreateCourseR
       }
     }
     
+    // Get class list data
+    await storage.set(`createStatus_${courseId}`, 'Getting class list...');
+    
+    let studentEmails: string[] = [];
+    let professorEmails: string[] = [];
+    
+    try {
+      // Create a tab for the class list page
+      const classListUrl = `https://purdue.brightspace.com/d2l/lms/classlist/classlist.d2l?ou=${courseId}`;
+      console.log("[Background] Creating class list tab...");
+      const classListTab = await chrome.tabs.create({ url: classListUrl, active: false });
+      
+      if (classListTab && classListTab.id) {
+        console.log("[Background] Class list tab created:", classListTab.id);
+        
+        // Wait for class list page to load
+        await new Promise((resolve) => {
+          const timeout = setTimeout(() => {
+            console.warn("Class list page load timeout, continuing without class list");
+            resolve(null);
+          }, 30000);
+          
+          const listener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+            if (tabId === classListTab.id && changeInfo.status === 'complete') {
+              console.log("[Background] Class list tab loaded:", tabId);
+              chrome.tabs.onUpdated.removeListener(listener);
+              clearTimeout(timeout);
+              setTimeout(resolve, 2000); // Add a small delay after page load
+            }
+          };
+          chrome.tabs.onUpdated.addListener(listener);
+        });
+        
+        // Execute content script to extract emails
+        const [classListResults] = await chrome.scripting.executeScript({
+          target: { tabId: classListTab.id },
+          func: () => {
+            // Select the first table that has the required class names
+            const table = document.querySelector("table.d2l-table.d2l-grid.d_gl") as HTMLTableElement | null;
+            if (!table) {
+              return { students: [], professors: [] };
+            }
+            
+            // Select only the data rows (skip header rows marked with class "d_gh")
+            const rows = table.querySelectorAll("tbody > tr:not(.d_gh)");
+            const students: string[] = [];
+            const professors: string[] = [];
+            
+            rows.forEach((row) => {
+              // Assume the first label contains the email and the second contains the role.
+              const labels = row.querySelectorAll("label");
+              if (labels.length < 2) {
+                return; // Skip rows that don't have the expected structure
+              }
+              
+              const email = labels[0].textContent?.trim();
+              const role = labels[1].textContent?.trim();
+              
+              if (email && role) {
+                if (role === "Learner") {
+                  students.push(email);
+                } else {
+                  professors.push(email);
+                }
+              }
+            });
+            
+            return { students, professors };
+          }
+        });
+        
+        console.log("[Background] Class list extraction results:", classListResults);
+        
+        if (classListResults?.result) {
+          studentEmails = classListResults.result.students || [];
+          professorEmails = classListResults.result.professors || [];
+          
+          console.log("[Background] Extracted emails:", {
+            students: studentEmails.length,
+            professors: professorEmails.length
+          });
+        }
+        
+        // Close the class list tab
+        chrome.tabs.remove(classListTab.id).catch(() => {
+          // Ignore tab closing errors
+        });
+      }
+    } catch (error) {
+      console.warn("[Background] Error getting class list:", error);
+    }
+    
     // Update status
     await storage.set(`createStatus_${courseId}`, 'Creating course...');
     
@@ -132,6 +224,14 @@ const handler: PlasmoMessaging.MessageHandler<CreateCourseRequest, CreateCourseR
       formData.append('syllabus_filename', syllabusFileName);
       console.log("[Background] Added syllabus to upload:", syllabusFileName);
     }
+    
+    // Add student and professor emails
+    formData.append('students', JSON.stringify(studentEmails));
+    formData.append('professors', JSON.stringify(professorEmails));
+    console.log("[Background] Added emails to upload:", {
+      students: studentEmails.length,
+      professors: professorEmails.length
+    });
     
     // Send to server
     const createResult = await fetch(`${process.env.PLASMO_PUBLIC_API_URL}/upload/create`, {

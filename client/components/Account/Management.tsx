@@ -35,6 +35,7 @@ import { getUser } from "@/utils/queries/get-user";
 import { createClass, updateClassPrivacy, updateClassPrompts, deleteClass } from "@/utils/services/class";
 import { TimeInput } from "@mantine/dates";
 import { Class } from "@/types";
+import Link from "next/link";
 
 interface ManagementProps {
     showCreateClass?: boolean;
@@ -363,12 +364,21 @@ export default function Management({ showCreateClass = true, showExistingClasses
                     </Text>
                 </Stack>
 
+                <Stack gap="xs">
+                    <Switch
+                        checked={editableClasses[classItem.id]?.download}
+                        onChange={(e) => handleDownloadToggle(classItem.id, e.currentTarget.checked)}
+                        label="Download with Chrome Extension"
+                        labelPosition="right"
+                    />
+                    <Text size="xs" c="dimmed">
+                        When enabled, you and your students will be able to download content from Brightspace using the <Link href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb" target="_blank">Scribe Chrome Extension</Link>.
+                    </Text>
+                </Stack>
+
                 {/* Features Section */}
                 <Stack gap="md">
-                    <Text fw={500} size="sm">Enabled Features</Text>
-                    <Text size="xs" c="dimmed">
-                        Enable or disable specific features for this class.
-                    </Text>
+                    <Text fw={500} size="sm">Enabled Content Types</Text>
                     <Group>
                         <Switch
                             checked={classFeatures[classItem.id]?.lectureEnabled}
@@ -393,11 +403,6 @@ export default function Management({ showCreateClass = true, showExistingClasses
 
                 {/* Custom Prompts Section */}
                 <Stack gap="md">
-                    <Text fw={500} size="sm">Custom Prompts</Text>
-                    <Text size="xs" c="dimmed">
-                        Customize the AI prompts for different content types in this class.
-                    </Text>
-
                     {/* Only show prompts for enabled features */}
                     {classFeatures[classItem.id]?.lectureEnabled && (
                         <Textarea

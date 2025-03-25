@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       chapters: {
         Row: {
+          additional_info: string
           chapter_number: number
           created_at: string
           end_page: number
@@ -20,6 +21,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          additional_info?: string
           chapter_number?: number
           created_at?: string
           end_page?: number
@@ -29,6 +31,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          additional_info?: string
           chapter_number?: number
           created_at?: string
           end_page?: number
@@ -113,10 +116,15 @@ export type Database = {
           deleted: boolean
           download: boolean
           download_time: string
+          homework_enabled: boolean
           homework_prompt: string
           id: string
+          lecture_enabled: boolean
           lecture_prompt: string
           privacy: boolean
+          professors: string[]
+          students: string[]
+          textbook_enabled: boolean
           textbook_prompt: string
           title: string | null
           updated_at: string
@@ -132,10 +140,15 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_enabled?: boolean
           homework_prompt?: string
           id?: string
+          lecture_enabled?: boolean
           lecture_prompt?: string
           privacy?: boolean
+          professors?: string[]
+          students?: string[]
+          textbook_enabled?: boolean
           textbook_prompt?: string
           title?: string | null
           updated_at?: string
@@ -151,10 +164,15 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          homework_enabled?: boolean
           homework_prompt?: string
           id?: string
+          lecture_enabled?: boolean
           lecture_prompt?: string
           privacy?: boolean
+          professors?: string[]
+          students?: string[]
+          textbook_enabled?: boolean
           textbook_prompt?: string
           title?: string | null
           updated_at?: string
@@ -214,14 +232,17 @@ export type Database = {
           chapter: string | null
           created_at: string
           description: string
+          end_time: number | null
           exercise: string | null
           exercises: string[]
+          file: string | null
           homework: string | null
           homeworks: string[]
           id: string
           lecture: string | null
           page: number
           processed: boolean
+          start_time: number | null
           subchapter: string | null
           text: string
           textbook: string | null
@@ -230,14 +251,17 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           description?: string
+          end_time?: number | null
           exercise?: string | null
           exercises?: string[]
+          file?: string | null
           homework?: string | null
           homeworks?: string[]
           id?: string
           lecture?: string | null
           page: number
           processed?: boolean
+          start_time?: number | null
           subchapter?: string | null
           text?: string
           textbook?: string | null
@@ -246,14 +270,17 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           description?: string
+          end_time?: number | null
           exercise?: string | null
           exercises?: string[]
+          file?: string | null
           homework?: string | null
           homeworks?: string[]
           id?: string
           lecture?: string | null
           page?: number
           processed?: boolean
+          start_time?: number | null
           subchapter?: string | null
           text?: string
           textbook?: string | null
@@ -271,6 +298,13 @@ export type Database = {
             columns: ["exercise"]
             isOneToOne: false
             referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_file_fkey"
+            columns: ["file"]
+            isOneToOne: false
+            referencedRelation: "files"
             referencedColumns: ["id"]
           },
           {
@@ -312,6 +346,7 @@ export type Database = {
           file_list: string[]
           id: string
           processed_files: number
+          profile: string | null
           refreshed_at: string
           response_url: string
           status: string
@@ -327,6 +362,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          profile?: string | null
           refreshed_at?: string
           response_url?: string
           status?: string
@@ -342,6 +378,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          profile?: string | null
           refreshed_at?: string
           response_url?: string
           status?: string
@@ -355,6 +392,13 @@ export type Database = {
             columns: ["class"]
             isOneToOne: false
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "downloads_profile_fkey"
+            columns: ["profile"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -487,6 +531,7 @@ export type Database = {
           homework: string | null
           id: string
           info: string
+          problem_multipart: boolean
           problem_number: number
           problem_part_number: number
           start_page: number
@@ -505,6 +550,7 @@ export type Database = {
           homework?: string | null
           id?: string
           info?: string
+          problem_multipart?: boolean
           problem_number?: number
           problem_part_number?: number
           start_page?: number
@@ -523,6 +569,7 @@ export type Database = {
           homework?: string | null
           id?: string
           info?: string
+          problem_multipart?: boolean
           problem_number?: number
           problem_part_number?: number
           start_page?: number
@@ -644,6 +691,51 @@ export type Database = {
           },
         ]
       }
+      files: {
+        Row: {
+          class: string
+          created_at: string
+          id: string
+          length: number
+          profile: string
+          title: string
+          type: Database["prod"]["Enums"]["file_type"]
+        }
+        Insert: {
+          class?: string
+          created_at?: string
+          id?: string
+          length?: number
+          profile: string
+          title?: string
+          type: Database["prod"]["Enums"]["file_type"]
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          id?: string
+          length?: number
+          profile?: string
+          title?: string
+          type?: Database["prod"]["Enums"]["file_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_profile_fkey"
+            columns: ["profile"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homeworks: {
         Row: {
           additional_info: string
@@ -707,6 +799,7 @@ export type Database = {
           id: string
           last_parse_attempt: string | null
           last_upload_attempt: string | null
+          lecture_date: string
           name: string | null
           note_number: number | null
           pages: number
@@ -725,6 +818,7 @@ export type Database = {
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
+          lecture_date?: string
           name?: string | null
           note_number?: number | null
           pages?: number
@@ -743,6 +837,7 @@ export type Database = {
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
+          lecture_date?: string
           name?: string | null
           note_number?: number | null
           pages?: number
@@ -772,6 +867,7 @@ export type Database = {
           chat: string | null
           created_at: string
           documents: string[]
+          files: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references: string[]
@@ -795,6 +891,7 @@ export type Database = {
           chat?: string | null
           created_at?: string
           documents?: string[]
+          files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -818,6 +915,7 @@ export type Database = {
           chat?: string | null
           created_at?: string
           documents?: string[]
+          files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -920,6 +1018,86 @@ export type Database = {
         }
         Relationships: []
       }
+      questions: {
+        Row: {
+          answers: string[]
+          chapter_exercise_references: string[]
+          chapter_references: string[]
+          computational: boolean
+          created_at: string
+          explanations: string[]
+          figures: string[]
+          frq: boolean
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references: string[]
+          id: string
+          last_generation_attempt: string | null
+          lecture_references: string[]
+          message: string | null
+          multi: string | null
+          options: string[]
+          problem: string
+          prompt: string
+          response_url: string
+          solution: string
+        }
+        Insert: {
+          answers?: string[]
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
+          computational?: boolean
+          created_at?: string
+          explanations?: string[]
+          figures?: string[]
+          frq?: boolean
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
+          id?: string
+          last_generation_attempt?: string | null
+          lecture_references?: string[]
+          message?: string | null
+          multi?: string | null
+          options?: string[]
+          problem?: string
+          prompt?: string
+          response_url?: string
+          solution?: string
+        }
+        Update: {
+          answers?: string[]
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
+          computational?: boolean
+          created_at?: string
+          explanations?: string[]
+          figures?: string[]
+          frq?: boolean
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
+          id?: string
+          last_generation_attempt?: string | null
+          lecture_references?: string[]
+          message?: string | null
+          multi?: string | null
+          options?: string[]
+          problem?: string
+          prompt?: string
+          response_url?: string
+          solution?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rules: {
         Row: {
           chapters: string[]
@@ -1005,8 +1183,74 @@ export type Database = {
           },
         ]
       }
+      summaries: {
+        Row: {
+          body: string
+          chapter_exercise_references: string[]
+          chapter_references: string[]
+          conclusion: string
+          created_at: string
+          figures: string[]
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references: string[]
+          id: string
+          last_generation_attempt: string | null
+          lecture_references: string[]
+          message: string | null
+          preamble: string
+          prompt: string
+          response_url: string
+        }
+        Insert: {
+          body?: string
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
+          conclusion?: string
+          created_at?: string
+          figures?: string[]
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
+          id?: string
+          last_generation_attempt?: string | null
+          lecture_references?: string[]
+          message?: string | null
+          preamble?: string
+          prompt?: string
+          response_url?: string
+        }
+        Update: {
+          body?: string
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
+          conclusion?: string
+          created_at?: string
+          figures?: string[]
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
+          id?: string
+          last_generation_attempt?: string | null
+          lecture_references?: string[]
+          message?: string | null
+          preamble?: string
+          prompt?: string
+          response_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summaries_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       textbooks: {
         Row: {
+          additional_info: string
           class: string
           created_at: string
           deleted: boolean
@@ -1020,6 +1264,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          additional_info?: string
           class: string
           created_at?: string
           deleted?: boolean
@@ -1033,6 +1278,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          additional_info?: string
           class?: string
           created_at?: string
           deleted?: boolean
@@ -1088,6 +1334,7 @@ export type Database = {
         | "concept"
         | "review"
         | "other"
+      file_type: "audio" | "video" | "video_audio" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status:

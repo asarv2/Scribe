@@ -27,10 +27,12 @@ import {
     Switch,
     Tabs,
     Textarea,
-    Modal
+    Modal,
+    Box,
+    Badge
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
-import { IconMoon, IconSun, IconUpload, IconUser, IconX, IconCopy, IconTrash, IconRefresh } from "@tabler/icons-react";
+import { IconMoon, IconSun, IconUpload, IconUser, IconX, IconCopy, IconTrash, IconRefresh, IconDotsVertical } from "@tabler/icons-react";
 import { useRef, useState, useEffect } from "react";
 import { Dropzone, FileWithPath } from '@mantine/dropzone';
 import { updateAvatar } from "@/utils/services/profile";
@@ -50,7 +52,7 @@ import { updateClassPrivacy, updateClassPrompts } from "@/utils/services/class";
 import Management from "@/components/Account/Management";
 
 export default function AccountPage() {
-    const { colorScheme, setColorScheme } = useMantineColorScheme();
+    const { colorScheme } = useMantineColorScheme();
     const openRef = useRef<() => void>(null);
     const [loading, setLoading] = useState(false);
     const [uploadLoading, setUploadLoading] = useState(false);
@@ -102,10 +104,6 @@ export default function AccountPage() {
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase)
     })
-
-    const toggleColorScheme = () => {
-        setColorScheme(colorScheme === 'dark' ? 'light' : 'dark');
-    };
 
     const handleDrop = async (files: FileWithPath[]) => {
         if (!files[0]) return;
@@ -317,25 +315,6 @@ export default function AccountPage() {
                         <div>
                             <Text size="lg" fw={500} mb="md">Personal Information</Text>
                             <Card withBorder shadow="sm" radius="md" p="xl">
-                                <Group justify="flex-end" mb="md">
-                                    {colorScheme === 'dark' ? (
-                                <ActionIcon
-                                    variant="light"
-                                    color="yellow"
-                                    onClick={toggleColorScheme}
-                                >
-                                    <IconSun size={24} />
-                                </ActionIcon>
-                            ) : (
-                                <ActionIcon
-                                    variant="light"
-                                    color="blue"
-                                    onClick={toggleColorScheme}
-                                >
-                                    <IconMoon size={24} />
-                                </ActionIcon>
-                            )}
-                                </Group>
                                 <Stack gap="xl">
                                     <Group justify="center" style={{ width: '100%' }}>
                                         <Stack align="center" gap="md">
@@ -380,6 +359,7 @@ export default function AccountPage() {
                                     </Group>
 
                                     <Stack gap="md">
+
                                         {loadingProfile ? (
                                             <Skeleton height={28} width="200px" />
                                         ) : (
@@ -396,50 +376,34 @@ export default function AccountPage() {
                                         )}
                                     </Stack>
                                 </Stack>
-                            </Card>
-                        </div>
-
-                        {/* Account Details Section */}
-                        <div>
-                            <Text size="lg" fw={500} mb="md">Account Details</Text>
-                            <Card withBorder shadow="sm" radius="md" p="xl">
-                                <Stack>
+                                <Box style={{ position: 'absolute', top: 0, right: 0 }} p="md">
+                                    <ActionIcon
+                                        variant="subtle"
+                                        color="red"
+                                        onClick={() => setDeleteModalOpened(true)}
+                                    >
+                                        <IconTrash size={18} />
+                                    </ActionIcon>
+                                </Box>
+                                <Box style={{ position: 'absolute', top: 0, left: 0 }} p="md">
                                     {loadingProfile ? (
                                         <>
                                             <Skeleton height={20} width="140px" />
-                                            <Skeleton height={20} width="180px" />
                                         </>
                                     ) : (
                                         <>
                                             {profile?.admin && (
-                                                <Text size="sm" c="blue">Administrator Account</Text>
+                                                <Badge color="indigo">Administrator</Badge>
                                             )}
                                             {profile?.professor && (
-                                                <Text size="sm" c="blue">Professor Account</Text>
+                                                <Badge color="cyan">Professor</Badge>
+                                            )}
+                                            {!profile?.admin && !profile?.professor && (
+                                                <Badge color="blue">Student</Badge>
                                             )}
                                         </>
                                     )}
-                                    {loadingUser ? (
-                                        <>
-                                            <Skeleton height={20} width="250px" />
-                                            <Skeleton height={36} width="120px" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Text size="sm">
-                                                <b>Member since:</b> {user && new Date(user.created_at).toLocaleDateString()}
-                                            </Text>
-                                            <Button
-                                                variant="light"
-                                                color="red"
-                                                onClick={() => setDeleteModalOpened(true)}
-                                                loading={deleteLoading}
-                                            >
-                                                Delete Account
-                                            </Button>
-                                        </>
-                                    )}
-                                </Stack>
+                                </Box>
                             </Card>
                         </div>
 
@@ -489,11 +453,13 @@ export default function AccountPage() {
                         )}
 
                         {/* Class Management Section */}
-                        <div>
-                            <Text size="lg" fw={500} mb="md">Class Management</Text>
-                            <Management />
-                        </div>
-                        
+                        {(profile?.admin || profile?.professor) && (
+                            <div>
+                                <Text size="lg" fw={500} mb="md">Class Management</Text>
+                                <Management />
+                            </div>
+                        )}
+
                     </Stack>
                 </Stack>
             </Container>

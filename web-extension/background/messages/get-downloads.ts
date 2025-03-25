@@ -4,6 +4,7 @@ import type { Download } from '~types'
 
 interface GetDownloadsResponse {
   downloads: Download[]
+  
 }
 
 const handler: PlasmoMessaging.MessageHandler<{}, GetDownloadsResponse> = async (req, res) => {

@@ -70,7 +70,6 @@ export const createClass = async (
             title: className, 
             class_code: classCode, 
             course_description: classDescription,
-            download: false // default to false
         });
     if (error) {
         return { success: false, error: error.message };

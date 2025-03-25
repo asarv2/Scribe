@@ -27,7 +27,8 @@ import {
     SimpleGrid,
     RingProgress,
     Badge,
-    Tooltip
+    Tooltip,
+    useMantineColorScheme
 } from "@mantine/core";
 import {
     IconDownload,
@@ -52,6 +53,7 @@ import { getLectures } from "@/utils/queries/get-lectures";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import { Homework, Lecture, Textbook } from "@/types";
+import Link from "next/link";
 
 export default function ProfessorSignup() {
     const supabase = useSupabaseBrowser();
@@ -59,6 +61,7 @@ export default function ProfessorSignup() {
     const [activeStep, setActiveStep] = useState(0);
     const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false);
     const queryClient = useQueryClient();
+    const { colorScheme } = useMantineColorScheme();
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -171,10 +174,10 @@ export default function ProfessorSignup() {
     // Determine active step based on user state
     useEffect(() => {
         if (!loadingProfile && profile) {
-            if (profile.professor) {
+            if (profile.professor || profile.admin) {
                 // Professor is logged in
                 if (profile.classes && profile.classes.length > 0) {
-                    setActiveStep(2); // Has classes, move to configure settings
+                    setActiveStep(1); // Has classes, move to configure settings
                 } else {
                     setActiveStep(1); // Logged in but no classes
                 }
@@ -234,9 +237,9 @@ export default function ProfessorSignup() {
                                                 }
                                                 styles={{
                                                     root: {
-                                                        color: 'white',
+                                                        color: colorScheme === 'dark' ? 'white' : 'black',
                                                         '&:hover': {
-                                                            backgroundColor: '#201F1F'
+                                                            backgroundColor: colorScheme === 'dark' ? '#201F1F' : 'gray.1'
                                                         }
                                                     }
                                                 }}
@@ -267,26 +270,11 @@ export default function ProfessorSignup() {
                                             <Tabs.Panel value="brightspace" pt="md">
                                                 <Stack gap="md">
                                                     <Text size="sm">
-                                                        1. Install our Brightspace extension from the Chrome Web Store
+                                                        1. Install the <Link href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb" target="_blank">Scribe Chrome Extension</Link>
                                                     </Text>
-                                                    <Button
-                                                        component="a"
-                                                        href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb"
-                                                        target="_blank"
-                                                        variant="outline"
-                                                        mb="md"
-                                                    >
-                                                        Get Scribe Extension
-                                                    </Button>
                                                     <Text size="sm">
                                                         2. Open Brightspace and use the extension to add your classes
                                                     </Text>
-                                                    <Text size="sm" c="dimmed" mt="md">
-                                                        Once you've added classes, refresh this page to continue
-                                                    </Text>
-                                                    <Button onClick={() => window.location.reload()} mt="sm">
-                                                        Refresh Page
-                                                    </Button>
                                                 </Stack>
                                             </Tabs.Panel>
 

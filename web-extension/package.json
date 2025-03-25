@@ -1,7 +1,7 @@
 {
   "name": "scribe",
   "displayName": "Scribe",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Used to download Brightspace content and upload to Scribe website.",
   "author": "Ashok Saravanan",
   "scripts": {
@@ -44,10 +44,12 @@
       "scripting",
       "cookies",
       "storage",
-      "alarms"
+      "alarms",
+      "identity"
     ],
     "host_permissions": [
-      "https://purdue.brightspace.com/*"
+      "https://purdue.brightspace.com/*",
+      "https://*.supabase.co/*"
     ]
   }
 }

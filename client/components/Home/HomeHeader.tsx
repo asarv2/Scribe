@@ -4,7 +4,7 @@
  * 17.02.2025
  */
 
-import { Button, Group } from "@mantine/core";
+import { ActionIcon, Button, Group, Tooltip } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
 import { useMantineColorScheme } from "@mantine/core";
@@ -15,9 +15,11 @@ import { getUser } from "@/utils/queries/get-user";
 import { AccountMenu } from "../AccountMenu";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClasses } from "@/utils/queries/get-classes";
+import { IconMoon } from "@tabler/icons-react";
+import { IconSun } from "@tabler/icons-react";
 
 export function HomeHeader() {
-    const { colorScheme } = useMantineColorScheme();
+    const { colorScheme, setColorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
 
     const { data: user } = useQuery({
@@ -41,6 +43,10 @@ export function HomeHeader() {
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
 
+    const toggleColorScheme = () => {
+        setColorScheme(colorScheme === 'dark' ? 'light' : 'dark');
+    };
+
     const firstClass = getFilteredClasses()?.[0];
 
     return (
@@ -59,6 +65,25 @@ export function HomeHeader() {
             </Group>
 
             <Group>
+                {colorScheme === 'dark' ? (
+                    <Tooltip label="Light Mode">
+                        <ActionIcon
+                            variant="subtle"
+                            onClick={toggleColorScheme}
+                        >
+                            <IconSun size={24} />
+                        </ActionIcon>
+                    </Tooltip>
+                ) : (
+                    <Tooltip label="Dark Mode">
+                        <ActionIcon
+                            variant="subtle"
+                            onClick={toggleColorScheme}
+                        >
+                            <IconMoon size={24} />
+                        </ActionIcon>
+                    </Tooltip>
+                )}
                 {user && profile ? (
                     // <AccountMenu profile={profile} />
                     <>
