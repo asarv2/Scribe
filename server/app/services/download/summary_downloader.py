@@ -12,7 +12,7 @@ class SummaryDownloader:
     def download_text(self):
         """Download summary as text file"""
         name = self.summary['id']
-        content = self.summary['preamble'] + "\n\n" + self.summary['content'] + "\n\n" + self.summary['conclusion']
+        content = self.summary['preamble'] + "\n\n" + self._clean_content(self.summary['content']) + "\n\n" + self.summary['conclusion']
         
         # Create directory if it doesn't exist
         os.makedirs(os.path.join(SUMMARIES_DIR, name), exist_ok=True)
@@ -28,7 +28,7 @@ class SummaryDownloader:
     def download_pdf(self):
         """Download summary as PDF file"""
         name = self.summary['id']
-        content = self.summary['preamble'] + "\n\n" + self.summary['content'] + "\n\n" + self.summary['conclusion']
+        content = self.summary['preamble'] + "\n\n" + self._clean_content(self.summary['content']) + "\n\n" + self.summary['conclusion']
         
         # Create directory if it doesn't exist
         os.makedirs(os.path.join(SUMMARIES_DIR, name), exist_ok=True)
@@ -43,7 +43,7 @@ class SummaryDownloader:
     def download_latex(self):
         """Download summary as LaTeX file"""
         name = self.summary['id']
-        content = self.summary['preamble'] + "\n\n" + self.summary['content'] + "\n\n" + self.summary['conclusion']
+        content = self.summary['preamble'] + "\n\n" + self._clean_content(self.summary['content']) + "\n\n" + self.summary['conclusion']
         
         base_filename = f"{name}"
         success = self.save(name, content, base_filename, pdf=False)
@@ -52,6 +52,23 @@ class SummaryDownloader:
             return os.path.join(SUMMARIES_DIR, name, f"{base_filename}.tex")
         return None
     
+    def _clean_content(self, content):
+        """Remove document tags from content"""
+        # List of tag patterns to remove
+        tag_patterns = [
+            r'<DOCUMENT_LECTURE>.*?</DOCUMENT_LECTURE>',
+            r'<DOCUMENT_CHAPTER>.*?</DOCUMENT_CHAPTER>',
+            r'<EXERCISE_CHAPTER>.*?</EXERCISE_CHAPTER>',
+            r'<PROBLEM_HOMEWORK>.*?</PROBLEM_HOMEWORK>'
+        ]
+        
+        # Remove each pattern
+        cleaned_content = content
+        for pattern in tag_patterns:
+            cleaned_content = re.sub(pattern, '', cleaned_content, flags=re.DOTALL)
+            
+        return cleaned_content
+
     def save(self, name: str, summary: str, base_filename: str, pdf: bool = True):
         """
         Save processed summary to a LaTeX PDF file using PyLaTeX.

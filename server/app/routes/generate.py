@@ -9,7 +9,7 @@ from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncG
 from pydantic import BaseModel
 from app.extensions import supabase
 from app.services.chat.chat_processor import ChatProcessor
-from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content, fetch_message_resources
+from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content, fetch_chat_resources
 import json
 import re
 from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor
@@ -131,16 +131,16 @@ async def handle_chat(
         if homework_content:
             message_context.append(homework_content)
 
-        # ADD HERE - Fetch and add message resources for context
-        message_resources = await fetch_message_resources(supabase, message_id)
+        # # ADD HERE - Fetch and add message resources for context
+        # chat_resources = await fetch_chat_resources(supabase, chat_id)
         
-        # Add summaries to context
-        for summary in message_resources.get("summaries", []):
-            message_context.append(summary["text"])
+        # # Add summaries to context
+        # for summary in chat_resources.get("summaries", []):
+        #     message_context.append(summary)
         
-        # Add questions to context
-        for question in message_resources.get("questions", []):
-            message_context.append(question["text"])
+        # # Add questions to context
+        # for question in chat_resources.get("questions", []):
+        #     message_context.append(question)
 
         # Initialize processor and response
         processor = ChatProcessor(
@@ -593,7 +593,7 @@ async def process_questions(
             "generation_status": "generating",
             "generation_error": "",
             "last_generation_attempt": datetime.now().isoformat()
-        }).eq("message", message_id).execute()
+        }).eq("message", message_id).neq("generation_status", "complete").execute()
 
         class_response = supabase.table("classes").select(
             "title, course_description"
@@ -606,7 +606,7 @@ async def process_questions(
         output_rules = await fetch_output_rules(supabase, class_id)
 
         # get the practice problems from the practice_problems table
-        practice_problems_response = supabase.table("questions").select("*").eq("message", message_id).execute()
+        practice_problems_response = supabase.table("questions").select("*").eq("message", message_id).neq("generation_status", "complete").execute()
         practice_problems = practice_problems_response.data
 
         if len(practice_problems) == 0:

@@ -748,7 +748,8 @@ class ProblemsProcessor(BaseProcessor):
                 figures_and_references['figures']
             )
 
-            if on_batch_complete:
+            # Only call on_batch_complete if the question was successfully added to self.questions
+            if on_batch_complete and question_id in self.questions:
                 await on_batch_complete(self.questions[question_id])
 
         return self.questions  # Return all questions, not just the last one

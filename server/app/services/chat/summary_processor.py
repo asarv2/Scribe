@@ -247,7 +247,7 @@ class SummaryProcessor(BaseProcessor):
                 )
             
             # clean the result, get the figures and references, of type ChatMessage
-            figures_and_references = clean_figures_and_references(question, message_id,result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
+            figures_and_references = clean_figures_and_references(question, message_id, result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
 
             print(f"Figures and references: {figures_and_references}")
 

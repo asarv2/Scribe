@@ -189,7 +189,7 @@ async def fetch_homework_resources(supabase, homework_ids):
 
 
 # this is still a WORK IN PROGRESS
-async def fetch_message_resources(supabase, message_id):
+async def fetch_chat_resources(supabase, chat_id):
     """
     Fetch message resources, their text for the summaries and questions generated.
     
@@ -197,24 +197,20 @@ async def fetch_message_resources(supabase, message_id):
     """
     try:
         # Fetch the message to get class_id
-        message_response = supabase.table("messages").select("*").eq("id", message_id).execute()
-        if not message_response.data:
-            return {"error": "Message not found"}
+        messages_response = supabase.table("messages").select("*").eq("chat", chat_id).execute()
+        if not messages_response.data:
+            return {"error": "Messages not found"}
         
-        message = message_response.data[0]
-        class_id = message.get("class_id")
+        messages = messages_response.data
         
         # Initialize result dictionary
         result = {
-            "message": message,
             "summaries": [],
             "questions": [],
-            "documents": [],
-            "exercises": []
         }
         
         # Fetch summaries related to this message
-        summaries_response = supabase.table("summaries").select("*").eq("message", message_id).execute()
+        summaries_response = supabase.table("summaries").select("*").in_("message", [message.get("id") for message in messages]).execute()
         if summaries_response.data:
             for summary in summaries_response.data:
                 summary_text = f"Summary: {summary.get('title', 'Untitled')}\n\n"
@@ -228,18 +224,10 @@ async def fetch_message_resources(supabase, message_id):
                 if summary.get('conclusion'):
                     summary_text += f"Conclusion:\n{summary['conclusion']}\n\n"
                 
-                result["summaries"].append({
-                    "id": summary.get('id'),
-                    "text": summary_text,
-                    "created_at": summary.get('created_at'),
-                    "lecture_references": summary.get('lecture_references', []),
-                    "chapter_references": summary.get('chapter_references', []),
-                    "chapter_exercise_references": summary.get('chapter_exercise_references', []),
-                    "homework_exercise_references": summary.get('homework_exercise_references', [])
-                })
+                result["summaries"].append(summary_text)
         
         # Fetch questions related to this message
-        questions_response = supabase.table("questions").select("*").eq("message", message_id).execute()
+        questions_response = supabase.table("questions").select("*").in_("message", [message.get("id") for message in messages]).execute()
         if questions_response.data:
             for question in questions_response.data:
                 question_text = f"Question: {question.get('problem', 'No problem statement')}\n\n"
@@ -274,47 +262,7 @@ async def fetch_message_resources(supabase, message_id):
                     if question.get('solution'):
                         question_text += f"Solution:\n{question['solution']}\n\n"
                 
-                result["questions"].append({
-                    "id": question.get('id'),
-                    "text": question_text,
-                    "created_at": question.get('created_at'),
-                    "tags": question.get('tags', []),
-                    "lecture_references": question.get('lecture_references', []),
-                    "chapter_references": question.get('chapter_references', []),
-                    "chapter_exercise_references": question.get('chapter_exercise_references', []),
-                    "homework_exercise_references": question.get('homework_exercise_references', [])
-                })
-        
-        # Fetch referenced documents
-        if class_id:
-            # Get all document IDs referenced in summaries and questions
-            document_ids = set()
-            
-            # Add lecture references
-            for item in result["summaries"] + result["questions"]:
-                document_ids.update(item.get("lecture_references", []))
-                document_ids.update(item.get("chapter_references", []))
-            
-            # Fetch documents
-            if document_ids:
-                documents_response = supabase.table("documents").select("*").in_("id", list(document_ids)).execute()
-                if documents_response.data:
-                    result["documents"] = documents_response.data
-            
-            # Get all exercise IDs referenced in summaries and questions
-            exercise_ids = set()
-            
-            # Add exercise references
-            for item in result["summaries"] + result["questions"]:
-                exercise_ids.update(item.get("chapter_exercise_references", []))
-                exercise_ids.update(item.get("homework_exercise_references", []))
-            
-            # Fetch exercises
-            if exercise_ids:
-                exercises_response = supabase.table("exercises").select("*").in_("id", list(exercise_ids)).execute()
-                if exercises_response.data:
-                    result["exercises"] = exercises_response.data
-        
+                result["questions"].append(question_text)
         return result
     
     except Exception as e:

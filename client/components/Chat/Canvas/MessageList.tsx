@@ -1214,10 +1214,10 @@ export const MessageList = memo(({
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
         // cannot get fade list to work with immersive mode
-        <FadeList enabled={false}> 
+        <FadeList enabled={false}>
           {renderWelcomeMessages()}
           {(messages)?.map((message, index) => (
-            <Stack key={`${message.id}`} style={{marginTop: viewerMode.immersive ? '5rem' : '0'}}>
+            <Stack key={`${message.id}`} style={{ marginTop: viewerMode.immersive ? '5rem' : '0' }}>
               {/* User message */}
               {!viewerMode.immersive && <Flex gap="md" justify="flex-end" align="flex-start">
                 <Stack gap="xs" align="flex-end">
@@ -1310,7 +1310,7 @@ export const MessageList = memo(({
                         <Box key={index}>
                           <Stack>
                             {splitTextByTags(group.text).map((segment, figIndex) => {
-                              if (segment.text) {
+                              if (segment.text && segment.text.trim() !== '') {
                                 return (
                                   <MessageViewer
                                     key={figIndex}
@@ -1327,7 +1327,7 @@ export const MessageList = memo(({
                               } else if (segment.summaryId && summaries) {
                                 return (
                                   summaries.find(s => s.id === segment.summaryId) && (
-                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} />
+                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} renderBadges={renderBadges} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
                                   )
                                 )
                               } else if (segment.questionId && questions) {

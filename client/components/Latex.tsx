@@ -2,13 +2,30 @@ import ReactMarkdown from 'react-markdown';
 import RemarkMathPlugin from 'remark-math';
 import RehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import remarkDirective from 'remark-directive';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 
 export default function Latex({ children }: { children: string }) {
     return (
         <div className="latex-container">
             <ReactMarkdown 
-                remarkPlugins={[RemarkMathPlugin]} 
-                rehypePlugins={[RehypeKatex]}
+                remarkPlugins={[
+                    RemarkMathPlugin,
+                    remarkGfm,
+                    remarkDirective
+                ]} 
+                rehypePlugins={[
+                    RehypeKatex,
+                    rehypeRaw,
+                    rehypeSlug,
+                    rehypeAutolinkHeadings,
+                    [rehypeHighlight, { ignoreMissing: true }]
+                ]}
                 components={{
                     p: ({children}) => <p className="prose-p">{children}</p>,
                     h1: ({children}) => <h1 className="prose-h1">{children}</h1>,
