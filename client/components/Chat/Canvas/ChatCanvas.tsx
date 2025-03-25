@@ -743,13 +743,13 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     // Add keyboard shortcuts
     useHotkeys([
-        ['mod+I', () => {
-            if (viewerMode.immersive) {
-                exitImmersive();
-            } else {
-                enterImmersive();
-            }
-        }],
+        // ['mod+I', () => {
+        //     if (viewerMode.immersive) {
+        //         exitImmersive();
+        //     } else {
+        //         enterImmersive();
+        //     }
+        // }],
         ['mod+M', () => {
             setViewerMode(prev => ({ ...prev, contextOpen: !prev.contextOpen }));
         }],

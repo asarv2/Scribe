@@ -25,10 +25,6 @@ export default function Landing() {
   const { colorScheme } = useMantineColorScheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
-  const [selectedClass, setSelectedClass] = useState<string | null>("physics101");
-  const [userQuestion, setUserQuestion] = useState("");
-  const [demoResponse, setDemoResponse] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -52,39 +48,6 @@ export default function Landing() {
   };
 
   const firstClass = getFilteredClasses()?.[0];
-
-  const demoClasses = [
-    { value: "physics101", label: "PHYS 101: Introduction to Physics" },
-    { value: "calculus201", label: "MATH 201: Calculus II" },
-    { value: "chemistry110", label: "CHEM 110: General Chemistry" },
-  ];
-
-  const handleDemoSubmit = () => {
-    if (!userQuestion.trim()) return;
-
-    setIsTyping(true);
-    setDemoResponse("");
-
-    // Simulate typing effect
-    const responses = {
-      "physics101": "In Newton's Second Law (F = ma), the force (F) is directly proportional to the mass (m) and acceleration (a) of an object. This means that when you apply a force to an object, it will accelerate in the direction of the force at a rate proportional to the force and inversely proportional to the object's mass.\n\nFor example, if you push a shopping cart with a force of 50N, and it has a mass of 25kg, the acceleration would be:\na = F/m = 50N/25kg = 2 m/s²",
-      "calculus201": "The derivative of sin(x) is cos(x). This can be proven using the limit definition of the derivative:\n\nf'(x) = lim(h→0) [sin(x+h) - sin(x)]/h\n\nUsing the trigonometric identity sin(A+B) = sin(A)cos(B) + cos(A)sin(B), we can expand sin(x+h) and work through the limit to arrive at cos(x).",
-      "chemistry110": "Balancing chemical equations requires ensuring the same number of atoms for each element appears on both sides of the equation. For the combustion of methane (CH₄ + O₂ → CO₂ + H₂O), we need to balance:\n\nCH₄ + 2O₂ → CO₂ + 2H₂O\n\nThis ensures we have 1 carbon atom, 4 hydrogen atoms, and 4 oxygen atoms on each side of the equation."
-    };
-
-    const fullResponse = responses[selectedClass as keyof typeof responses] || "I don't have information about that class yet.";
-    let charIndex = 0;
-
-    const typingInterval = setInterval(() => {
-      if (charIndex < fullResponse.length) {
-        setDemoResponse(prev => prev + fullResponse.charAt(charIndex));
-        charIndex++;
-      } else {
-        clearInterval(typingInterval);
-        setIsTyping(false);
-      }
-    }, 20);
-  };
 
   return (
     <HomeLayout>
@@ -212,72 +175,6 @@ export default function Landing() {
               </Card>
             </Grid.Col>
           </Grid>
-        </Container>
-      </Box>
-
-      {/* Interactive Demo Section */}
-      <Box py={80}>
-        <Container size="lg">
-          <Title order={2} ta="center" mb={20}>Try Scribe AI</Title>
-          <Text ta="center" size="lg" c="dimmed" mb={50} maw={800} mx="auto">
-            Experience how Scribe helps students understand complex concepts with personalized explanations.
-          </Text>
-
-          <Card shadow="md" p={isMobile ? "md" : "xl"} radius="lg" withBorder>
-            <Stack>
-              <Select
-                label="Select your class"
-                placeholder="Choose a class"
-                data={demoClasses}
-                value={selectedClass}
-                onChange={setSelectedClass}
-                mb="md"
-              />
-
-              <Box mb="md">
-                <Text fw={500} mb="xs">Ask a question about your class</Text>
-                <Flex gap="md">
-                  <Textarea
-                    placeholder="e.g., Can you explain Newton's Second Law?"
-                    value={userQuestion}
-                    onChange={(e) => setUserQuestion(e.currentTarget.value)}
-                    minRows={2}
-                    style={{ flexGrow: 1 }}
-                  />
-                  <ActionIcon
-                    size="lg"
-                    variant="filled"
-                    color="blue"
-                    onClick={handleDemoSubmit}
-                    disabled={isTyping || !userQuestion.trim()}
-                    style={{ alignSelf: "flex-end" }}
-                  >
-                    <IconSend size={18} />
-                  </ActionIcon>
-                </Flex>
-              </Box>
-
-              {demoResponse && (
-                <Box
-                  p="md"
-                  style={{
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                    borderRadius: "8px",
-                    whiteSpace: "pre-wrap"
-                  }}
-                >
-                  <Group mb="sm">
-                    <Avatar radius="xl" size="md">
-                      <IconSchool size={20} />
-                    </Avatar>
-                    <Text fw={600}>Scribe AI</Text>
-                  </Group>
-                  <Text>{demoResponse}</Text>
-                  {isTyping && <Text component="span" fw={600}>|</Text>}
-                </Box>
-              )}
-            </Stack>
-          </Card>
         </Container>
       </Box>
 

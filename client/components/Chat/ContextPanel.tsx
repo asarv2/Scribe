@@ -168,7 +168,7 @@ const ItemCard = ({
                             }
                         }
                     } else if (contextType === 'homeworks') {
-                        const exercise = exercises?.find(e => e.homework === item.id) // find first exercise of the homework
+                        const exercise = exercises?.filter(e => e.homework === item.id).sort((a, b) => a.problem_number - b.problem_number).sort((a, b) => a.problem_part_number - b.problem_part_number)[0] // find first exercise of the homework
                         if (exercise) {
                             handleDocumentClick('homeworks', item.id, setViewerMode, undefined, undefined, exercise.id);
                         }

@@ -346,6 +346,7 @@ export type Database = {
           file_list: string[]
           id: string
           processed_files: number
+          profile: string | null
           refreshed_at: string
           response_url: string
           status: string
@@ -361,6 +362,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          profile?: string | null
           refreshed_at?: string
           response_url?: string
           status?: string
@@ -376,6 +378,7 @@ export type Database = {
           file_list?: string[]
           id?: string
           processed_files?: number
+          profile?: string | null
           refreshed_at?: string
           response_url?: string
           status?: string
@@ -389,6 +392,13 @@ export type Database = {
             columns: ["class"]
             isOneToOne: false
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "downloads_profile_fkey"
+            columns: ["profile"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -654,22 +664,55 @@ export type Database = {
       }
       figures: {
         Row: {
+          chapter_exercise_references: string[]
+          chapter_references: string[]
           code: string
           created_at: string
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references: string[]
           id: string
+          last_generation_attempt: string | null
+          lecture_references: string[]
           message: string | null
+          prompt: string
+          question: string | null
+          response_url: string
+          summary: string | null
         }
         Insert: {
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           code?: string
           created_at?: string
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           id?: string
+          last_generation_attempt?: string | null
+          lecture_references?: string[]
           message?: string | null
+          prompt?: string
+          question?: string | null
+          response_url?: string
+          summary?: string | null
         }
         Update: {
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           code?: string
           created_at?: string
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           id?: string
+          last_generation_attempt?: string | null
+          lecture_references?: string[]
           message?: string | null
+          prompt?: string
+          question?: string | null
+          response_url?: string
+          summary?: string | null
         }
         Relationships: [
           {

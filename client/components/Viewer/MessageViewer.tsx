@@ -5,19 +5,16 @@
  * 03-25-2025
  */
 
-import { ViewerMode } from "@/types";
+import { Figure, ViewerMode } from "@/types";
 import { Card } from "@mantine/core";
 import Latex from "../Latex";
-import FigureViewer from "./FigureViewer";
 
 interface MessageViewerProps {
     text: string;
-    figureId: string | null;
-    viewerMode: ViewerMode;
     colorScheme: string;
 }
 
-export default function MessageViewer({ text, figureId, viewerMode, colorScheme }: MessageViewerProps) {
+export default function MessageViewer({ text, colorScheme }: MessageViewerProps) {
     return (
         <>
             <Card
@@ -32,7 +29,6 @@ export default function MessageViewer({ text, figureId, viewerMode, colorScheme 
             >
                 {/* If the viewerMode.immersive is true, use some logic to split the text into chunks and display multiple cards */}
                 <Latex>{text}</Latex>
-                {figureId && <FigureViewer figureId={figureId} />}
             </Card>
         </>
     )

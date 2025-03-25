@@ -50,6 +50,15 @@ class ChatProcessor(BaseProcessor):
             "3. Address any misconceptions from earlier in the conversation"
         )
     
+    def figure_prompt(self) -> str:
+        """Get the prompt for the figure generation"""
+        return (
+             "Moreover, if the student asks for a generation of a figure or graph from content, either from lectures, chapters, homeworks, or the class as a whole, use <FIGURE></FIGURE> tags to for each of figures you would like to generate.\n"
+            "1. Use <FIGURE>x</FIGURE> tags to specify the format for the figure, where x are the instructions for generating the figure. These instructions will be used (not by you) to create Python code that can display a chart with tools like matplotlib. Use this information to guide your prompt for the figure generation. For example, a figure could look like this: <FIGURE>Generate a figure of the following equations: y = 2x + 1 and y = x^2, with x and y axes.</FIGURE>.\n"
+            "Be sure to not include a generated figure itself, but only provide the tags to specify the format of the figure. You do not need to create the figure yourself, just the formatting in tags for another AI to generate the figure."
+            
+        )
+    
     def summary_prompt(self) -> str:
         """Get the prompt for the summary generation"""
         return (
@@ -110,6 +119,9 @@ class ChatProcessor(BaseProcessor):
                 "You (AI): "
             )
 
+            # adding figure prompt to end of system prompt
+            system_prompt += self.figure_prompt()
+
             # adding summary prompt to end of system prompt
             system_prompt += self.summary_prompt()
 
@@ -145,10 +157,61 @@ class ChatProcessor(BaseProcessor):
             print(f"Error in process_message: {str(e)}")
             raise
 
+
     def clear_chat_history(self, message_id: str) -> None:
         """Clear the chat history for a specific message ID"""
         if message_id in self.chat_histories:
             del self.chat_histories[message_id]
+
+    def extract_figure_prompts(self, result: str, response_url: str) -> Tuple[List[Dict[str, Any]], str]:
+        """Parse figure tags from the response and convert them to figure prompts.
+        
+        Args:
+            result: The response string containing figure tags
+            response_url: The URL of the response to the message
+
+        Returns:
+            List of figure prompt dictionaries ready for the FigureProcessor
+            String of the response with the figure prompts replaced with <FIGURE_GENERATION>x</FIGURE_GENERATION> tags, where x is the id of the created figure
+        """
+        figure_prompts = []
+
+        # Find all figure tag blocks
+        figure_matches = re.finditer(
+            r'<FIGURE>(.*?)</FIGURE>',
+            result,
+            re.DOTALL
+        )
+        
+        # Store matches and their spans for later replacement
+        matches_data = []
+        for match in figure_matches:
+            figure_prompt = {
+                "additional_info": match.group(1).strip()
+            }
+            figure_prompts.append(figure_prompt)
+
+            # insert figure into supabase and get the id
+            figure_response = supabase.table("figures").insert({
+                "message": self.message_id,
+                "prompt": figure_prompt["additional_info"],
+                "response_url": response_url
+            }).execute()
+            figure_id = figure_response.data[0]["id"]
+
+            # update the figure prompt with the id
+            figure_prompt["id"] = figure_id
+            
+            # Store the full match and its position for replacement
+            matches_data.append((match.group(0), match.span(), figure_id))
+        
+        # Replace matches from end to beginning to avoid position shifts
+        matches_data.sort(key=lambda x: x[1][0], reverse=True)
+        for full_match, (start, end), figure_id in matches_data:
+            replacement = f"<FIGURE_GENERATION>{figure_id}</FIGURE_GENERATION>"
+            result = result[:start] + replacement + result[end:]
+
+        return figure_prompts, result
 
     def extract_summary_prompts(self, result: str, response_url: str) -> Tuple[List[Dict[str, Any]], str]:
         """Parse summary tags from the response and convert them to summary prompts.

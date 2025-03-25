@@ -37,6 +37,10 @@ os.makedirs(CHATS_DIR, exist_ok=True)
 COURSES_DIR = os.path.join(UPLOAD_FOLDER, 'courses')
 os.makedirs(COURSES_DIR, exist_ok=True)
 
+# make figures directory if it doesn't exist, under the uploads directory
+FIGURES_DIR = os.path.join(UPLOAD_FOLDER, 'figures')
+os.makedirs(FIGURES_DIR, exist_ok=True)
+
 # make questions directory if it doesn't exist, under the uploads directory
 QUESTIONS_DIR = os.path.join(UPLOAD_FOLDER, 'questions')
 os.makedirs(QUESTIONS_DIR, exist_ok=True)

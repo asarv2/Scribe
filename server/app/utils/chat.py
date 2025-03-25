@@ -20,7 +20,6 @@ def get_critical_instructions(output_rules: str) -> str:
         "CRITICAL INSTRUCTIONS:\n\n"
         f"{output_rules}\n\n"
         "FORMATTING:\n\n"
-        "Only if you find it useful, or the student asks use <CODE>x</CODE> tags to write code in Python that can display a chart in matplotlib. For example, if you wanted to show the 2D visualization of 2 equations (with x and y axes), you should write the following code: <CODE>import matplotlib.pyplot as plt\nimport numpy as np\nx = np.linspace(-5, 5, 100)\ny1 = 2*x + 1  # First equation: y = 2x + 1\ny2 = x**2    # Second equation: y = x^2\nplt.plot(x, y1, label='y = 2x + 1')\nplt.plot(x, y2, label='y = x^2')\nplt.grid(True)\nplt.legend()\nplt.xlabel('x')\nplt.ylabel('y')\nplt.show()</CODE>. You should only enclose the code in the code tag, not anywhere else in your response.\n\n"
         "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
         "Moreover, if you use the content from the chapter, use <CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER> tags, where x is the chapter number and a, b, c are the page numbers. If you cite any exercises from the chapter, use <CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER> tags, where x is the chapter number and a, b, c are the exercise numbers."
         "Lastly, if you use the homework, use <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK> tags, where x is the homework number and a, b, c are the problem numbers. "
@@ -54,30 +53,6 @@ def clean_result(
     lecture_ids = []
     chapter_ids = []
     homework_ids = []
-
-    # Convert markdown-style code blocks (both with and without python tag) to CODE tags
-    result = re.sub(
-        r'```(?:python)?\n(.*?)```',
-        lambda m: f'<CODE>{m.group(1).strip()}</CODE>',
-        result,
-        flags=re.DOTALL
-    )
-
-    # Extract and process code blocks
-    code_matches = re.finditer(r'<CODE>(.*?)</CODE>', result, re.DOTALL)
-    for code_match in code_matches:
-        code_block = code_match.group(1).strip()
-        try:
-            # Create a synchronous version for now
-            figure_id = _execute_and_save_plot_sync(code_block, message_id)
-            if figure_id:
-                figure_ids.append(figure_id)
-                # Replace code block with figure reference
-                result = result.replace(code_match.group(0), f'<FIGURE>{figure_id}</FIGURE>')
-        except Exception as e:
-            print(f"Error executing code block: {str(e)}")
-            # Remove the code block if execution fails
-            result = result.replace(code_match.group(0), '')
 
     # First, normalize incorrect closing tags like </CHAPTER 2> to </CHAPTER>
     result = re.sub(r'</LECTURE\s+\d+>', '</LECTURE>', result)
@@ -191,73 +166,3 @@ def clean_result(
         homework_exercise_references=list(set(homework_exercise_ids)),
         figures=figure_ids
     )
-
-def _execute_and_save_plot_sync(code_block: str, message_id: str) -> Optional[str]:
-    """Synchronous version of plot generation and saving."""
-    import io
-    import os
-    import matplotlib.pyplot as plt
-    import scipy
-    import networkx as nx
-    import numpy as np
-    
-    try:
-        # Clear any existing plots
-        plt.close('all')
-        
-        # Create namespace with pre-imported modules and ensure plt.figure is called
-        namespace = {
-            'plt': plt,
-            'np': np,
-            'scipy': scipy,
-            'nx': nx,  # Add networkx to the namespace
-            'figure': plt.figure(),  # Create a new figure explicitly
-        }
-        
-        # Set non-interactive backend before executing code
-        plt.switch_backend('Agg')
-        
-        # Execute the code
-        exec(code_block, namespace)
-        
-        # Get the current figure (the one we're working with)
-        current_fig = plt.gcf()
-        
-        # Verify the figure has actual content
-        if len(current_fig.axes) == 0 or not any(ax.lines or ax.collections or ax.patches or ax.images for ax in current_fig.axes):
-            print("Figure exists but has no plotted content")
-            return None
-        
-        # Save to buffer for Supabase
-        buffer = io.BytesIO()
-        current_fig.savefig(buffer, format='png', bbox_inches='tight', dpi=300)
-        
-        # Insert metadata and upload to Supabase
-        figure_data = {
-            'message': message_id,
-            'code': code_block,
-        }
-        
-        figure_id = supabase.table('figures').insert(figure_data).execute().data[0]['id']
-
-        # Save to local file system for debugging
-        local_path = os.path.join(UPLOAD_FOLDER, f"{figure_id}.png")
-        current_fig.savefig(local_path, format='png', bbox_inches='tight', dpi=300)
-        
-        # Clean up
-        plt.close('all')
-        
-        buffer.seek(0)
-        supabase.storage.from_('figures').upload(
-            f"{figure_id}.png",
-            buffer.getvalue(),
-            {'content-type': 'image/png'}
-        )
-
-        print(f"Figure saved locally at: {local_path}")
-        return figure_id
-
-    except Exception as e:
-        print(f"Error in _execute_and_save_plot_sync: {str(e)}")
-        plt.close('all')  # Ensure cleanup even on error
-        return None

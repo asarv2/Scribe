@@ -8,7 +8,7 @@ export const filterCodeBlocks = (text: string): string => {
     let result = text;
     
     // Replace <CODE> tags with placeholders
-    result = result.replace(/<CODE>[\s\S]*?<\/CODE>/g, '<FIGURE>code-placeholder</FIGURE>');
+    result = result.replace(/<FIGURE>[\s\S]*?<\/FIGURE>/g, '<FIGURE_GENERATION>figure-placeholder</FIGURE_GENERATION>');
     
     // Replace <SUMMARY> tags with placeholders
     result = result.replace(/<SUMMARY>[\s\S]*?<\/SUMMARY>/g, '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>');
@@ -16,30 +16,7 @@ export const filterCodeBlocks = (text: string): string => {
     // Replace <QUESTION> tags with placeholders
     result = result.replace(/<QUESTION>[\s\S]*?<\/QUESTION>/g, '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>');
     
-    // Also filter out triple backtick code blocks
-    return filterTripleBacktickCodeBlocks(result);
-};
-
-// Filter out triple backtick code blocks
-export const filterTripleBacktickCodeBlocks = (text: string): string => {
-    if (!text) return '';
-    
-    // Regular expression to match complete triple backtick code blocks
-    const completeCodeBlockRegex = /```[\s\S]*?```/g;
-    
-    // Replace complete code blocks with a figure placeholder
-    let processedText = text.replace(completeCodeBlockRegex, '<FIGURE>code-placeholder</FIGURE>');
-    
-    // Check for incomplete code blocks (opening ``` without closing ```)
-    const incompleteCodeBlockIndex = processedText.lastIndexOf('```');
-    if (incompleteCodeBlockIndex !== -1 && 
-        processedText.indexOf('```', incompleteCodeBlockIndex + 3) === -1) {
-        // There's an opening ``` without a closing one
-        processedText = processedText.substring(0, incompleteCodeBlockIndex) + 
-                        '<FIGURE>code-placeholder</FIGURE>';
-    }
-    
-    return processedText;
+    return result;
 };
 
 // Split text by document references and preserve formatting
@@ -121,7 +98,7 @@ export const splitTextByTags = (text: string): { text: string; figureId: string 
     const result: { text: string; figureId: string | null; summaryId: string | null; questionId: string | null }[] = [];
     
     // Use regex to properly extract tags and content
-    const tagPattern = /<(FIGURE|SUMMARY_GENERATION|QUESTION_GENERATION)>(.*?)<\/(FIGURE|SUMMARY_GENERATION|QUESTION_GENERATION)>/g;
+    const tagPattern = /<(FIGURE_GENERATION|SUMMARY_GENERATION|QUESTION_GENERATION)>(.*?)<\/(FIGURE_GENERATION|SUMMARY_GENERATION|QUESTION_GENERATION)>/g;
     let lastIndex = 0;
     let match;
     
@@ -140,7 +117,7 @@ export const splitTextByTags = (text: string): { text: string; figureId: string 
         }
         
         // Add the tag with its content
-        if (tagType === 'FIGURE') {
+        if (tagType === 'FIGURE_GENERATION') {
             result.push({ 
                 text: '', 
                 figureId: content.trim(), 

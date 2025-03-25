@@ -40,6 +40,8 @@ import SummaryViewer from "@/components/Viewer/SummaryViewer";
 import QuestionViewer from "@/components/Viewer/QuestionViewer";
 import FadeList from "./FadeList";
 import MessageViewer from "@/components/Viewer/MessageViewer";
+import { getFigures } from "@/utils/queries/get-figures";
+import FigureViewer from "@/components/Viewer/FigureViewer";
 
 interface MessageListProps {
   chatId: string;
@@ -144,6 +146,12 @@ export const MessageList = memo(({
     queryKey: ["homeworkExercises", classId],
     queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
     enabled: !!homeworks
+  });
+
+  const { data: figures } = useQuery({
+    queryKey: ["figures", chatId],
+    queryFn: () => getFigures(supabase, messages!.map(m => m.id)),
+    enabled: !!messages
   });
 
   const { data: summaries } = useQuery({
@@ -332,6 +340,25 @@ export const MessageList = memo(({
   // Add realtime subscriptions for course-specific data when viewing a course
   useEffect(() => {
     if (!user || !messages) return;
+
+    const figuresChannel = supabase
+      .channel('realtime-figures')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'prod',
+          table: 'figures',
+          filter: `message=in.(${messages.map(m => m.id).join(',')})`
+        },
+        () => {
+          queryClient.invalidateQueries({
+            queryKey: ["figures"]
+          });
+        }
+      )
+      .subscribe();
+
     // Create channels for lectures, textbooks, and homeworks
     const summariesChannel = supabase
       .channel('realtime-summaries')
@@ -370,6 +397,7 @@ export const MessageList = memo(({
       .subscribe();
 
     return () => {
+      supabase.removeChannel(figuresChannel);
       supabase.removeChannel(summariesChannel);
       supabase.removeChannel(questionsChannel);
     };
@@ -1287,10 +1315,14 @@ export const MessageList = memo(({
                                   <MessageViewer
                                     key={figIndex}
                                     text={segment.text}
-                                    figureId={segment.figureId}
-                                    viewerMode={viewerMode}
                                     colorScheme={colorScheme}
                                   />
+                                )
+                              } else if (segment.figureId && figures) {
+                                return (
+                                  figures.find(f => f.id === segment.figureId) && (
+                                    <FigureViewer figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
+                                  )
                                 )
                               } else if (segment.summaryId && summaries) {
                                 return (

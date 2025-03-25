@@ -15,7 +15,8 @@ import re
 from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor
 from app.services.chat.problems_processor import QuestionPrompt, ProblemsProcessor
 from app.utils.chat import get_critical_instructions, clean_result, ChatMessage
-from app.services.base_processor import MCQQuestion, FRQQuestion, Summary
+from app.services.base_processor import MCQQuestion, FRQQuestion, Summary, Figure
+from app.services.chat.figure_processor import FigurePrompt, FigureProcessor
 
 router = APIRouter()
 
@@ -225,6 +226,17 @@ async def handle_chat(
             ):
                 pass  # We're handling updates in the callback
 
+            # Extract and remove the figure prompts from the response
+            figure_prompts, total_response = processor.extract_figure_prompts(total_response, current_message['response_url'])
+            if len(figure_prompts) > 0:
+                # call the generate_figures function
+                await request.app.state.add_task(
+                    process_figures_internally,
+                    message_id,
+                    class_id,
+                    current_message['response_url']
+                )
+
             # Extract and remove the summary prompts from the response
             summary_prompts, total_response = processor.extract_summary_prompts(total_response, current_message['response_url'])
             if len(summary_prompts) > 0:
@@ -300,6 +312,138 @@ async def handle_chat(
             }
         )
     
+
+@router.post('/figures')
+async def process_figures(
+    request: Request,
+    message_id: str = Form(...),
+    class_id: str = Form(...)
+):
+    """Generate figures for a given message ID."""
+    try:
+
+        # Mark figures as generating
+        supabase.table("figures").update({
+            "generation_status": "generating",
+            "generation_error": "",
+            "last_generation_attempt": datetime.now().isoformat()
+        }).eq("message", message_id).execute()
+
+        class_response = supabase.table("classes").select(
+            "title, course_description"
+        ).eq("id", class_id).single().execute()
+        class_title = class_response.data.get('title')
+
+        message_response = supabase.table("messages").select("*").eq("id", message_id).execute()
+        message = message_response.data[0]
+
+        # Get output formatting rules for this class
+        output_rules = await fetch_output_rules(supabase, class_id)
+
+        # get the figures from the figures table
+        figures_response = supabase.table("figures").select("*").eq("message", message_id).execute()
+        figures = figures_response.data
+
+        if len(figures) == 0:
+            print("No figures found for message ID:", message_id)
+            prompts = []
+        else:
+            prompts = [FigurePrompt(
+                id=figure['id'],
+                additional_info=figure['prompt'],
+            ) for figure in figures]
+
+        # Get resource IDs from the message
+        lecture_ids = message.get('lectures', []) or []
+        chapter_ids = message.get('chapters', []) or []
+        homework_ids = message.get('homeworks', []) or []
+
+        # Fetch resources and their documents
+        lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
+        chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
+        homework_resources = await fetch_homework_resources(supabase, homework_ids)
+        
+        # Extract the individual components
+        all_lectures = lecture_resources.get('lectures', [])
+        all_chapters = chapter_resources.get('chapters', [])
+        all_homeworks = homework_resources.get('homeworks', [])
+        
+        # Get documents for each resource type
+        all_lecture_documents = lecture_resources.get('documents', [])
+        all_chapter_documents = chapter_resources.get('documents', [])
+        all_chapter_exercises = chapter_resources.get('exercises', [])
+        all_homework_exercises = homework_resources.get('exercises', [])
+
+        # Generate textual content for context
+        lecture_content = await fetch_lecture_content(supabase, lecture_ids)
+        chapter_content = await fetch_chapter_content(supabase, chapter_ids)
+        homework_content = await fetch_homework_content(supabase, homework_ids)
+        
+        # Combine all content for context
+        message_context = []
+        if lecture_content:
+            message_context.append(lecture_content)
+        if chapter_content:
+            message_context.append(chapter_content)
+        if homework_content:
+            message_context.append(homework_content)
+
+         # initialize the critical instructions
+        critical_instructions = get_critical_instructions(output_rules)
+
+        # Initialize the figure processor
+        processor = FigureProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises) 
+        
+        # Process the summaries
+        try:
+            async def on_batch_complete(generated_figure: Figure):
+                # Prepare summaries for updating
+                figures_to_upsert = []
+                print("Generated figure:", generated_figure)
+                figures_to_upsert.append({
+                    "id": generated_figure["id"],
+                    "code": generated_figure["code"],
+                    "generation_status": "complete",
+                    "generation_error": ""
+                })
+                print("Figures to upsert:", figures_to_upsert)
+                # Update existing topics
+                if figures_to_upsert:
+                    upsert_response = supabase.table("figures").upsert(figures_to_upsert).execute()
+                    print("Upsert response:", upsert_response)
+
+            generated_figures = await processor.process_figures(prompts, message.get('bare_question'), message_id, clean_result, on_batch_complete)
+
+            # print the generated figures
+            print("Generated figures:", generated_figures)
+
+            return {"status": "success", "message_id": message_id}
+        except Exception as e:
+            raise e
+        
+    except Exception as e:
+        print("Error in generate-figures function:", {
+            "name": type(e).__name__,
+            "message": str(e),
+            "stack": traceback.format_exc()
+        })
+
+
+        # Update figures status to error, if they are not already complete
+        supabase.table("figures").update({
+            "generation_status": "error",
+            "generation_error": str(e),
+        }).eq("message", message_id).eq("generation_status", "generating").execute()
+
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": str(e),
+                "stack": traceback.format_exc(),
+                "name": type(e).__name__
+            }
+        )
+
 
 @router.post('/summaries')
 async def process_summaries(
@@ -580,7 +724,21 @@ async def process_questions(
                 "name": type(e).__name__
             }
         )
+    
+async def process_figures_internally(message_id: str, class_id: str, response_url: str):
+    """Helper function to call the figures endpoint internally."""
+    import httpx
+    
+    # Prepare form data
+    form_data = {
+        "message_id": message_id,
+        "class_id": class_id,
+    }
 
+    # Call the endpoint
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{response_url}/generate/figures", data=form_data)
+        print(f"Figures processing response: {response.text}")
 
 async def process_summaries_internally(message_id: str, class_id: str, response_url: str):
     """Helper function to call the summaries endpoint internally."""

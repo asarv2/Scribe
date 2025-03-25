@@ -249,7 +249,7 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const exercise = exercises?.find(e => e.homework === homeworkId) // find first exercise of the homework
+                                const exercise = exercises?.filter(e => e.homework === homeworkId).sort((a, b) => a.problem_number - b.problem_number).sort((a, b) => a.problem_part_number - b.problem_part_number)[0] // find first exercise of the homework
                                 if (exercise) {
                                     handleDocumentClick('homeworks', homeworkId, setViewerMode, undefined, undefined, exercise.id);
                                 }

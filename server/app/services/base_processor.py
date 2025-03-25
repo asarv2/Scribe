@@ -9,6 +9,15 @@ from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from dataclasses import dataclass
 import re
 
+
+class Figure(TypedDict):
+    id: str
+    code: str
+    lecture_references: List[str]
+    chapter_references: List[str]
+    chapter_exercise_references: List[str]
+    homework_exercise_references: List[str]
+
 class Summary(TypedDict):
     id: str
     preamble: str

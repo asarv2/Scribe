@@ -98,11 +98,28 @@ export const ChatInput = memo(({
           autosize
           size={"md"}
           style={{ paddingRight: '40px' }}
-          // variant={viewerMode.immersive ? "unstyled" : "filled"}
+        // variant={viewerMode.immersive ? "unstyled" : "filled"}
         />
 
+        <Tooltip label="Send">
+          <ActionIcon
+            onClick={onSend}
+            style={{
+              position: 'absolute',
+              right: '0',
+              top: '50%',
+              transform: 'translateY(-50%)',
+            }}
+            size="lg"
+            loading={loading}
+            disabled={!activeChat.prompt.trim()}
+          >
+            <IconSend size={20} />
+          </ActionIcon>
+        </Tooltip>
+
         {/* Only show send icon in normal mode */}
-        {!viewerMode.immersive && (!!activeChat.prompt.trim() ?
+        {/* {!viewerMode.immersive && (!!activeChat.prompt.trim() ?
           <Tooltip label="Send">
             <ActionIcon
               onClick={onSend}
@@ -130,7 +147,7 @@ export const ChatInput = memo(({
             >
               <IconEye size={20} />
             </ActionIcon>
-          </Tooltip>)}
+          </Tooltip>)} */}
       </Box>
     </Stack>
   );

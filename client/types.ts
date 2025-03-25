@@ -24,6 +24,7 @@ export type Chat = Database[SchemaName]["Tables"]["chats"]["Row"]
 export type ChatType = Database[SchemaName]["Enums"]["chat_type"]
 export type Code = Database[SchemaName]["Tables"]["codes"]["Row"]
 
+export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"]
 export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"]
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
 
