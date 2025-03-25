@@ -9,7 +9,7 @@ from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncG
 from pydantic import BaseModel
 from app.extensions import supabase
 from app.services.chat.chat_processor import ChatProcessor
-from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content, fetch_chat_resources
+from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
 import json
 import re
 from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor
@@ -130,17 +130,6 @@ async def handle_chat(
             message_context.append(chapter_content)
         if homework_content:
             message_context.append(homework_content)
-
-        # # ADD HERE - Fetch and add message resources for context
-        # chat_resources = await fetch_chat_resources(supabase, chat_id)
-        
-        # # Add summaries to context
-        # for summary in chat_resources.get("summaries", []):
-        #     message_context.append(summary)
-        
-        # # Add questions to context
-        # for question in chat_resources.get("questions", []):
-        #     message_context.append(question)
 
         # Initialize processor and response
         processor = ChatProcessor(

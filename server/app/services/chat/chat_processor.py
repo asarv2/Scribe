@@ -8,7 +8,7 @@ from app.extensions import MESSAGES_DIR, UPLOAD_FOLDER
 from app.extensions import supabase
 from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt
 from app.utils.chat import get_critical_instructions
-
+from app.utils.get_content import process_special_tags
 class ChatProcessor(BaseProcessor):
     def __init__(
         self,
@@ -29,7 +29,7 @@ class ChatProcessor(BaseProcessor):
             if q and r:  # Only add complete message pairs
                 self.chat_history.extend([q, r])
 
-    def format_conversation(self) -> str:
+    async def format_conversation(self) -> str:
         """Format the conversation history into context"""
         if not self.chat_history:
             return ""
@@ -37,7 +37,7 @@ class ChatProcessor(BaseProcessor):
         context_summary = ""
         for i in range(0, len(self.chat_history)-1, 2):
             user_msg = self.chat_history[i]
-            assistant_msg = self.chat_history[i+1]
+            assistant_msg = await process_special_tags(self.chat_history[i+1], supabase)
             context_summary += f"Student asked: {user_msg}\nYou explained: {assistant_msg}\n"
         
         return (
@@ -88,7 +88,7 @@ class ChatProcessor(BaseProcessor):
     ) -> AsyncGenerator[str, None]:
         """Process a single message with streaming"""
         try:
-            conversation_context = self.format_conversation()
+            conversation_context = await self.format_conversation()
             
             system_prompt = ""
             match self.prompt_type:
