@@ -183,8 +183,8 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
         <Menu position="bottom-start" shadow="md">
             <Menu.Target>
                 <Tooltip label="History">
-                    <ActionIcon variant="subtle" size="md" aria-label="View chat history">
-                        <IconHistory size={18} />
+                    <ActionIcon variant="subtle" size="lg" aria-label="View chat history">
+                        <IconHistory size={20} />
                     </ActionIcon>
                 </Tooltip>
             </Menu.Target>

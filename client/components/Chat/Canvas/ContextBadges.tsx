@@ -18,6 +18,8 @@ import { Chapter, Subchapter, ChatMessage, Document, ViewerMode } from "@/types"
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
+import { getFiles } from "@/utils/queries/get-files";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 interface ContextBadgesProps {
     activeChat: ChatMessage;
@@ -74,16 +76,21 @@ export const ContextBadges = memo(({
         queryFn: () => getHomeworks(supabase, [classId]),
     });
 
-    const { data: problems } = useQuery({
-        queryKey: ["problems", classId],
-        queryFn: () => getProblems(supabase, homeworkData!.map(h => h.id)),
-        enabled: !!homeworkData
-    });
-
     const { data: exercises } = useQuery({
         queryKey: ["exercises", classId],
         queryFn: () => getExercises(supabase, chapters?.map(c => c.id) ?? [], homeworkData?.map(h => h.id) ?? []),
         enabled: !!chapters && !!homeworkData
+    });
+
+    const { data: files } = useQuery({
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, [classId]),
+    });
+
+    const { data: fileDocuments } = useQuery({
+        queryKey: ["fileDocuments", classId],
+        queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
+        enabled: !!files
     });
 
     // Render active badges
@@ -97,9 +104,9 @@ export const ContextBadges = memo(({
                         color="blue"
                         style={{ cursor: 'pointer' }}
                         leftSection={
-                            <Avatar 
-                                src={lectureDocuments?.find(d => d.lecture === lectureId) ? 
-                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${lectureDocuments.find(d => d.lecture === lectureId)?.id}.png` : 
+                            <Avatar
+                                src={lectureDocuments?.find(d => d.lecture === lectureId) ?
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${lectureDocuments.find(d => d.lecture === lectureId)?.id}.png` :
                                     '/placeholder_image.svg'}
                                 size="xs"
                                 radius="sm"
@@ -137,9 +144,9 @@ export const ContextBadges = memo(({
                         color="green"
                         style={{ cursor: 'pointer' }}
                         leftSection={
-                            <Avatar 
-                                src={textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook) ? 
-                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${textbookDocuments.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook)?.id}.png` : 
+                            <Avatar
+                                src={textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook) ?
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${textbookDocuments.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook)?.id}.png` :
                                     '/placeholder_image.svg'}
                                 size="xs"
                                 radius="sm"
@@ -181,9 +188,9 @@ export const ContextBadges = memo(({
                         color="teal"
                         style={{ cursor: 'pointer' }}
                         leftSection={
-                            <Avatar 
-                                src={exercises?.find(e => e.id === exerciseId) ? 
-                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${chapter.textbook}/${exercise.id}.png` : 
+                            <Avatar
+                                src={exercises?.find(e => e.id === exerciseId) ?
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${chapter.textbook}/${exercise.id}.png` :
                                     '/placeholder_image.svg'}
                                 size="xs"
                                 radius="sm"
@@ -192,7 +199,7 @@ export const ContextBadges = memo(({
                         rightSection={onRemoveContext && (
                             <IconX
                                 size={14}
-                                
+
                                 style={{ cursor: 'pointer' }}
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -222,9 +229,9 @@ export const ContextBadges = memo(({
                         color="orange"
                         style={{ cursor: 'pointer' }}
                         leftSection={
-                            <Avatar 
-                                src={exercises?.find(e => e.homework === homeworkId) ? 
-                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercises.find(e => e.homework === homeworkId)?.id}.png` : 
+                            <Avatar
+                                src={exercises?.find(e => e.homework === homeworkId) ?
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercises.find(e => e.homework === homeworkId)?.id}.png` :
                                     '/placeholder_image.svg'}
                                 size="xs"
                                 radius="sm"
@@ -254,20 +261,52 @@ export const ContextBadges = memo(({
                 );
             })}
 
+            {activeChat.context.files.map(fileId => {
+                const file = files?.find(f => f.id === fileId);
+                return file && (
+                    <Badge
+                        key={fileId}
+                        color="violet"
+                        style={{ cursor: 'pointer' }}
+                        leftSection={
+                            <Avatar
+                                src={fileDocuments?.find(d => d.file === fileId) ?
+                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${fileDocuments.find(d => d.file === fileId)?.id}.png` :
+                                    '/placeholder_image.svg'}
+                                size="xs"
+                                radius="sm"
+                            />
+                        }
+                        rightSection={onRemoveContext && (
+                            <IconX
+                                size={14}
+                                style={{ cursor: 'pointer' }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onRemoveContext('files', fileId);
+                                }}
+                            />
+                        )}
+                        onClick={(e) => {
+                            if (setViewerMode) {
+                                const document = fileDocuments?.find(d => d.file === fileId) // first page of the lecture
+                                if (document) {
+                                    handleDocumentClick('files', fileId, setViewerMode, document.id);
+                                }
+                            }
+                        }}
+                    >
+                        {file.title}
+                    </Badge>
+                );
+            })}
 
         </>
     );
 
     return (
         <Group>
-            {/* <Text size="sm" c="dimmed">
-                Add Context:
-            </Text> */}
             {renderActiveBadges()}
-            {/* {renderAddBadges()} */}
-            {(!activeChat.context.lectures?.length && 
-                !activeChat.context.chapters?.length && 
-                !activeChat.context.homeworks?.length)}
         </Group>
     );
 });

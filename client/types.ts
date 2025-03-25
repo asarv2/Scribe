@@ -28,6 +28,7 @@ export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"]
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
 
 export type Faqs = Database[SchemaName]["Tables"]["faqs"]["Row"]
+export type File = Database[SchemaName]["Tables"]["files"]["Row"]
 
 export interface ChatMessage {
     id: number;
@@ -38,6 +39,7 @@ export interface ChatMessage {
         chapters: string[];    // chapter IDs
         homeworks: string[];   // homework IDs
         exercises: string[];   // exercise IDs
+        files: string[];   // file IDs
     };
     chatType: ChatType;
     teacher: boolean; // whether the chat is a teacher chat
@@ -45,8 +47,14 @@ export interface ChatMessage {
 }
 
 export interface ViewerMode {
-    active: boolean; // whether we are on a document
-    open: boolean; // whether the viewer is open
+    contextActive: boolean; // whether we are on a document
+    contextOpen: boolean; // whether the viewer is open
+    audio: boolean; // whether the audio is open
+    video: boolean; // whether the video is open
+    recording: boolean; // whether the recording is open
+    inputActive: boolean; // whether the input is shown in immersive mode
+    paused: boolean; // whether the recording is paused
+    saved: boolean; // whether the recording is saved
     immersive: boolean; // whether the viewer is in immersive mode
     documentId?: string; // this goes with either lecture or chapter
     lectureId?: string; // source of truth for lecture
@@ -54,4 +62,5 @@ export interface ViewerMode {
     chapterId?: string; // source of truth for chapter
     exerciseId?: string; // this goes with either chapter or homework
     homeworkId?: string; // source of truth for homework
+    fileId?: string; // source of truth for file
 }

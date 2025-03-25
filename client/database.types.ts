@@ -232,14 +232,17 @@ export type Database = {
           chapter: string | null
           created_at: string
           description: string
+          end_time: number | null
           exercise: string | null
           exercises: string[]
+          file: string | null
           homework: string | null
           homeworks: string[]
           id: string
           lecture: string | null
           page: number
           processed: boolean
+          start_time: number | null
           subchapter: string | null
           text: string
           textbook: string | null
@@ -248,14 +251,17 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           description?: string
+          end_time?: number | null
           exercise?: string | null
           exercises?: string[]
+          file?: string | null
           homework?: string | null
           homeworks?: string[]
           id?: string
           lecture?: string | null
           page: number
           processed?: boolean
+          start_time?: number | null
           subchapter?: string | null
           text?: string
           textbook?: string | null
@@ -264,14 +270,17 @@ export type Database = {
           chapter?: string | null
           created_at?: string
           description?: string
+          end_time?: number | null
           exercise?: string | null
           exercises?: string[]
+          file?: string | null
           homework?: string | null
           homeworks?: string[]
           id?: string
           lecture?: string | null
           page?: number
           processed?: boolean
+          start_time?: number | null
           subchapter?: string | null
           text?: string
           textbook?: string | null
@@ -289,6 +298,13 @@ export type Database = {
             columns: ["exercise"]
             isOneToOne: false
             referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_file_fkey"
+            columns: ["file"]
+            isOneToOne: false
+            referencedRelation: "files"
             referencedColumns: ["id"]
           },
           {
@@ -665,6 +681,51 @@ export type Database = {
           },
         ]
       }
+      files: {
+        Row: {
+          class: string
+          created_at: string
+          id: string
+          length: number
+          profile: string
+          title: string
+          type: Database["prod"]["Enums"]["file_type"]
+        }
+        Insert: {
+          class?: string
+          created_at?: string
+          id?: string
+          length?: number
+          profile: string
+          title?: string
+          type: Database["prod"]["Enums"]["file_type"]
+        }
+        Update: {
+          class?: string
+          created_at?: string
+          id?: string
+          length?: number
+          profile?: string
+          title?: string
+          type?: Database["prod"]["Enums"]["file_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "files_profile_fkey"
+            columns: ["profile"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homeworks: {
         Row: {
           additional_info: string
@@ -796,6 +857,7 @@ export type Database = {
           chat: string | null
           created_at: string
           documents: string[]
+          files: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references: string[]
@@ -819,6 +881,7 @@ export type Database = {
           chat?: string | null
           created_at?: string
           documents?: string[]
+          files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -842,6 +905,7 @@ export type Database = {
           chat?: string | null
           created_at?: string
           documents?: string[]
+          files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -947,14 +1011,19 @@ export type Database = {
       questions: {
         Row: {
           answers: string[]
+          chapter_exercise_references: string[]
+          chapter_references: string[]
           computational: boolean
           created_at: string
           explanations: string[]
+          figures: string[]
           frq: boolean
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references: string[]
           id: string
           last_generation_attempt: string | null
+          lecture_references: string[]
           message: string | null
           multi: string | null
           options: string[]
@@ -965,14 +1034,19 @@ export type Database = {
         }
         Insert: {
           answers?: string[]
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           computational?: boolean
           created_at?: string
           explanations?: string[]
+          figures?: string[]
           frq?: boolean
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           id?: string
           last_generation_attempt?: string | null
+          lecture_references?: string[]
           message?: string | null
           multi?: string | null
           options?: string[]
@@ -983,14 +1057,19 @@ export type Database = {
         }
         Update: {
           answers?: string[]
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           computational?: boolean
           created_at?: string
           explanations?: string[]
+          figures?: string[]
           frq?: boolean
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           id?: string
           last_generation_attempt?: string | null
+          lecture_references?: string[]
           message?: string | null
           multi?: string | null
           options?: string[]
@@ -1097,12 +1176,17 @@ export type Database = {
       summaries: {
         Row: {
           body: string
+          chapter_exercise_references: string[]
+          chapter_references: string[]
           conclusion: string
           created_at: string
+          figures: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references: string[]
           id: string
           last_generation_attempt: string | null
+          lecture_references: string[]
           message: string | null
           preamble: string
           prompt: string
@@ -1110,12 +1194,17 @@ export type Database = {
         }
         Insert: {
           body?: string
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           conclusion?: string
           created_at?: string
+          figures?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           id?: string
           last_generation_attempt?: string | null
+          lecture_references?: string[]
           message?: string | null
           preamble?: string
           prompt?: string
@@ -1123,12 +1212,17 @@ export type Database = {
         }
         Update: {
           body?: string
+          chapter_exercise_references?: string[]
+          chapter_references?: string[]
           conclusion?: string
           created_at?: string
+          figures?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
+          homework_exercise_references?: string[]
           id?: string
           last_generation_attempt?: string | null
+          lecture_references?: string[]
           message?: string | null
           preamble?: string
           prompt?: string
@@ -1230,6 +1324,7 @@ export type Database = {
         | "concept"
         | "review"
         | "other"
+      file_type: "audio" | "video" | "video_audio" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status:

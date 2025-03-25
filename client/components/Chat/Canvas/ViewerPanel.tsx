@@ -18,6 +18,8 @@ import HomeworkViewer from "@/components/Viewer/HomeworkViewer";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getChapters } from "@/utils/queries/get-chapters";
 import { getExercises } from "@/utils/queries/get-exercises";
+import FileViewer from "@/components/Viewer/FileViewer";
+import { getFiles } from "@/utils/queries/get-files";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
@@ -50,9 +52,14 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
         queryFn: () => getHomeworks(supabase, [classId])
     });
 
+    const { data: files } = useQuery({
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, [classId])
+    });
+
     // Helper function to get viewer title
     const getViewerTitle = () => {
-        if (viewerMode.lectureId) {
+        if (viewerMode.lectureId ) {
             const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
             return lecture ? `${lecture.name}` : "Lecture Viewer";
         } else if (viewerMode.textbookId && viewerMode.chapterId) {
@@ -65,6 +72,9 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
         } else if (viewerMode.exerciseId && viewerMode.chapterId) {
             const chapter = chapters?.find(c => c.id === viewerMode.chapterId);
             return chapter ? `Chapter ${chapter.chapter_number} Exercises` : "Exercise Viewer";
+        } else if (viewerMode.fileId) {
+            const file = files?.find(f => f.id === viewerMode.fileId);
+            return file ? `${file.title}` : "File Viewer";
         }
         return "Document Viewer";
     };
@@ -74,13 +84,14 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
         if (viewerMode.immersive) {
             setViewerMode(prev => ({
                 ...prev,
-                active: false,
-                open: false,
+                contextActive: false,
+                contextOpen: false,
+                
             }));
-        } else {
+        } else if (viewerMode.contextActive) {
             setViewerMode(prev => ({
                 ...prev,
-                active: false,
+                contextActive: false,
             }));
         }
     };
@@ -178,6 +189,22 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                             leftSection={<IconPlus size={16} />}
                             onClick={() => addContextToChat("homeworks", viewerMode.homeworkId ?? "")}
                         >Add Homework to Chat</Button>}
+                    </>
+                ) : viewerMode.fileId ? (
+                    <>
+                        <Box style={{ flex: 1, overflow: 'hidden' }}>
+                            <FileViewer
+                                key={`${viewerMode.fileId}-${viewerMode.documentId}`}
+                                classId={classId}
+                                fileId={viewerMode.fileId}
+                                initialDocumentId={viewerMode.documentId}
+                            />
+
+                        </Box>
+                        {activeChat.context.files.includes(viewerMode.fileId ?? "") ? null : <Button
+                            leftSection={<IconPlus size={16} />}
+                            onClick={() => addContextToChat("files", viewerMode.fileId ?? "")}
+                        >Add File to Chat</Button>}
                     </>
                 ) : null}
 

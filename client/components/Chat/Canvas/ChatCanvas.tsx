@@ -6,8 +6,8 @@
 import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff, IconMaximize, IconMaximizeOff, IconColumnsOff, IconArrowRight, IconClearAll, IconCategoryPlus, IconCategoryMinus } from "@tabler/icons-react";
-import { useEffect, useState, useCallback } from "react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff, IconMaximize, IconMaximizeOff, IconColumnsOff, IconArrowRight, IconClearAll, IconCategoryPlus, IconCategoryMinus, IconVolumeOff, IconVolume, IconFilePlus, IconFileMinus, IconMicrophone, IconCamera, IconMicrophoneOff, IconCameraOff, IconPlayerPlay, IconPlayerStop, IconPlayerPause } from "@tabler/icons-react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFullscreen, useMediaQuery, useHotkeys } from "@mantine/hooks";
 import { em } from "@mantine/core";
@@ -38,25 +38,44 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
+import RecordingPanel from "../RecordingPanel";
+
 
 export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
         immersive: fullscreen,
-        active: false,
-        open: chatId === "new"
+        contextActive: false,
+        contextOpen: chatId === "new",
+        audio: false,
+        video: false,
+        recording: false,
+        inputActive: true,
+        paused: false,
+        saved: false,
     });
     const [loading, setLoading] = useState(false);
 
     // Search and expansion states
-    const [searchQuery, setSearchQuery] = useState("");
+    const [contextSearchQuery, setContextSearchQuery] = useState("");
+    const [filesSearchQuery, setFilesSearchQuery] = useState("");
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures']));
 
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
     const { colorScheme } = useMantineColorScheme();
+
+    // video/audio section
+    const [recordingDuration, setRecordingDuration] = useState(0);
+    const [mediaBlob, setMediaBlob] = useState<Blob | null>(null);
+    const [stream, setStream] = useState<MediaStream | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const mediaChunksRef = useRef<Blob[]>([]);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const videoPreviewRef = useRef<HTMLVideoElement | null>(null);
+
     // Fetch necessary data
     const { data: existingChat } = useQuery({
         queryKey: ["chat", chatId],
@@ -118,8 +137,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             chapters: [],
             homeworks: [],
             exercises: [],
+            files: []
         },
-        chatType: 'review',
+        chatType: 'general-student',
         teacher: false,
         rating: null
     });
@@ -284,6 +304,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     chapters: [],
                     homeworks: [],
                     exercises: [],
+                    files: []
                 }
             });
 
@@ -490,7 +511,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         setViewerMode(prev => ({
             ...prev,
             immersive: true,
-            open: false,
+            contextOpen: false,
+            filesOpen: false,
         }));
         toggle();
     };
@@ -499,9 +521,225 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         setViewerMode(prev => ({
             ...prev,
             immersive: false,
+            contextOpen: chatId === "new",
+            filesOpen: chatId === "new",
         }));
         toggle();
     };
+
+    const toggleAudio = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            audio: !prev.audio
+        }));
+    };
+
+    const toggleVideo = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            video: !prev.video
+        }));
+    };
+
+    // Initialize media devices on component mount
+    useEffect(() => {
+        getMediaStream();
+
+        // Cleanup on unmount
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+
+            if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+                mediaRecorderRef.current.stop();
+            }
+
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+
+    // Update media stream when audio/video toggles change
+    useEffect(() => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        getMediaStream();
+    }, [viewerMode.audio, viewerMode.video]);
+
+    // Function to get media stream based on enabled devices
+    const getMediaStream = async () => {
+        if (!viewerMode.audio && !viewerMode.video) {
+            setStream(null);
+            return;
+        }
+
+        try {
+            const newStream = await navigator.mediaDevices.getUserMedia({
+                audio: viewerMode.audio,
+                video: viewerMode.video
+            });
+
+            setStream(newStream);
+
+            // Connect stream to video preview if video is enabled
+            if (viewerMode.video && videoPreviewRef.current) {
+                videoPreviewRef.current.srcObject = newStream;
+            }
+
+            // Create MediaRecorder instance immediately (for visualization)
+            const recorder = new MediaRecorder(newStream);
+            mediaRecorderRef.current = recorder;
+
+            // Setup data handlers even before recording starts
+            mediaChunksRef.current = [];
+
+            recorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    mediaChunksRef.current.push(event.data);
+                }
+            };
+
+            recorder.onstop = () => {
+                const mimeType = viewerMode.video ? 'video/webm' : 'audio/wav';
+                const blob = new Blob(mediaChunksRef.current, { type: mimeType });
+                setMediaBlob(blob);
+
+                // Display recorded media for video
+                if (viewerMode.video && videoPreviewRef.current) {
+                    videoPreviewRef.current.srcObject = null;
+                    videoPreviewRef.current.src = URL.createObjectURL(blob);
+                    videoPreviewRef.current.controls = true;
+                }
+            };
+
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+            notifications.show({
+                title: 'Device Access Error',
+                message: 'Could not access requested media devices. Please check permissions.',
+                color: 'red',
+            });
+        }
+    };
+
+    // Function to start recording
+    const startRecording = () => {
+        if (!stream || !mediaRecorderRef.current) {
+            notifications.show({
+                title: 'Recording Error',
+                message: 'No media devices enabled. Please enable audio or video.',
+                color: 'red',
+            });
+            return;
+        }
+
+        try {
+            // Reset chunks if starting a new recording
+            mediaChunksRef.current = [];
+
+            // Start recording
+            mediaRecorderRef.current.start();
+            setViewerMode(prev => ({
+                ...prev,
+                recording: true,
+                paused: false
+            }));
+            setRecordingDuration(0);
+
+            // Start timer
+            timerRef.current = setInterval(() => {
+                setRecordingDuration(prev => prev + 1);
+            }, 1000);
+
+        } catch (error) {
+            console.error('Error starting recording:', error);
+            notifications.show({
+                title: 'Recording Error',
+                message: 'Failed to start recording. Please try again.',
+                color: 'red',
+            });
+        }
+    };
+
+    // Function to pause recording
+    const pauseRecording = () => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+            mediaRecorderRef.current.pause();
+            setViewerMode(prev => ({
+                ...prev,
+                paused: true
+            }));
+            // Pause timer
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        }
+    };
+
+    // Function to resume recording
+    const resumeRecording = () => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'paused') {
+            mediaRecorderRef.current.resume();
+            setViewerMode(prev => ({
+                ...prev,
+                paused: false
+            }));
+            // Resume timer
+            timerRef.current = setInterval(() => {
+                setRecordingDuration(prev => prev + 1);
+            }, 1000);
+        }
+    };
+
+    // Function to stop recording
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop();
+            setViewerMode(prev => ({
+                ...prev,
+                recording: false,
+                saved: true
+            }));
+        }
+
+        // Clear timer
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+
+    };
+
+
+    const handleDiscardRecording = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            recording: false,
+            saved: false
+        }));
+    };
+
+    const handleSaveRecording = () => {
+        // add to chat, reset recording state
+        // use media blob to add to chat
+        setViewerMode(prev => ({
+            ...prev,
+            recording: false,
+            saved: false
+        }));
+    };
+
+    const toggleInput = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            inputActive: !prev.inputActive
+        }));
+    };
+
 
     // Add keyboard shortcuts
     useHotkeys([
@@ -513,16 +751,129 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             }
         }],
         ['mod+M', () => {
-            setViewerMode(prev => ({ ...prev, open: !prev.open }));
+            setViewerMode(prev => ({ ...prev, contextOpen: !prev.contextOpen }));
         }],
-    ]);
+    ], []
+    );
 
     return (
         <ClassLayout classId={classId} showHeader={!viewerMode.immersive}>
             <Container fluid>
                 <Stack>
                     <Flex justify="space-between" align="center">
-                        {viewerMode.immersive ? <div /> :
+                        {viewerMode.immersive ?
+                            <Group gap="xs">
+                                <div style={{ display: "none" }}>
+                                    {viewerMode.recording ?
+                                        <>
+                                            <Tooltip label={viewerMode.inputActive ? "Hide input" : "Show input"}>
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={toggleInput}
+                                                    aria-label="Toggle input"
+                                                >
+                                                    {viewerMode.inputActive ? <IconEye size={18} /> : <IconEyeOff size={18} />}
+                                                </ActionIcon>
+                                            </Tooltip>
+                                            {viewerMode.paused ? <Tooltip label="Resume recording">
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={resumeRecording}
+                                                    aria-label="Resume recording"
+                                                >
+                                                    <IconPlayerPlay size={18} />
+                                                </ActionIcon>
+                                            </Tooltip> :
+                                                <Tooltip label="Pause recording">
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={pauseRecording}
+                                                        aria-label="Pause recording"
+                                                    >
+                                                        <IconPlayerPause size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            }
+                                            <Tooltip label="Stop recording">
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    size="md"
+                                                    onClick={stopRecording}
+                                                    aria-label="Stop recording"
+                                                >
+                                                    <IconPlayerStop size={18} />
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        </>
+                                        : viewerMode.saved ?
+                                            <>
+                                                <Tooltip label={viewerMode.inputActive ? "Hide input" : "Show input"}>
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={toggleInput}
+                                                        aria-label="Toggle input"
+                                                    >
+                                                        {viewerMode.inputActive ? <IconEye size={18} /> : <IconEyeOff size={18} />}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip label="Discard recording">
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={handleDiscardRecording}
+                                                        aria-label="Discard recording"
+                                                    >
+                                                        <IconX size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip label="Add to chat">
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={handleSaveRecording}
+                                                        aria-label="Add to chat"
+                                                    >
+                                                        <IconFilePlus size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </>
+                                            : <>
+                                                <Tooltip label="Enable microphone">
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={toggleAudio}
+                                                        aria-label="Toggle audio"
+                                                    >
+                                                        {viewerMode.audio ? <IconMicrophone size={18} /> : <IconMicrophoneOff size={18} />}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip label="Enable camera">
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={toggleVideo}
+                                                        aria-label="Toggle video"
+                                                    >
+                                                        {viewerMode.video ? <IconCamera size={18} /> : <IconCameraOff size={18} />}
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                {(viewerMode.audio || viewerMode.video) && <Tooltip label="Start recording">
+                                                    <ActionIcon
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={startRecording}
+                                                    >
+                                                        <IconPlayerPlay size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>}
+                                            </>}
+                                </div>
+                            </Group> :
                             <Group gap="sm">
                                 <Text size="xl" fw={700} mb={6}>
                                     {existingChat ? (
@@ -546,6 +897,29 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                         activeChat.title
                                     )}
                                 </Text>
+                                {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
+                                    <Badge color={
+                                        existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'indigo' :
+                                            existingChat.type === 'concept' ? 'green' :
+                                                existingChat.type === 'review' ? 'cyan' :
+                                                    existingChat.type === 'method' ? 'green' :
+                                                        existingChat.type === 'generate' ? 'indigo' :
+                                                            existingChat.type === 'other' ? 'orange' :
+                                                                'gray'
+                                    }>
+                                        {existingChat.type.startsWith('homework-')
+                                            ? 'Homework'
+                                            : existingChat.type === 'concept'
+                                                ? 'Conceptual'
+                                                : existingChat.type === 'method'
+                                                    ? 'Approach'
+                                                    : existingChat.type === 'generate'
+                                                        ? 'Generated'
+                                                        : existingChat.type === 'other'
+                                                            ? 'Other'
+                                                            : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
+                                    </Badge>
+                                )}
                             </Group>}
                         <Group gap="xs">
                             {viewerMode.immersive ?
@@ -558,16 +932,29 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     >
                                         <IconEyeOff size={18} />
                                     </ActionIcon>
-                                </Tooltip> : <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
-                                    <ActionIcon
-                                        variant="subtle"
-                                        size="md"
-                                        onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                        aria-label="Toggle context panel"
-                                    >
-                                        {viewerMode.open ? <IconCategoryMinus size={18} /> : <IconCategoryPlus size={18} />}
-                                    </ActionIcon>
-                                </Tooltip>
+                                </Tooltip> :
+                                <>
+                                    {/* <Tooltip label={viewerMode.filesOpen ? "Hide files" : "Add files"}>
+                                        <ActionIcon
+                                            variant="subtle"
+                                            size="md"
+                                            onClick={() => setViewerMode(prev => ({ ...prev, filesOpen: !prev.filesOpen }))}
+                                            aria-label="Toggle file panel"
+                                        >
+                                            {viewerMode.filesOpen ? <IconFileMinus size={18} /> : <IconFilePlus size={18} />}
+                                        </ActionIcon>
+                                    </Tooltip> */}
+                                    <Tooltip label={viewerMode.contextOpen ? "Hide context" : "Add context"}>
+                                        <ActionIcon
+                                            variant="subtle"
+                                            size="lg"
+                                            onClick={() => setViewerMode(prev => ({ ...prev, contextOpen: !prev.contextOpen }))}
+                                            aria-label="Toggle context panel"
+                                        >
+                                            {viewerMode.contextOpen ? <IconCategoryMinus size={20} /> : <IconCategoryPlus size={20} />}
+                                        </ActionIcon>
+                                    </Tooltip>
+                                </>
                             }
 
                             {/* <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
@@ -583,9 +970,18 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                         </Group>
                     </Flex>
                     <Grid>
-                        {viewerMode.immersive && <Grid.Col span={3} />}
+                        {viewerMode.immersive && <Grid.Col span={3} >
+                            <RecordingPanel
+                                viewerMode={viewerMode}
+                                mediaBlob={mediaBlob}
+                                videoPreviewRef={videoPreviewRef}
+                                mediaRecorderRef={mediaRecorderRef}
+                                recordingDuration={recordingDuration}
+                            />
+                        </Grid.Col>
+                        }
                         <Grid.Col
-                            span={isMobile ? 12 : (viewerMode.immersive ? 6 : (viewerMode.open ? 8 : 12))}
+                            span={isMobile ? 12 : viewerMode.immersive ? 6 : (8 + (!viewerMode.contextOpen ? 4 : 0))}
                             style={{
                                 transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
                             }}
@@ -606,12 +1002,12 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                         {chatId !== "new" && <Tooltip label="New chat">
                                             <ActionIcon
                                                 variant="subtle"
-                                                size="md"
+                                                size="lg"
                                                 aria-label="Start a new chat"
                                                 onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
                                                 mb={3}
                                             >
-                                                <IconPlus size={18} />
+                                                <IconPlus size={20} />
                                             </ActionIcon>
                                         </Tooltip>}
                                         <ChatHistoryDropdown
@@ -653,15 +1049,15 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                             </Card>
                         </Grid.Col>
                         <Grid.Col
-                            span={isMobile ? 12 : (viewerMode.immersive) ? 3 : 4}
+                            span={isMobile ? 12 : viewerMode.immersive ? 3 : 4}
                             style={{
-                                display: (viewerMode.open) ? 'block' : 'none',
+                                display: (viewerMode.contextOpen) ? 'block' : 'none',
                                 transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
-                                opacity: (viewerMode.open) ? 1 : 0,
+                                opacity: (viewerMode.contextOpen) ? 1 : 0,
                                 overflow: 'hidden',
                             }}
                         >
-                            {viewerMode.active ? (
+                            {viewerMode.contextActive ? (
                                 <ViewerPanel
                                     viewerMode={viewerMode}
                                     setViewerMode={setViewerMode}
@@ -672,8 +1068,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                             ) : (
                                 <ContextPanel
                                     classId={classId}
-                                    searchQuery={searchQuery}
-                                    setSearchQuery={setSearchQuery}
+                                    searchQuery={contextSearchQuery}
+                                    setSearchQuery={setContextSearchQuery}
                                     addContextToChat={addContextToChat}
                                     activeChat={activeChat}
                                     makeDraggable={true}

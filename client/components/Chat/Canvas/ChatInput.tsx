@@ -96,9 +96,9 @@ export const ChatInput = memo(({
           onKeyDown={handleKeyDown}
           placeholder={viewerMode.immersive ? "" : "Type your message here..."}
           autosize
-          size={viewerMode.immersive ? "lg" : "sm"}
+          size={"md"}
           style={{ paddingRight: '40px' }}
-          variant={viewerMode.immersive ? "unstyled" : "filled"}
+          // variant={viewerMode.immersive ? "unstyled" : "filled"}
         />
 
         {/* Only show send icon in normal mode */}
@@ -112,8 +112,9 @@ export const ChatInput = memo(({
                 top: '50%',
                 transform: 'translateY(-50%)',
               }}
+              size="lg"
             >
-              <IconSend size={18} />
+              <IconSend size={20} />
             </ActionIcon>
           </Tooltip> :
           <Tooltip label="Immersive">
@@ -125,8 +126,9 @@ export const ChatInput = memo(({
                 top: '50%',
                 transform: 'translateY(-50%)',
               }}
+              size="lg"
             >
-              <IconEye size={18} />
+              <IconEye size={20} />
             </ActionIcon>
           </Tooltip>)}
       </Box>

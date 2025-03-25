@@ -15,10 +15,14 @@ from dotenv import load_dotenv
 from app.services.upload.textbook_extractor import TextbookExtractor
 from app.services.upload.homework_extractor import HomeworkExtractor
 from app.services.upload.lecture_extractor import LectureExtractor
+from app.services.upload.file_extractor import FileExtractor
+
+import logging
 
 load_dotenv()
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
 
 @router.post("/create")
 async def create_course(
@@ -905,6 +909,157 @@ async def process_homework(
             }
         )
 
+
+@router.post("/file")
+async def process_file(
+    request: Request,
+    file: UploadFile = File(None),
+    file_path: str = Form(None),
+    class_id: str = Form(...),
+    title: str = Form(None),
+    response_url: str = Form(None)
+):
+    """
+    Process a file - can be called with either an uploaded file or a file path.
+    """
+    file_id = None
+    try:
+        # Validate that either file or file_path is provided
+        if not file and not file_path:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Either file or file_path must be provided"}
+            )
+            
+        # Determine filename
+        if file:
+            filename = file.filename
+        else:
+            filename = os.path.basename(file_path)
+            
+        # Determine file type based on extension
+        file_type = "unknown"
+        ext = os.path.splitext(filename)[1].lower()
+        
+        if ext in ['.pdf']:
+            file_type = "pdf"
+        elif ext in ['.mp3', '.wav', '.ogg', '.flac', '.m4a']:
+            file_type = "audio"
+        elif ext in ['.mp4', '.avi', '.mov', '.mkv', '.webm']:
+            file_type = "video"
+        elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+            file_type = "image"
+
+        # Create file record in supabase
+        file_response = supabase.table("files").insert({
+            "class": class_id,
+            "title": title or os.path.splitext(filename)[0],
+            "type": file_type,
+            "parse_status": "pending",
+            "response_url": response_url or ""
+        }).execute()
+        
+        # get the id of the newly created file
+        file_id = file_response.data[0]["id"]
+        
+        # Create file directory
+        file_dir = os.path.join(COURSES_DIR, class_id, "files", file_id)
+        os.makedirs(file_dir, exist_ok=True)
+        
+        # Determine file path and save if needed
+        if not file_path:
+            # This is an external upload
+            # Save the uploaded file
+            file_path = os.path.join(file_dir, filename)
+            await file.seek(0)
+            
+            async with aiofiles.open(file_path, "wb") as f:
+                content = await file.read()
+                await f.write(content)
+        else:
+            # This is an internal call with an existing file
+            # Copy the file to the file directory
+            destination_path = os.path.join(file_dir, filename)
+            
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(destination_path), exist_ok=True)
+            
+            # Copy the file
+            shutil.copy2(file_path, destination_path)
+            file_path = destination_path
+            
+        # Update file length for audio/video files
+        if file_type in ["audio", "video", "video_audio"]:
+            try:
+                from pydub import AudioSegment
+                media = AudioSegment.from_file(file_path)
+                file_length = len(media) / 1000  # Convert to seconds
+                
+                # Update the file record with the length
+                supabase.table("files").update({
+                    "length": file_length
+                }).eq("id", file_id).execute()
+            except Exception as e:
+                logger.warning(f"Could not determine media length: {str(e)}")
+        
+        # Update file status to extracting
+        supabase.table("files").update({
+            "parse_status": "extracting",
+            "parse_error": None,
+            "last_parse_attempt": datetime.now().isoformat()
+        }).eq("id", file_id).execute()
+        
+        # Initialize file extractor
+        processor = FileExtractor(file_path)
+        
+        # Extract content from the file
+        file_content = processor.extract_file_content()
+        
+        # Update file status to uploading
+        supabase.table("files").update({
+            "parse_status": "uploading",
+            "parse_error": None,
+            "last_parse_attempt": datetime.now().isoformat()
+        }).eq("id", file_id).execute()
+        
+        # Upload content to Supabase
+        processor.upload_to_supabase(file_content, class_id, file_id, supabase)
+        
+        # Process the file using the task queue if response_url is provided
+        if response_url:
+            await request.app.state.add_task(parse_file_internally, file_id, response_url)
+        
+        return {
+            "status": "success",
+            "message": "File received and processing started",
+            "file_id": file_id,
+            "file_path": file_path,
+            "file_type": file_type
+        }
+        
+    except Exception as e:
+        import traceback
+        print(f"Error processing file: {str(e)}")
+        print(traceback.format_exc())
+
+        if file_id:
+            # update the status of the file in the database
+            supabase.table("files").update({
+                "parse_status": "error",
+                "parse_error": str(e),
+            }).eq("id", file_id).execute()
+        
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": f"Failed to process file: {str(e)}"
+            }
+        )
+    
+    
+
+
 # Helper functions for internal processing
 async def process_lecture_internally(file_path: str, class_id: str, response_url: str):
     """Helper function to call the lecture endpoint internally."""
@@ -1012,3 +1167,22 @@ async def parse_homework_internally(homework_id: str, response_url: str):
             headers={"Content-Type": "application/json"}
         )
         print(f"Homework parsing response: {response.text}")
+
+
+async def parse_file_internally(file_id: str, response_url: str):
+    """Helper function to call the file endpoint internally."""
+    import httpx
+    
+    # Prepare form data
+    json_data = {
+        "file_id": file_id
+    }
+
+    # Call the endpoint with JSON data
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{response_url}/parse/file", 
+            json=json_data,  # Use json parameter instead of data
+            headers={"Content-Type": "application/json"}
+        )
+        print(f"File parsing response: {response.text}")

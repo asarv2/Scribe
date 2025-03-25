@@ -255,7 +255,7 @@ export const groupConsecutiveDocuments = (
 
 // Handle document click with support for different document types
 export const handleDocumentClick = (
-    contextType: 'lectures' | 'chapters' | 'homeworks',
+    contextType: 'lectures' | 'chapters' | 'homeworks' | 'files',
     contextId: string,
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>,
     documentId?: string,
@@ -266,7 +266,8 @@ export const handleDocumentClick = (
     if (contextType === 'lectures' && documentId) {
         setViewerMode(prev => ({
             ...prev,
-            active: true,
+            contextActive: true,
+            contextOpen: true,
             documentId: documentId,
             lectureId: contextId,
             chapterId: undefined,
@@ -279,7 +280,8 @@ export const handleDocumentClick = (
     else if (contextType === 'chapters' && documentId && textbookId) {
         setViewerMode(prev => ({
             ...prev,
-            active: true,
+            contextActive: true,
+            contextOpen: true,
             documentId: documentId,
             textbookId: textbookId,
             chapterId: contextId,
@@ -290,7 +292,8 @@ export const handleDocumentClick = (
     } else if (contextType === 'chapters' && exerciseId && textbookId) {
         setViewerMode(prev => ({
             ...prev,
-            active: true,
+            contextActive: true,
+            contextOpen: true,
             chapterId: contextId,
             exerciseId: exerciseId,
             textbookId: textbookId,
@@ -301,10 +304,19 @@ export const handleDocumentClick = (
     } else if (contextType === 'homeworks' && exerciseId) {
         setViewerMode(prev => ({
             ...prev,
-            active: true,
+            contextActive: true,
+            contextOpen: true,
             homeworkId: contextId,
             exerciseId: exerciseId,
             lectureId: undefined,
+        }));
+    } else if (contextType === 'files' && documentId) {
+        setViewerMode(prev => ({
+            ...prev,
+            contextActive: true,
+            contextOpen: true,
+            fileId: contextId,
+            documentId: documentId,
         }));
     }
 };
