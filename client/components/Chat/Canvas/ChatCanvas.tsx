@@ -65,7 +65,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
-    const { colorScheme } = useMantineColorScheme();
 
     // video/audio section
     const [recordingDuration, setRecordingDuration] = useState(0);
@@ -1019,7 +1018,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                 <MessageList
                                     chatId={chatId}
                                     classId={classId}
-                                    colorScheme={colorScheme}
                                     existingChat={existingChat ?? null}
                                     activeChat={activeChat}
                                     setActiveChat={setActiveChat}

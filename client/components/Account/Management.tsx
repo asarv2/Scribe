@@ -187,6 +187,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
             }
 
             queryClient.invalidateQueries({ queryKey: ["classes"] });
+            queryClient.invalidateQueries({ queryKey: ["class", classId] });
             notifications.show({
                 title: 'Success',
                 message: 'Class settings updated successfully',
@@ -340,12 +341,13 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         value={editableClasses[classItem.id]?.course_description}
                         onChange={(e) => handleEditableChange(classItem.id, 'course_description', e.currentTarget.value)}
                         autosize
+                        minRows={3}
                     />
 
                 </Stack>}
 
                 {/* Privacy Mode Section */}
-                <Stack gap="xs">
+                {/* <Stack gap="xs">
                     <Switch
                         checked={editableClasses[classItem.id]?.privateMode}
                         onChange={(e) => handlePrivateModeToggle(classItem.id, e.currentTarget.checked)}
@@ -356,7 +358,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         When private mode is enabled, all lecture content will be processed using our own models
                         instead of external services, ensuring complete data privacy.
                     </Text>
-                </Stack>
+                </Stack> */}
 
                 {/* <Stack gap="xs">
                     <Switch
@@ -402,6 +404,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         <Textarea
                             label="Lecture Prompt"
                             placeholder="Enter custom prompt for lecture content"
+                            autosize
                             minRows={3}
                             value={classPrompts[classItem.id]?.lecture || ''}
                             onChange={(event) => handlePromptChange(classItem.id, 'lecture', event.currentTarget.value)}
@@ -412,6 +415,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         <Textarea
                             label="Textbook Prompt"
                             placeholder="Enter custom prompt for textbook content"
+                            autosize
                             minRows={3}
                             value={classPrompts[classItem.id]?.textbook || ''}
                             onChange={(event) => handlePromptChange(classItem.id, 'textbook', event.currentTarget.value)}
@@ -422,6 +426,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         <Textarea
                             label="Homework Prompt"
                             placeholder="Enter custom prompt for homework content"
+                            autosize
                             minRows={3}
                             value={classPrompts[classItem.id]?.homework || ''}
                             onChange={(event) => handlePromptChange(classItem.id, 'homework', event.currentTarget.value)}
@@ -466,6 +471,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         placeholder="A brief description of the class"
                         value={newClassDescription}
                         onChange={(e) => setNewClassDescription(e.currentTarget.value)}
+                        autosize
                         minRows={3}
                     />
                 </Stack>

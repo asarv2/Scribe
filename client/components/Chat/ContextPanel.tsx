@@ -129,7 +129,6 @@ const ItemCard = ({
     chapters?: Chapter[],
     textbooks?: Textbook[]
 }) => {
-    const { colorScheme } = useMantineColorScheme();
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const originalCard = (
@@ -140,7 +139,6 @@ const ItemCard = ({
             withBorder
             style={{
                 marginBottom: '8px',
-                backgroundColor: colorScheme === "dark" ? "#25262b" : "white",
                 cursor: makeDraggable ? 'grab' : 'pointer',
                 transition: 'all 0.2s ease',
                 borderLeft: `3px solid var(--mantine-color-${color}-filled)`,
@@ -263,7 +261,6 @@ export function ContextPanel({
     setViewerMode
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
-    const { colorScheme } = useMantineColorScheme();
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
     const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
     const containerRef = useRef<HTMLDivElement>(null);

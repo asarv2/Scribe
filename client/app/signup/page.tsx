@@ -7,7 +7,7 @@
 
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
     Button,
     Card,
@@ -60,13 +60,14 @@ import Management from "@/components/Account/Management";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
-import { Class, Homework, Lecture, Profile, Textbook } from "@/types";
+import { Class, Homework, Lecture, Profile, Textbook, TypedSupabaseClient } from "@/types";
 import Link from "next/link";
 import MicrosoftLoginButton from "@/components/Buttons/MicrosoftLoginButton";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import UploadLectureButton from "@/components/Buttons/UploadLectureButton";
 import UploadTextbookButton from "@/components/Buttons/UploadTextbookButton";
 import UploadHomeworkButton from "@/components/Buttons/UploadHomeworkButton";
+import Content from "@/components/Content/Content";
 
 export default function ProfessorSignup() {
     const supabase = useSupabaseBrowser();
@@ -90,20 +91,33 @@ export default function ProfessorSignup() {
         queryFn: () => getClasses(supabase),
     });
 
+    const getClass = useCallback((classes: Class[] | undefined, profile: Profile | undefined) => {
+        if (!classes || classes.length === 0) return null;
+        return classes.filter(c => profile?.admin || profile?.classes.includes(c.id))[0];
+    }, [classes, profile]);
+
+    const classData = getClass(classes, profile);
+
+    // Lectures data
     const { data: lectures, isLoading: loadingLectures } = useQuery({
-        queryKey: ["lectures"],
-        queryFn: () => getLectures(supabase, classes?.map(c => c.id) ?? []),
+        queryKey: ["lectures", classData?.id],
+        queryFn: () => getLectures(supabase, [classData?.id!], false),
+        enabled: !!classData?.id
     });
 
+    // Textbooks data
     const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
-        queryKey: ["textbooks"],
-        queryFn: () => getTextbooks(supabase, classes?.map(c => c.id) ?? []),
+        queryKey: ["textbooks", classData?.id],
+        queryFn: () => getTextbooks(supabase, [classData?.id!]),
+        enabled: !!classData?.id
     });
 
+    // Homework data
     const { data: homeworks, isLoading: loadingHomeworks } = useQuery({
-        queryKey: ["homeworks"],
-        queryFn: () => getHomeworks(supabase, classes?.map(c => c.id) ?? []),
-    });
+        queryKey: ["homeworks", classData?.id],
+        queryFn: () => getHomeworks(supabase, [classData?.id!]),
+        enabled: !!classData?.id
+    }); 
 
 
     const handleDeleteClass = async (classId: string) => {
@@ -134,7 +148,7 @@ export default function ProfessorSignup() {
         if (!items || items.length === 0) return { percent: 0, count: 0, total: 0 };
 
         const completedCount = items.filter(item =>
-            item.parse_status === 'idle'
+            item.parse_status === 'uploading' || item.parse_status === 'parsing' || item.parse_status === 'complete'
         ).length;
 
         return {
@@ -159,6 +173,33 @@ export default function ProfessorSignup() {
         };
     };
 
+    // Add realtime subscriptions for profiles
+    useEffect(() => {
+        if (!user) return;
+
+        const channel = supabase
+            .channel('realtime-profiles')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'profiles'
+                },
+                () => {
+                    // Invalidate profile query to fetch fresh data
+                    queryClient.invalidateQueries({
+                        queryKey: ["profile", user.id]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user, queryClient]);
+
     // Add realtime subscriptions for classes
     useEffect(() => {
         if (!user) return;
@@ -172,7 +213,9 @@ export default function ProfessorSignup() {
                     schema: 'prod',
                     table: 'classes'
                 },
-                () => {
+                (payload) => {
+                    console.log('Class change detected:', payload);
+
                     // Invalidate classes query to fetch fresh data
                     queryClient.invalidateQueries({
                         queryKey: ["classes"]
@@ -184,81 +227,244 @@ export default function ProfessorSignup() {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [user, queryClient]);
+    }, [queryClient, user, supabase, classData]);
 
-    // Add realtime subscriptions for course-specific data when viewing a course
+
+    // Add realtime subscriptions for lectures
     useEffect(() => {
-        if (!user || !classes) return;
-        // Create channels for lectures, textbooks, and homeworks
-        const lecturesChannel = supabase
+        if (!classData) return;
+        const classId = classData.id;
+
+        const channel = supabase
             .channel('realtime-lectures')
             .on(
                 'postgres_changes',
                 {
                     event: '*',
                     schema: 'prod',
-                    table: 'lectures'
+                    table: 'lectures',
+                    filter: `class=eq.${classId}`
                 },
                 () => {
                     queryClient.invalidateQueries({
-                        queryKey: ["lectures"]
-                    });
-                }
-            )
-            .subscribe();
-
-        const textbooksChannel = supabase
-            .channel('realtime-textbooks')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'textbooks'
-                },
-                () => {
-                    queryClient.invalidateQueries({
-                        queryKey: ["textbooks"]
-                    });
-                }
-            )
-            .subscribe();
-
-        const homeworksChannel = supabase
-            .channel('realtime-homeworks')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'homeworks'
-                },
-                () => {
-                    queryClient.invalidateQueries({
-                        queryKey: ["homeworks"]
+                        queryKey: ["lectures", classId]
                     });
                 }
             )
             .subscribe();
 
         return () => {
-            supabase.removeChannel(lecturesChannel);
-            supabase.removeChannel(textbooksChannel);
-            supabase.removeChannel(homeworksChannel);
+            supabase.removeChannel(channel);
         };
-    }, [user, queryClient, classes]);
+    }, [classData, supabase, queryClient]);
 
-    const filteredClasses = profile && classes ? classes.filter(c => profile.admin || profile.classes.includes(c.id)) : undefined;
+    // Add realtime subscriptions for lecture documents
+    useEffect(() => {
+        if (!classData) return;
+        const classId = classData.id;
+        if (!lectures || lectures.length === 0) return;
 
-    const getActiveStep = (profile: Profile | undefined, classes: Class[] | undefined, lectures: Lecture[] | undefined, textbooks: Textbook[] | undefined, homeworks: Homework[] | undefined) => {
-        if (profile && profile.admin) return 3;
-        if (lectures && calculateUploadStatus(lectures).percent === 100 && textbooks && calculateUploadStatus(textbooks).percent === 100 && homeworks && calculateUploadStatus(homeworks).percent === 100) return 3;
-        if (classes && classes[0] && classes[0]?.saved) return 2;
-        if (profile && classes && classes.length > 0) return 1;
+        const channel = supabase
+            .channel('realtime-lecture-documents')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'documents',
+                    filter: `lecture=in.(${lectures.map(lecture => lecture.id).join(',')})`
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["lectureDocuments", classId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [classData, supabase, lectures, queryClient]);
+
+    // Add realtime subscriptions for textbooks
+    useEffect(() => {
+        if (!classData) return;
+        const classId = classData.id;
+        if (!textbooks || textbooks.length === 0) return;
+
+        const channel = supabase
+            .channel('realtime-textbooks')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'textbooks',
+                    filter: `class=eq.${classId}`
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["textbooks", classId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [classData, supabase, queryClient]);
+
+    // Add realtime subscriptions for textbook documents
+    useEffect(() => {
+        if (!classData) return;
+        const classId = classData.id;
+        if (!textbooks || textbooks.length === 0) return;
+
+        const channel = supabase
+            .channel('realtime-textbook-documents')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'documents',
+                    filter: `textbook=in.(${textbooks.map(textbook => textbook.id).join(',')})`
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["textbookDocuments", classId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [classData, supabase, textbooks, queryClient]);
+
+    // Add realtime subscriptions for homeworks
+    useEffect(() => {
+        if (!classData) return;
+        const classId = classData.id;
+        if (!homeworks || homeworks.length === 0) return;
+
+        const channel = supabase
+            .channel('realtime-homeworks')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'homeworks',
+                    filter: `class=eq.${classId}`
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["homeworks", classId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [classData, supabase, queryClient]);
+
+    // Add realtime subscriptions for exercises
+    useEffect(() => {
+        if (!classData) return;
+        const classId = classData.id;
+        if (!homeworks || homeworks.length === 0) return;
+
+        const channel = supabase
+            .channel('realtime-homework-exercises')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'exercises',
+                    filter: `homework=in.(${homeworks.map(homework => homework.id).join(',')})`
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["exercises", classId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [classData, homeworks, supabase, queryClient]);
+
+    // Add realtime subscriptions for homework documents
+    useEffect(() => {
+        if (!classData) return;
+        const classId = classData.id;
+        if (!homeworks || homeworks.length === 0) return;
+
+        const channel = supabase
+            .channel('realtime-homework-documents')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'documents',
+                    filter: `homework=in.(${homeworks.map(homework => homework.id).join(',')})`
+                },
+                () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ["homeworkDocuments", classId]
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [classData, homeworks, supabase, queryClient]);
+
+    const getActiveStep = (profile: Profile | undefined, classItem: Class | null, lectures: Lecture[] | undefined, textbooks: Textbook[] | undefined, homeworks: Homework[] | undefined) => {
+        if (profile && profile.admin) return 4;
+
+        if (classItem) {
+            const filteredLectures = lectures?.filter(l => l.class === classItem.id) || [];
+            const filteredTextbooks = textbooks?.filter(t => t.class === classItem.id) || [];
+            const filteredHomeworks = homeworks?.filter(h => h.class === classItem.id) || [];
+
+            const lecturesReady = !classItem.lecture_enabled ||
+                (filteredLectures.length > 0 && calculateUploadStatus(filteredLectures).percent === 100);
+            const lecturesComplete = !classItem.lecture_enabled ||
+                (filteredLectures.length > 0 && calculateParseStatus(filteredLectures).percent === 100);
+
+            const textbooksReady = !classItem.textbook_enabled ||
+                (filteredTextbooks.length > 0 && calculateUploadStatus(filteredTextbooks).percent === 100);
+            const textbooksComplete = !classItem.textbook_enabled ||
+                (filteredTextbooks.length > 0 && calculateParseStatus(filteredTextbooks).percent === 100);
+
+            const homeworksReady = !classItem.homework_enabled ||
+                (filteredHomeworks.length > 0 && calculateUploadStatus(filteredHomeworks).percent === 100);
+            const homeworksComplete = !classItem.homework_enabled ||
+                (filteredHomeworks.length > 0 && calculateParseStatus(filteredHomeworks).percent === 100);
+
+            if (lecturesComplete && textbooksComplete && homeworksComplete) return 4;
+            if (lecturesReady || textbooksReady || homeworksReady) return 3;
+            if (classItem.saved) return 2;
+        }
+
+        if (profile && classData && classData.id) return 1;
         return 0;
     }
 
-    const activeStep = getActiveStep(profile, filteredClasses, lectures, textbooks, homeworks);
+    const activeStep = getActiveStep(profile, classData, lectures?.filter(l => l.class === classData?.id), textbooks?.filter(t => t.class === classData?.id), homeworks?.filter(h => h.class === classData?.id));
 
     const loading = loadingUser || loadingProfile || loadingClasses || loadingLectures || loadingTextbooks || loadingHomeworks;
 
@@ -328,44 +534,44 @@ export default function ProfessorSignup() {
                                                             </Tabs.Panel>
                                                         </Tabs>
                                                     </Stack> : (<Stack pt="md">
-                                                        {filteredClasses && filteredClasses.length > 0 && (
-                                                            filteredClasses[0].brightspace_course_id !== null ? (
-                                                                <Group>
-                                                                    <IconCheck size={16} />
-                                                                    <Text>Added {filteredClasses[0].class_code} from Brightspace at {new Date(filteredClasses[0].created_at ?? "").toLocaleString()}</Text>
-                                                                    <Tooltip label="Remove Course">
-                                                                        <ActionIcon
-                                                                            variant="subtle"
-                                                                            size="md"
-                                                                            color="red"
-                                                                            onClick={() => {
-                                                                                setDeleteClassModalId(filteredClasses[0].id);
-                                                                            }}
-                                                                        >
-                                                                            <IconTrash size={16} />
-                                                                        </ActionIcon>
-                                                                    </Tooltip>
-                                                                </Group>
-                                                            ) : (
-                                                                <Group>
-                                                                    <IconCheck size={16} />
-                                                                    <Text>Added {filteredClasses[0].class_code} manually at {new Date(filteredClasses[0].created_at ?? "").toLocaleString()}</Text>
-                                                                    <Tooltip label="Remove Course">
-                                                                        <ActionIcon
-                                                                            variant="subtle"
-                                                                            size="md"
-                                                                            color="red"
-                                                                            onClick={() => {
-                                                                                setDeleteClassModalId(filteredClasses[0].id);
-                                                                            }}
-                                                                        >
-                                                                            <IconTrash size={16} />
-                                                                        </ActionIcon>
-                                                                    </Tooltip>
-                                                                </Group>
-                                                            )
-                                                        )}
-                                                    </Stack>)
+                                                        {classData && classData.brightspace_course_id !== null ? (
+                                                            <Group>
+                                                                <IconCheck size={16} />
+                                                                <Text>Added {classData.class_code} from Brightspace at {new Date(classData.created_at ?? "").toLocaleString()}</Text>
+                                                                <Tooltip label="Remove Course">
+                                                                    <ActionIcon
+                                                                        variant="subtle"
+                                                                        size="md"
+                                                                        color="red"
+                                                                        onClick={() => {
+                                                                            setDeleteClassModalId(classData.id);
+                                                                        }}
+                                                                    >
+                                                                        <IconTrash size={16} />
+                                                                    </ActionIcon>
+                                                                </Tooltip>
+                                                            </Group>
+                                                        ) : (
+                                                            <Group>
+                                                                <IconCheck size={16} />
+                                                                <Text>Added {classData?.class_code} manually at {new Date(classData?.created_at ?? "").toLocaleString()}</Text>
+                                                                <Tooltip label="Remove Course">
+                                                                    <ActionIcon
+                                                                        variant="subtle"
+                                                                        size="md"
+                                                                        color="red"
+                                                                        onClick={() => {
+                                                                            setDeleteClassModalId(classData?.id ?? "");
+                                                                        }}
+                                                                    >
+                                                                        <IconTrash size={16} />
+                                                                    </ActionIcon>
+                                                                </Tooltip>
+                                                            </Group>
+                                                        )
+                                                        }
+                                                    </Stack>
+                                                    )
                                                 )}
                                             </Accordion.Panel>
                                         </Accordion.Item>
@@ -415,7 +621,7 @@ export default function ProfessorSignup() {
                             <Timeline.Item
                                 bullet={<IconUpload size={16} />}
                                 title={
-                                    <Accordion defaultValue={activeStep === 2 ? "step2" : null} key={"accordion-upload-content-" + activeStep}>
+                                    <Accordion defaultValue={(activeStep === 2 || activeStep === 3) ? "step2" : null} key={"accordion-upload-content-" + activeStep}>
                                         <Accordion.Item value="step2">
                                             <Accordion.Control disabled={activeStep < 2}>
                                                 <Group>
@@ -425,16 +631,53 @@ export default function ProfessorSignup() {
                                                     ) : (
                                                         activeStep > 2 ?
                                                             <Badge color="green">Complete</Badge> :
-                                                            <Text c="dimmed" size="sm">Upload content from Brightspace, Kaltura MediaSpace, personal website, or your computer</Text>
+                                                            <Text c="dimmed" size="sm">Upload content from your computer or Brightspace</Text>
                                                     )}
                                                 </Group>
                                             </Accordion.Control>
                                             <Accordion.Panel>
-                                                <Stack mt="md">
-                                                    <UploadLectureButton classId={classes?.[0]?.id ?? ""} initalStatus={"idle"} />
-                                                    <UploadTextbookButton classId={classes?.[0]?.id ?? ""} initalStatus={"idle"} />
-                                                    <UploadHomeworkButton classId={classes?.[0]?.id ?? ""} initalStatus={"idle"} />
-                                                </Stack>
+                                                {loading ? (
+                                                    <Stack mt="md">
+                                                        <Skeleton height={40} width="100%" />
+                                                        <Skeleton height={100} width="100%" />
+                                                        <Skeleton height={40} width="70%" />
+                                                    </Stack>
+                                                ) : (
+                                                    activeStep === 2 ? <Stack mt="md">
+                                                        <Tabs defaultValue="brightspace">
+                                                            <Tabs.List>
+                                                                <Tabs.Tab value="brightspace">Upload from Brightspace</Tabs.Tab>
+                                                                <Tabs.Tab value="manual">Upload from Computer</Tabs.Tab>
+                                                            </Tabs.List>
+
+                                                            <Tabs.Panel value="brightspace" pt="md">
+                                                                <Stack gap="md">
+                                                                    <Text size="md">
+                                                                        1. Click the 'Download Now' button to upload your content to Scribe
+                                                                    </Text>
+                                                                    <Stack gap="0">
+                                                                        <Text size="md">
+                                                                            2. To keep the content refreshed, you can switch the 'Daily Download' button to download your content at a specific time every day.
+                                                                        </Text>
+                                                                        <Text size="xs" c="dimmed">
+                                                                            *This option will keep you logged into Brightspace at all times, which may be a security risk.*
+                                                                        </Text>
+                                                                    </Stack>
+                                                                </Stack>
+                                                            </Tabs.Panel>
+
+                                                            <Tabs.Panel value="manual" pt="md">
+                                                                <Group>
+                                                                    {classData?.lecture_enabled && (calculateUploadStatus(lectures?.filter(l => l.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Lectures Uploaded</Button> : <UploadLectureButton classId={classData?.id ?? ""} />)}
+                                                                    {classData?.textbook_enabled && (calculateUploadStatus(textbooks?.filter(t => t.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Textbooks Uploaded</Button> : <UploadTextbookButton classId={classData?.id ?? ""} />)}
+                                                                    {classData?.homework_enabled && (calculateUploadStatus(homeworks?.filter(h => h.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Homeworks Uploaded</Button> : <UploadHomeworkButton classId={classData?.id ?? ""} />)}
+                                                                </Group>
+                                                            </Tabs.Panel>
+                                                        </Tabs>
+                                                    </Stack> : <Content classId={classData?.id ?? ""} showDeleteButton={true} navigateHomeAfterDelete={false} />
+
+                                                )}
+
                                             </Accordion.Panel>
                                         </Accordion.Item>
                                     </Accordion>
@@ -445,7 +688,7 @@ export default function ProfessorSignup() {
                             <Timeline.Item
                                 bullet={<IconUpload size={16} />}
                                 title={
-                                    <Accordion defaultValue={activeStep === 3 ? "step3" : null} key={"accordion-parse-content-" + activeStep}>
+                                    <Accordion defaultValue={(activeStep === 3 || activeStep === 4) ? "step3" : null} key={"accordion-parse-content-" + activeStep}>
                                         <Accordion.Item value="step3">
                                             <Accordion.Control disabled={activeStep < 3}>
                                                 <Group>
@@ -493,116 +736,102 @@ export default function ProfessorSignup() {
                                                                     homeworks?.filter(h => h.class === classItem.id) || []
                                                                 );
 
-                                                                // Check if everything is complete
-                                                                const isComplete = (
-                                                                    (!classItem.lecture_enabled || lectureStatus.percent === 100) &&
-                                                                    (!classItem.textbook_enabled || textbookStatus.percent === 100) &&
-                                                                    (!classItem.homework_enabled || homeworkStatus.percent === 100)
-                                                                );
-
                                                                 return (
-                                                                    <>
-                                                                        <Card key={classItem.id} withBorder p="md" mb="sm">
-                                                                            <Stack>
-                                                                                <Group justify="space-between">
-                                                                                    <Text fw={500}>{classItem.class_code}</Text>
-                                                                                    <Tooltip label="View Content">
-                                                                                        <ActionIcon
-                                                                                            variant="subtle"
-                                                                                            size="md"
-                                                                                        >
-                                                                                            <Link href={`/classes/c/${classItem.id}/content`} style={{ textDecoration: 'none', color: 'inherit' }} target="_blank">
-                                                                                                <IconExternalLink size={18} />
-                                                                                            </Link>
-                                                                                        </ActionIcon>
-                                                                                    </Tooltip>
-                                                                                </Group>
+                                                                    <Card key={classItem.id} withBorder p="md" mb="sm">
+                                                                        <Stack>
+                                                                            <Group justify="space-between">
+                                                                                <Text fw={500}>{classItem.class_code}</Text>
+                                                                                <Tooltip label="View Content">
+                                                                                    <ActionIcon
+                                                                                        variant="subtle"
+                                                                                        size="md"
+                                                                                    >
+                                                                                        <Link href={`/classes/c/${classItem.id}/content`} style={{ textDecoration: 'none', color: 'inherit' }} target="_blank">
+                                                                                            <IconExternalLink size={18} />
+                                                                                        </Link>
+                                                                                    </ActionIcon>
+                                                                                </Tooltip>
+                                                                            </Group>
 
-                                                                                {/* Progress Indicators */}
-                                                                                <SimpleGrid cols={3} spacing="xs">
-                                                                                    {classItem.lecture_enabled && (
-                                                                                        <Stack align="center">
-                                                                                            <Tooltip label={`${lectureStatus.count}/${lectureStatus.total} lectures processed`}>
-                                                                                                <RingProgress
-                                                                                                    size={160}
-                                                                                                    thickness={8}
-                                                                                                    roundCaps
-                                                                                                    sections={[{
-                                                                                                        value: lectureStatus.percent,
-                                                                                                        color: 'blue'
-                                                                                                    }]}
-                                                                                                    label={
-                                                                                                        <Center>
-                                                                                                            <Text size="xs" fw={700}>{lectureStatus.percent}%</Text>
-                                                                                                        </Center>
-                                                                                                    }
-                                                                                                />
-                                                                                            </Tooltip>
-                                                                                            <Text size="md" ta="center" fw={700}>
-                                                                                                Lectures
-                                                                                            </Text>
-                                                                                        </Stack>
+                                                                            {/* Progress Indicators */}
+                                                                            <SimpleGrid cols={3} spacing="xs">
+                                                                                {classItem.lecture_enabled && (
+                                                                                    <Stack align="center">
+                                                                                        <Tooltip label={`${lectureStatus.count}/${lectureStatus.total} lectures processed`}>
+                                                                                            <RingProgress
+                                                                                                size={160}
+                                                                                                thickness={8}
+                                                                                                roundCaps
+                                                                                                sections={[{
+                                                                                                    value: lectureStatus.percent,
+                                                                                                    color: 'blue'
+                                                                                                }]}
+                                                                                                label={
+                                                                                                    <Center>
+                                                                                                        <Text size="xs" fw={700}>{lectureStatus.percent}%</Text>
+                                                                                                    </Center>
+                                                                                                }
+                                                                                            />
+                                                                                        </Tooltip>
+                                                                                        <Text size="md" ta="center" fw={700}>
+                                                                                            Lectures
+                                                                                        </Text>
+                                                                                    </Stack>
 
-                                                                                    )}
+                                                                                )}
 
-                                                                                    {classItem.textbook_enabled && (
+                                                                                {classItem.textbook_enabled && (
 
-                                                                                        <Stack align="center">
-                                                                                            <Tooltip label={`${textbookStatus.count}/${textbookStatus.total} textbooks processed`}>
-                                                                                                <RingProgress
-                                                                                                    size={160}
-                                                                                                    thickness={8}
-                                                                                                    roundCaps
-                                                                                                    sections={[{
-                                                                                                        value: textbookStatus.percent,
-                                                                                                        color: 'green'
-                                                                                                    }]}
-                                                                                                    label={
-                                                                                                        <Center>
-                                                                                                            <Text size="xs" fw={700}>{textbookStatus.percent}%</Text>
-                                                                                                        </Center>
-                                                                                                    }
-                                                                                                />
-                                                                                            </Tooltip>
-                                                                                            <Text size="md" fw={700} ta="center" mt={2}>
-                                                                                                Textbooks
-                                                                                            </Text>
-                                                                                        </Stack>
-                                                                                    )}
+                                                                                    <Stack align="center">
+                                                                                        <Tooltip label={`${textbookStatus.count}/${textbookStatus.total} textbooks processed`}>
+                                                                                            <RingProgress
+                                                                                                size={160}
+                                                                                                thickness={8}
+                                                                                                roundCaps
+                                                                                                sections={[{
+                                                                                                    value: textbookStatus.percent,
+                                                                                                    color: 'green'
+                                                                                                }]}
+                                                                                                label={
+                                                                                                    <Center>
+                                                                                                        <Text size="xs" fw={700}>{textbookStatus.percent}%</Text>
+                                                                                                    </Center>
+                                                                                                }
+                                                                                            />
+                                                                                        </Tooltip>
+                                                                                        <Text size="md" fw={700} ta="center" mt={2}>
+                                                                                            Textbooks
+                                                                                        </Text>
+                                                                                    </Stack>
+                                                                                )}
 
-                                                                                    {classItem.homework_enabled && (
+                                                                                {classItem.homework_enabled && (
 
-                                                                                        <Stack align="center">
-                                                                                            <Tooltip label={`${homeworkStatus.count}/${homeworkStatus.total} homework processed`}>
-                                                                                                <RingProgress
-                                                                                                    size={160}
-                                                                                                    thickness={8}
-                                                                                                    roundCaps
-                                                                                                    sections={[{
-                                                                                                        value: homeworkStatus.percent,
-                                                                                                        color: 'orange'
-                                                                                                    }]}
-                                                                                                    label={
-                                                                                                        <Center>
-                                                                                                            <Text size="xs" fw={700}>{homeworkStatus.percent}%</Text>
-                                                                                                        </Center>
-                                                                                                    }
-                                                                                                />
-                                                                                            </Tooltip>
-                                                                                            <Text size="md" fw={700} ta="center" mt={2}>
-                                                                                                Homework
-                                                                                            </Text>
-                                                                                        </Stack>
-                                                                                    )}
-                                                                                </SimpleGrid>
-                                                                            </Stack>
-                                                                        </Card>
-                                                                        {isComplete && (
-                                                                            <Text c="dimmed" ta="center" mt="xl">
-                                                                                All content has been processed! Click <Link href={`/classes/c/${classItem.id}`} target="_blank">here</Link> to view your dashboard.
-                                                                            </Text>
-                                                                        )}
-                                                                    </>
+                                                                                    <Stack align="center">
+                                                                                        <Tooltip label={`${homeworkStatus.count}/${homeworkStatus.total} homework processed`}>
+                                                                                            <RingProgress
+                                                                                                size={160}
+                                                                                                thickness={8}
+                                                                                                roundCaps
+                                                                                                sections={[{
+                                                                                                    value: homeworkStatus.percent,
+                                                                                                    color: 'orange'
+                                                                                                }]}
+                                                                                                label={
+                                                                                                    <Center>
+                                                                                                        <Text size="xs" fw={700}>{homeworkStatus.percent}%</Text>
+                                                                                                    </Center>
+                                                                                                }
+                                                                                            />
+                                                                                        </Tooltip>
+                                                                                        <Text size="md" fw={700} ta="center" mt={2}>
+                                                                                            Homework
+                                                                                        </Text>
+                                                                                    </Stack>
+                                                                                )}
+                                                                            </SimpleGrid>
+                                                                        </Stack>
+                                                                    </Card>
                                                                 );
                                                             })
                                                     )}
@@ -613,10 +842,15 @@ export default function ProfessorSignup() {
                                 }
                                 __active={activeStep >= 3}
                             />
+                            {activeStep === 4 && (
+                                <Text c="dimmed" ta="center" mt="xl">
+                                    All content has been processed! Click <Link href={`/classes/c/${classData?.id}`} target="_blank">here</Link> to view your dashboard.
+                                </Text>
+                            )}
                         </Timeline>
                         <Modal opened={!!deleteClassModalId} onClose={() => setDeleteClassModalId(null)} title="Delete Class">
                             <Stack>
-                                <Text>Are you sure you want to delete {filteredClasses?.find(c => c.id === deleteClassModalId)?.class_code}?</Text>
+                                <Text>Are you sure you want to delete {classData?.class_code}?</Text>
                                 <Button onClick={() => handleDeleteClass(deleteClassModalId!)} color="red">Delete</Button>
                             </Stack>
                         </Modal>

@@ -1,0 +1,38 @@
+.navigationArrow {
+  position: absolute;
+  top: 45%;
+  z-index: 100;
+}
+
+.leftArrow {
+  left: 10px;
+}
+
+.rightArrow {
+  right: 10px;
+}
+
+.pageIndicator {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 8px;
+  z-index: 100;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+:global(.mantine-ColorScheme-dark) .pageIndicator {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.pageText {
+  font-weight: 500;
+  color: var(--mantine-color-black);
+  text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.5);
+}
+
+:global(.mantine-ColorScheme-dark) .pageText {
+  color: var(--mantine-color-white);
+  text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+} 

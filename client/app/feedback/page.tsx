@@ -18,8 +18,6 @@ export default function FeedbackPage() {
     const [wishlist, setWishlist] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { colorScheme } = useMantineColorScheme();
-
     const handleSubmit = async () => {
         setLoading(true);
         try {
@@ -58,7 +56,6 @@ export default function FeedbackPage() {
                             root: {
                                 fontSize: '2.5rem',
                                 marginBottom: theme.spacing.xl,
-                                color: colorScheme === 'dark' ? theme.white : theme.black,
                             }
                         })}
                     >

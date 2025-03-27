@@ -20,15 +20,14 @@ type DeleteLectureModalProps = {
     lectureId: string
     lectureTitle: string
     profile: Profile | undefined
+    navigateHome?: boolean
 }
 
-export default function DeleteLectureModal({ lectureId, profile, lectureTitle, classId }: DeleteLectureModalProps) {
+export default function DeleteLectureModal({ lectureId, profile, lectureTitle, classId, navigateHome = true }: DeleteLectureModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
-
-    const { colorScheme } = useMantineColorScheme();
 
     const handleDeleteClass = async () => {
         setLoading(true);
@@ -43,7 +42,9 @@ export default function DeleteLectureModal({ lectureId, profile, lectureTitle, c
                 queryClient.invalidateQueries({ 
                     queryKey: ["lectures", classId]
                 });
-                router.push(`/classes/c/${classId}`);
+                if (navigateHome) {
+                    router.push(`/classes/c/${classId}`);
+                }
             }
             notifications.show({
                 title: "Lecture deleted",
@@ -66,7 +67,7 @@ export default function DeleteLectureModal({ lectureId, profile, lectureTitle, c
 
     return (
         <>
-            {profile && (profile.professor || profile.admin) && <Tooltip label="Delete Lecture"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && (profile.professor || profile.admin) && <Tooltip label="Delete Lecture"><IconTrash size={24} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Lecture" centered>
                 <Stack>

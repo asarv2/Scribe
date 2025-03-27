@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { ParseStatus } from "@/types";
 
-export default function UploadTextbookButton({ classId, icon = false, initalStatus = "parsing" }: { classId: string, icon?: boolean, initalStatus?: ParseStatus }) {
+export default function UploadTextbookButton({ classId, icon = false, startParse = false }: { classId: string, icon?: boolean, startParse?: boolean }) {
     const queryClient = useQueryClient();
 
     const handleUploadTextbook = async (file: File) => {
@@ -29,7 +29,7 @@ export default function UploadTextbookButton({ classId, icon = false, initalStat
             formData.append('title', file.name.replace('.pdf', ''));
             formData.append('file_path', ''); // Empty string for direct uploads
             formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
-            formData.append('initial_status', initalStatus);
+            formData.append('start_parse', startParse ? 'true' : 'false');
             // Upload the file
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/textbook`, {
                 method: 'POST',
@@ -58,7 +58,7 @@ export default function UploadTextbookButton({ classId, icon = false, initalStat
 
     return (
         <>
-            {icon ? <Tooltip label="Upload Textbook">
+            {icon ? <Tooltip label="Upload Textbooks">
                 <ActionIcon
                     size="md"
                     variant="subtle"
@@ -71,7 +71,7 @@ export default function UploadTextbookButton({ classId, icon = false, initalStat
                 leftSection={<IconUpload size={14} />}
                 onClick={() => textbookInputRef.current?.click()}
             >
-                Upload Textbook
+                Upload Textbooks
             </Button>}
             <input
                 type="file"

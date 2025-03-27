@@ -41,8 +41,6 @@ function IndexPopupContent() {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-    const colorScheme = useMantineColorScheme()
-
     const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
         queryKey: ["user"],
         queryFn: async () => {

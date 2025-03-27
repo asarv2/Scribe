@@ -19,15 +19,15 @@ type DeleteTextbookModalProps = {
     classId: string
     textbookId: string
     textbookTitle: string
+    navigateHome?: boolean
+    profile: Profile | undefined
 }
 
-export default function DeleteTextbookModal({ textbookId, textbookTitle, classId }: DeleteTextbookModalProps) {
+export default function DeleteTextbookModal({ textbookId, textbookTitle, classId, navigateHome = true, profile }: DeleteTextbookModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
-
-    const { colorScheme } = useMantineColorScheme();
 
     const handleDeleteClass = async () => {
         setLoading(true);
@@ -42,7 +42,9 @@ export default function DeleteTextbookModal({ textbookId, textbookTitle, classId
                 queryClient.invalidateQueries({ 
                     queryKey: ["textbooks", classId]
                 });
-                router.push(`/classes/c/${classId}`);
+                if (navigateHome) {
+                    router.push(`/classes/c/${classId}`);
+                }
             }
             notifications.show({
                 title: "Textbook deleted",
@@ -65,7 +67,7 @@ export default function DeleteTextbookModal({ textbookId, textbookTitle, classId
 
     return (
         <>
-            <Tooltip label="Delete Textbook"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>
+            <Tooltip label="Delete Textbook"><IconTrash size={24} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>
 
             <Modal opened={opened} onClose={close} title="Delete Textbook" centered>
                 <Stack>

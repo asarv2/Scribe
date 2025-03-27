@@ -427,6 +427,7 @@ async function performDownload(courseId: string, courseDescriptor: string, profi
           formData.append('response_url', responseUrl);
           formData.append('profile_id', profileId);
           formData.append('download_id', downloadId);
+          formData.append('start_parse', immediate ? 'false' : 'true'); // If we download immediately, we don't want to start parsing immediately
           
           console.log("[Background] Uploading file to server:", {
             filename: filename,

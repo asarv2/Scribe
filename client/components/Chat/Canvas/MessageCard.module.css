@@ -1,0 +1,27 @@
+.messageCard {
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  min-width: 200px;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  background-color: #f1f3f5;
+  border: 1px solid #e9ecef;
+  
+  @mixin dark {
+    background-color: #25262b;
+    border: 1px solid #373A40;
+  }
+}
+
+.dropTarget {
+  background-color: transparent;
+  
+  @mixin dark {
+    background-color: rgba(34, 139, 230, 0.1);
+  }
+  
+  @mixin light {
+    background-color: rgba(34, 139, 230, 0.05);
+  }
+} 

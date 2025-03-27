@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 
-import { ActionIcon, Button, Container, Group, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -24,18 +24,16 @@ import { logout } from '@/utils/services/auth';
 import { AccountMenu } from '../AccountMenu';
 import { Profile } from '@/types';
 import { Class } from '@/types';
+import cx from 'clsx';
 interface ClassHeaderProps {
     classId: string
     showClasses: boolean
 }
 
 export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
-    const [loading, setLoading] = useState(false);
     const supabase = useSupabaseBrowser();
-    const pathname = usePathname();
-    const { colorScheme, setColorScheme } = useMantineColorScheme();
-    const queryClient = useQueryClient();
-    const router = useRouter();
+    const { setColorScheme } = useMantineColorScheme();
+    const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -59,20 +57,30 @@ export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
     };
 
     const toggleColorScheme = () => {
-        setColorScheme(colorScheme === 'dark' ? 'light' : 'dark');
+        setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
     };
 
     return (
         <Group h="100%" px="md" w="100%" justify="space-between">
             <Group>
-                <Link href="/">
+            <Link href="/">
                     <Image
-                        src={colorScheme === "dark" ? "/images/logo-dark.png" : "/images/logo-light.png"}
+                        src={"/images/logo-light.png"}
                         priority
                         alt="Logo"
                         width={90}
                         height={20}
                         style={{ marginTop: '4px' }}
+                        className={classes['logo-light']}
+                    />
+                    <Image
+                        src={"/images/logo-dark.png"}
+                        priority
+                        alt="Logo"
+                        width={90}
+                        height={20}
+                        style={{ marginTop: '4px' }}
+                        className={classes['logo-dark']}
                     />
                 </Link>
             </Group>
@@ -94,25 +102,16 @@ export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
                 ))}
             </Group>}
             <Group>
-                {colorScheme === 'dark' ? (
-                    <Tooltip label="Light Mode">
-                        <ActionIcon
-                            variant="subtle"
-                            onClick={toggleColorScheme}
+            <Tooltip label="Toggle theme">
+                    <ActionIcon
+                        variant="subtle"
+                        onClick={toggleColorScheme}
+                        aria-label="Toggle color scheme"
                     >
-                            <IconSun size={24} />
-                        </ActionIcon>
-                    </Tooltip>
-                ) : (
-                    <Tooltip label="Dark Mode">
-                        <ActionIcon
-                            variant="subtle"
-                            onClick={toggleColorScheme}
-                    >
-                        <IconMoon size={24} />
-                        </ActionIcon>
-                    </Tooltip>
-                )}
+                        <IconSun className={cx(classes.icon, classes.light)} size={24} />
+                        <IconMoon className={cx(classes.icon, classes.dark)} size={24} />
+                    </ActionIcon>
+                </Tooltip>
                 <AccountMenu profile={profile} />
             </Group>
         </Group>

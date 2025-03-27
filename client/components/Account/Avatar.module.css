@@ -1,0 +1,11 @@
+.avatarContainer {
+  cursor: pointer;
+}
+
+.avatarBorder {
+  border: 2px solid var(--mantine-color-gray-3);
+}
+
+:global(.mantine-ColorScheme-dark) .avatarBorder {
+  border: 2px solid var(--mantine-color-gray-7);
+} 

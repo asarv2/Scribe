@@ -25,13 +25,15 @@ import { notifications } from '@mantine/notifications';
 import DeleteTextbookModal from "@/components/Delete/DeleteTextbookModal";
 import { getAllChats } from "@/utils/queries/get-all-chats";
 import { getMessages } from "@/utils/queries/get-messages";
+import { getUser } from '@/utils/queries/get-user';
+import { getProfile } from '@/utils/queries/get-profile';
+import navigationStyles from '@/components/Viewer/NavigationControls.module.css';
 
 export default function Textbook({ params }: { params: Promise<{ classId: string, textbookId: string }> }) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const { classId, textbookId } = use(params);
     const isMobile = useMediaQuery('(max-width: 768px)');
-    const { colorScheme } = useMantineColorScheme();
     const previewScrollRef = useRef<HTMLDivElement>(null);
 
     // State for navigation
@@ -66,6 +68,17 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
 
     // Add state for related chats
     const [relatedChats, setRelatedChats] = useState<any[]>([]);
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
 
     // Fetch textbook data
     const { data: textbook, isLoading: loadingTextbook } = useQuery({
@@ -846,6 +859,7 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                     textbookId={textbookId}
                                     textbookTitle={textbook?.title ?? ""}
                                     classId={classId}
+                                    profile={profile}
                                 />
                             </Skeleton>
                         </Group>
@@ -891,14 +905,7 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                                     <ActionIcon
                                                         size="lg"
                                                         variant="filled"
-                                                        color={colorScheme === "dark" ? "gray" : "dark"}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: 5,
-                                                            transform: 'translateY(-50%)',
-                                                            zIndex: 100,
-                                                        }}
+                                                        className={`${navigationStyles.navigationArrow} ${navigationStyles.leftArrow}`}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handlePrevExercise();
@@ -906,20 +913,14 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                                         disabled={!exercises || !selectedExercise || exercises.filter(ex => ex.chapter === selectedChapter).findIndex(ex => ex.id === selectedExercise) === 0}
                                                         aria-label="Previous Exercise"
                                                     >
-                                                        <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                                                        <IconArrowLeft size={24} />
                                                     </ActionIcon>
 
                                                     <ActionIcon
                                                         size="lg"
                                                         variant="filled"
                                                         color="gray"
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            right: 5,
-                                                            transform: 'translateY(-50%)',
-                                                            zIndex: 100,
-                                                        }}
+                                                        className={`${navigationStyles.navigationArrow} ${navigationStyles.rightArrow}`}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handleNextExercise();
@@ -931,25 +932,11 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                                     </ActionIcon>
 
                                                     <Box
-                                                        pos="absolute"
-                                                        bottom={5}
-                                                        right={5}
-                                                        p={4}
-                                                        style={{
-                                                            zIndex: 100,
-                                                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                                                            borderRadius: "4px",
-                                                        }}
+                                                        className={navigationStyles.pageIndicator}
                                                     >
                                                         <Text
                                                             size="xs"
-                                                            fw={500}
-                                                            style={{
-                                                                color: colorScheme === "dark" ? "white" : "black",
-                                                                textShadow: colorScheme === "dark" ?
-                                                                    "0px 0px 4px rgba(0,0,0,0.5)" :
-                                                                    "0px 0px 4px rgba(255,255,255,0.5)"
-                                                            }}
+                                                            className={navigationStyles.pageText}
                                                         >
                                                             Exercise {currentExercise?.exercise_number}
                                                         </Text>
@@ -978,14 +965,8 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                                 <ActionIcon
                                                     size="lg"
                                                     variant="filled"
-                                                    color={colorScheme === "dark" ? "gray" : "dark"}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: '50%',
-                                                        left: 5,
-                                                        transform: 'translateY(-50%)',
-                                                        zIndex: 100,
-                                                    }}
+                                                    color="gray"
+                                                    className={`${navigationStyles.navigationArrow} ${navigationStyles.leftArrow}`}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handlePrevPage();
@@ -993,20 +974,14 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                                     disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
                                                     aria-label="Previous Page"
                                                 >
-                                                    <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                                                    <IconArrowLeft size={24} />
                                                 </ActionIcon>
 
                                                 <ActionIcon
                                                     size="lg"
                                                     variant="filled"
                                                     color="gray"
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: '50%',
-                                                        right: 5,
-                                                        transform: 'translateY(-50%)',
-                                                        zIndex: 100,
-                                                    }}
+                                                    className={`${navigationStyles.navigationArrow} ${navigationStyles.rightArrow}`}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleNextPage();
@@ -1018,25 +993,11 @@ export default function Textbook({ params }: { params: Promise<{ classId: string
                                                 </ActionIcon>
 
                                                 <Box
-                                                    pos="absolute"
-                                                    bottom={5}
-                                                    right={5}
-                                                    p={4}
-                                                    style={{
-                                                        zIndex: 100,
-                                                        backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                                                        borderRadius: "4px",
-                                                    }}
+                                                    className={navigationStyles.pageIndicator}
                                                 >
                                                     <Text
                                                         size="xs"
-                                                        fw={500}
-                                                        style={{
-                                                            color: colorScheme === "dark" ? "white" : "black",
-                                                            textShadow: colorScheme === "dark" ?
-                                                                "0px 0px 4px rgba(0,0,0,0.5)" :
-                                                                "0px 0px 4px rgba(255,255,255,0.5)"
-                                                        }}
+                                                        className={navigationStyles.pageText}
                                                     >
                                                         Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
                                                     </Text>

@@ -54,7 +54,6 @@ export default function Viewer({
     loadingTitle = false,
     SideComponent,
 }: ViewerProps) {
-    const { colorScheme } = useMantineColorScheme();
     const [activeImageId, setActiveImageId] = useState<string>(initialImageId || images[0]?.id);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
@@ -131,7 +130,6 @@ export default function Viewer({
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
-                                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                                         borderRadius: "10px",
                                         flexShrink: 0
                                     }}
@@ -161,7 +159,6 @@ export default function Viewer({
                                                 <ActionIcon
                                                     size="lg"
                                                     variant="filled"
-                                                    color={colorScheme === "dark" ? "gray" : "dark"}
                                                     style={{
                                                         position: 'absolute',
                                                         top: '50%',
@@ -182,7 +179,6 @@ export default function Viewer({
                                                 <ActionIcon
                                                     size="lg"
                                                     variant="filled"
-                                                    color={colorScheme === "dark" ? "gray" : "dark"}
                                                     style={{
                                                         position: 'absolute',
                                                         top: '50%',
@@ -211,7 +207,7 @@ export default function Viewer({
                                             p={embedded ? 4 : 8}
                                             style={{
                                                 zIndex: 100,
-                                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
+                                                backgroundColor: "rgba(0,0,0,0.7)",
                                                 borderRadius: "4px",
                                             }}
                                         >
@@ -219,10 +215,8 @@ export default function Viewer({
                                                 size={embedded ? "xs" : "sm"}
                                                 fw={500}
                                                 style={{
-                                                    color: colorScheme === "dark" ? "white" : "black",
-                                                    textShadow: colorScheme === "dark" ?
-                                                        "0px 0px 4px rgba(0,0,0,0.5)" :
-                                                        "0px 0px 4px rgba(255,255,255,0.5)"
+                                                    color: "white",
+                                                    textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
                                                 }}
                                             >
                                                 {images.find(img => img.id === activeImageId)?.label || ""}

@@ -3,7 +3,7 @@
  * Used to show all the messages in the chat.
  */
 
-import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip } from "@mantine/core";
+import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
 import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, Exercise } from "@/types";
@@ -46,7 +46,6 @@ import FigureViewer from "@/components/Viewer/FigureViewer";
 interface MessageListProps {
   chatId: string;
   classId: string;
-  colorScheme: string;
   existingChat: Chat | null;
   activeChat: ChatMessage;
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
@@ -61,7 +60,6 @@ interface MessageListProps {
 export const MessageList = memo(({
   chatId,
   classId,
-  colorScheme,
   activeChat,
   setActiveChat,
   setViewerMode,
@@ -73,6 +71,7 @@ export const MessageList = memo(({
 }: MessageListProps) => {
   const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
+  const { colorScheme } = useMantineColorScheme();
 
   const { data: messages, isLoading: isLoadingMessages } = useQuery({
     queryKey: ["messages", chatId],
@@ -1315,7 +1314,6 @@ export const MessageList = memo(({
                                   <MessageViewer
                                     key={figIndex}
                                     text={segment.text}
-                                    colorScheme={colorScheme}
                                   />
                                 )
                               } else if (segment.figureId && figures) {

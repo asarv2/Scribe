@@ -35,7 +35,6 @@ export const ChatInput = memo(({
   toggleSection,
   toggleImmersive,
 }: ChatInputProps) => {
-  const { colorScheme } = useMantineColorScheme();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

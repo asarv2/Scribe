@@ -1,7 +1,7 @@
 {
   "name": "scribe",
   "displayName": "Scribe",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Used to download Brightspace content and upload to Scribe website.",
   "author": "Ashok Saravanan",
   "scripts": {

@@ -45,7 +45,6 @@ interface ClassNavbarProps {
 
 export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }: ClassNavbarProps) {
     const supabase = useSupabaseBrowser();
-    const { colorScheme } = useMantineColorScheme();
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ['user'],

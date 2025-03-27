@@ -1,4 +1,4 @@
-import { TypedSupabaseClient } from "../../types";
+import { Profile, TypedSupabaseClient } from "../../types";
 
 export async function getClasses(client: TypedSupabaseClient) {
     const {data, error} = await client

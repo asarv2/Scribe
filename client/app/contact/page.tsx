@@ -4,11 +4,11 @@
  */
 
 "use client";
-import { Button, Container, Stack, TextInput, Textarea, Title, useMantineColorScheme } from '@mantine/core';
+import { Button, Container, Stack, TextInput, Textarea, Title } from '@mantine/core';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { HomeLayout } from '@/components/Home/HomeLayout';
-import { IconAt, IconUser, IconMessage } from '@tabler/icons-react';
+import { IconAt, IconUser } from '@tabler/icons-react';
 import { submitContact } from '@/utils/services/contact';
 
 export default function ContactPage() {
@@ -16,8 +16,6 @@ export default function ContactPage() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
-
-    const { colorScheme } = useMantineColorScheme();
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -65,7 +63,6 @@ export default function ContactPage() {
                             root: {
                                 fontSize: '2.5rem',
                                 marginBottom: theme.spacing.xl,
-                                color: colorScheme === 'dark' ? theme.white : theme.black,
                             }
                         })}
                     >

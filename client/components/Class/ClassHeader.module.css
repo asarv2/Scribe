@@ -74,3 +74,49 @@
     background-color: var(--mantine-color-blue-filled);
     color: var(--mantine-color-white);
 }
+
+
+.icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .dark {
+    @mixin dark {
+      display: none;
+    }
+  
+    @mixin light {
+      display: block;
+    }
+  }
+  
+  .light {
+    @mixin light {
+      display: none;
+    }
+  
+    @mixin dark {
+      display: block;
+    }
+  } 
+  
+  .logo-light {
+    @mixin dark {
+      display: none;
+    }
+  
+    @mixin light {
+      display: block;
+    }
+  }
+  
+  .logo-dark {
+    @mixin light {
+      display: none;
+    }
+  
+    @mixin dark {
+      display: block;
+    }
+  }

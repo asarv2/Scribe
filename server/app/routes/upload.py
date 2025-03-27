@@ -65,7 +65,7 @@ async def create_course(
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # check the classes supabase table to check if the course_id exists
-    class_response = supabase.table("classes").select("*").eq("brightspace_course_id", course_id).execute()
+    class_response = supabase.table("classes").select("*").eq("brightspace_course_id", course_id).eq("deleted", False).eq("active", True).execute()
     
     # Process syllabus if provided and course doesn't exist
     course_info = {}
@@ -208,7 +208,8 @@ async def upload_content(
     filename: str = Form(...),
     response_url: str = Form(None),
     profile_id: str = Form(None),
-    download_id: str = Form(None)
+    download_id: str = Form(None),
+    start_parse: bool = Form(False)
 ):
     """
     Receive course content files from D2L, extract content zip, and process files.
@@ -220,6 +221,7 @@ async def upload_content(
     - response_url: Optional response url for the course
     - profile_id: Profile ID
     - download_id: ID of the download record in the database
+    - start_parse: Whether to start parsing the course content
     Returns:
     - JSON with file information and storage paths
     """
@@ -425,7 +427,8 @@ async def upload_content(
                         process_lecture_internally,
                         full_path,
                         class_id,
-                        response_url
+                        response_url,
+                        start_parse
                     )
                 else:
                     print(f"Skipping already processed lecture: {filename_only}")
@@ -452,7 +455,8 @@ async def upload_content(
                         process_textbook_internally,
                         full_path,
                         class_id,
-                        response_url
+                        response_url,
+                        start_parse
                     )
                 else:
                     print(f"Skipping already processed reading: {filename_only}")
@@ -479,7 +483,8 @@ async def upload_content(
                         process_homework_internally,
                         full_path,
                         class_id,
-                        response_url
+                        response_url,
+                        start_parse
                     )
                 else:
                     print(f"Skipping already processed assignment: {filename_only}")
@@ -546,7 +551,8 @@ async def process_lecture(
     file_path: str = Form(None),
     class_id: str = Form(...),
     title: str = Form(None),
-    response_url: str = Form(None)
+    response_url: str = Form(None),
+    start_parse: bool = Form(False)
 ):
     """
     Process a lecture file - can be called with either an uploaded file or a file path.
@@ -557,7 +563,7 @@ async def process_lecture(
     - class_id: Class ID
     - title: Optional title for the lecture
     - response_url: Optional response url for the lecture
-    
+
     Returns:
     - JSON with processing information
     """
@@ -637,8 +643,9 @@ async def process_lecture(
 
         processor.upload_to_supabase(pages_content, class_id, lecture_id, supabase)
         
-        # Process the lecture file using the task queue
-        await request.app.state.add_task(parse_lecture_internally, lecture_id, response_url)
+        if start_parse:
+            # Process the lecture file using the task queue
+            await request.app.state.add_task(parse_lecture_internally, lecture_id, response_url)
         
         return {
             "status": "success",
@@ -674,7 +681,8 @@ async def process_textbook(
     file_path: str = Form(None),
     class_id: str = Form(...),
     title: str = Form(None),
-    response_url: str = Form(None)
+    response_url: str = Form(None),
+    start_parse: bool = Form(False)
 ):
     """
     Process a textbook/reading file - can be called with either an uploaded file or a file path.
@@ -771,8 +779,9 @@ async def process_textbook(
         processor.create_documents_and_upload_textbook_images(class_id, textbook_id, supabase)
         processor.upload_exercise_images(class_id, textbook_id, chapters_id, exercises_id, supabase)
         
-        # Process the textbook file using the task queue
-        await request.app.state.add_task(parse_textbook_internally, textbook_id, response_url)
+        if start_parse:
+            # Process the textbook file using the task queue
+            await request.app.state.add_task(parse_textbook_internally, textbook_id, response_url)
         
         return {
             "status": "success",
@@ -808,7 +817,8 @@ async def process_homework(
     file_path: str = Form(None),
     class_id: str = Form(...),
     title: str = Form(None),
-    response_url: str = Form(None)
+    response_url: str = Form(None),
+    start_parse: bool = Form(False)
 ):
     """
     Process a homework/assignment file - can be called with either an uploaded file or a file path.
@@ -907,8 +917,9 @@ async def process_homework(
         # Upload to Supabase. Need to handle page labels if we have a textbook. Leaving this for now.
         processor.upload_to_supabase(class_id, homework_id, homework_data, supabase)
         
-        # Process the homework file using the task queue
-        await request.app.state.add_task(parse_homework_internally, homework_id, response_url)
+        if start_parse:
+            # Process the homework file using the task queue
+            await request.app.state.add_task(parse_homework_internally, homework_id, response_url)
         
         return {
             "status": "success",
@@ -945,7 +956,8 @@ async def process_file(
     file_path: str = Form(None),
     class_id: str = Form(...),
     title: str = Form(None),
-    response_url: str = Form(None)
+    response_url: str = Form(None),
+    start_parse: bool = Form(False)
 ):
     """
     Process a file - can be called with either an uploaded file or a file path.
@@ -1054,7 +1066,7 @@ async def process_file(
         processor.upload_to_supabase(file_content, class_id, file_id, supabase)
         
         # Process the file using the task queue if response_url is provided
-        if response_url:
+        if start_parse:
             await request.app.state.add_task(parse_file_internally, file_id, response_url)
         
         return {
@@ -1089,7 +1101,7 @@ async def process_file(
 
 
 # Helper functions for internal processing
-async def process_lecture_internally(file_path: str, class_id: str, response_url: str):
+async def process_lecture_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):
     """Helper function to call the lecture endpoint internally."""
     import httpx
     
@@ -1098,7 +1110,8 @@ async def process_lecture_internally(file_path: str, class_id: str, response_url
         "file_path": file_path,
         "class_id": class_id,
         "title": os.path.splitext(os.path.basename(file_path))[0],
-        "response_url": response_url
+        "response_url": response_url,
+        "start_parse": start_parse
     }
     
     # Call the endpoint
@@ -1125,7 +1138,7 @@ async def parse_lecture_internally(lecture_id: str, response_url: str):
         print(f"Lecture parsing response: {response.text}")
 
 
-async def process_textbook_internally(file_path: str, class_id: str, response_url: str):
+async def process_textbook_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):
     """Helper function to call the textbook endpoint internally."""
     import httpx
     
@@ -1134,7 +1147,8 @@ async def process_textbook_internally(file_path: str, class_id: str, response_ur
         "file_path": file_path,
         "class_id": class_id,
         "title": os.path.splitext(os.path.basename(file_path))[0],
-        "response_url": response_url
+        "response_url": response_url,
+        "start_parse": start_parse
     }
     
     # Call the endpoint
@@ -1161,7 +1175,7 @@ async def parse_textbook_internally(textbook_id: str, response_url: str):
         print(f"Textbook parsing response: {response.text}")
 
 
-async def process_homework_internally(file_path: str, class_id: str, response_url: str):
+async def process_homework_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):
     """Helper function to call the homework endpoint internally."""
     import httpx
     
@@ -1170,7 +1184,8 @@ async def process_homework_internally(file_path: str, class_id: str, response_ur
         "file_path": file_path,
         "class_id": class_id,
         "title": os.path.splitext(os.path.basename(file_path))[0],
-        "response_url": response_url
+        "response_url": response_url,
+        "start_parse": start_parse
     }
     
     # Call the endpoint

@@ -17,7 +17,7 @@ class ParseRequest(BaseModel):
     textbook_id: str | None = None
     chapter_id: str | None = None
     homework_id: str | None = None
-    file_id: str
+    file_id: str | None = None
 
 @router.post('/lecture')
 async def parse_lecture(request: ParseRequest):

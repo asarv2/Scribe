@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { ParseStatus } from "@/types";
 
-export default function UploadLectureButton({ classId, icon = false, initalStatus = "parsing" }: { classId: string, icon?: boolean, initalStatus?: ParseStatus }) {
+export default function UploadLectureButton({ classId, icon = false, startParse = false }: { classId: string, icon?: boolean, startParse?: boolean }) {
     const queryClient = useQueryClient();
 
     const handleUploadLecture = async (file: File) => {
@@ -23,7 +23,7 @@ export default function UploadLectureButton({ classId, icon = false, initalStatu
             formData.append('title', file.name.replace('.pdf', ''));
             formData.append('file_path', ''); // Empty since we're uploading directly
             formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
-            formData.append('initial_status', initalStatus);
+            formData.append('start_parse', startParse ? 'true' : 'false');
             // Upload the file
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/lecture`, {
                 method: 'POST',
@@ -51,7 +51,7 @@ export default function UploadLectureButton({ classId, icon = false, initalStatu
 
     return (
         <>
-            {icon ? <Tooltip label="Upload Lecture">
+            {icon ? <Tooltip label="Upload Lectures">
                 <ActionIcon
                     size="md"
                     variant="subtle"
@@ -64,7 +64,7 @@ export default function UploadLectureButton({ classId, icon = false, initalStatu
                 leftSection={<IconUpload size={14} />}
                 onClick={() => lectureInputRef.current?.click()}
             >
-                Upload Lecture
+                Upload Lectures
             </Button>}
             <input
                 type="file"

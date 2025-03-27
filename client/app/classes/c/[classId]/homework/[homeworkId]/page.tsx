@@ -30,6 +30,7 @@ import Latex from "@/components/Latex";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { Chat, Document, Exercise, Message } from "@/types";
 import { useSearchParams } from "next/navigation";
+import navigationStyles from '@/components/Viewer/NavigationControls.module.css';
 
 type HomeworkProps = {
     params: Promise<{
@@ -53,7 +54,6 @@ export default function HomeworkPage({ params }: HomeworkProps) {
     const [isMultipart, setIsMultipart] = useState<boolean>(false);
     const [problemPartNumber, setProblemPartNumber] = useState<number | null>(1);
     const [exerciseProblemNumber, setExerciseProblemNumber] = useState<number | null>(null);
-    const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
     const searchParams = useSearchParams();
     const page = searchParams.get("page");
@@ -430,16 +430,10 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                                             onClick={openImageModal} // Add click handler to open modal
                                                         />
                                                         <ActionIcon
-                                                            size={"xl"}
+                                                            size={"lg"}
                                                             variant="filled"
-                                                            color={colorScheme === "dark" ? "gray" : "dark"}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: '50%',
-                                                                left: 10,
-                                                                transform: 'translateY(-50%)',
-                                                                zIndex: 100,
-                                                            }}
+                                                            color="gray"
+                                                            className={`${navigationStyles.navigationArrow} ${navigationStyles.leftArrow}`}
                                                             onClick={() => {
                                                                 const sortedExercises = exercises ? sortExercises(exercises) : [];
                                                                 const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
@@ -450,19 +444,13 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                                             disabled={!exercises || sortExercises(exercises).findIndex(ex => ex.id === activeExerciseId) === 0}
                                                             aria-label="Previous Exercise"
                                                         >
-                                                            <IconArrowLeft size={24} color={colorScheme === "dark" ? "white" : "black"} />
+                                                            <IconArrowLeft size={24} />
                                                         </ActionIcon>
                                                         <ActionIcon
-                                                            size={"xl"}
+                                                            size={"lg"}
                                                             variant="filled"
                                                             color="gray"
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: '50%',
-                                                                right: 10,
-                                                                transform: 'translateY(-50%)',
-                                                                zIndex: 100,
-                                                            }}
+                                                            className={`${navigationStyles.navigationArrow} ${navigationStyles.rightArrow}`}
                                                             onClick={() => {
                                                                 const sortedExercises = exercises ? sortExercises(exercises) : [];
                                                                 const currentIndex = sortedExercises.findIndex(ex => ex.id === activeExerciseId);
@@ -476,25 +464,11 @@ export default function HomeworkPage({ params }: HomeworkProps) {
                                                             <IconArrowRight size={24} />
                                                         </ActionIcon>
                                                         <Box
-                                                            pos="absolute"
-                                                            bottom={10}
-                                                            right={10}
-                                                            p={8}
-                                                            style={{
-                                                                zIndex: 100,
-                                                                backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                                                                borderRadius: "4px",
-                                                            }}
+                                                            className={navigationStyles.pageIndicator}
                                                         >
                                                             <Text
                                                                 size={"xs"}
-                                                                fw={500}
-                                                                style={{
-                                                                    color: colorScheme === "dark" ? "white" : "black",
-                                                                    textShadow: colorScheme === "dark" ?
-                                                                        "0px 0px 4px rgba(0,0,0,0.5)" :
-                                                                        "0px 0px 4px rgba(255,255,255,0.5)"
-                                                                }}
+                                                                className={navigationStyles.pageText}
                                                             >
                                                                 {`Problem ${exercises?.find(ex => ex.id === activeExerciseId)?.problem_number}${exercises?.find(ex => ex.id === activeExerciseId)?.problem_multipart ? `.${exercises?.find(ex => ex.id === activeExerciseId)?.problem_part_number}` : ""}`}
                                                             </Text>

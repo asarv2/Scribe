@@ -49,7 +49,6 @@ export default function ChapterViewer({
     const previewScrollRef = useRef<HTMLDivElement>(null);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
-    const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
     const searchParams = useSearchParams();
     const page = searchParams.get("page");
@@ -176,7 +175,6 @@ export default function ChapterViewer({
                     position: 'relative',
                     width: '100%',
                     aspectRatio: '16/9',
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                     borderRadius: "10px",
                     flexShrink: 0
                 }}>
@@ -191,7 +189,6 @@ export default function ChapterViewer({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                     borderRadius: "10px",
                     flexShrink: 0
                 }}

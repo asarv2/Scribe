@@ -50,9 +50,9 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { updateClassPrivacy, updateClassPrompts } from "@/utils/services/class";
 import Management from "@/components/Account/Management";
+import avatarStyles from '@/components/Account/Avatar.module.css';
 
 export default function AccountPage() {
-    const { colorScheme } = useMantineColorScheme();
     const openRef = useRef<() => void>(null);
     const [loading, setLoading] = useState(false);
     const [uploadLoading, setUploadLoading] = useState(false);
@@ -338,10 +338,7 @@ export default function AccountPage() {
                                                         src={profile ? getAvatarUrl(profile.id) : "/placeholder_image.svg"}
                                                         size={120}
                                                         radius={120}
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            border: `2px solid ${colorScheme === 'dark' ? '#374151' : '#e5e7eb'}`,
-                                                        }}
+                                                        className={`${avatarStyles.avatarContainer} ${avatarStyles.avatarBorder}`}
                                                     >
                                                         <IconUser size={80} />
                                                     </Avatar>

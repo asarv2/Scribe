@@ -42,8 +42,6 @@ export default function LectureViewer({
     const previewScrollRef = useRef<HTMLDivElement>(null);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
-    const { colorScheme } = useMantineColorScheme();
-
     const supabase = useSupabaseBrowser();
 
     const searchParams = useSearchParams();
@@ -163,7 +161,6 @@ export default function LectureViewer({
                         position: 'relative',
                         width: '100%',
                         aspectRatio: '16/9',
-                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                         borderRadius: "10px",
                         flexShrink: 0
                     }}>
@@ -178,7 +175,6 @@ export default function LectureViewer({
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                         borderRadius: "10px",
                         flexShrink: 0
                     }}

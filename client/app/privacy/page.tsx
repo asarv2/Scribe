@@ -9,10 +9,8 @@
 
 import { HomeLayout } from "@/components/Home/HomeLayout";
 import { Container } from "@mantine/core";
-import { useMantineColorScheme } from "@mantine/core";
 
 export default function PrivacyPage() {
-    const { colorScheme } = useMantineColorScheme();
 
     return (
         <HomeLayout>
@@ -30,7 +28,7 @@ export default function PrivacyPage() {
                         [data-custom-class='body_text'], [data-custom-class='body_text'] * {
                           font-family: Arial !important;
                           font-size: 14px !important;
-                          color: ${colorScheme === 'dark' ? '#ffffff' : '#595959'} !important;
+                          color: var(--mantine-color-text) !important;
                         }
                         [data-custom-class='title'], [data-custom-class='title'] * {
                           font-size: 26px !important;
@@ -59,7 +57,7 @@ export default function PrivacyPage() {
                         background: "url(data:image/svg+xml"
                     }}
                 />
-                <div data-custom-class="body" style={{ color: colorScheme === 'dark' ? '#1a1b1e' : 'transparent' }}>
+                <div data-custom-class="body">
                     <div>
                         <strong>
                             <span style={{ fontSize: 26 }}>
@@ -140,11 +138,11 @@ export default function PrivacyPage() {
                                         <span style={{ color: "rgb(0, 58, 250)" }}>
                                             <span className="question">
                                                 <a
-                                                    href="https://scribe-lec.vercel.app"
+                                                    href="https://scribe.it.com"
                                                     target="_blank"
                                                     data-custom-class="link"
                                                 >
-                                                    https://scribe-lec.vercel.app
+                                                    https://scribe.it.com
                                                 </a>
                                             </span>
                                         </span>
@@ -472,11 +470,11 @@ export default function PrivacyPage() {
                                         <span style={{ color: "rgb(0, 58, 250)" }}>
                                             <span className="question">
                                                 <a
-                                                    href="https://scribe-lec.vercel.app/contact"
+                                                    href="https://scribe.it.com/contact"
                                                     target="_blank"
                                                     data-custom-class="link"
                                                 >
-                                                    https://scribe-lec.vercel.app/contact
+                                                    https://scribe.it.com/contact
                                                 </a>
                                             </span>
                                         </span>
@@ -8579,11 +8577,11 @@ export default function PrivacyPage() {
                                                                                                                                                                                     >
                                                                                                                                                                                         <span className="question">
                                                                                                                                                                                             <a
-                                                                                                                                                                                                href="https://scribe-lec.vercel.app/contact"
+                                                                                                                                                                                                href="https://scribe.it.com/contact"
                                                                                                                                                                                                 target="_blank"
                                                                                                                                                                                                 data-custom-class="link"
                                                                                                                                                                                             >
-                                                                                                                                                                                                https://scribe-lec.vercel.app/contact
+                                                                                                                                                                                                https://scribe.it.com/contact
                                                                                                                                                                                             </a>
                                                                                                                                                                                         </span>
                                                                                                                                                                                     </span>
@@ -10203,11 +10201,11 @@ export default function PrivacyPage() {
                                                                                                                                                                                     >
                                                                                                                                                                                         <span className="question">
                                                                                                                                                                                             <a
-                                                                                                                                                                                                href="https://scribe-lec.vercel.app/contact"
+                                                                                                                                                                                                href="https://scribe.it.com/contact"
                                                                                                                                                                                                 target="_blank"
                                                                                                                                                                                                 data-custom-class="link"
                                                                                                                                                                                             >
-                                                                                                                                                                                                https://scribe-lec.vercel.app/contact
+                                                                                                                                                                                                https://scribe.it.com/contact
                                                                                                                                                                                             </a>
                                                                                                                                                                                         </span>
                                                                                                                                                                                     </span>

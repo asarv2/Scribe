@@ -28,6 +28,7 @@ import { useMantineColorScheme } from "@mantine/core";
 import Image from "next/image";
 import Latex from "@/components/Latex";
 import { ClassLayout } from "@/components/Class/ClassLayout";
+import navigationStyles from '@/components/Viewer/NavigationControls.module.css';
 
 type LectureProps = {
     params: Promise<{
@@ -43,7 +44,6 @@ export default function Lecture({ params }: LectureProps) {
     const [lectureDate, setLectureDate] = useState<Date | null>(null);
     const [isNameUpdating, setIsNameUpdating] = useState(false);
     const [isDateUpdating, setIsDateUpdating] = useState(false);
-    const { colorScheme } = useMantineColorScheme();
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
     const previewScrollRef = useRef<HTMLDivElement>(null);
@@ -249,7 +249,7 @@ export default function Lecture({ params }: LectureProps) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
+
                     borderRadius: "10px",
                     flexShrink: 0
                 }}
@@ -284,16 +284,10 @@ export default function Lecture({ params }: LectureProps) {
 
                     {/* Navigation arrows */}
                     <ActionIcon
-                        size="xl"
+                        size="lg"
                         variant="filled"
-                        color={colorScheme === "dark" ? "gray" : "dark"}
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: 10,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
+                        color="gray"
+                        className={`${navigationStyles.navigationArrow} ${navigationStyles.leftArrow}`}
                         onClick={() => {
                             const currentIndex = images.findIndex(img => img.id === activeDocumentId);
                             if (currentIndex > 0) {
@@ -303,19 +297,13 @@ export default function Lecture({ params }: LectureProps) {
                         disabled={images.findIndex(img => img.id === activeDocumentId) === 0}
                         aria-label="Previous Slide"
                     >
-                        <IconArrowLeft size={32} color={colorScheme === "dark" ? "white" : "black"} />
+                        <IconArrowLeft size={24} />
                     </ActionIcon>
                     <ActionIcon
-                        size="xl"
+                        size="lg"
                         variant="filled"
                         color="gray"
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            right: 10,
-                            transform: 'translateY(-50%)',
-                            zIndex: 100,
-                        }}
+                        className={`${navigationStyles.navigationArrow} ${navigationStyles.rightArrow}`}
                         onClick={() => {
                             const currentIndex = images.findIndex(img => img.id === activeDocumentId);
                             if (currentIndex < images.length - 1) {
@@ -325,30 +313,15 @@ export default function Lecture({ params }: LectureProps) {
                         disabled={images.findIndex(img => img.id === activeDocumentId) === images.length - 1}
                         aria-label="Next Slide"
                     >
-                        <IconArrowRight size={32} />
+                        <IconArrowRight size={24} />
                     </ActionIcon>
 
-                    {/* Page label */}
                     <Box
-                        pos="absolute"
-                        bottom={10}
-                        right={10}
-                        p={8}
-                        style={{
-                            zIndex: 100,
-                            backgroundColor: colorScheme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(255,255,255,0.7)",
-                            borderRadius: "4px",
-                        }}
+                        className={navigationStyles.pageIndicator}
                     >
                         <Text
                             size="sm"
-                            fw={500}
-                            style={{
-                                color: colorScheme === "dark" ? "white" : "black",
-                                textShadow: colorScheme === "dark" ?
-                                    "0px 0px 4px rgba(0,0,0,0.5)" :
-                                    "0px 0px 4px rgba(255,255,255,0.5)"
-                            }}
+                            className={navigationStyles.pageText}
                         >
                             {currentImage?.label || ""}
                         </Text>

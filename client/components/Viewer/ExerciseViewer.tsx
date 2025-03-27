@@ -106,12 +106,9 @@ export default function ExerciseViewer({
     const previewScrollRef = useRef<HTMLDivElement>(null);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
-    const { colorScheme } = useMantineColorScheme();
     const supabase = useSupabaseBrowser();
     const searchParams = useSearchParams();
     const exerciseNumber = searchParams.get("exercise");
-
-    const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
     // Query hooks
     const { data: documents, isLoading: loadingDocuments } = useQuery({
@@ -245,7 +242,6 @@ export default function ExerciseViewer({
                     position: 'relative',
                     width: '100%',
                     aspectRatio: '16/9',
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                     borderRadius: "10px",
                     flexShrink: 0
                 }}>
@@ -260,7 +256,6 @@ export default function ExerciseViewer({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f8f9fa",
                     borderRadius: "10px",
                     flexShrink: 0
                 }}

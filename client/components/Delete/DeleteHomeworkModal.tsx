@@ -5,7 +5,7 @@
  * 02-26-2025
  */
 
-import { Button, Input, Modal, Stack, Text, Tooltip, useMantineColorScheme } from "@mantine/core"
+import { Button, Modal, Stack, Text, Tooltip } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { IconTrash } from "@tabler/icons-react"
 import { useState } from "react"
@@ -20,15 +20,14 @@ type DeleteHomeworkModalProps = {
     homeworkId: string
     homeworkTitle: string
     profile: Profile | undefined
+    navigateHome?: boolean
 }
 
-export default function DeleteHomeworkModal({ homeworkId, profile, homeworkTitle, classId }: DeleteHomeworkModalProps) {
+export default function DeleteHomeworkModal({ homeworkId, profile, homeworkTitle, classId, navigateHome = true }: DeleteHomeworkModalProps) {
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
-
-    const { colorScheme } = useMantineColorScheme();
 
     const handleDeleteClass = async () => {
         setLoading(true);
@@ -43,7 +42,9 @@ export default function DeleteHomeworkModal({ homeworkId, profile, homeworkTitle
                 queryClient.invalidateQueries({ 
                     queryKey: ["homeworks", classId]
                 });
-                router.push(`/classes/c/${classId}`);
+                if (navigateHome) {
+                    router.push(`/classes/c/${classId}`);
+                }
             }
             notifications.show({
                 title: "Homework deleted",
@@ -66,7 +67,7 @@ export default function DeleteHomeworkModal({ homeworkId, profile, homeworkTitle
 
     return (
         <>
-            {profile && (profile.professor || profile.admin) && <Tooltip label="Delete Homework"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && (profile.professor || profile.admin) && <Tooltip label="Delete Homework"><IconTrash size={24} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Homework" centered>
                 <Stack>
