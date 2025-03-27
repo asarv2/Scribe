@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const code = searchParams.get("code");
 
     if (code) {
-        const supabase = useSupabaseServer(cookies());
+        const supabase = await useSupabaseServer(cookies());
         // Exchange the code for a session
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
@@ -59,7 +59,6 @@ export async function GET(request: Request) {
 
             const classes = await getClasses(supabase);
 
-            let next: string = "/";
             if (directoryUser) {
                 const splitNames = directoryUser.name.split(' ')
                 const firstName = (splitNames[0]).toLowerCase()
@@ -79,11 +78,6 @@ export async function GET(request: Request) {
                     if (!success || error) {
                         console.error(error);
                     }
-                    if (filteredClasses.length > 0) {
-                        next = `/classes/c/${filteredClasses[0].id}/chat/new`;
-                    } else {
-                        next = "/signup"; // they must complete the signup process
-                    }
                 } else {
                     const filteredClasses = classes.filter((c) => c.students.includes(email));
                     const { success, error } = await updateProfile(user.id, {
@@ -95,12 +89,7 @@ export async function GET(request: Request) {
                     if (!success || error) {
                         console.error(error);
                     }
-                    if (filteredClasses.length > 0) {
-                        next = `/classes/c/${filteredClasses[0].id}/chat/new`;
-                    } else {
-                        // they do not have any courses, we need to handle this case
-                        next = "/";
-                    }
+
                 }
             }
 
@@ -108,11 +97,11 @@ export async function GET(request: Request) {
             const forwardedHost = request.headers.get("x-forwarded-host"); // original host before load balancer
             const isLocalEnv = process.env.NODE_ENV === "development";
             if (isLocalEnv) {
-                return NextResponse.redirect(`${origin}${next}`);
+                return NextResponse.redirect(`${origin}/classes`);
             } else if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}${next}`);
+                return NextResponse.redirect(`https://${forwardedHost}/classes`);
             } else {
-                return NextResponse.redirect(`${origin}${next}`);
+                return NextResponse.redirect(`${origin}/classes`);
             }
         }
     }

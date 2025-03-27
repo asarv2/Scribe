@@ -125,7 +125,7 @@ const handler: PlasmoMessaging.MessageHandler<CreateCourseRequest, CreateCourseR
     
     try {
       // Create a tab for the class list page
-      const classListUrl = `https://purdue.brightspace.com/d2l/lms/classlist/classlist.d2l?ou=${courseId}`;
+      const classListUrl = `https://purdue.brightspace.com/d2l/lms/classlist/print_email.d2l?pageOption=print&ou=${courseId}`;
       console.log("[Background] Creating class list tab...");
       const classListTab = await chrome.tabs.create({ url: classListUrl, active: false });
       

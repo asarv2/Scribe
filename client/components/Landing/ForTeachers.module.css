@@ -1,0 +1,51 @@
+/* ForTeachers.module.css */
+.container {
+  @mixin light {
+    background-color: #f8f9fa;
+  }
+  
+  @mixin dark {
+    background-color: #1A1B1E;
+  }
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  @mixin light {
+    background-color: #ffffff;
+    border-color: #e9ecef;
+  }
+  
+  @mixin dark {
+    background-color: #25262b;
+    border-color: #2c2e33;
+  }
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  
+  @mixin light {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  @mixin dark {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.avatar {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .avatar {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}

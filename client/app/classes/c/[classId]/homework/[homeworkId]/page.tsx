@@ -16,7 +16,7 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getAllChats } from "@/utils/queries/get-all-chats";
 import { getMessages } from "@/utils/queries/get-messages";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, use } from "react";
 import { Tabs, TextInput, Button, Group, Card, Stack, Text, Badge, Accordion, ActionIcon, Modal, Box, Container, Flex, Grid, Skeleton, Textarea, Divider, em, Switch, NumberInput } from "@mantine/core";
 import { IconMessage, IconSettings, IconRuler, IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { useDisclosure, useIntersection, useMediaQuery } from "@mantine/hooks";
@@ -32,10 +32,10 @@ import { Chat, Document, Exercise, Message } from "@/types";
 import { useSearchParams } from "next/navigation";
 
 type HomeworkProps = {
-    params: {
+    params: Promise<{
         classId: string;
         homeworkId: string;
-    }
+    }>
 }
 
 export default function HomeworkPage({ params }: HomeworkProps) {
@@ -59,8 +59,7 @@ export default function HomeworkPage({ params }: HomeworkProps) {
     const page = searchParams.get("page");
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-    const homeworkId = params.homeworkId;
-    const classId = params.classId;
+    const { homeworkId, classId } = use(params);
 
     // Query hooks
     const { data: documents, isLoading: loadingDocuments } = useQuery({

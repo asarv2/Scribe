@@ -63,7 +63,7 @@ export function GeneralHeader({
                 /> */}
                 <Link href="/">
                     <Image
-                        src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
+                        src={colorScheme === "dark" ? "/images/logo-dark.png" : "/images/logo-light.png"}
                         priority
                         alt="Logo"
                         width={90}

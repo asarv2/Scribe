@@ -7,7 +7,7 @@
  */
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, use } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip, RingProgress, ActionIcon } from "@mantine/core";
 import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch } from "@tabler/icons-react";
@@ -29,17 +29,14 @@ import { Lecture, Textbook, Homework, Chapter } from "@/types";
 import { getChapters } from "@/utils/queries/get-chapters";
 import { notifications } from "@mantine/notifications";
 import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
+import UploadLectureButton from "@/components/Buttons/UploadLectureButton";
+import UploadHomeworkButton from "@/components/Buttons/UploadHomeworkButton";
+import UploadTextbookButton from "@/components/Buttons/UploadTextbookButton";
 
-export default function ContentPage({ params }: { params: { classId: string } }) {
+export default function ContentPage({ params }: { params: Promise<{ classId: string }> }) {
+    const { classId } = use(params);
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
-    const classId = params.classId;
-    const [activeTab, setActiveTab] = useState<string | null>("lectures");
-
-    // File input refs
-    const lectureInputRef = useRef<HTMLInputElement>(null);
-    const textbookInputRef = useRef<HTMLInputElement>(null);
-    const homeworkInputRef = useRef<HTMLInputElement>(null);
 
     // Search states
     const [lectureSearch, setLectureSearch] = useState('');
@@ -262,46 +259,6 @@ export default function ContentPage({ params }: { params: { classId: string } })
         }
     };
 
-    const handleUploadHomework = async (file: File) => {
-        // Validate file is a PDF or TXT
-        if (file.type !== 'application/pdf' && file.type !== 'text/plain' && file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            alert('Please upload a PDF, TXT, or DOCX file');
-            return;
-        }
-
-        try {
-            // Create form data to match server requirements
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('class_id', classId);
-            formData.append('title', file.name.replace(/\.(pdf|txt)$/i, ''));
-            formData.append('file_path', ''); // Empty string for direct uploads
-            formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
-
-            // Upload the file
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/homework`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to upload homework');
-            }
-
-            // Refresh homeworks data
-            queryClient.invalidateQueries({ queryKey: ["homeworks", classId] });
-
-        } catch (error) {
-            console.error('Error uploading homework:', error);
-            notifications.show({
-                title: 'Error uploading homework',
-                message: 'Please try again.',
-                color: 'red',
-            });
-        }
-    };
-
     // Add realtime subscriptions for lectures
     useEffect(() => {
         const channel = supabase
@@ -515,79 +472,6 @@ export default function ContentPage({ params }: { params: { classId: string } })
         };
     }, [classId, supabase, homeworks, queryClient]);
 
-    const handleUploadLecture = async (file: File) => {
-        try {
-            // Create form data to match server requirements
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('class_id', classId);
-            formData.append('title', file.name.replace('.pdf', ''));
-            formData.append('file_path', ''); // Empty since we're uploading directly
-            formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
-
-            // Upload the file
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/lecture`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to upload lecture');
-            }
-
-            // Refresh lectures data
-            queryClient.invalidateQueries({ queryKey: ["lectures", classId] });
-
-        } catch (error) {
-            console.error('Error uploading lecture:', error);
-            notifications.show({
-                title: 'Error uploading lecture',
-                message: 'Please try again.',
-                color: 'red',
-            });
-        }
-    };
-
-    const handleUploadTextbook = async (file: File) => {
-        // Validate file is a PDF
-        if (file.type !== 'application/pdf') {
-            alert('Please upload a PDF file');
-            return;
-        }
-
-        try {
-            // Create form data to match server requirements
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('class_id', classId);
-            formData.append('title', file.name.replace('.pdf', ''));
-            formData.append('file_path', ''); // Empty string for direct uploads
-            formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
-
-            // Upload the file
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/textbook`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to upload textbook');
-            }
-
-            // Refresh textbooks data
-            queryClient.invalidateQueries({ queryKey: ["textbooks", classId] });
-
-        } catch (error) {
-            console.error('Error uploading textbook:', error);
-            notifications.show({
-                title: 'Error uploading textbook',
-                message: 'Please try again.',
-                color: 'red',
-            });
-        }
-    };
-
     // Add these functions to your ContentPage component
     const getLectureProgress = useMemo(() => {
         return (lectureId: string, uploading: boolean = false) => {
@@ -682,12 +566,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
                         <Stack>
                             <Group justify="space-between" align="center">
                                 <Text size="xl" fw={700}>Lectures</Text>
-                                <Button
-                                    leftSection={<IconUpload size={14} />}
-                                    onClick={() => lectureInputRef.current?.click()}
-                                >
-                                    Upload Lecture
-                                </Button>
+                                <UploadLectureButton classId={classId} />
                             </Group>
 
                             <Group align="center" mb="md">
@@ -826,12 +705,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
                         <Stack>
                             <Group justify="space-between" align="center">
                                 <Text size="xl" fw={700}>Textbooks</Text>
-                                <Button
-                                    leftSection={<IconUpload size={14} />}
-                                    onClick={() => textbookInputRef.current?.click()}
-                                >
-                                    Upload Textbook
-                                </Button>
+                                <UploadTextbookButton classId={classId} />
                             </Group>
 
                             <Group align="center" mb="md">
@@ -963,12 +837,7 @@ export default function ContentPage({ params }: { params: { classId: string } })
                         <Stack>
                             <Group justify="space-between" align="center">
                                 <Text size="xl" fw={700}>Homework</Text>
-                                <Button
-                                    leftSection={<IconUpload size={14} />}
-                                    onClick={() => homeworkInputRef.current?.click()}
-                                >
-                                    Upload Homework
-                                </Button>
+                                <UploadHomeworkButton classId={classId} />
                             </Group>
 
                             <Group align="center" mb="md">
@@ -1094,47 +963,6 @@ export default function ContentPage({ params }: { params: { classId: string } })
                             </ScrollArea>
                         </Stack>
                     }
-
-                    {/* Hidden file inputs */}
-                    <input
-                        type="file"
-                        ref={lectureInputRef}
-                        onChange={(e) => {
-                            e.preventDefault();
-                            if (e.target.files?.length) {
-                                Array.from(e.target.files).forEach(file => handleUploadLecture(file));
-                            }
-                        }}
-                        accept="application/pdf"
-                        style={{ display: 'none' }}
-                        multiple
-                    />
-                    <input
-                        type="file"
-                        ref={textbookInputRef}
-                        onChange={(e) => {
-                            e.preventDefault();
-                            if (e.target.files?.length) {
-                                Array.from(e.target.files).forEach(file => handleUploadTextbook(file));
-                            }
-                        }}
-                        accept="application/pdf"
-                        style={{ display: 'none' }}
-                        multiple
-                    />
-                    <input
-                        type="file"
-                        ref={homeworkInputRef}
-                        onChange={(e) => {
-                            e.preventDefault();
-                            if (e.target.files?.length) {
-                                Array.from(e.target.files).forEach(file => handleUploadHomework(file));
-                            }
-                        }}
-                        accept="application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        style={{ display: 'none' }}
-                        multiple
-                    />
                 </Stack>
             </Container>
         </ClassLayout>

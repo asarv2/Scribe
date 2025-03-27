@@ -36,6 +36,7 @@ import { createClass, updateClassPrivacy, updateClassPrompts, deleteClass } from
 import { TimeInput } from "@mantine/dates";
 import { Class } from "@/types";
 import Link from "next/link";
+import { updateProfile } from "@/utils/services/profile";
 
 interface ManagementProps {
     showCreateClass?: boolean;
@@ -203,28 +204,40 @@ export default function Management({ showCreateClass = true, showExistingClasses
     };
 
     const handleCreateClass = async () => {
+
+        if (!profile) {
+            throw new Error("Profile not found");
+        }
+
         if (!newClassName || !newClassCode) {
-            notifications.show({
-                title: 'Error',
-                message: 'Class name and code are required',
-                color: 'red'
-            });
-            return;
+            throw new Error("Class name and code are required");
         }
 
         setCreateLoading(true);
         try {
-            const { success, error } = await createClass(
+            const classId = await createClass(
                 newClassName,
                 newClassCode,
                 newClassDescription
             );
 
-            if (!success) {
-                throw new Error(error);
+            if (!classId) {
+                throw new Error("Failed to create class");
+            } else {
+                // add class to profile if not admin
+                if (!profile.admin) {
+                    const { success: profileSuccess, error: profileError } = await updateProfile(profile.id, {
+                        classes: Array.from(new Set([...profile.classes, classId]))
+                    });
+
+                    if (!profileSuccess) {
+                        throw new Error(profileError);
+                    }
+                }
             }
 
             queryClient.invalidateQueries({ queryKey: ["classes"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
             notifications.show({
                 title: 'Success',
                 message: 'Class created successfully',
@@ -305,9 +318,9 @@ export default function Management({ showCreateClass = true, showExistingClasses
         }
     };
 
-    const renderClassInfo = (classItem: Class) => {
+    const renderClassInfo = (classItem: Class, hasChanges: boolean) => {
         return (
-            <>
+            <Stack gap="xl">
                 {/* Class Details Section */}
                 {showInitialClassInfo && <Stack gap="md">
                     <Group grow>
@@ -329,25 +342,6 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         autosize
                     />
 
-                    {/* Download Settings Section */}
-                    {/* <Stack gap="xs">
-                                                    <Switch
-                                                        label="Download Daily"
-                                                        checked={editableClasses[classItem.id]?.download}
-                                                        onChange={(event) => handleDownloadToggle(classItem.id, event.currentTarget.checked)}
-                                                    />
-                                                    {editableClasses[classItem.id]?.download && (
-                                                        <TimeInput
-                                                            value={editableClasses[classItem.id]?.download_time}
-                                                            onChange={(e) => handleEditableChange(classItem.id, 'download_time', e.currentTarget.value)}
-                                                            withSeconds={false}
-                                                        />
-                                                    )}
-                                                    <Text size="xs" c="dimmed">
-                                                        If enabled, this is the time that the AI will download the content for this class every day.
-                                                    </Text>
-                                                </Stack> */}
-
                 </Stack>}
 
                 {/* Privacy Mode Section */}
@@ -364,7 +358,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                     </Text>
                 </Stack>
 
-                <Stack gap="xs">
+                {/* <Stack gap="xs">
                     <Switch
                         checked={editableClasses[classItem.id]?.download}
                         onChange={(e) => handleDownloadToggle(classItem.id, e.currentTarget.checked)}
@@ -374,7 +368,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
                     <Text size="xs" c="dimmed">
                         When enabled, you and your students will be able to download content from Brightspace using the <Link href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb" target="_blank">Scribe Chrome Extension</Link>.
                     </Text>
-                </Stack>
+                </Stack> */}
 
                 {/* Features Section */}
                 <Stack gap="md">
@@ -434,9 +428,58 @@ export default function Management({ showCreateClass = true, showExistingClasses
                         />
                     )}
                 </Stack>
-            </>
+                <Group justify="flex-end">
+                    <Button
+                        onClick={() => handleSavePrompts(classItem.id)}
+                        variant={hasChanges ? "filled" : "light"}
+                        loading={saveLoading[classItem.id]}
+                    >
+                        Save Changes
+                    </Button>
+                </Group>
+            </Stack>
         );
     };
+
+    const renderCreateClass = () => {
+        return (
+            <Stack>
+                <Stack gap="md">
+                    <Group grow>
+                        <TextInput
+                            label="Class Name"
+                            placeholder="Introduction to Computer Science"
+                            value={newClassName}
+                            onChange={(e) => setNewClassName(e.currentTarget.value)}
+                            required
+                        />
+                        <TextInput
+                            label="Class Code"
+                            placeholder="CS101"
+                            value={newClassCode}
+                            onChange={(e) => setNewClassCode(e.currentTarget.value)}
+                            required
+                        />
+                    </Group>
+                    <Textarea
+                        label="Description"
+                        placeholder="A brief description of the class"
+                        value={newClassDescription}
+                        onChange={(e) => setNewClassDescription(e.currentTarget.value)}
+                        minRows={3}
+                    />
+                </Stack>
+                <Group justify="flex-end">
+                    <Button
+                        onClick={handleCreateClass}
+                        loading={createLoading}
+                    >
+                        Create Class
+                    </Button>
+                </Group>
+            </Stack>
+        )
+    }
 
     // Check if user is professor or admin
     const canManageClasses = profile?.professor || profile?.admin;
@@ -469,141 +512,113 @@ export default function Management({ showCreateClass = true, showExistingClasses
                     <Skeleton height={60} />
                 </Stack>
             ) : (
-                <Accordion
-                    variant="separated"
-                    defaultValue={classes
-                        ?.filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))?.[0]?.id
-                    }
-                    chevronPosition="left"
-                >
-                    {/* Existing Classes */}
-                    {showExistingClasses && classes && classes
-                        .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
-                        .map((classItem: Class) => {
-                            const promptsChanged = classPrompts[classItem.id] && (
-                                classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
-                                classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
-                                classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
-                            );
+                <>
+                    {showOuterAccordion ? <Accordion
+                        variant="separated"
+                        defaultValue={classes
+                            ?.filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))?.[0]?.id
+                        }
+                        chevronPosition="left"
+                    >
+                        {/* Existing Classes */}
+                        {showExistingClasses && classes && classes
+                            .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
+                            .map((classItem: Class) => {
+                                const promptsChanged = classPrompts[classItem.id] && (
+                                    classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
+                                    classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
+                                    classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
+                                );
 
-                            const featuresChanged = classFeatures[classItem.id] && (
-                                classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
-                                classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
-                                classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false)
-                            );
+                                const featuresChanged = classFeatures[classItem.id] && (
+                                    classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
+                                    classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
+                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false)
+                                );
 
-                            const hasChanges = promptsChanged || featuresChanged;
+                                const hasChanges = promptsChanged || featuresChanged;
 
-                            if (!showOuterAccordion) {
+                                return (
+                                    <Accordion.Item key={classItem.id} value={classItem.id}>
+                                        <Accordion.Control>
+                                            <Group justify="space-between">
+                                                <Text fw={500}>{classItem.class_code}</Text>
+                                                <Group gap="xs">
+                                                    {hasChanges && (
+                                                        <Text size="xs" c="blue" fw={500}>Unsaved changes</Text>
+                                                    )}
+                                                    <ActionIcon
+                                                        color="red"
+                                                        variant="subtle"
+                                                        size="md"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setDeleteModalOpen(classItem.id);
+                                                        }}
+                                                    >
+                                                        <IconTrash size={16} />
+                                                    </ActionIcon>
+                                                </Group>
+                                            </Group>
+                                        </Accordion.Control>
+                                        <Accordion.Panel>
+                                            {renderClassInfo(classItem, hasChanges)}
+                                        </Accordion.Panel>
+                                    </Accordion.Item>
+                                );
+                            })}
+
+
+                        {/* Add New Class Accordion Item */}
+                        {showCreateClass && (
+                            <Accordion.Item value="new-class">
+                                <Accordion.Control>
+                                    <Group justify="space-between">
+                                        <Group gap="xs">
+                                            <ActionIcon
+                                                variant="light"
+                                                color="blue"
+                                                size="sm"
+                                                radius="xl"
+                                            >
+                                                <IconPlus size={16} />
+                                            </ActionIcon>
+                                            <Text fw={500} c="blue">Add New Class</Text>
+                                        </Group>
+                                    </Group>
+                                </Accordion.Control>
+                                <Accordion.Panel>
+                                    {renderCreateClass()}
+                                </Accordion.Panel>
+                            </Accordion.Item>
+                        )}
+                    </Accordion> : <>
+                        {showExistingClasses && classes && classes
+                            .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
+                            .map((classItem: Class) => {
+                                const promptsChanged = classPrompts[classItem.id] && (
+                                    classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
+                                    classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
+                                    classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
+                                );
+
+                                const featuresChanged = classFeatures[classItem.id] && (
+                                    classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
+                                    classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
+                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false)
+                                );
+
+                                const hasChanges = promptsChanged || featuresChanged;
+
                                 return (
                                     <Stack key={classItem.id}>
-                                        {renderClassInfo(classItem)}
+                                        {renderClassInfo(classItem, hasChanges)}
                                     </Stack>
                                 )
-                            }
-
-                            return (
-                                <Accordion.Item key={classItem.id} value={classItem.id}>
-                                    <Accordion.Control>
-                                        <Group justify="space-between">
-                                            <Text fw={500}>{classItem.class_code}</Text>
-                                            <Group gap="xs">
-                                                {hasChanges && (
-                                                    <Text size="xs" c="blue" fw={500}>Unsaved changes</Text>
-                                                )}
-                                                <ActionIcon
-                                                    color="red"
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setDeleteModalOpen(classItem.id);
-                                                    }}
-                                                >
-                                                    <IconTrash size={16} />
-                                                </ActionIcon>
-                                            </Group>
-                                        </Group>
-                                    </Accordion.Control>
-                                    <Accordion.Panel>
-                                        <Stack gap="xl">
-                                            {renderClassInfo(classItem)}
-                                            <Group justify="flex-end">
-                                                <Button
-                                                    onClick={() => handleSavePrompts(classItem.id)}
-                                                    variant={hasChanges ? "filled" : "light"}
-                                                    loading={saveLoading[classItem.id]}
-                                                >
-                                                    Save Changes
-                                                </Button>
-                                            </Group>
-                                        </Stack>
-                                    </Accordion.Panel>
-                                </Accordion.Item>
-                            );
-                        })}
-
-
-                    {/* Add New Class Accordion Item */}
-                    {showCreateClass && (
-                        <Accordion.Item value="new-class">
-                            <Accordion.Control>
-                                <Group justify="space-between">
-                                    <Group gap="xs">
-                                        <ActionIcon
-                                            variant="light"
-                                            color="blue"
-                                            size="sm"
-                                            radius="xl"
-                                        >
-                                            <IconPlus size={16} />
-                                        </ActionIcon>
-                                        <Text fw={500} c="blue">Add New Class</Text>
-                                    </Group>
-                                </Group>
-                            </Accordion.Control>
-                            <Accordion.Panel>
-                                <Card withBorder shadow="sm" radius="md" p="xl">
-                                    <Stack>
-                                        <Stack gap="md">
-                                            <Group grow>
-                                                <TextInput
-                                                    label="Class Name"
-                                                    placeholder="Introduction to Computer Science"
-                                                    value={newClassName}
-                                                    onChange={(e) => setNewClassName(e.currentTarget.value)}
-                                                    required
-                                                />
-                                                <TextInput
-                                                    label="Class Code"
-                                                    placeholder="CS101"
-                                                    value={newClassCode}
-                                                    onChange={(e) => setNewClassCode(e.currentTarget.value)}
-                                                    required
-                                                />
-                                            </Group>
-                                            <Textarea
-                                                label="Description"
-                                                placeholder="A brief description of the class"
-                                                value={newClassDescription}
-                                                onChange={(e) => setNewClassDescription(e.currentTarget.value)}
-                                                minRows={3}
-                                            />
-                                        </Stack>
-                                        <Group justify="flex-end">
-                                            <Button
-                                                onClick={handleCreateClass}
-                                                loading={createLoading}
-                                            >
-                                                Create Class
-                                            </Button>
-                                        </Group>
-                                    </Stack>
-                                </Card>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-                    )}
-                </Accordion>
+                            })}
+                        {showCreateClass && renderCreateClass()}
+                    </>}
+                </>
             )}
             <Modal
                 opened={!!deleteModalOpen}

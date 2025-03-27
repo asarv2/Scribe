@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
 export const updateClassPrivacy = async (classId: string, privacyStatus: boolean) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("classes")
         .update({privacy: privacyStatus})
@@ -34,10 +34,11 @@ export const updateClassPrompts = async (
     download_time: string,
     privateMode: boolean
 ) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("classes")
         .update({
+            saved: true,
             lecture_prompt: lecturePrompt,
             textbook_prompt: textbookPrompt,
             homework_prompt: homeworkPrompt,
@@ -63,22 +64,23 @@ export const createClass = async (
     classCode: string,
     classDescription: string
 ) => {
-    const supabase = useSupabaseServer(cookies());
-    const { error } = await supabase
+    const supabase = await useSupabaseServer(cookies());
+    const { data, error } = await supabase
         .from("classes")
         .insert({ 
             title: className, 
             class_code: classCode, 
             course_description: classDescription,
-        });
+        })
+        .select("id")
     if (error) {
-        return { success: false, error: error.message };
+        return null
     }
-    return { success: true, error: "" };
+    return data[0].id;
 }
 
 export const deleteClass = async (classId: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("classes")
         .update({

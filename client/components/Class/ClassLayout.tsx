@@ -26,9 +26,10 @@ interface ClassLayoutProps {
     children: ReactNode;
     classId: string | null;
     showHeader?: boolean;
+    showClasses?: boolean;
 }
 
-export function ClassLayout({ children, classId, showHeader = true }: ClassLayoutProps) {
+export function ClassLayout({ children, classId, showHeader = true, showClasses = true }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const supabase = useSupabaseBrowser();
 
@@ -74,15 +75,15 @@ export function ClassLayout({ children, classId, showHeader = true }: ClassLayou
                 >
                     {showHeader && (
                         <AppShell.Header>
-                            <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} />
+                            <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} showClasses={showClasses} />
                         </AppShell.Header>
                     )}
 
-                    {profile && (profile.professor || profile.admin) && (
+                    {profile && (profile.professor || profile.admin) && (classId !== null) && (
                         <AppShell.Navbar>
                             <ClassNavbar
-                                classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
-                                basePath={`/classes/c/${classId ?? getFilteredClasses(profile, classData)?.[0]?.id}`}
+                                classId={classId}
+                                basePath={`/classes/c/${classId}`}
                                 isExpanded={isExpanded}
                                 onExpandedChange={setIsExpanded}
                             />

@@ -3,18 +3,18 @@ import { Database } from '../../database.types'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export default function useSupabaseServer(cookieStore: ReturnType<typeof cookies>, useServiceRole: boolean = false) {
+export default async function useSupabaseServer(cookieStore: ReturnType<typeof cookies>, useServiceRole: boolean = false) {
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     useServiceRole ? process.env.SERVICE_ROLE_KEY! : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll().map(cookie => ({ name: cookie.name, value: cookie.value }));
+        async getAll() {
+          return (await cookieStore).getAll().map(cookie => ({ name: cookie.name, value: cookie.value }));
         },
-        setAll(cookiesToSet: { name: string, value: string, options?: any }[]) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
+        async setAll(cookiesToSet: { name: string, value: string, options?: any }[]) {
+          cookiesToSet.forEach(async ({ name, value, options }) =>
+            (await cookieStore).set(name, value, options)
           );
         },
       },

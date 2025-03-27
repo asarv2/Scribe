@@ -1,0 +1,17 @@
+.microsoftButton {
+  @mixin light {
+    color: black;
+    
+    &:hover {
+      background-color: var(--mantine-color-gray-1);
+    }
+  }
+
+  @mixin dark {
+    color: white;
+    
+    &:hover {
+      background-color: #201F1F;
+    }
+  }
+}

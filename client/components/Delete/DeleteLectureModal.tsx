@@ -14,7 +14,6 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { deleteLecture } from "@/utils/services/lecture"
 import { Profile } from "@/types"
-import { isProfessor } from "@/utils/services/auth"
 
 type DeleteLectureModalProps = {
     classId: string
@@ -67,7 +66,7 @@ export default function DeleteLectureModal({ lectureId, profile, lectureTitle, c
 
     return (
         <>
-            {profile && isProfessor(profile, classId) && <Tooltip label="Delete Lecture"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && (profile.professor || profile.admin) && <Tooltip label="Delete Lecture"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Lecture" centered>
                 <Stack>

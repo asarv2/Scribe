@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
 export const createMessages = async (messages: { chat: string, bare_question: string, question: string, lectures: string[], chapters: string[], homeworks: string[], response_url: string }[]) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase
         .from("messages")
         .insert(messages)

@@ -10,7 +10,7 @@ import crypto from "crypto";
 import { Code } from "@/types";
 
 export const createCode = async (userId: string, classIds: string[]) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
 
     try {
         // Define characters to use (excluding similar-looking characters)
@@ -51,7 +51,7 @@ export const createCode = async (userId: string, classIds: string[]) => {
 };
 
 export const deleteCode = async (codeId: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("codes")
         .update({ deleted: true })
@@ -64,7 +64,7 @@ export const deleteCode = async (codeId: string) => {
 };
 
 export const checkCode = async (code: string): Promise<{ success: boolean, error: string, code: Code | null }> => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase.from("codes").select("*").eq("code", code).eq("deleted", false).single();
     if (error) {
         return { success: false, error: "Invalid code", code: null };

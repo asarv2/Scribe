@@ -21,3 +21,23 @@
     margin-top: var(--mantine-spacing-md);
   }
 }
+
+.logo-light {
+  @mixin dark {
+    display: none;
+  }
+
+  @mixin light {
+    display: block;
+  }
+}
+
+.logo-dark {
+  @mixin light {
+    display: none;
+  }
+
+  @mixin dark {
+    display: block;
+  }
+}

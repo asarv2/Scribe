@@ -31,6 +31,8 @@ export type Question = Database[SchemaName]["Tables"]["questions"]["Row"]
 export type Faqs = Database[SchemaName]["Tables"]["faqs"]["Row"]
 export type File = Database[SchemaName]["Tables"]["files"]["Row"]
 
+export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"]
+
 export interface ChatMessage {
     id: number;
     title: string

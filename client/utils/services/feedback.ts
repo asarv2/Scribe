@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
 export const submitFeedback = async (positive: string, negative: string, feature: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase.from("feedback").insert({ positive, negative, feature });
     if (error) {
         return { success: false, error: error.message };

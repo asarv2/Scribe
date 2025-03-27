@@ -10,7 +10,7 @@ import '@mantine/dropzone/styles.css';
 import '@mantine/charts/styles.css';
 import '@mantine/dates/styles.css';
 
-import { ColorSchemeScript } from '@mantine/core';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import type { Metadata } from "next";
 import { Providers } from './providers';
 
@@ -25,14 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <ColorSchemeScript />
+          <ColorSchemeScript />
       </head>
-      <body>
-        <Providers>
-          {children}
-        </Providers>
+      <body suppressHydrationWarning>
+          <Providers>
+            {children}
+          </Providers>
       </body>
     </html>
   );

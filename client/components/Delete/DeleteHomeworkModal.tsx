@@ -13,7 +13,6 @@ import { notifications } from "@mantine/notifications"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { Profile } from "@/types"
-import { isProfessor } from "@/utils/services/auth"
 import { deleteHomework } from "@/utils/services/homework"
 
 type DeleteHomeworkModalProps = {
@@ -67,7 +66,7 @@ export default function DeleteHomeworkModal({ homeworkId, profile, homeworkTitle
 
     return (
         <>
-            {profile && isProfessor(profile, classId) && <Tooltip label="Delete Homework"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
+            {profile && (profile.professor || profile.admin) && <Tooltip label="Delete Homework"><IconTrash size={24} color={colorScheme === "dark" ? "white" : "black"} style={{ cursor: "pointer" }} onClick={open} /></Tooltip>}
 
             <Modal opened={opened} onClose={close} title="Delete Homework" centered>
                 <Stack>

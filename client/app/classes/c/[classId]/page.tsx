@@ -9,7 +9,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "../../../../utils/supabase/supabase-browser";
 import { AppShell, Button, Burger, Container, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme, Card, Badge, Group, Paper, Skeleton } from "@mantine/core";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -45,17 +45,9 @@ import {
     IconHourglass,
 } from '@tabler/icons-react';
 
-export default function Class({ params }: { params: { classId: string } }) {
-    const queryClient = useQueryClient()
-    const [opened, { toggle }] = useDisclosure(false)
-    const [openNodeId, setOpenNodeId] = useState<string>()
-    const [openNodeLabel, setOpenNodeLabel] = useState<string>()
-    const [openNodeDescription, setOpenNodeDescription] = useState<string>()
-    const theme = useMantineTheme()
-    const pathname = usePathname()
-
+export default function Class({ params }: { params: Promise<{ classId: string }> }) {
+    const { classId } = use(params);
     const supabase = useSupabaseBrowser();
-    const classId = params.classId;
 
     const { data: classData } = useQuery({
         queryKey: ["class", classId],

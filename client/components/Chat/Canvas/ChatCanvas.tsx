@@ -252,10 +252,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     responseUrl
                 );
                 newChatId = chat.id;
-
-                // Instead of directly using router.replace which causes a full page transition,
-                // use router.push with shallow option to preserve state
-                router.push(`/classes/c/${classId}/chat/${chat.id}`);
             }
 
             const additionalContextForBareQuestion = getAdditionalContextForBareQuestion();
@@ -307,6 +303,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     files: []
                 }
             });
+
+            router.push(`/classes/c/${classId}/chat/${newChatId}`);
 
         } catch (error) {
             console.error("Error in message processing:", error);
@@ -971,13 +969,13 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     </Flex>
                     <Grid>
                         {viewerMode.immersive && <Grid.Col span={3} >
-                            <RecordingPanel
+                            {/* <RecordingPanel
                                 viewerMode={viewerMode}
                                 mediaBlob={mediaBlob}
                                 videoPreviewRef={videoPreviewRef}
                                 mediaRecorderRef={mediaRecorderRef}
                                 recordingDuration={recordingDuration}
-                            />
+                            /> */}
                         </Grid.Col>
                         }
                         <Grid.Col

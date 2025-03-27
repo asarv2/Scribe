@@ -1,0 +1,100 @@
+/* CallToAction.module.css */
+.container {
+  @mixin light {
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  }
+  
+  @mixin dark {
+    background: linear-gradient(45deg, #1A1B1E, #25262b);
+  }
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  @mixin light {
+    background-color: #ffffff;
+    border-color: #e9ecef;
+  }
+  
+  @mixin dark {
+    background-color: #25262b;
+    border-color: #2c2e33;
+  }
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  
+  @mixin light {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  @mixin dark {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.title {
+  font-weight: 700;
+  
+  @mixin light {
+    color: #1A1B1E;
+  }
+  
+  @mixin dark {
+    color: #ffffff;
+  }
+}
+
+.description {
+  line-height: 1.6;
+  
+  @mixin light {
+    color: #495057;
+  }
+  
+  @mixin dark {
+    color: #c1c2c5;
+  }
+}
+
+.ctaButton {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  
+  @mixin light {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  @mixin dark {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  
+  @mixin light {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  @mixin dark {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .description {
+    font-size: 16px;
+  }
+}

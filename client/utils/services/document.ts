@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
 export const createLectureDocument = async (lectureId: string, pageNumber: number, text: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase
         .from("documents")
         .insert({lecture: lectureId, page: pageNumber, text: text})
@@ -21,7 +21,7 @@ export const createLectureDocument = async (lectureId: string, pageNumber: numbe
 }
 
 export const createTextbookDocument = async (textbookId: string, pageNumber: number, text: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase
         .from("documents")
         .insert({textbook: textbookId, page: pageNumber, text: text})

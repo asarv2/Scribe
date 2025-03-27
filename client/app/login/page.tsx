@@ -7,7 +7,7 @@
 
 "use client"
 
-import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch, useMantineColorScheme } from "@mantine/core"
+import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch, useMantineColorScheme, useComputedColorScheme } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
 import { login, createAnonymousUser, signInWithMicrosoft } from "@/utils/services/auth";
@@ -22,17 +22,15 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import { checkEmail } from "@/utils/services/profile";
 import MicrosoftIcon from "@/components/Icons/MicrosoftIcon";
+import MicrosoftLoginButton from "@/components/Buttons/MicrosoftLoginButton";
 
 export default function Login() {
     const supabase = useSupabaseBrowser()
     const queryClient = useQueryClient()
     const router = useRouter()
-    const { colorScheme } = useMantineColorScheme()
-    const [lastName, setLastName] = useState("") // used for student login
     const [email, setEmail] = useState("") // used for both student and professor login
     const [password, setPassword] = useState("") // used for professor login
     const [loading, setLoading] = useState(false)
-    const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false)
     const { data: classes, isLoading: classesLoading } = useQuery({
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase)
@@ -62,17 +60,19 @@ export default function Login() {
                     throw new Error("Profile not found")
                 }
                 const filteredClasses = classes?.filter((c: Class) => (profile.classes.includes(c.id) || profile.admin))
-                if (filteredClasses?.length === 0) {
-                    throw new Error("No classes found")
-                }
                 const firstClass = filteredClasses?.[0]
-                if (!firstClass) {
-                    throw new Error("No classes found")
-                }
-                if (profile.admin || profile.professor) {
-                    router.push(`/classes/c/${firstClass.id}`)
+                if (firstClass) {
+                    if (profile.admin || profile.professor) {
+                        router.push(`/classes/c/${firstClass.id}`)
+                    } else {
+                        router.push(`/classes/c/${firstClass.id}/chat/new`)
+                    }
                 } else {
-                    router.push(`/classes/c/${firstClass.id}/chat/new`)
+                    if (profile.admin || profile.professor) {
+                        router.push("/signup")
+                    } else {
+                        throw new Error("No classes found")
+                    }
                 }
             }
 
@@ -94,27 +94,9 @@ export default function Login() {
         }
     }
 
-    const handleSignInWithMicrosoft = async () => {
-        setMicrosoftButtonLoading(true);
-        try {
-            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
-            if (success && url) {
-                router.push(url);
-            } else {
-                throw new Error(error);
-            }
-        } catch (error: any) {
-            notifications.show({
-                title: "Error",
-                message: error.message,
-                color: "red",
-            });
-        }
-    }
-
     return (
         <HomeLayout>
-            <Container fluid style={{ height: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Container fluid>
                 <Center>
                     <Stack w={300} gap="md">
                         <Text size="xl">Login</Text>
@@ -138,24 +120,7 @@ export default function Login() {
 
                         <Divider />
 
-                        <Button
-                            onClick={handleSignInWithMicrosoft}
-                            loading={microsoftButtonLoading}
-                            variant="outline"
-                            leftSection={
-                                <MicrosoftIcon />
-                            }
-                            styles={{
-                                root: {
-                                    color: colorScheme === 'dark' ? 'white' : 'black',
-                                    '&:hover': {
-                                        backgroundColor: colorScheme === 'dark' ? '#201F1F' : 'gray.1'
-                                    }
-                                }
-                            }}
-                        >
-                            Login with Microsoft
-                        </Button>
+                        <MicrosoftLoginButton />
                     </Stack>
                 </Center>
             </Container>

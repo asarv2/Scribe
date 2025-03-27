@@ -10,7 +10,7 @@ import { Code, Profile } from "@/types";
 import { User } from "@supabase/supabase-js";
 
 export const login = async (email: string, password: string): Promise<{ success: boolean, error: string, user: User | null }> => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error, data } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
@@ -23,7 +23,7 @@ export const login = async (email: string, password: string): Promise<{ success:
 }
 
 export const createAnonymousUser = async (firstName: string, lastName: string, email: string, classes: string[], oldId?: string): Promise<{ success: boolean, error: string, user: User | null }> => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase.auth.signInAnonymously({
         options: {
             data: {
@@ -43,7 +43,7 @@ export const createAnonymousUser = async (firstName: string, lastName: string, e
 }
 
 export const logout = async (): Promise<{ success: boolean, error: string }> => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase.auth.signOut();
     if (error) {
         return { success: false, error: error.message };
@@ -53,7 +53,7 @@ export const logout = async (): Promise<{ success: boolean, error: string }> => 
 }
 
 export const updatePassword = async (userId: string, newPassword: string) => {
-    const supabase = useSupabaseServer(cookies(), true);
+    const supabase = await useSupabaseServer(cookies(), true);
     const { error } = await supabase.auth.admin.updateUserById(userId, {
         password: newPassword,
     });
@@ -64,12 +64,8 @@ export const updatePassword = async (userId: string, newPassword: string) => {
     }
 }
 
-export const isProfessor = (profile: Profile, classId: string) => {
-    return (profile.professor && profile.classes.includes(classId)) || profile.admin;
-}
-
 export const deleteAccount = async (userId: string): Promise<{ success: boolean, error: string }> => {
-    const supabase = useSupabaseServer(cookies(), true);
+    const supabase = await useSupabaseServer(cookies(), true);
     const { error } = await supabase.auth.admin.deleteUser(userId);
     if (error) {
         return { success: false, error: error.message };
@@ -79,7 +75,7 @@ export const deleteAccount = async (userId: string): Promise<{ success: boolean,
 }
 
 export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success: boolean, error: string, url: string | null }> => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'azure',
         options: {
@@ -98,7 +94,7 @@ export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success
 }
 
 export const signInWithSSO = async (): Promise<{ success: boolean, error: string, url: string | null }> => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase.auth.signInWithSSO({
         domain: 'purdue.edu'
     })

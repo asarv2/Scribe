@@ -16,7 +16,7 @@ export const createChat = async (
     teacher: boolean = false,
     response_url: string | null = null,
 ) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     
     // Store teacher mode info in the name instead of metadata
     let name = chatTitle;
@@ -47,7 +47,7 @@ export const createChat = async (
 };
 
 export const deleteChat = async (chatId: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("chats")
         .update({deleted: true})
@@ -60,7 +60,7 @@ export const deleteChat = async (chatId: string) => {
 }
 
 export const updateChatRating = async (chatId: string, rating: number) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("chats")
         .update({ rating })

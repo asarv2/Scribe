@@ -13,9 +13,10 @@ const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
+
         <QueryClientProvider client={queryClient}>
             <ReactQueryClientProvider>
-                <MantineProvider defaultColorScheme="dark">
+                <MantineProvider>
                     <Notifications />
                     <HealthCheck />
                     <Analytics />
@@ -23,5 +24,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 </MantineProvider>
             </ReactQueryClientProvider>
         </QueryClientProvider>
+
     );
 }

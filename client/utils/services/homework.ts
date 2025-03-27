@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
 export const createHomework = async (classId: string, homeworkTitle: string, homeworkNumber: number, upload_progress: number, response_url: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     console.log("Creating homework", classId, homeworkTitle, homeworkNumber, upload_progress, response_url);
     const { data, error } = await supabase
         .from("homeworks")
@@ -22,7 +22,7 @@ export const createHomework = async (classId: string, homeworkTitle: string, hom
 }
 
 export const deleteHomework = async (homeworkId: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("homeworks")
         .update({deleted: true})
@@ -35,7 +35,7 @@ export const deleteHomework = async (homeworkId: string) => {
 }
 
 export const updateHomeworkDate = async (homeworkId: string, due: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("homeworks")
         .update({ due: due })
@@ -47,7 +47,7 @@ export const updateHomeworkDate = async (homeworkId: string, due: string) => {
 }
 
 export const updateHomeworkName = async (homeworkId: string, name: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("homeworks")
         .update({ title: name })
@@ -59,7 +59,7 @@ export const updateHomeworkName = async (homeworkId: string, name: string) => {
 }
 
 export const updateHomeworkInstructions = async (homeworkId: string, instructions: string) => {
-    const supabase = useSupabaseServer(cookies());
+    const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("homeworks")
         .update({ additional_info: instructions })

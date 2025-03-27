@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
@@ -188,10 +188,10 @@ function sortData(
   );
 }
 
-export default function ChatPage({ params }: { params: { classId: string } }) {
+export default function ChatPage({ params }: { params: Promise<{ classId: string }> }) {
+    const { classId } = use(params);
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
-    const classId = params.classId;
     const router = useRouter();
 
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);

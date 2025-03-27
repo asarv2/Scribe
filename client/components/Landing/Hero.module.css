@@ -1,0 +1,63 @@
+/* Hero.module.css */
+.heroContainer {
+  transition: background 0.3s ease;
+  
+  @mixin light {
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  }
+  
+  @mixin dark {
+    background: linear-gradient(45deg, #1A1B1E, #25262b);
+  }
+}
+
+.heroTitle {
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.heroText {
+  line-height: 1.6;
+}
+
+.imageContainer {
+  transition: transform 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  
+  @mixin light {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  @mixin dark {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.imageContainer:hover {
+  transform: translateY(-5px);
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.ctaButton {
+  transition: transform 0.2s ease;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    text-align: center;
+  }
+  
+  .heroText {
+    text-align: center;
+  }
+}

@@ -26,9 +26,10 @@ import { Profile } from '@/types';
 import { Class } from '@/types';
 interface ClassHeaderProps {
     classId: string
+    showClasses: boolean
 }
 
-export function ClassHeader({ classId }: ClassHeaderProps) {
+export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
     const [loading, setLoading] = useState(false);
     const supabase = useSupabaseBrowser();
     const pathname = usePathname();
@@ -66,7 +67,7 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
             <Group>
                 <Link href="/">
                     <Image
-                        src={colorScheme === "dark" ? "/images/logo-darkmode.png" : "/images/logo.png"}
+                        src={colorScheme === "dark" ? "/images/logo-dark.png" : "/images/logo-light.png"}
                         priority
                         alt="Logo"
                         width={90}
@@ -75,7 +76,7 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
                     />
                 </Link>
             </Group>
-            <Group gap="md">
+            {showClasses && <Group gap="md">
                 {getFilteredClasses(profile, classData).map((classItem) => (
                     <Link key={classItem.id} href={profile?.professor || profile?.admin ? `/classes/c/${classItem.id}` : `/classes/c/${classItem.id}/chat/new`}>
                         <Button
@@ -91,7 +92,7 @@ export function ClassHeader({ classId }: ClassHeaderProps) {
                         </Button>
                     </Link>
                 ))}
-            </Group>
+            </Group>}
             <Group>
                 {colorScheme === 'dark' ? (
                     <Tooltip label="Light Mode">

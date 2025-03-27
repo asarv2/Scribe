@@ -15,7 +15,7 @@ import { getLecture } from "@/utils/queries/get-lecture";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, use } from "react";
 import { getAllChats } from "@/utils/queries/get-all-chats";
 import { getMessages } from "@/utils/queries/get-messages";
 import { Tabs, TextInput, Button, Group, Card, Stack, Text, Badge, Accordion, ActionIcon, Modal, Box, Container, Flex, Grid, Skeleton, Textarea, Divider } from "@mantine/core";
@@ -30,14 +30,14 @@ import Latex from "@/components/Latex";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 
 type LectureProps = {
-    params: {
+    params: Promise<{
         classId: string;
         lectureId: string;
-    }
+    }>
 }
 
 export default function Lecture({ params }: LectureProps) {
-
+    const { classId, lectureId } = use(params);
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
     const [lectureName, setLectureName] = useState<string>("");
     const [lectureDate, setLectureDate] = useState<Date | null>(null);
@@ -57,18 +57,18 @@ export default function Lecture({ params }: LectureProps) {
     const queryClient = useQueryClient();
 
     const { data: classData, isLoading: loadingClassData } = useQuery({
-        queryKey: ["class", params.classId],
-        queryFn: () => getClass(supabase, params.classId)
+        queryKey: ["class", classId],
+        queryFn: () => getClass(supabase, classId)
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["lectureDocuments", params.lectureId],
-        queryFn: () => getLectureDocuments(supabase, [params.lectureId])
+        queryKey: ["lectureDocuments", lectureId],
+        queryFn: () => getLectureDocuments(supabase, [lectureId])
     })
 
     const { data: lecture, isLoading: loadingLecture } = useQuery({
-        queryKey: ["lecture", params.lectureId],
-        queryFn: () => getLecture(supabase, params.lectureId)
+        queryKey: ["lecture", lectureId],
+        queryFn: () => getLecture(supabase, lectureId)
     })
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -83,12 +83,12 @@ export default function Lecture({ params }: LectureProps) {
     })
 
     const { data: chats, isLoading: loadingChats } = useQuery({
-        queryKey: ["allChats", params.classId],
-        queryFn: () => getAllChats(supabase, params.classId),
+        queryKey: ["allChats", classId],
+        queryFn: () => getAllChats(supabase, classId),
     });
 
     const { data: messages, isLoading: loadingMessages } = useQuery({
-        queryKey: ["messages", params.classId, chats],
+        queryKey: ["messages", classId, chats],
         queryFn: () => getMessages(supabase, chats ? chats.map(chat => chat.id) : []),
         enabled: !!chats
     });
@@ -101,18 +101,18 @@ export default function Lecture({ params }: LectureProps) {
             return chatMessages.some(msg =>
                 msg.lectures &&
                 Array.isArray(msg.lectures) &&
-                msg.lectures.includes(params.lectureId)
+                msg.lectures.includes(lectureId)
             );
         });
-    }, [chats, messages, params.lectureId]);
+    }, [chats, messages, lectureId]);
 
     const handleUpdateLectureName = async () => {
         if (!lectureName.trim()) return;
 
         try {
             setIsNameUpdating(true);
-            await updateLectureName(params.lectureId, lectureName);
-            queryClient.invalidateQueries({ queryKey: ["lecture", params.lectureId] });
+            await updateLectureName(lectureId, lectureName);
+            queryClient.invalidateQueries({ queryKey: ["lecture", lectureId] });
             notifications.show({
                 title: "Lecture updated",
                 message: "Lecture name has been updated successfully",
@@ -134,8 +134,8 @@ export default function Lecture({ params }: LectureProps) {
 
         try {
             setIsDateUpdating(true);
-            await updateLectureDate(params.lectureId, lectureDate.toISOString());
-            queryClient.invalidateQueries({ queryKey: ["lecture", params.lectureId] });
+            await updateLectureDate(lectureId, lectureDate.toISOString());
+            queryClient.invalidateQueries({ queryKey: ["lecture", lectureId] });
             notifications.show({
                 title: "Lecture updated",
                 message: "Lecture date has been updated successfully",
@@ -155,9 +155,9 @@ export default function Lecture({ params }: LectureProps) {
     const handleSaveAiInstructions = async () => {
         try {
             setLoading(true);
-            const { success, error } = await updateLectureInfo(params.lectureId, aiInstructions);
+            const { success, error } = await updateLectureInfo(lectureId, aiInstructions);
             if (success) {
-                queryClient.invalidateQueries({ queryKey: ["lecture", params.lectureId] });
+                queryClient.invalidateQueries({ queryKey: ["lecture", lectureId] });
                 notifications.show({
                     title: "AI Instructions saved",
                     message: "AI Instructions saved successfully",
@@ -187,7 +187,7 @@ export default function Lecture({ params }: LectureProps) {
 
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !lecture || !documentId) return "/placeholder_image.svg";
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${params.classId}/${params.lectureId}/${documentId}.png`;
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${documentId}.png`;
     }
 
     const images = documents?.map(doc => ({
@@ -372,7 +372,7 @@ export default function Lecture({ params }: LectureProps) {
     });
 
     return (
-        <ClassLayout classId={params.classId}>
+        <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px", position: "relative" }}>
                 <Stack gap="xs">
                     <Flex justify="space-between" align="center" w="100%">
@@ -383,7 +383,7 @@ export default function Lecture({ params }: LectureProps) {
                         </Group>
                         <Group>
                             <Skeleton visible={loadingLecture} width={loadingLecture ? 300 : '100%'}>
-                                <DeleteLectureModal lectureId={params.lectureId} lectureTitle={lecture?.name ?? ""} profile={profile ?? undefined} classId={params.classId} />
+                                <DeleteLectureModal lectureId={lectureId} lectureTitle={lecture?.name ?? ""} profile={profile ?? undefined} classId={classId} />
                             </Skeleton>
                         </Group>
                     </Flex>
@@ -605,7 +605,7 @@ export default function Lecture({ params }: LectureProps) {
                                                                 withBorder
                                                                 padding="sm"
                                                                 component="a"
-                                                                href={`/classes/c/${params.classId}/chat/${chat.id}`}
+                                                                href={`/classes/c/${classId}/chat/${chat.id}`}
                                                                 style={{
                                                                     width: '180px',
                                                                     minWidth: '180px',

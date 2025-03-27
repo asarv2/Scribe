@@ -170,7 +170,7 @@ export default function FigureViewer({
   };
 
   return (
-    <Card withBorder p="md" w={viewerMode?.immersive ? '100%' : 700}>
+    <Card withBorder p="md" w={viewerMode?.immersive ? '100%' : 700} key={"figure-" + figure.id}>
       {renderContent()}
     </Card>
   );

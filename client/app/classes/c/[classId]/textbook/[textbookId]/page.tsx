@@ -17,7 +17,7 @@ import { IconArrowLeft, IconArrowRight, IconPencil, IconChevronDown } from '@tab
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, use } from 'react';
 import { ClassLayout } from '@/components/Class/ClassLayout';
 import { useMediaQuery, useIntersection } from '@mantine/hooks';
 import Latex from '@/components/Latex';
@@ -26,11 +26,10 @@ import DeleteTextbookModal from "@/components/Delete/DeleteTextbookModal";
 import { getAllChats } from "@/utils/queries/get-all-chats";
 import { getMessages } from "@/utils/queries/get-messages";
 
-export default function Textbook({ params }: { params: { classId: string, textbookId: string } }) {
+export default function Textbook({ params }: { params: Promise<{ classId: string, textbookId: string }> }) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
-    const classId = params.classId;
-    const textbookId = params.textbookId;
+    const { classId, textbookId } = use(params);
     const isMobile = useMediaQuery('(max-width: 768px)');
     const { colorScheme } = useMantineColorScheme();
     const previewScrollRef = useRef<HTMLDivElement>(null);
@@ -95,12 +94,12 @@ export default function Textbook({ params }: { params: { classId: string, textbo
 
     // Add queries for chats
     const { data: chats, isLoading: loadingChats } = useQuery({
-        queryKey: ["allChats", params.classId],
-        queryFn: () => getAllChats(supabase, params.classId),
+        queryKey: ["allChats", classId],
+        queryFn: () => getAllChats(supabase, classId),
     });
 
     const { data: messages, isLoading: loadingMessages } = useQuery({
-        queryKey: ["messages", params.classId, chats],
+        queryKey: ["messages", classId, chats],
         queryFn: () => getMessages(supabase, chats ? chats.map(chat => chat.id) : []),
         enabled: !!chats
     });
@@ -782,7 +781,7 @@ export default function Textbook({ params }: { params: { classId: string, textbo
                                 withBorder
                                 padding="sm"
                                 component="a"
-                                href={`/classes/c/${params.classId}/chat/${chat.id}`}
+                                href={`/classes/c/${classId}/chat/${chat.id}`}
                                 style={{
                                     width: '180px',
                                     minWidth: '180px',

@@ -12,7 +12,6 @@ import { useState } from "react"
 import { notifications } from "@mantine/notifications"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { isProfessor } from "@/utils/services/auth"
 import { deleteTextbook } from "@/utils/services/textbook"
 import { Profile } from "@/types"
 
