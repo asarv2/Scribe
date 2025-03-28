@@ -331,3 +331,4 @@ def get_present_mode() -> str:
         "As the session ends, ask if they want to practice again or have further questions.\n"
         "Conclude with supportive words like, 'Sounds good! Good luck on your presentation!' if they are finished.\n"
     )
+    return base_system_prompt

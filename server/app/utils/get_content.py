@@ -126,7 +126,7 @@ async def fetch_file_content(supabase, file_ids):
     content = []
     for file in files:
         file_docs = [doc for doc in documents if doc.get("file") == file.get("id")]
-        file_content = f"FILE {file.get('name')}\n"
+        file_content = f"FILE {file.get('title')}\n"
         
         for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
             file_content += f"\nPAGE {doc.get('page')}\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
@@ -226,7 +226,7 @@ async def fetch_file_resources(supabase, file_ids):
     all_google_file_ids = []
     if file_ids:
         # Fetch files
-        files_response = supabase.table("files").select("*").in_("id", file_ids).order("name", desc=False).execute()
+        files_response = supabase.table("files").select("*").in_("id", file_ids).order("title", desc=False).execute()
         all_files = files_response.data or []
         
         # Fetch file documents

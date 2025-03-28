@@ -271,7 +271,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     };
 
     const handleChat = async () => {
-        if (!activeChat.prompt.trim()) return;
+        if (!activeChat.prompt.trim() && recordedVideos.length === 0) return;
 
         try {
             setLoading(true);
@@ -281,7 +281,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 
             // upload all the recorded videos, via the addFile function
             const fileIds = await Promise.all(recordedVideos.map(async (video) => {
-                const videoFile = new File([video.url], `${video.id}.webm`, { type: 'video/webm' });
+                // Fetch the actual blob data from the URL
+                const response = await fetch(video.url);
+                const blobData = await response.blob();
+                const videoFile = new File([blobData], `${video.id}.webm`, { type: 'video/webm' });
                 return await addFile(videoFile);
             }));
             setAddingFiles(false);
@@ -314,7 +317,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 lectures: getLectureContext(),
                 chapters: getChapterContext(),
                 homeworks: getHomeworkContext(),
-                files: getFileContext(fileIds.filter((id): id is string => id !== null)),
+                files: getFileContext(fileIds.filter((id) => id !== null)),
                 // exercises: activeChat.context.exercises, // these can stay as they are
             };
 

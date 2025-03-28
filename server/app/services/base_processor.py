@@ -276,7 +276,8 @@ class BaseProcessor:
         message: Message,
         model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,
-        initial_wait: int = 5
+        initial_wait: int = 5,
+        additional_files: List[File] = []
     ) -> AsyncGenerator[str, None]:
         """
         A streaming version of robust_generate that yields chunks of the response.
@@ -290,6 +291,11 @@ class BaseProcessor:
                 
                 # Extract content parts from the message
                 content_parts = []
+                # Add additional files to the content parts
+                if additional_files:
+                    content_parts.extend(additional_files)
+
+                # Add the message content to the content parts
                 for part in message.content:
                     if part["type"] == "text":
                         content_parts.append(part["text"])

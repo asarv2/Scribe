@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 from app.extensions import MESSAGES_DIR, UPLOAD_FOLDER
 from app.extensions import supabase
-from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt
+from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt, get_present_mode
 from app.utils.chat import get_critical_instructions
 from app.utils.get_content import process_special_tags
 from google.generativeai.types import File
@@ -111,6 +111,8 @@ class ChatProcessor(BaseProcessor):
                     system_prompt = get_general_student_prompt()
                 case 'general-teacher':
                     system_prompt = get_general_teacher_prompt()
+                case 'present':
+                    system_prompt = get_present_mode()
 
             prompt = (
                 "Now, continue the conversation using this style.\n"

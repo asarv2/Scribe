@@ -85,7 +85,7 @@ export const ChatInput = memo(({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (!loading && activeChat.prompt.trim()) {
+      if (!loading && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
         onSend();
       }
     }
@@ -678,7 +678,7 @@ export const ChatInput = memo(({
                     onClick={onSend}
                     size="lg"
                     loading={loading}
-                    disabled={!activeChat.prompt.trim()}
+                    disabled={!activeChat.prompt.trim() && recordedVideos.length === 0}
                     variant="subtle"
                     color="blue"
                   >
