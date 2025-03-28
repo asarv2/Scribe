@@ -622,7 +622,7 @@ export const MessageList = memo(({
     contextId: string,
     documentId?: string,
     textbookId?: string,
-    exerciseId?: string
+    exerciseId?: string,
   ) => {
     console.log(`Opening ${contextType} with ID: ${contextId}`);
 
@@ -639,6 +639,7 @@ export const MessageList = memo(({
         textbookId: undefined,
         chapterId: undefined,
         homeworkId: undefined,
+        fileId: undefined,
       }));
     }
     else if (contextType === 'chapters' && exerciseId) {
@@ -652,6 +653,7 @@ export const MessageList = memo(({
         textbookId: undefined,
         homeworkId: undefined,
         documentId: undefined,
+        fileId: undefined,
       }));
     }
     // For chapters
@@ -666,6 +668,7 @@ export const MessageList = memo(({
         exerciseId: undefined,
         lectureId: undefined,
         homeworkId: undefined,
+        fileId: undefined,
       }));
     }
     // For chapter exercises
@@ -682,6 +685,7 @@ export const MessageList = memo(({
         chapterId: undefined,
         lectureId: undefined,
         documentId: undefined,
+        fileId: undefined,
       }));
     }
     else if (contextType === 'files' && documentId) {
@@ -694,6 +698,7 @@ export const MessageList = memo(({
         textbookId: undefined,
         chapterId: undefined,
         homeworkId: undefined,
+        fileId: contextId,
       }));
     }
   };
@@ -804,14 +809,14 @@ export const MessageList = memo(({
             <Badge
               key={`file-${fileId}`}
               size="md"
-              color="purple"
+              color="violet"
               radius="xl"
               styles={{ root: { borderColor: 'white' } }}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 const document = fileDocuments?.find(d => d.file === fileId);
                 if (document) {
-                  handleEnhancedDocumentClick('files', fileId, document.id);
+                  handleEnhancedDocumentClick('files', fileId, document.id, undefined, undefined);
                 }
               }}
             >
@@ -1171,7 +1176,7 @@ export const MessageList = memo(({
                   </Group>
 
                   {/* Message container */}
-                  <Card
+                  {message.question && <Card
                     padding="sm"
                     radius="md"
                     style={{
@@ -1189,8 +1194,8 @@ export const MessageList = memo(({
                     {/* {index === 0 && !message.lectures?.length && !message.chapters?.length && !message.homeworks?.length &&
                           renderAutoAddedContextBadges()
                         } */}
-                  </Card>
-                  {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0) &&
+                  </Card>}
+                  {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0 || message.files?.length > 0) &&
                     renderMessageContext(message)
                   }
                 </Stack>
