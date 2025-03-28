@@ -1,19 +1,19 @@
 import { Button } from "@mantine/core";
-import { signInWithMicrosoft } from "@/utils/services/auth";
+import { signInWithMicrosoft, signInWithMicrosoftProfessor } from "@/utils/services/auth";
 import { notifications } from "@mantine/notifications";
 import MicrosoftIcon from "../Icons/MicrosoftIcon";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import classes from "./MicrosoftLoginButton.module.css";
 
-export default function MicrosoftLoginButton({ text = "Login with Microsoft" }: { text?: string }) {
+export default function MicrosoftLoginButton({ text = "Login with Microsoft (Student)", professor = false }: { text?: string, professor?: boolean }) {
     const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false);
     const router = useRouter();
     
     const handleSignInWithMicrosoft = async () => {
         setMicrosoftButtonLoading(true);
         try {
-            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
+            const { success, error, url } = await (professor ? signInWithMicrosoftProfessor(`${window.location.origin}/auth/callback`) : signInWithMicrosoft(`${window.location.origin}/auth/callback`));
             if (success && url) {
                 router.push(url);
             } else {
@@ -37,7 +37,7 @@ export default function MicrosoftLoginButton({ text = "Login with Microsoft" }: 
             }
             className={classes.microsoftButton}
         >
-            {text}
+            {professor ? "Login with Microsoft (Professor)" : text}
         </Button>
     )
 }

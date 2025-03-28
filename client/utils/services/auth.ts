@@ -93,6 +93,25 @@ export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success
     }
 }
 
+export const signInWithMicrosoftProfessor = async (redirectTo: string): Promise<{ success: boolean, error: string, url: string | null }> => {
+    const supabase = await useSupabaseServer(cookies());
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'azure',
+        options: {
+            scopes: 'openid profile email Files.Read',
+            queryParams: {
+                domain_hint: 'purdue.edu',
+            },
+            redirectTo: `${redirectTo}`
+        },
+    });
+    if (error) {
+        return { success: false, error: error.message, url: null };
+    } else {
+        return { success: true, error: "", url: data.url };
+    }
+}
+
 export const signInWithSSO = async (): Promise<{ success: boolean, error: string, url: string | null }> => {
     const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase.auth.signInWithSSO({

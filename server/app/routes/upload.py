@@ -1,3 +1,4 @@
+import math
 import re
 import json
 from fastapi import APIRouter, File, UploadFile, Form, Request, BackgroundTasks
@@ -955,7 +956,7 @@ async def process_file(
     file: UploadFile = File(None),
     file_path: str = Form(None),
     class_id: str = Form(...),
-    title: str = Form(None),
+    profile_id: str = Form(...),
     response_url: str = Form(None),
     start_parse: bool = Form(False)
 ):
@@ -978,7 +979,7 @@ async def process_file(
             filename = os.path.basename(file_path)
             
         # Determine file type based on extension
-        file_type = "unknown"
+        file_type = "other"
         ext = os.path.splitext(filename)[1].lower()
         
         if ext in ['.pdf']:
@@ -990,12 +991,28 @@ async def process_file(
         elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
             file_type = "image"
 
+        # Determine file length
+        file_length = 1
+        if file_type in ["audio", "video"]:
+            try:
+                from pydub import AudioSegment
+                media = AudioSegment.from_file(file_path)
+                file_length = len(media) / 1000  # Convert to seconds
+                # find how many 30 second chunks (rounded up)
+                file_length = math.ceil(file_length / 30)
+            except Exception as e:
+                logger.warning(f"Could not determine media length: {str(e)}")
+        else:
+            file_length = 1
+
         # Create file record in supabase
         file_response = supabase.table("files").insert({
             "class": class_id,
-            "title": title or os.path.splitext(filename)[0],
+            "title": filename,
+            "profile": profile_id,
             "type": file_type,
-            "parse_status": "pending",
+            "length": file_length,
+            "parse_status": "idle",
             "response_url": response_url or ""
         }).execute()
         
@@ -1027,25 +1044,11 @@ async def process_file(
             # Copy the file
             shutil.copy2(file_path, destination_path)
             file_path = destination_path
-            
-        # Update file length for audio/video files
-        if file_type in ["audio", "video", "video_audio"]:
-            try:
-                from pydub import AudioSegment
-                media = AudioSegment.from_file(file_path)
-                file_length = len(media) / 1000  # Convert to seconds
-                
-                # Update the file record with the length
-                supabase.table("files").update({
-                    "length": file_length
-                }).eq("id", file_id).execute()
-            except Exception as e:
-                logger.warning(f"Could not determine media length: {str(e)}")
         
         # Update file status to extracting
         supabase.table("files").update({
             "parse_status": "extracting",
-            "parse_error": None,
+            "parse_error": "",
             "last_parse_attempt": datetime.now().isoformat()
         }).eq("id", file_id).execute()
         
@@ -1058,7 +1061,7 @@ async def process_file(
         # Update file status to uploading
         supabase.table("files").update({
             "parse_status": "uploading",
-            "parse_error": None,
+            "parse_error": "",
             "last_parse_attempt": datetime.now().isoformat()
         }).eq("id", file_id).execute()
         

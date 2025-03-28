@@ -33,6 +33,8 @@ export type File = Database[SchemaName]["Tables"]["files"]["Row"]
 
 export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"]
 
+export type FileType = Database[SchemaName]["Enums"]["file_type"]
+
 export interface ChatMessage {
     id: number;
     title: string
@@ -50,14 +52,8 @@ export interface ChatMessage {
 }
 
 export interface ViewerMode {
-    contextActive: boolean; // whether we are on a document
-    contextOpen: boolean; // whether the viewer is open
-    audio: boolean; // whether the audio is open
-    video: boolean; // whether the video is open
-    recording: boolean; // whether the recording is open
-    inputActive: boolean; // whether the input is shown in immersive mode
-    paused: boolean; // whether the recording is paused
-    saved: boolean; // whether the recording is saved
+    active: boolean; // whether we are on a document
+    open: boolean; // whether the viewer is open
     immersive: boolean; // whether the viewer is in immersive mode
     documentId?: string; // this goes with either lecture or chapter
     lectureId?: string; // source of truth for lecture

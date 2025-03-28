@@ -731,6 +731,7 @@ export type Database = {
         Row: {
           class: string
           created_at: string
+          deleted: boolean
           id: string
           length: number
           profile: string
@@ -740,6 +741,7 @@ export type Database = {
         Insert: {
           class?: string
           created_at?: string
+          deleted?: boolean
           id?: string
           length?: number
           profile: string
@@ -749,6 +751,7 @@ export type Database = {
         Update: {
           class?: string
           created_at?: string
+          deleted?: boolean
           id?: string
           length?: number
           profile?: string
@@ -1370,7 +1373,7 @@ export type Database = {
         | "concept"
         | "review"
         | "other"
-      file_type: "audio" | "video" | "video_audio" | "image" | "pdf"
+      file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status:

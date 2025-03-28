@@ -243,8 +243,8 @@ export const handleDocumentClick = (
     if (contextType === 'lectures' && documentId) {
         setViewerMode(prev => ({
             ...prev,
-            contextActive: true,
-            contextOpen: true,
+            active: true,
+            open: true,
             documentId: documentId,
             lectureId: contextId,
             chapterId: undefined,
@@ -257,8 +257,8 @@ export const handleDocumentClick = (
     else if (contextType === 'chapters' && documentId && textbookId) {
         setViewerMode(prev => ({
             ...prev,
-            contextActive: true,
-            contextOpen: true,
+            active: true,
+            open: true,
             documentId: documentId,
             textbookId: textbookId,
             chapterId: contextId,
@@ -269,8 +269,8 @@ export const handleDocumentClick = (
     } else if (contextType === 'chapters' && exerciseId && textbookId) {
         setViewerMode(prev => ({
             ...prev,
-            contextActive: true,
-            contextOpen: true,
+            active: true,
+            open: true,
             chapterId: contextId,
             exerciseId: exerciseId,
             textbookId: textbookId,
@@ -281,8 +281,8 @@ export const handleDocumentClick = (
     } else if (contextType === 'homeworks' && exerciseId) {
         setViewerMode(prev => ({
             ...prev,
-            contextActive: true,
-            contextOpen: true,
+            active: true,
+            open: true,
             homeworkId: contextId,
             exerciseId: exerciseId,
             lectureId: undefined,
@@ -290,10 +290,15 @@ export const handleDocumentClick = (
     } else if (contextType === 'files' && documentId) {
         setViewerMode(prev => ({
             ...prev,
-            contextActive: true,
-            contextOpen: true,
+            active: true,
+            open: true,
             fileId: contextId,
             documentId: documentId,
+            lectureId: undefined,
+            chapterId: undefined,
+            textbookId: undefined,
+            exerciseId: undefined,
+            homeworkId: undefined,
         }));
     }
 };

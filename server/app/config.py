@@ -12,7 +12,10 @@ MODEL_REGISTRY = {
     "model": None,
     "processor": None,
     "initialized": False,
-    "lock": threading.Lock()
+    "lock": threading.Lock(),
+    "whisper_model": None,
+    "whisper_initialized": False,
+    "whisper_lock": threading.Lock()
 }
 
 class ModelManager:
@@ -21,8 +24,12 @@ class ModelManager:
         self.cache_dir = MODEL_CACHE_DIR
         self.model_save_path = os.path.join(self.cache_dir, "phi4_model")
         
-        # Create cache directory if it doesn't exist
+        # Whisper model settings
+        self.whisper_cache_dir = os.path.join(self.cache_dir, "whisper_models")
+        
+        # Create cache directories if they don't exist
         os.makedirs(self.cache_dir, exist_ok=True)
+        os.makedirs(self.whisper_cache_dir, exist_ok=True)
         
         # Prompt templates
         self.user_prompt = "<|user|>\n"
@@ -155,6 +162,63 @@ class ModelManager:
         warm_up_time = time.time() - warm_up_start
         print(f"Model warm-up completed in {warm_up_time:.2f} seconds")
 
+    def _get_whisper_model(self):
+        """Get Whisper model from global registry or load it if not available"""
+        global MODEL_REGISTRY
+        
+        # If model is already loaded in registry, return it
+        if MODEL_REGISTRY["whisper_initialized"]:
+            return MODEL_REGISTRY["whisper_model"]
+        
+        # Use lock to prevent multiple workers from loading the model simultaneously
+        with MODEL_REGISTRY["whisper_lock"]:
+            # Check again in case another thread loaded the model while waiting
+            if MODEL_REGISTRY["whisper_initialized"]:
+                return MODEL_REGISTRY["whisper_model"]
+            
+            # Check if this is a GPU worker or if GPU is available
+            is_gpu_worker = os.environ.get('GPU_WORKER') == 'true'
+            has_gpu = torch.cuda.is_available()
+            enable_whisper = os.environ.get('ENABLE_WHISPER', 'false').lower() == 'true'
+            
+            print(f"Loading Whisper model (full version: {enable_whisper})...")
+            start_time = time.time()
+            
+            # Force garbage collection before loading model
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            
+            # Import whisper here to avoid loading it unnecessarily
+            import whisper
+            
+            device = "cuda" if has_gpu and is_gpu_worker else "cpu"
+            
+            # Choose model size based on ENABLE_WHISPER environment variable
+            model_size = "tiny"
+            if enable_whisper and has_gpu and is_gpu_worker:
+                model_size = "large-v3"  # Using large-v3 which is the "turbo" version
+                print("Loading Whisper large-v3 (turbo) model...")
+            else:
+                print("Loading Whisper tiny model...")
+            
+            # Load the model
+            whisper_model = whisper.load_model(model_size, download_root=self.whisper_cache_dir).to(device)
+            
+            load_time = time.time() - start_time
+            print(f"Whisper {model_size} model loaded in {load_time:.2f} seconds")
+            
+            # Store in global registry
+            MODEL_REGISTRY["whisper_model"] = whisper_model
+            MODEL_REGISTRY["whisper_initialized"] = True
+            
+            # Run garbage collection to free memory
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            
+            return whisper_model
+
 # Initialize model manager
 model_manager = ModelManager()
 
@@ -162,9 +226,14 @@ if os.environ.get('GPU_WORKER') == 'true':
     import torch
     if torch.cuda.is_available():
         try:
-            print("Loading model in GPU worker at startup...")
+            print("Loading models in GPU worker at startup...")
+            # Load Phi-4 model
             model, processor = model_manager._get_model()
             model_manager._warm_up_model()  # Add warm-up step
-            print("Model loaded successfully in GPU worker")
+            print("Phi-4 model loaded successfully in GPU worker")
+            
+            # Load Whisper model
+            whisper_model = model_manager._get_whisper_model()
+            print("Whisper model loaded successfully in GPU worker")
         except Exception as e:
-            print(f"Warning: Could not load model on startup: {str(e)}")
+            print(f"Warning: Could not load models on startup: {str(e)}")

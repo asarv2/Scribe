@@ -84,14 +84,13 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
         if (viewerMode.immersive) {
             setViewerMode(prev => ({
                 ...prev,
-                contextActive: false,
-                contextOpen: false,
-                
+                active: false,
+                open: false,                
             }));
-        } else if (viewerMode.contextActive) {
+        } else if (viewerMode.active) {
             setViewerMode(prev => ({
                 ...prev,
-                contextActive: false,
+                active: false,
             }));
         }
     };

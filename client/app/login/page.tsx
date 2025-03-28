@@ -121,6 +121,7 @@ export default function Login() {
                         <Divider />
 
                         <MicrosoftLoginButton />
+                        <MicrosoftLoginButton professor />
                     </Stack>
                 </Center>
             </Container>

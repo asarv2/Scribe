@@ -73,7 +73,7 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "wavesurfer-react": "^3.0.4",
-    "wavesurfer.js": "^7.9.3"
+    "wavesurfer.js": "^7.9.4"
   },
   "devDependencies": {
     "@types/html-to-pdfmake": "^2.4.4",

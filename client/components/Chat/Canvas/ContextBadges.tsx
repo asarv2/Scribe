@@ -223,6 +223,20 @@ export const ContextBadges = memo(({
 
             {activeChat.context.homeworks.map(homeworkId => {
                 const homework = homeworkData?.find(h => h.id === homeworkId);
+
+                // find the first exercise in the homework
+                const exercise = exercises?.find(e => e.homework === homeworkId);
+                if (!exercise) return '/placeholder_image.svg';
+
+                let imageUrl = '/placeholder_image.svg';
+                // find the textbook document that has the same page number, but null for the chapter, homework and exercise
+                const textbookDocumentHomework = textbookDocuments?.find(d => d.homeworks.includes(homeworkId));
+                if (textbookDocumentHomework) {
+                    imageUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentHomework.textbook}/${textbookDocumentHomework.id}.png`;
+                } else {
+                    imageUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`;
+                }
+
                 return homework && (
                     <Badge
                         key={homeworkId}
@@ -230,9 +244,7 @@ export const ContextBadges = memo(({
                         style={{ cursor: 'pointer' }}
                         leftSection={
                             <Avatar
-                                src={exercises?.find(e => e.homework === homeworkId) ?
-                                    `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercises.find(e => e.homework === homeworkId)?.id}.png` :
-                                    '/placeholder_image.svg'}
+                                src={imageUrl}
                                 size="xs"
                                 radius="sm"
                             />

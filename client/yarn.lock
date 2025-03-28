@@ -3736,14 +3736,9 @@ postcss-selector-parser@^6.1.1:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
 
-postcss-simple-vars@^7.0.0:
+postcss-simple-vars@^7.0.0, postcss-simple-vars@^7.0.1:
   version "7.0.1"
   resolved "https://registry.npmjs.org/postcss-simple-vars/-/postcss-simple-vars-7.0.1.tgz"
-  integrity sha512-5GLLXaS8qmzHMOjVxqkk1TZPf1jMqesiI7qLhnlyERalG0sMbHIbJqrcnrpmZdKCLglHnRHoEBB61RtGTsj++A==
-
-postcss-simple-vars@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/postcss-simple-vars/-/postcss-simple-vars-7.0.1.tgz#836b3097a54dcd13dbd3c36a5dbdd512fad2954c"
   integrity sha512-5GLLXaS8qmzHMOjVxqkk1TZPf1jMqesiI7qLhnlyERalG0sMbHIbJqrcnrpmZdKCLglHnRHoEBB61RtGTsj++A==
 
 postcss@8.4.31:
@@ -4868,10 +4863,10 @@ wavesurfer-react@^3.0.4:
   resolved "https://registry.yarnpkg.com/wavesurfer-react/-/wavesurfer-react-3.0.4.tgz#018c0c3928c688a5064b487cf8256d5a96c3fce7"
   integrity sha512-Eq+9ihd28UhX23ZVRrg9llpfo4ejUbYZ8oMEx+XwoymHiwLw44GwYVAo+iUPl9W8aVxuoncBKjbslukvqv0kFw==
 
-wavesurfer.js@^7.9.3:
-  version "7.9.3"
-  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-7.9.3.tgz#174d65da0075c97740409c9de82ec6a27f294f9a"
-  integrity sha512-GgYIQjZYu4Q2tm+qrFhBCoQm+K7+SGqulEsKXndIjmJ4b/drA1umjgQlDc+wGotGAef/8hH/gu5f3bf19yDyxw==
+wavesurfer.js@^7.9.4:
+  version "7.9.4"
+  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-7.9.4.tgz#fab2e52a4bf8e256f6f13dd85cdfed2bc7487d7d"
+  integrity sha512-ahOMvrOKo5jULNnXq8Ske8v/ZStoNNTDjYohvgLNerUFuh+6fJSt7wlxFesEXmnlcTnjMy5/tIzhn9KusjO6bg==
 
 web-namespaces@^2.0.0:
   version "2.0.1"

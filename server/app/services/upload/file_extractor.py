@@ -14,6 +14,7 @@ import mimetypes
 from PIL import Image
 import io
 import cv2  # For video frame extraction
+from app.config import model_manager
 
 load_dotenv()
 
@@ -33,7 +34,7 @@ class FileExtractor:
         if self.file_type in ['audio', 'video', 'video_audio']:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
             logger.info(f"Using device for audio processing: {self.device}")
-            self.model = whisper.load_model("base").to(self.device)
+            self.model = model_manager._get_whisper_model()
         
         logger.info(f"Initialized FileExtractor for file: {file_path} (type: {self.file_type})")
 
@@ -77,7 +78,7 @@ class FileExtractor:
                 return self._extract_audio_content()
             elif self.file_type == 'image':
                 return self._extract_image_content()
-            elif self.file_type == 'video' or self.file_type == 'video_audio':
+            elif self.file_type == 'video':
                 return self._extract_video_content()
             else:
                 logger.warning(f"Unsupported file type: {self.file_type}")
@@ -288,11 +289,30 @@ class FileExtractor:
         try:
             # Upload each content item to the documents table and store images
             for item in content_items:
-                document_data = {
-                    'file': file_id,
-                    'text': item.get('text', ''),
-                    'processed': False
-                }
+                if item['type'] == 'pdf_page':
+                    document_data = {
+                        'page': item['page'],
+                        'file': file_id,
+                        'text': item.get('text', ''),
+                        'processed': False
+                    }
+                elif item['type'] in ['audio_chunk', 'video_chunk']:
+                    document_data = {
+                        'page': item['chunk_num'],
+                        'file': file_id,
+                        'text': item.get('text', ''),
+                        'processed': False
+                    }
+                elif item['type'] == 'image':
+                    document_data = {
+                        'page': 1,
+                        'file': file_id,
+                        'text': '',
+                        'processed': False
+                    }
+                else:
+                    logger.warning(f"Unsupported content type: {item['type']}")
+                    continue
                 
                 # Add type-specific fields
                 if item['type'] == 'pdf_page':
@@ -318,7 +338,7 @@ class FileExtractor:
             # Update file status
             supabase.table("files").update({
                 "parse_status": "complete",
-                "parse_error": None
+                "parse_error": ""
             }).eq("id", file_id).execute()
 
         except Exception as e:

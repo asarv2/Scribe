@@ -50,7 +50,7 @@ export default function FileViewer({
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["fileDocuments", fileId],
+        queryKey: ["fileDocuments", classId],
         queryFn: () => getFileDocuments(supabase, [fileId])
     })
 
@@ -64,58 +64,60 @@ export default function FileViewer({
         queryFn: () => getUser(supabase),
     })
 
+    const filteredDocuments = documents?.filter(doc => doc.file === fileId);
+
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !file || !documentId) return "/placeholder_image.svg";
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${documentId}.png`;
     }
 
     const handleSwipe = (touchEndX: number) => {
-        if (touchStartX !== null && documents) {
+        if (touchStartX !== null && filteredDocuments) {
             const deltaX = touchStartX - touchEndX;
             const minSwipeDistance = 50;
 
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
-            if (deltaX > minSwipeDistance && currentIndex < documents.length - 1) {
+            const currentIndex = filteredDocuments.findIndex(doc => doc.id === activeDocumentId);
+            if (deltaX > minSwipeDistance && currentIndex < filteredDocuments.length - 1) {
                 // Swipe left (next page)
-                handlePageClick(documents[currentIndex + 1].id);
+                handlePageClick(filteredDocuments[currentIndex + 1].id);
             } else if (deltaX < -minSwipeDistance && currentIndex > 0) {
                 // Swipe right (previous page)
-                handlePageClick(documents[currentIndex - 1].id);
+                handlePageClick(filteredDocuments[currentIndex - 1].id);
             }
         }
         setTouchStartX(null);
     };
 
     useEffect(() => {
-        if (documents && documents.length > 0 && !activeDocumentId) {
+        if (filteredDocuments && filteredDocuments.length > 0 && !activeDocumentId) {
             if (initialDocumentId) {
                 setActiveDocumentId(initialDocumentId);
             } else if (page) {
                 // Handle both single page numbers and page ranges (e.g., "p.5" or "pp.5-7")
                 const pageNum = parseInt(page.replace(/[^0-9]/g, ''));
-                const matchingDoc = documents.find(doc => doc.page === pageNum);
+                const matchingDoc = filteredDocuments.find(doc => doc.page === pageNum);
                 if (matchingDoc) {
                     setActiveDocumentId(matchingDoc.id);
                 } else {
                     // Default to first page if specified page not found
-                    setActiveDocumentId(documents[0].id);
+                    setActiveDocumentId(filteredDocuments[0].id);
                 }
             } else {
                 // No page specified, default to first page
-                setActiveDocumentId(documents[0].id);
+                setActiveDocumentId(filteredDocuments[0].id);
             }
         }
-    }, [documents, activeDocumentId, page, initialDocumentId]);
+    }, [filteredDocuments, activeDocumentId, page, initialDocumentId]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (!documents) return;
-            const currentIndex = documents.findIndex(doc => doc.id === activeDocumentId);
+            if (!filteredDocuments) return;
+            const currentIndex = filteredDocuments.findIndex(doc => doc.id === activeDocumentId);
 
             if (event.key === 'ArrowLeft' && currentIndex > 0) {
-                handlePageClick(documents[currentIndex - 1].id);
-            } else if (event.key === 'ArrowRight' && currentIndex < documents.length - 1) {
-                handlePageClick(documents[currentIndex + 1].id);
+                handlePageClick(filteredDocuments[currentIndex - 1].id);
+            } else if (event.key === 'ArrowRight' && currentIndex < filteredDocuments.length - 1) {
+                handlePageClick(filteredDocuments[currentIndex + 1].id);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -123,7 +125,7 @@ export default function FileViewer({
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [activeDocumentId, documents]);
+    }, [activeDocumentId, filteredDocuments]);
 
     useEffect(() => {
         if (previewScrollRef.current) {
@@ -179,7 +181,7 @@ export default function FileViewer({
                     >
                         <Image
                             src={getActiveImage(activeDocumentId)}
-                            alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                            alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
                             width={500}
                             height={500}
                             style={{
@@ -205,12 +207,12 @@ export default function FileViewer({
                                 zIndex: 100,
                             }}
                             onClick={() => {
-                                const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                                if (currentIndex > 0 && documents) {
-                                    handlePageClick(documents[currentIndex - 1].id);
+                                const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                if (currentIndex > 0 && filteredDocuments) {
+                                    handlePageClick(filteredDocuments[currentIndex - 1].id);
                                 }
                             }}
-                            disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === 0}
+                            disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === 0}
                             aria-label="Previous Slide"
                         >
                             <IconArrowLeft size={24} />
@@ -227,12 +229,12 @@ export default function FileViewer({
                                 zIndex: 100,
                             }}
                             onClick={() => {
-                                const currentIndex = documents?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
-                                if (documents && currentIndex < documents.length - 1) {
-                                    handlePageClick(documents[currentIndex + 1].id);
+                                const currentIndex = filteredDocuments?.findIndex(doc => doc.id === activeDocumentId) ?? 0;
+                                if (filteredDocuments && currentIndex < filteredDocuments.length - 1) {
+                                    handlePageClick(filteredDocuments[currentIndex + 1].id);
                                 }
                             }}
-                            disabled={!documents || documents.findIndex(doc => doc.id === activeDocumentId) === documents.length - 1}
+                            disabled={!filteredDocuments || filteredDocuments.findIndex(doc => doc.id === activeDocumentId) === filteredDocuments.length - 1}
                             aria-label="Next Slide"
                         >
                             <IconArrowRight size={24} />
@@ -256,7 +258,7 @@ export default function FileViewer({
                                     textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
                                 }}
                             >
-                                Page {documents?.find(doc => doc.id === activeDocumentId)?.page}
+                                Page {filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}
                             </Text>
                         </Box>
                     </Box>
@@ -287,7 +289,7 @@ export default function FileViewer({
                                 width: '100%'
                             }}
                         >
-                            {documents?.map((doc) => (
+                            {filteredDocuments?.map((doc) => (
                                 <Box
                                     key={doc.id}
                                     data-document={doc.id}
@@ -335,7 +337,7 @@ export default function FileViewer({
                         </Stack>
                     ) : (
                         <Text fw={500} size="sm">
-                            <Latex>{documents?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
+                            <Latex>{filteredDocuments?.find((doc) => doc.id === activeDocumentId)?.description ?? ""}</Latex>
                         </Text>
                     )}
                 </Box>
@@ -347,7 +349,7 @@ export default function FileViewer({
                 size="xl"
                 padding="md"
                 centered
-                title={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                title={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
             >
                 <Box
                     style={{
@@ -359,7 +361,7 @@ export default function FileViewer({
                 >
                     <Image
                         src={getActiveImage(activeDocumentId)}
-                        alt={`Page ${documents?.find(doc => doc.id === activeDocumentId)?.page}`}
+                        alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
                         width={1200}
                         height={1200}
                         style={{

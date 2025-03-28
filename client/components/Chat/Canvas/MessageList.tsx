@@ -42,6 +42,8 @@ import FadeList from "./FadeList";
 import MessageViewer from "@/components/Viewer/MessageViewer";
 import { getFigures } from "@/utils/queries/get-figures";
 import FigureViewer from "@/components/Viewer/FigureViewer";
+import { getFiles } from "@/utils/queries/get-files";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 interface MessageListProps {
   chatId: string;
@@ -145,6 +147,17 @@ export const MessageList = memo(({
     queryKey: ["homeworkExercises", classId],
     queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
     enabled: !!homeworks
+  });
+
+  const { data: files } = useQuery({
+    queryKey: ["files", classId],
+    queryFn: () => getFiles(supabase, [classId]),
+  });
+
+  const { data: fileDocuments } = useQuery({
+    queryKey: ["fileDocuments", classId],
+    queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
+    enabled: !!files
   });
 
   const { data: figures } = useQuery({
@@ -651,7 +664,7 @@ export const MessageList = memo(({
 
   // Get document label for display
   const getDocumentLabel = (
-    type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise',
+    type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise' | 'files',
     doc?: Document,
     exercise?: Exercise,
     range?: string
@@ -668,6 +681,9 @@ export const MessageList = memo(({
     } else if (type === 'homework-problem' && exercise) {
       const homework = homeworks?.find(h => h.id === exercise.homework);
       return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number} ${range ? `p.${range}` : ''}`;
+    } else if (type === 'files' && doc) {
+      const file = files?.find(f => f.id === doc.file);
+      return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc.page}`}`;
     }
     return 'Document Reference';
   };
@@ -750,7 +766,7 @@ export const MessageList = memo(({
 
   // Enhanced document click handler
   const handleEnhancedDocumentClick = (
-    contextType: 'lectures' | 'chapters' | 'homeworks',
+    contextType: 'lectures' | 'chapters' | 'homeworks' | 'files',
     contextId: string,
     documentId?: string,
     textbookId?: string,
@@ -763,8 +779,8 @@ export const MessageList = memo(({
       // Use the setViewerMode function prop instead of directly setting state
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         documentId,
         lectureId: contextId,
         exerciseId: undefined,
@@ -776,8 +792,8 @@ export const MessageList = memo(({
     else if (contextType === 'chapters' && exerciseId) {
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         chapterId: contextId,
         exerciseId,
         lectureId: undefined,
@@ -790,8 +806,8 @@ export const MessageList = memo(({
     else if (contextType === 'chapters' && textbookId) {
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         documentId: documentId || undefined,
         textbookId,
         chapterId: contextId,
@@ -806,14 +822,26 @@ export const MessageList = memo(({
     else if (contextType === 'homeworks' && exerciseId) {
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         homeworkId: contextId,
         exerciseId,
         textbookId: undefined,
         chapterId: undefined,
         lectureId: undefined,
         documentId: undefined,
+      }));
+    }
+    else if (contextType === 'files' && documentId) {
+      setViewerMode(prev => ({
+        ...prev,
+        active: true,
+        open: true,
+        documentId,
+        lectureId: undefined,
+        textbookId: undefined,
+        chapterId: undefined,
+        homeworkId: undefined,
       }));
     }
   };
@@ -830,8 +858,9 @@ export const MessageList = memo(({
     const hasLectures = message.lectures && message.lectures.length > 0;
     const hasChapters = message.chapters && message.chapters.length > 0;
     const hasHomeworks = message.homeworks && message.homeworks.length > 0;
+    const hasFiles = message.files && message.files.length > 0;
 
-    if (!hasLectures && !hasChapters && !hasHomeworks) {
+    if (!hasLectures && !hasChapters && !hasHomeworks && !hasFiles) {
       return null;
     }
 
@@ -913,6 +942,32 @@ export const MessageList = memo(({
             </Badge>
           );
         })}
+
+        {/* Render file badges */}
+        {hasFiles && message.files.map((fileId: string) => {
+          const file = files?.find(f => f.id === fileId);
+          if (!file) return null;
+
+          return (
+            <Badge
+              key={`file-${fileId}`}
+              size="md"
+              color="purple"
+              radius="xl"
+              styles={{ root: { borderColor: 'white' } }}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                const document = fileDocuments?.find(d => d.file === fileId);
+                if (document) {
+                  handleEnhancedDocumentClick('files', fileId, document.id);
+                }
+              }}
+            >
+              {file.title}
+            </Badge>
+          );
+        })}
+
       </Group>
     );
   };
@@ -1022,13 +1077,13 @@ export const MessageList = memo(({
     // find all of the distinct lectures and chapters in the group
     const groupLectures = Array.from(new Set(group.documents.filter(doc => doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
     const groupChapters = Array.from(new Set(group.documents.filter(doc => doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
-
+    const groupFiles = Array.from(new Set(group.documents.filter(doc => doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
     // get the page ranges for each lecture and chapter
     const lecturePageRanges = groupLectures.map(lecture => getPageRanges(group.documents.filter(doc => doc.lecture === lecture), [])).flat()
     const chapterPageRanges = groupChapters.map(chapter => getPageRanges(group.documents.filter(doc => doc.chapter === chapter), [])).flat()
-
+    const filePageRanges = groupFiles.map(file => getPageRanges(group.documents.filter(doc => doc.file === file), [])).flat()
     // combine the page ranges for each lecture and chapter
-    const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges]
+    const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges, ...filePageRanges]
 
     // find all of the distinct exercises and chapters in the group
     const groupExercises = Array.from(new Set(group.exercises.map(exercise => exercise.homework).filter((homeworkId) => homeworkId !== null)))
@@ -1041,7 +1096,7 @@ export const MessageList = memo(({
         {allDocumentPageRanges.length > 0 && allDocumentPageRanges.map((pageRange, pageRangeIndex) => {
           const lectureDocument: boolean = pageRange.startDocument?.lecture !== null;
           const chapterDocument: boolean = pageRange.startDocument?.textbook !== null && pageRange.startDocument?.chapter !== null;
-
+          const fileDocument: boolean = pageRange.startDocument?.file !== null;
           if (lectureDocument) {
             return (
               <Badge
@@ -1096,6 +1151,36 @@ export const MessageList = memo(({
               >
                 {getDocumentLabel(
                   'chapter',
+                  pageRange.startDocument ?? undefined,
+                  undefined,
+                  pageRange.range
+                )}
+              </Badge>
+            );
+          } else if (fileDocument) {
+            return (
+              <Badge
+                key={pageRangeIndex}
+                color="purple"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (pageRange.startDocument?.file) {
+                    handleEnhancedDocumentClick('files', pageRange.startDocument.file, pageRange.startDocument.id);
+                  }
+                }}
+                leftSection={
+                  <Avatar
+                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${pageRange.startDocument?.file}/${pageRange.startDocument?.id}.png`}
+                    size="xs"
+                    radius="sm"
+                  />
+                }
+                rightSection={
+                  <IconChevronRight size={16} />
+                }
+              >
+                {getDocumentLabel(
+                  'files',
                   pageRange.startDocument ?? undefined,
                   undefined,
                   pageRange.range
@@ -1319,7 +1404,7 @@ export const MessageList = memo(({
                               } else if (segment.figureId && figures) {
                                 return (
                                   figures.find(f => f.id === segment.figureId) && (
-                                    <FigureViewer figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
+                                    <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
                                   )
                                 )
                               } else if (segment.summaryId && summaries) {
