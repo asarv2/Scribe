@@ -20,10 +20,10 @@ export const filterCodeBlocks = (text: string): string => {
 };
 
 // Split text by document references and preserve formatting
-export const splitTextByDocuments = (text: string): { text: string; documentId: string | null; exerciseId: string | null; documentType: 'lecture' | 'chapter' | 'chapter_exercise' | 'homework_problem' | null }[] => {
+export const splitTextByDocuments = (text: string): { text: string; documentId: string | null; exerciseId: string | null; documentType: 'lecture' | 'chapter' | 'chapter_exercise' | 'homework_problem' | 'file' | null }[] => {
     if (!text) return [];
 
-    const documentTags: Array<{id: string, type: 'lecture' | 'chapter'}> = [];
+    const documentTags: Array<{id: string, type: 'lecture' | 'chapter' | 'file'}> = [];
     const exerciseTags: Array<{id: string, type: 'chapter_exercise' | 'homework_problem'}> = [];
     let cleanedText = text;
 
@@ -31,6 +31,7 @@ export const splitTextByDocuments = (text: string): { text: string; documentId: 
     const documentPatterns = [
         { regex: /<DOCUMENT_LECTURE>([^<]+)<\/DOCUMENT_LECTURE>/g, type: 'lecture' },
         { regex: /<DOCUMENT_CHAPTER>([^<]+)<\/DOCUMENT_CHAPTER>/g, type: 'chapter' },
+        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>/g, type: 'file' }
     ];
 
     const exercisePatterns = [
@@ -41,7 +42,7 @@ export const splitTextByDocuments = (text: string): { text: string; documentId: 
     documentPatterns.forEach(pattern => {
         let match;
         while ((match = pattern.regex.exec(text)) !== null) {
-            documentTags.push({ id: match[1], type: pattern.type as 'lecture' | 'chapter' });
+            documentTags.push({ id: match[1], type: pattern.type as 'lecture' | 'chapter' | 'file' });
             // Replace the document tag with empty string to preserve formatting
             cleanedText = cleanedText.replace(match[0], '');
         }
@@ -56,7 +57,7 @@ export const splitTextByDocuments = (text: string): { text: string; documentId: 
         }
     });
 
-    const result: { text: string; documentId: string | null; exerciseId: string | null; documentType: 'lecture' | 'chapter' | 'chapter_exercise' | 'homework_problem' | null }[] = [];
+    const result: { text: string; documentId: string | null; exerciseId: string | null; documentType: 'lecture' | 'chapter' | 'chapter_exercise' | 'homework_problem' | 'file' | null }[] = [];
     
     // Add the main text if it exists (with preserved formatting)
     if (cleanedText.trim()) {
@@ -251,6 +252,7 @@ export const handleDocumentClick = (
             textbookId: undefined,
             exerciseId: undefined,
             homeworkId: undefined,
+            fileId: undefined,
         }));
     }
     // For chapters
@@ -265,6 +267,7 @@ export const handleDocumentClick = (
             lectureId: undefined,
             exerciseId: undefined,
             homeworkId: undefined,
+            fileId: undefined,
         }));
     } else if (contextType === 'chapters' && exerciseId && textbookId) {
         setViewerMode(prev => ({
@@ -277,6 +280,7 @@ export const handleDocumentClick = (
             lectureId: undefined,
             homeworkId: undefined,
             documentId: undefined,
+            fileId: undefined,
         }));
     } else if (contextType === 'homeworks' && exerciseId) {
         setViewerMode(prev => ({
@@ -286,6 +290,7 @@ export const handleDocumentClick = (
             homeworkId: contextId,
             exerciseId: exerciseId,
             lectureId: undefined,
+            fileId: undefined,
         }));
     } else if (contextType === 'files' && documentId) {
         setViewerMode(prev => ({

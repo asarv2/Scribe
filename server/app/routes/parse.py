@@ -532,7 +532,7 @@ async def parse_file(request: ParseRequest):
         # Update file status to parsing
         supabase.table("files").update({
             "parse_status": "parsing",
-            "parse_error": None,
+            "parse_error": "",
             "last_parse_attempt": datetime.now().isoformat()
         }).eq("id", file_id).execute()
 
@@ -569,7 +569,7 @@ async def parse_file(request: ParseRequest):
         processor = FileProcessor(
             course_title=class_title,
             file_title=file_title,
-            file_type=file_type
+            file_type=file_type,
         )
         
         # Process in batches
@@ -580,10 +580,10 @@ async def parse_file(request: ParseRequest):
             batch = documents_to_process[i:i + batch_size]
             print(f"Processing batch {i//batch_size + 1}: {len(batch)} documents")
             
-            # Get images from supabase for file types that have images
+            # Get images from supabase only for PDF and image files
             images = []
             
-            if file_type in ['pdf', 'image', 'video', 'video_audio']:
+            if file_type in ['pdf', 'image']:
                 try:
                     for doc in batch:
                         # Download image
@@ -619,11 +619,12 @@ async def parse_file(request: ParseRequest):
                     "page": doc["page"],
                     "text": doc.get("text", ""),
                     "start_time": doc.get("start_time"),
-                    "end_time": doc.get("end_time")
+                    "end_time": doc.get("end_time"),
+                    "file_name": doc.get("file_name")  # Include file_name for audio/video chunks
                 }
                 
-                # Add image if available
-                if file_type in ['pdf', 'image', 'video', 'video_audio'] and j < len(images) and images[j]:
+                # Add image if available (only for PDF and image files)
+                if file_type in ['pdf', 'image'] and j < len(images) and images[j]:
                     doc_data["image"] = images[j]
                 
                 processed_documents.append(doc_data)
@@ -667,7 +668,7 @@ async def parse_file(request: ParseRequest):
         # Update file status to complete
         supabase.table("files").update({
             "parse_status": "complete",
-            "parse_error": None
+            "parse_error": ""
         }).eq("id", file_id).execute()
         
         return {

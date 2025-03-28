@@ -149,10 +149,12 @@ export const MessageList = memo(({
     enabled: !!homeworks
   });
 
-  const { data: files } = useQuery({
-    queryKey: ["files", classId],
-    queryFn: () => getFiles(supabase, [classId]),
-  });
+  const { data: files, isLoading: loadingFiles } = useQuery({
+    queryKey: ["files", profile?.id, classId],
+    queryFn: () => getFiles(supabase, profile!.id, [classId]),
+    enabled: !!profile
+});
+
 
   const { data: fileDocuments } = useQuery({
     queryKey: ["fileDocuments", classId],
@@ -418,246 +420,96 @@ export const MessageList = memo(({
   const renderWelcomeMessages = () => {
     return (
       <Stack style={{ width: viewerMode.immersive ? "100%" : "auto" }}>
-        {(!existingChat && (chatId === 'new')) && (
-          <Flex gap="md" align="flex-start">
-            <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
-              <Group gap="xs" align="center">
-                <Avatar
-                  src={professor ? getAvatarUrl(professor.id) : undefined}
-                  size="sm"
-                  radius="xl"
-                  alt="AI Assistant"
-                />
-                <Text size="sm" c="dimmed">
-                  {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                </Text>
-              </Group>
+        <Flex gap="md" align="flex-start">
+          <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
+            <Group gap="xs" align="center">
+              <Avatar
+                src={professor ? getAvatarUrl(professor.id) : undefined}
+                size="sm"
+                radius="xl"
+                alt="AI Assistant"
+              />
+              <Text size="sm" c="dimmed">
+                {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+              </Text>
+            </Group>
 
-              <Card
-                padding="sm"
-                radius="md"
-                style={{
-                  backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                  minWidth: "200px",
-                  width: "100%",
-                  maxWidth: "100%",
-                  border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
-                  position: "relative"
-                }}
-              >
-                <Stack gap="sm">
-                  <Flex justify="space-between" align="center">
-                    <Text>
-                      Hi {profile?.first_name || 'there'}, how can I assist you today?
-                    </Text>
-                    {/* {(profile?.admin || profile?.professor) && (
-                      <Group justify="flex-end">
-                        <Group gap="xs" align="center">
-                          <Badge size="xs" variant="light" color="blue">Teacher</Badge>
-                          <Checkbox
-                            size="xs"
-                            checked={activeChat.teacher}
-                            onChange={() => setActiveChat((prev) => ({
-                              ...prev,
-                              teacher: !prev.teacher,
-                              chatType: prev.teacher ? 'general-student' : 'general-teacher'
-                            }))}
-                          />
-                        </Group>
-                      </Group>
-                    )} */}
-                  </Flex>
-                  <Flex justify="space-between" align="center">
-                    <Group gap="xs">
-                      {!activeChat.teacher ? (
-                        <>
-                          {/* Student options */}
-                          <Button
-                            variant="light"
-                            color="green"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'concept'
-                            }))}
-                          >
-                            Learn
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="indigo"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'homework-student'
-                            }))}
-                          >
-                            Homework
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="cyan"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'review'
-                            }))}
-                          >
-                            Test-Prep
-                          </Button>
-                        </>
+            <Card
+              padding="sm"
+              radius="md"
+              style={{
+                backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                minWidth: "200px",
+                width: "100%",
+                maxWidth: "100%",
+                border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
+                position: "relative"
+              }}
+            >
+              <Text>
+                {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
+                  <>
+                    {/* Student follow-up text */}
+                    {existingChat ? (
+                      // Use existingChat data when available
+                      existingChat.type === 'concept' ? (
+                        <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
+                      ) : existingChat.type === 'homework-student' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
+                      ) : existingChat.type === 'present' ? (
+                        <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
+                      ) : existingChat.type === 'review' ? (
+                        <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
                       ) : (
-                        <>
-                          {/* Teacher options */}
-                          <Button
-                            variant="light"
-                            color="green"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'method'
-                            }))}
-                          >
-                            Methodology
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="indigo"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'homework-professor'
-                            }))}
-                          >
-                            Homework
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="cyan"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'generate'
-                            }))}
-                          >
-                            Generate
-                          </Button>
-                        </>
-                      )}
-                    </Group>
-                    {/* Clear button in bottom right */}
-                    {activeChat.chatType &&
-                      !activeChat.chatType.startsWith('general') && (
-                        <Group justify="flex-end" mt="xs">
-                          <Tooltip label="Clear selection">
-                            <ActionIcon
-                              variant="subtle"
-                              color="red"
-                              size="md"
-                              onClick={() => setActiveChat((prev) => ({
-                                ...prev,
-                                chatType: prev.teacher ? 'general-student' : 'general-teacher'
-                              }))}
-                              title="Clear Selection"
-                            >
-                              <IconRefresh size={18} />
-                            </ActionIcon>
-                          </Tooltip>
-                        </Group>
-                      )}
-                  </Flex>
-                </Stack>
-              </Card>
-            </Stack>
-          </Flex>
-        )}
-
-        {/* Only show follow-up message if:
-            1. It's a new chat with a non-general chat type, OR
-            2. It's an existing chat with a non-general chat type */}
-        {((existingChat && !existingChat.type.startsWith('general')) ||
-          (!existingChat && activeChat.chatType && !activeChat.chatType.startsWith('general'))) && (
-            <Flex gap="md" align="flex-start">
-              <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
-                <Group gap="xs" align="center">
-                  <Avatar
-                    src={professor ? getAvatarUrl(professor.id) : undefined}
-                    size="sm"
-                    radius="xl"
-                    alt="AI Assistant"
-                  />
-                  <Text size="sm" c="dimmed">
-                    {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                  </Text>
-                </Group>
-
-                <Card
-                  padding="sm"
-                  radius="md"
-                  style={{
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                    minWidth: "200px",
-                    width: "100%",
-                    maxWidth: "100%",
-                    border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
-                    position: "relative"
-                  }}
-                >
-                  <Text>
-                    {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
-                      <>
-                        {/* Student follow-up text */}
-                        {existingChat ? (
-                          // Use existingChat data when available
-                          existingChat.type === 'concept' ? (
-                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                          ) : existingChat.type === 'homework-student' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                          ) : existingChat.type === 'review' ? (
-                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        ) : (
-                          // Fall back to activeChat data for new chats
-                          activeChat.chatType === 'concept' ? (
-                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                          ) : activeChat.chatType === 'homework-student' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                          ) : activeChat.chatType === 'review' ? (
-                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        )}
-                      </>
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
                     ) : (
-                      <>
-                        {/* Teacher follow-up text */}
-                        {existingChat ? (
-                          // Use existingChat data when available
-                          existingChat.type === 'method' ? (
-                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                          ) : existingChat.type === 'homework-professor' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                          ) : existingChat.type === 'generate' ? (
-                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        ) : (
-                          // Fall back to activeChat data for new chats
-                          activeChat.chatType === 'method' ? (
-                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                          ) : activeChat.chatType === 'homework-professor' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                          ) : activeChat.chatType === 'generate' ? (
-                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        )}
-                      </>
+                      // Fall back to activeChat data for new chats
+                      activeChat.chatType === 'concept' ? (
+                        <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
+                      ) : activeChat.chatType === 'homework-student' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
+                      ) : activeChat.chatType === 'present' ? (
+                        <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
+                      ) : activeChat.chatType === 'review' ? (
+                        <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
+                      ) : (
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
                     )}
-                  </Text>
-                </Card>
-              </Stack>
-            </Flex>
-          )}
+                  </>
+                ) : (
+                  <>
+                    {/* Teacher follow-up text */}
+                    {existingChat ? (
+                      // Use existingChat data when available
+                      existingChat.type === 'method' ? (
+                        <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
+                      ) : existingChat.type === 'homework-professor' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
+                      ) : existingChat.type === 'generate' ? (
+                        <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                      ) : (
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
+                    ) : (
+                      // Fall back to activeChat data for new chats
+                      activeChat.chatType === 'method' ? (
+                        <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
+                      ) : activeChat.chatType === 'homework-professor' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
+                      ) : activeChat.chatType === 'generate' ? (
+                        <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                      ) : (
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
+                    )}
+                  </>
+                )}
+              </Text>
+            </Card>
+          </Stack>
+        </Flex>
       </Stack>
     );
   };

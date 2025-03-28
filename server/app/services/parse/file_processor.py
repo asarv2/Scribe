@@ -7,6 +7,7 @@ import tempfile
 import requests
 from PIL import Image
 import io
+import google.generativeai as genai
 
 class FileProcessor(BaseProcessor):
     def __init__(self, course_title: str, file_title: str, file_type: str):
@@ -16,6 +17,14 @@ class FileProcessor(BaseProcessor):
         self.file_type = file_type
         self.notes: Dict[str, Dict[int, CleanedResponse]] = {}
         self.conversation_history: List[Message] = []
+
+    def get_file_from_gemini(self, file_name: str) -> Any:
+        # Get the file from Gemini
+        response = genai.get_file(file_name)
+        if response.state.name == "ACTIVE":
+            return response
+        else:
+            return None
 
     def clean_response(
         self,
@@ -48,7 +57,7 @@ class FileProcessor(BaseProcessor):
             file_id = document.get('file')
             
             # Determine if we need to fetch an image
-            has_image = self.file_type in ['pdf', 'image', 'video', 'video_audio']
+            has_image = self.file_type in ['pdf', 'image', 'video']
             image_bytes = None
             
             if has_image and storage_url:
@@ -92,7 +101,8 @@ class FileProcessor(BaseProcessor):
             
             # Generate response using AI
             model = "gemini-2.0-flash-lite"
-            response = await self.robust_generate(None, message, model=model)
+            file_context = self.get_file_from_gemini(document.get('file_name'))
+            response = await self.robust_generate(None, message, model=model, additional_files=[file_context])
             print(f"Response for document {document_id}:", response)
             
             if response:
@@ -122,12 +132,19 @@ class FileProcessor(BaseProcessor):
                 page_number = document.get('page', 1)
                 text = document.get('text', '')
                 image = document.get('image')
+                file_name = document.get('file_name')
                 
                 # Prepare the message based on file type
                 message_content = []
+                additional_files = []
                 
-                # Add image if available
-                if image:
+                # For audio/video, use the Gemini file_name
+                if self.file_type in ['audio', 'video'] and file_name:
+                    file_context = self.get_file_from_gemini(file_name)
+                    if file_context:
+                        additional_files.append(file_context)
+                # For images and PDFs, use the image from Supabase
+                elif image and self.file_type in ['pdf', 'image']:
                     base64_image = base64.b64encode(image).decode('utf-8')
                     message_content.append({
                         "type": "image_url",
@@ -136,6 +153,7 @@ class FileProcessor(BaseProcessor):
                 
                 # Add appropriate prompt based on file type
                 prompt = self._get_prompt_for_file_type(document)
+                print(f"Prompt for document {document_id}:", prompt)
                 message_content.append({
                     "type": "text",
                     "text": prompt
@@ -155,7 +173,7 @@ class FileProcessor(BaseProcessor):
                 
                 # Generate response using AI
                 model = "gemini-2.0-flash-lite"
-                response = await self.robust_generate(None, message, model=model)
+                response = await self.robust_generate(None, message, model=model, additional_files=additional_files)
                 print(f"Response for document {document_id}:", response)
                 
                 if response:
@@ -187,16 +205,22 @@ class FileProcessor(BaseProcessor):
             return f"{base_prompt}\n\nThis is page {page_number} of a PDF document. Please provide a detailed description of what you see on this page. Include any key concepts, formulas, diagrams, or important information. Use LaTeX notation (enclosed in $ signs) for any mathematical content."
         
         elif self.file_type == 'audio':
-            start_time = document.get('start_time', 0)
-            end_time = document.get('end_time', 0)
+            start_time = int(document.get('start_time', 0))
+            end_time = int(document.get('end_time', 0))
+            # Handle None values by defaulting to 0
+            start_time = 0 if start_time is None else start_time
+            end_time = 0 if end_time is None else end_time
             start_time_fmt = f"{int(start_time // 60):02d}:{int(start_time % 60):02d}"
             end_time_fmt = f"{int(end_time // 60):02d}:{int(end_time % 60):02d}"
             
             return f"{base_prompt}\n\nThis is an audio segment from {start_time_fmt} to {end_time_fmt}. Based on the transcription provided, please summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples mentioned."
         
-        elif self.file_type in ['video', 'video_audio']:
-            start_time = document.get('start_time', 0)
-            end_time = document.get('end_time', 0)
+        elif self.file_type in ['video']:
+            start_time = int(document.get('start_time', 0))
+            end_time = int(document.get('end_time', 0))
+            # Handle None values by defaulting to 0
+            start_time = 0 if start_time is None else start_time
+            end_time = 0 if end_time is None else end_time
             start_time_fmt = f"{int(start_time // 60):02d}:{int(start_time % 60):02d}"
             end_time_fmt = f"{int(end_time // 60):02d}:{int(end_time % 60):02d}"
             

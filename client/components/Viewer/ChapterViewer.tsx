@@ -78,11 +78,6 @@ export default function ChapterViewer({
         queryFn: () => getTextbook(supabase, textbookId)
     })
 
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
-    })
-
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !textbook || !documentId) return "/placeholder_image.svg";
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookId}/${documentId}.png`

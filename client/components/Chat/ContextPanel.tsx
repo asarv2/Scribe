@@ -6,7 +6,7 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image } from "@mantine/core";
+import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button } from "@mantine/core";
 import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
 import { getLectures } from "@/utils/queries/get-lectures";
@@ -19,10 +19,15 @@ import { getChapters } from "@/utils/queries/get-chapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
-import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, ViewerMode, Document } from "@/types";
+import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, ViewerMode, Document, File } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useDrag } from 'react-dnd';
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
+import { getFiles } from "@/utils/queries/get-files";
+import DeleteFileModal from "../Delete/DeleteFileModal";
+import { getUser } from "@/utils/queries/get-user";
+import { getProfile } from "@/utils/queries/get-profile";
 declare global {
     interface Window {
         scrollToFirstItem?: (type: string) => void;
@@ -38,6 +43,7 @@ interface ContextPanelProps {
     makeDraggable?: boolean;
     viewerMode: ViewerMode;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
+    onFileDelete?: () => void;
 }
 
 // Define consistent colors for different content types
@@ -46,6 +52,7 @@ const CONTENT_COLORS = {
     chapters: 'green',   // matches badge color
     exercises: 'cyan',   // matches badge color
     homeworks: 'orange', // matches badge color
+    files: 'violet',     // now matches badge color in ContextBadges
 } as const;
 
 // Define a wrapper component that makes an item draggable
@@ -104,6 +111,8 @@ function DraggableWrapper({
 // Define a reusable ItemCard component directly in ContextPanel
 const ItemCard = ({
     item,
+    classId,
+    profileId,
     color,
     contextType,
     addContextToChat,
@@ -112,11 +121,15 @@ const ItemCard = ({
     setViewerMode,
     lectureDocuments,
     textbookDocuments,
+    fileDocuments,
     exercises,
     chapters,
-    textbooks
+    textbooks,
+    onFileDelete
 }: {
     item: any,
+    classId: string,
+    profileId: string,
     color: string,
     contextType: keyof ChatMessage['context'],
     addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void,
@@ -125,11 +138,12 @@ const ItemCard = ({
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
     lectureDocuments?: Document[],
     textbookDocuments?: Document[],
+    fileDocuments?: Document[],
     exercises?: Exercise[],
     chapters?: Chapter[],
-    textbooks?: Textbook[]
+    textbooks?: Textbook[],
+    onFileDelete?: () => void
 }) => {
-    const [imageLoaded, setImageLoaded] = useState(false);
 
     const originalCard = (
         <Card
@@ -147,7 +161,6 @@ const ItemCard = ({
                 e.stopPropagation();
                 if (!makeDraggable) {
                     addContextToChat(contextType, item.id);
-
                 } else if (setViewerMode) {
                     if (contextType === 'lectures') {
                         const document = lectureDocuments?.find(d => d.lecture === item.id) // first page of the lecture
@@ -169,6 +182,11 @@ const ItemCard = ({
                         const exercise = exercises?.filter(e => e.homework === item.id).sort((a, b) => a.problem_number - b.problem_number).sort((a, b) => a.problem_part_number - b.problem_part_number)[0] // find first exercise of the homework
                         if (exercise) {
                             handleDocumentClick('homeworks', item.id, setViewerMode, undefined, undefined, exercise.id);
+                        }
+                    } else if (contextType === 'files') {
+                        const document = fileDocuments?.find(d => d.file === item.id)
+                        if (document) {
+                            handleDocumentClick('files', item.id, setViewerMode, document.id);
                         }
                     }
                 }
@@ -196,14 +214,13 @@ const ItemCard = ({
                                 objectFit: 'contain',
                             }}
                             loading="lazy"
-                            onLoad={() => setImageLoaded(true)}
                         />
                     </div>
                 ) : (
                     <Skeleton width={40} height={40} radius={4} />
                 )}
                 <Stack style={{ flex: 1 }}>
-                    <Group justify="space-between">
+                    <Group justify="space-between" wrap="nowrap">
                         <Text
                             size="sm"
                             lineClamp={2}
@@ -214,11 +231,20 @@ const ItemCard = ({
                                 textOverflow: 'ellipsis',
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical'
+                                WebkitBoxOrient: 'vertical',
+                                flex: 1
                             }}
                         >
                             {item.newName}
                         </Text>
+                        {contextType === 'files' && <DeleteFileModal
+                            fileId={item.id}
+                            classId={classId}
+                            fileName={item.newName}
+                            navigateHome={false}
+                            profileId={profileId}
+                            onDelete={onFileDelete}
+                        />}
                     </Group>
                 </Stack>
             </Group>
@@ -258,7 +284,8 @@ export function ContextPanel({
     activeChat,
     makeDraggable = false,
     viewerMode,
-    setViewerMode
+    setViewerMode,
+    onFileDelete
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
@@ -269,6 +296,18 @@ export function ContextPanel({
     const firstLectureRef = useRef<string | null>(null);
     const firstChapterRef = useRef<string | null>(null);
     const firstHomeworkRef = useRef<string | null>(null);
+    const firstFileRef = useRef<string | null>(null);
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
 
     const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
@@ -281,7 +320,7 @@ export function ContextPanel({
         enabled: !!lectures
     });
 
-    const { data: textbooks } = useQuery({
+    const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
         queryKey: ["textbooks", classId],
         queryFn: () => getTextbooks(supabase, [classId]),
     });
@@ -298,14 +337,26 @@ export function ContextPanel({
         enabled: !!textbooks
     });
 
-    const { data: homeworks } = useQuery({
+    const { data: homeworks, isLoading: loadingHomeworks } = useQuery({
         queryKey: ["homeworks", classId],
         queryFn: () => getHomeworks(supabase, [classId]),
     });
 
-    const { data: exercises } = useQuery({
+    const { data: exercises, isLoading: loadingExercises } = useQuery({
         queryKey: ["exercises", classId],
         queryFn: () => getExercises(supabase, chapters!.map(c => c.id), homeworks!.map(h => h.id)),
+    });
+
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", profile?.id, classId],
+        queryFn: () => getFiles(supabase, profile!.id, [classId]),
+        enabled: !!profile
+    });
+
+    const { data: fileDocuments } = useQuery({
+        queryKey: ["fileDocuments", classId],
+        queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
+        enabled: !!files
     });
 
     useEffect(() => {
@@ -387,6 +438,13 @@ export function ContextPanel({
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`;
     }
 
+    const getFileImageUrl = (item: File, documentId: string) => {
+        if (documentId.length > 0) {
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${item.id}/${documentId}.png`;
+        }
+        return "/placeholder_image.svg";
+    }
+
     // Add search filtering function
     const filterBySearch = (items: any[], documents: any[]) => {
         if (!localSearchQuery) return items;
@@ -418,7 +476,8 @@ export function ContextPanel({
                 doc.lecture === item.id ||
                 doc.chapter === item.id ||
                 doc.homework === item.id ||
-                doc.exercise === item.id
+                doc.exercise === item.id ||
+                doc.file === item.id
             );
 
             return itemDocs?.some(doc =>
@@ -431,6 +490,26 @@ export function ContextPanel({
     // Get all content items combined
     const getAllContentItems = () => {
         const allItems = [];
+
+        // Add files
+        if (files) {
+            const filteredFiles = filterBySearch(files.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
+                .filter(f => !activeChat.context.files.includes(f.id))
+                .map(f => ({
+                    ...f,
+                    newName: f.title ?? "",
+                    imageUrl: getFileImageUrl(f, fileDocuments?.find(d => d.file === f.id)?.id ?? ""),
+                    type: 'files' as keyof ChatMessage['context'],
+                    color: CONTENT_COLORS.files
+                }));
+
+            // Store the first file ID if available
+            if (filteredFiles.length > 0 && firstFileRef.current === null) {
+                firstFileRef.current = filteredFiles[0].id;
+            }
+
+            allItems.push(...filteredFiles);
+        }
 
         // Add homeworks
         if (homeworks) {
@@ -545,13 +624,13 @@ export function ContextPanel({
     };
 
     const allContentItems = getAllContentItems();
-    const isLoading = loadingLectures || loadingChapters;
+    const isLoading = loadingLectures || loadingChapters || loadingFiles || loadingExercises || loadingHomeworks || loadingTextbooks;
 
     // Find first items of each type for scrolling
     const firstLectureItem = allContentItems.find(item => item.type === 'lectures');
     const firstChapterItem = allContentItems.find(item => item.type === 'chapters');
     const firstHomeworkItem = allContentItems.find(item => item.type === 'homeworks');
-
+    const firstFileItem = allContentItems.find(item => item.type === 'files');
     // Virtualized list setup
     const rowVirtualizer = useVirtualizer({
         count: allContentItems.length,
@@ -594,7 +673,7 @@ export function ContextPanel({
             elements.forEach(el => observer.unobserve(el));
         };
     }, [rowVirtualizer.getVirtualItems()]);
-    
+
     return (
         <Card
             shadow="sm"
@@ -634,6 +713,7 @@ export function ContextPanel({
                         <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="chapters-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="files-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
 
                         {allContentItems.length > 0 ? (
                             <div
@@ -652,7 +732,8 @@ export function ContextPanel({
                                     const isFirstOfType =
                                         (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
                                         (item.type === 'chapters' && item.id === firstChapterItem?.id) ||
-                                        (item.type === 'homeworks' && item.id === firstHomeworkItem?.id);
+                                        (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
+                                        (item.type === 'files' && item.id === firstFileItem?.id);
 
                                     return (
                                         <div
@@ -670,6 +751,8 @@ export function ContextPanel({
                                         >
                                             <ItemCard
                                                 item={item}
+                                                classId={classId}
+                                                profileId={profile?.id ?? ""}
                                                 color={item.color}
                                                 contextType={item.type}
                                                 addContextToChat={addContextToChat}
@@ -678,9 +761,11 @@ export function ContextPanel({
                                                 setViewerMode={setViewerMode}
                                                 lectureDocuments={lectureDocuments}
                                                 textbookDocuments={textbookDocuments}
+                                                fileDocuments={fileDocuments}
                                                 exercises={exercises}
                                                 chapters={chapters}
                                                 textbooks={textbooks}
+                                                onFileDelete={onFileDelete}
                                             />
                                         </div>
                                     );

@@ -18,6 +18,7 @@ from app.services.upload.textbook_extractor import TextbookExtractor
 from app.services.upload.homework_extractor import HomeworkExtractor
 from app.services.upload.lecture_extractor import LectureExtractor
 from app.services.upload.file_extractor import FileExtractor
+import google.generativeai as genai
 
 import logging
 
@@ -1100,8 +1101,6 @@ async def process_file(
             }
         )
     
-    
-
 
 # Helper functions for internal processing
 async def process_lecture_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):

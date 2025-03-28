@@ -15,6 +15,7 @@ from PIL import Image
 import io
 import cv2  # For video frame extraction
 from app.config import model_manager
+import google.generativeai as genai
 
 load_dotenv()
 
@@ -297,11 +298,43 @@ class FileExtractor:
                         'processed': False
                     }
                 elif item['type'] in ['audio_chunk', 'video_chunk']:
+                    # For audio/video chunks, upload the chunk to Gemini
+                    chunk_file_name = None
+                    if 'image' in item and item['image']:
+                        # Create a temporary file for this chunk
+                        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_chunk:
+                            temp_chunk_path = temp_chunk.name
+                        
+                        # Extract the chunk from the original file
+                        original_audio = AudioSegment.from_file(self.file_path)
+                        start_ms = int(item['start_time'] * 1000)
+                        end_ms = int(item['end_time'] * 1000)
+                        chunk = original_audio[start_ms:end_ms]
+                        chunk.export(temp_chunk_path, format="wav")
+                        
+                        # Upload to Gemini
+                        try:
+                            mime_type = "audio/wav"
+                            if item['type'] == 'video_chunk':
+                                mime_type = "video/mp4"  # Adjust if needed
+                                
+                            with open(temp_chunk_path, "rb") as f:
+                                media_file = genai.upload_file(f, mime_type=mime_type)
+                                chunk_file_name = media_file.name
+                                
+                            # Clean up temp file
+                            os.unlink(temp_chunk_path)
+                        except Exception as e:
+                            logger.error(f"Error uploading chunk to Gemini: {str(e)}")
+                    
                     document_data = {
                         'page': item['chunk_num'],
                         'file': file_id,
                         'text': item.get('text', ''),
-                        'processed': False
+                        'processed': False,
+                        'start_time': item['start_time'],
+                        'end_time': item['end_time'],
+                        'file_name': chunk_file_name if chunk_file_name else ""
                     }
                 elif item['type'] == 'image':
                     document_data = {
@@ -313,14 +346,6 @@ class FileExtractor:
                 else:
                     logger.warning(f"Unsupported content type: {item['type']}")
                     continue
-                
-                # Add type-specific fields
-                if item['type'] == 'pdf_page':
-                    document_data['page'] = item['page']
-                elif item['type'] in ['audio_chunk', 'video_chunk']:
-                    # For audio/video chunks, we'll store the timing info in the description
-                    # since there's no dedicated field for start/end times
-                    document_data['page'] = item['chunk_num']  # Use page for chunk number
                 
                 # Insert document record
                 document_response = supabase.table('documents').insert(document_data).execute()
@@ -334,12 +359,6 @@ class FileExtractor:
                         file=item['image'],
                         file_options={"content-type": "image/png"}
                     )
-
-            # Update file status
-            supabase.table("files").update({
-                "parse_status": "complete",
-                "parse_error": ""
-            }).eq("id", file_id).execute()
 
         except Exception as e:
             logger.error(f"Error uploading to Supabase: {str(e)}")

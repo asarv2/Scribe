@@ -9,6 +9,7 @@ from app.extensions import supabase
 from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt
 from app.utils.chat import get_critical_instructions
 from app.utils.get_content import process_special_tags
+from google.generativeai.types import File
 class ChatProcessor(BaseProcessor):
     def __init__(
         self,
@@ -17,6 +18,7 @@ class ChatProcessor(BaseProcessor):
         message_id: str,
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
+        additional_files: List[File] = []
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -28,6 +30,7 @@ class ChatProcessor(BaseProcessor):
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
                 self.chat_history.extend([q, r])
+        self.additional_files = additional_files
 
     async def format_conversation(self) -> str:
         """Format the conversation history into context"""
@@ -143,7 +146,7 @@ class ChatProcessor(BaseProcessor):
             ])
 
             response_text = ""
-            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash"):
+            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash", additional_files=self.additional_files):
                 response_text += chunk
                 if stream_callback:
                     yield await stream_callback(chunk)

@@ -59,7 +59,8 @@ class SummaryDownloader:
             r'<DOCUMENT_LECTURE>.*?</DOCUMENT_LECTURE>',
             r'<DOCUMENT_CHAPTER>.*?</DOCUMENT_CHAPTER>',
             r'<EXERCISE_CHAPTER>.*?</EXERCISE_CHAPTER>',
-            r'<PROBLEM_HOMEWORK>.*?</PROBLEM_HOMEWORK>'
+            r'<PROBLEM_HOMEWORK>.*?</PROBLEM_HOMEWORK>',
+            r'<DOCUMENT_FILE>.*?</DOCUMENT_FILE>'
         ]
         
         # Remove each pattern

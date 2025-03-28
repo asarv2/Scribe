@@ -12,7 +12,7 @@ import { getClass } from "@/utils/queries/get-class";;
 import { useSearchParams } from "next/navigation";
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { getUser } from "@/utils/queries/get-user";
-import { ActionIcon, Box, Stack, Text, useMantineColorScheme, Skeleton, Modal } from "@mantine/core";
+import { ActionIcon, Box, Stack, Text, useMantineColorScheme, Skeleton, Modal, Group } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { Flex } from "@mantine/core";
 import Latex from "@/components/Latex";
@@ -59,10 +59,6 @@ export default function FileViewer({
         queryFn: () => getFile(supabase, fileId)
     })
 
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase),
-    })
 
     const filteredDocuments = documents?.filter(doc => doc.file === fileId);
 

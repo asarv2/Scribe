@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import classes from "./MicrosoftLoginButton.module.css";
 
-export default function MicrosoftLoginButton({ text = "Login with Microsoft (Student)", professor = false }: { text?: string, professor?: boolean }) {
+export default function MicrosoftLoginButton({ text = "Student Login", professor = false }: { text?: string, professor?: boolean }) {
     const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false);
     const router = useRouter();
     
@@ -37,7 +37,7 @@ export default function MicrosoftLoginButton({ text = "Login with Microsoft (Stu
             }
             className={classes.microsoftButton}
         >
-            {professor ? "Login with Microsoft (Professor)" : text}
+            {professor ? "Professor Login" : text}
         </Button>
     )
 }

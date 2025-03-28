@@ -83,6 +83,26 @@ export default function ClassesPage() {
         return profile.admin ? classes : classes?.filter(classItem => profile.classes?.includes(classItem.id));
     }
 
+    // Check if any data is still loading
+    const isLoading = loadingUser || loadingProfile || loadingClasses || 
+                     (!!classes && (loadingLectures || loadingTextbooks || loadingHomeworks));
+
+    // Show loading state while data is being fetched
+    if (isLoading) {
+        return (
+            <HomeLayout>
+                <Container fluid>
+                    <Center>
+                        <Stack h="100vh" justify="center" align="center">
+                            <Loader size="lg" />
+                            <Text c="dimmed">Loading your class information...</Text>
+                        </Stack>
+                    </Center>
+                </Container>
+            </HomeLayout>
+        );
+    }
+
     if (profile) {
         const filteredClasses = getFilteredClasses();
         if (filteredClasses.length > 0) {

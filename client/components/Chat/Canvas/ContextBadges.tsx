@@ -20,6 +20,8 @@ import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
+import { getUser } from "@/utils/queries/get-user";
+import { getProfile } from "@/utils/queries/get-profile";
 
 interface ContextBadgesProps {
     activeChat: ChatMessage;
@@ -41,6 +43,17 @@ export const ContextBadges = memo(({
     toggleSection
 }: ContextBadgesProps) => {
     const supabase = useSupabaseBrowser();
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
 
     // Queries for data
     const { data: lectures } = useQuery({
@@ -82,9 +95,10 @@ export const ContextBadges = memo(({
         enabled: !!chapters && !!homeworkData
     });
 
-    const { data: files } = useQuery({
-        queryKey: ["files", classId],
-        queryFn: () => getFiles(supabase, [classId]),
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", profile?.id, classId],
+        queryFn: () => getFiles(supabase, profile!.id, [classId]),
+        enabled: !!profile
     });
 
     const { data: fileDocuments } = useQuery({
@@ -301,7 +315,7 @@ export const ContextBadges = memo(({
                         )}
                         onClick={(e) => {
                             if (setViewerMode) {
-                                const document = fileDocuments?.find(d => d.file === fileId) // first page of the lecture
+                                const document = fileDocuments?.find(d => d.file === fileId) // first page of the file
                                 if (document) {
                                     handleDocumentClick('files', fileId, setViewerMode, document.id);
                                 }

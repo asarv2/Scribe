@@ -12,6 +12,7 @@ class ChatMessage(TypedDict):
     chapter_references: List[str]
     chapter_exercise_references: List[str]
     homework_exercise_references: List[str]
+    file_references: List[str]
     figures: List[str]
 
 def get_critical_instructions(output_rules: str) -> str:
@@ -22,13 +23,15 @@ def get_critical_instructions(output_rules: str) -> str:
         "FORMATTING:\n\n"
         "When citing course content, use <LECTURE x><SLIDE a><SLIDE b><SLIDE c></LECTURE> tags, where x is the lecture number and a, b, c are the slide numbers. "
         "Moreover, if you use the content from the chapter, use <CHAPTER x><PAGE a><PAGE b><PAGE c></CHAPTER> tags, where x is the chapter number and a, b, c are the page numbers. If you cite any exercises from the chapter, use <CHAPTER x><EXERCISE a><EXERCISE b><EXERCISE c></CHAPTER> tags, where x is the chapter number and a, b, c are the exercise numbers."
-        "Lastly, if you use the homework, use <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK> tags, where x is the homework number and a, b, c are the problem numbers. "
+        "Also, if you use the homework, use <HOMEWORK x><PROBLEM a><PROBLEM b><PROBLEM c></HOMEWORK> tags, where x is the homework number and a, b, c are the problem numbers. "
         "Put this at the end of your response. Do not include periods after your citations, add it before the tags.\n\n"
         "An example of a lecture citation: <LECTURE 1><SLIDE 1><SLIDE 2><SLIDE 3></LECTURE> This is a citation to the first 3 slides of lecture 1."
         "An example of a chapter citation: <CHAPTER 1><PAGE 1><PAGE 2><PAGE 3></CHAPTER> This is a citation to the first 3 pages of chapter 1."
         "An example of a chapter exercise citation: <CHAPTER 1><EXERCISE 1><EXERCISE 2><EXERCISE 3></CHAPTER> This is a citation to the first 3 exercises of chapter 1."
         "An example of a combined chapter and exercise citation: <CHAPTER 1><PAGE 1><EXERCISE 1><EXERCISE 2></CHAPTER> This is a citation to the first page and the first 2 exercises of chapter 1."
         "An example of a homework citation: <HOMEWORK 1><PROBLEM 1><PROBLEM 2><PROBLEM 3></HOMEWORK> This is a citation to the first 3 problems of homework 1."
+        "Lastly, if you use the content from the file, use <FILE x><PAGE a><PAGE b><PAGE c></FILE> tags, where x is the file number and a, b, c are the page numbers. "
+
     )
 
 
@@ -39,16 +42,20 @@ def clean_result(
     all_lectures: List[Dict[str, Any]],
     all_chapters: List[Dict[str, Any]],
     all_homeworks: List[Dict[str, Any]],
+    all_files: List[Dict[str, Any]],
     all_lecture_documents: List[Dict[str, Any]],
     all_chapter_documents: List[Dict[str, Any]],
     all_chapter_exercises: List[Dict[str, Any]],
     all_homework_exercises: List[Dict[str, Any]],
+    all_file_documents: List[Dict[str, Any]],
 ) -> ChatMessage:
     """Clean chat results and extract document references and code blocks from tags."""
     lecture_document_ids = []
     chapter_document_ids = []
     chapter_exercise_ids = []
     homework_exercise_ids = []
+    file_document_ids = []
+    file_ids = []
     figure_ids = []
     lecture_ids = []
     chapter_ids = []
@@ -58,9 +65,10 @@ def clean_result(
     result = re.sub(r'</LECTURE\s+\d+>', '</LECTURE>', result)
     result = re.sub(r'</CHAPTER\s+\d+>', '</CHAPTER>', result)
     result = re.sub(r'</HOMEWORK\s+\d+>', '</HOMEWORK>', result)
+    result = re.sub(r'</FILE\s+\d+>', '</FILE>', result)
     
     # Also handle standalone chapter/lecture tags without proper closing
-    standalone_tags = re.finditer(r'<(CHAPTER|LECTURE|HOMEWORK)\s+(\d+)>(?!\s*<(?:SLIDE|PAGE|EXERCISE|PROBLEM))', result)
+    standalone_tags = re.finditer(r'<(CHAPTER|LECTURE|HOMEWORK|FILE)\s+(\d+)>(?!\s*<(?:SLIDE|PAGE|EXERCISE|PROBLEM))', result)
     for tag in reversed(list(standalone_tags)):
         tag_type, number = tag.groups()
         # Replace with proper opening and closing tags
@@ -151,10 +159,35 @@ def clean_result(
             # Replace only this specific match using string slicing
             start, end = homework_match.span()
             result = result[:start] + exercise_tags + result[end:]
+
+    # Process files and insert document tags
+    file_matches = list(re.finditer(r'<FILE ([^>]+)>((?:<PAGE \d+>)+)</FILE>', result))
+    for file_match in reversed(file_matches):
+        file_number = file_match.group(1)
+        page_nums = [int(num) for num in re.findall(r'<PAGE (\d+)>', file_match.group(2))]
+        file_id = next((file['id'] for file in all_files if file['file_number'] == int(file_number)), None)
+        
+        if file_id:
+            file_ids.append(file_id)
+            
+            # Find matching documents
+            matching_docs = [
+                doc['id'] for doc in all_file_documents
+                if doc.get('page') in page_nums 
+                and doc.get('file') == file_id
+            ]
+            file_document_ids.extend(matching_docs)
+            
+            # Replace the lecture tag with document tags
+            document_tags = ''.join([f'<DOCUMENT_FILE>{doc_id}</DOCUMENT_FILE>' for doc_id in matching_docs])
+            
+            # Replace only this specific match using string slicing
+            start, end = file_match.span()
+            result = result[:start] + document_tags + result[end:]
     
     # Remove any remaining tags
-    cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|SLIDE|PAGE|PROBLEM|EXERCISE)(\s[^>]*)?>', '', result)
-    cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK)(\s[^>]*)?>', '', cleaned_result)
+    cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|FILE|SLIDE|PAGE|PROBLEM|EXERCISE)(\s[^>]*)?>', '', result)
+    cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK|FILE)(\s[^>]*)?>', '', cleaned_result)
     
     return ChatMessage(
         id=message_id,
@@ -164,5 +197,6 @@ def clean_result(
         chapter_references=list(set(chapter_ids)),
         chapter_exercise_references=list(set(chapter_exercise_ids)),
         homework_exercise_references=list(set(homework_exercise_ids)),
+        file_references=list(set(file_ids)),
         figures=figure_ids
     )

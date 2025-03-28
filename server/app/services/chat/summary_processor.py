@@ -17,10 +17,12 @@ class SummaryProcessor(BaseProcessor):
         lectures: List[Dict[str, Any]],
         chapters: List[Dict[str, Any]],
         homeworks: List[Dict[str, Any]],
+        files: List[Dict[str, Any]],
         lecture_documents: List[Dict[str, Any]],
         chapter_documents: List[Dict[str, Any]],
         chapter_exercises: List[Dict[str, Any]],
         homework_exercises: List[Dict[str, Any]],
+        file_documents: List[Dict[str, Any]],
     ):
         super().__init__()
         self.course_title = course_title
@@ -34,6 +36,8 @@ class SummaryProcessor(BaseProcessor):
         self.chapter_exercises = chapter_exercises
         self.homework_exercises = homework_exercises
         self.all_content = all_content
+        self.files = files
+        self.file_documents = file_documents
 
         # Base prompts
         base_question_prompt = (
@@ -179,6 +183,7 @@ class SummaryProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],
+        file_references: List[str],
         figures: List[str]
     ) -> None:
         """Clean and process the generated summary result."""
@@ -205,7 +210,8 @@ class SummaryProcessor(BaseProcessor):
                     "chapter_references": chapter_references,
                     "chapter_exercise_references": chapter_exercise_references,
                     "homework_exercise_references": homework_exercise_references,
-                    "figures": figures
+                    "figures": figures,
+                    "file_references": file_references
                 }
             else:
                 if preamble_match:
@@ -218,7 +224,7 @@ class SummaryProcessor(BaseProcessor):
                 self.summaries[summary_id]["chapter_exercise_references"] = list(set(self.summaries[summary_id]["chapter_exercise_references"] + chapter_exercise_references))
                 self.summaries[summary_id]["homework_exercise_references"] = list(set(self.summaries[summary_id]["homework_exercise_references"] + homework_exercise_references))
                 self.summaries[summary_id]["figures"] = list(set(self.summaries[summary_id]["figures"] + figures))
-
+                self.summaries[summary_id]["file_references"] = list(set(self.summaries[summary_id]["file_references"] + file_references))
         except Exception as e:
             print(f"Error processing summary block: {str(e)}")
 
@@ -247,7 +253,7 @@ class SummaryProcessor(BaseProcessor):
                 )
             
             # clean the result, get the figures and references, of type ChatMessage
-            figures_and_references = clean_figures_and_references(question, message_id, result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
+            figures_and_references = clean_figures_and_references(question, message_id, result, self.lectures, self.chapters, self.homeworks, self.files, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises, self.file_documents)
 
             print(f"Figures and references: {figures_and_references}")
 
@@ -258,7 +264,8 @@ class SummaryProcessor(BaseProcessor):
                 figures_and_references['chapter_references'], 
                 figures_and_references['chapter_exercise_references'], 
                 figures_and_references['homework_exercise_references'], 
-                figures_and_references['figures']
+                figures_and_references['figures'],
+                figures_and_references['file_references']
             )
 
             if on_batch_complete:

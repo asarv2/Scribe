@@ -2,13 +2,17 @@ import { ChatMessage, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
 import { memo, useRef, useState, useEffect } from "react";
-import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX } from "@tabler/icons-react";
+import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation } from "@tabler/icons-react";
 import classes from './ChatInput.module.css';
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js';
 import Image from "next/image";
 import { notifications } from "@mantine/notifications";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import { getClass } from "@/utils/queries/get-class";
+import { getUser } from "@/utils/queries/get-user";
+import { getProfile } from "@/utils/queries/get-profile";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
@@ -23,6 +27,8 @@ interface ChatInputProps {
   expandedSections: Set<string>;
   toggleSection: (section: string) => void;
   toggleImmersive: () => void;
+  recordedVideos: { id: string, url: string }[];
+  setRecordedVideos: React.Dispatch<React.SetStateAction<{ id: string, url: string }[]>>;
   addFile: (file: File) => void;
 }
 
@@ -39,7 +45,10 @@ export const ChatInput = memo(({
   toggleSection,
   setActiveChat,
   addFile,
+  recordedVideos,
+  setRecordedVideos,
 }: ChatInputProps) => {
+  const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -55,8 +64,23 @@ export const ChatInput = memo(({
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const videoChunksRef = useRef<Blob[]>([]);
-  const [recordedVideos, setRecordedVideos] = useState<{ id: string, url: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUser(supabase)
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: () => getProfile(supabase, user!.id),
+    enabled: !!user?.id
+  });
+
+  const { data: classData, isLoading: classDataLoading } = useQuery({
+    queryKey: ["class", classId],
+    queryFn: () => getClass(supabase, classId)
+  });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -72,6 +96,8 @@ export const ChatInput = memo(({
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!profile?.id) return;
+
     const files = e.target.files;
     if (files && files.length > 0) {
       for (const file of files) {
@@ -88,7 +114,7 @@ export const ChatInput = memo(({
           await addFile(file);
 
           queryClient.refetchQueries({
-            queryKey: ["files", classId]
+            queryKey: ["files", profile.id, classId]
           });
 
           queryClient.refetchQueries({
@@ -554,7 +580,7 @@ export const ChatInput = memo(({
               autosize
               minRows={1}
               maxRows={4}
-              size={"lg"}
+              size={"md"}
               classNames={{
                 root: classes.textarea,
                 input: classes.textareaInput,
@@ -593,7 +619,7 @@ export const ChatInput = memo(({
           {!recordingMode && (
             <Box className={classes.controlsBackground}>
               {/* Left side icons */}
-              <Group gap={8}>
+              <Group gap={"xs"}>
                 <Tooltip label="Add files">
                   <ActionIcon size="lg" variant="subtle" onClick={handleFileUpload}>
                     <IconPlus size={20} />
@@ -606,6 +632,22 @@ export const ChatInput = memo(({
                   onChange={handleFileChange}
                   accept="image/*,application/pdf,audio/*,video/*"
                 />
+                {classData?.learn_mode_enabled && <Button color={"green"} variant={activeChat.chatType === 'concept' ? "outline" : "subtle"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+                }))}>Learn</Button>}
+                {classData?.homework_mode_enabled && <Button color={"indigo"} variant={activeChat.chatType === 'homework-student' ? "outline" : "subtle"} size="sm" leftSection={<IconFile size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
+                }))}>Homework</Button>}
+                {classData?.test_prep_mode_enabled && <Button color={"cyan"} variant={activeChat.chatType === 'review' ? "outline" : "subtle"} size="sm" leftSection={<IconPencil size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'review' ? 'general-student' : 'review'
+                }))}>Test-Prep</Button>}
+                {classData?.present_mode_enabled && <Button color={"orange"} variant={activeChat.chatType === 'present' ? "outline" : "subtle"} size="sm" leftSection={<IconPresentation size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'present' ? 'general-student' : 'present'
+                }))}>Present</Button>}
               </Group>
 
               {/* Right side icons */}

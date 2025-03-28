@@ -9,7 +9,7 @@ from typing import Dict, List, Any, Union, Optional, Callable, Awaitable, AsyncG
 from pydantic import BaseModel
 from app.extensions import supabase
 from app.services.chat.chat_processor import ChatProcessor
-from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content
+from app.utils.get_content import fetch_lecture_resources, fetch_chapter_resources, fetch_homework_resources, fetch_lecture_content, fetch_chapter_content, fetch_homework_content, fetch_file_resources, fetch_file_content
 import json
 import re
 from app.services.chat.summary_processor import SummaryPrompt, SummaryProcessor
@@ -100,28 +100,33 @@ async def handle_chat(
         lecture_ids = current_message.get('lectures', []) or []
         chapter_ids = current_message.get('chapters', []) or []
         homework_ids = current_message.get('homeworks', []) or []
+        file_ids = current_message.get('files', []) or []
 
         # Fetch resources and their documents
         lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
         chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
         homework_resources = await fetch_homework_resources(supabase, homework_ids)
+        file_resources = await fetch_file_resources(supabase, file_ids)
         
         # Extract the individual components
         all_lectures = lecture_resources.get('lectures', [])
         all_chapters = chapter_resources.get('chapters', [])
         all_homeworks = homework_resources.get('homeworks', [])
-        
+        all_files = file_resources.get('files', [])
+
         # Get documents for each resource type
         all_lecture_documents = lecture_resources.get('documents', [])
         all_chapter_documents = chapter_resources.get('documents', [])
         all_chapter_exercises = chapter_resources.get('exercises', [])
         all_homework_exercises = homework_resources.get('exercises', [])
-
+        all_file_documents = file_resources.get('documents', [])
+        additional_files = file_resources.get('google_file_ids', [])
         # Generate textual content for context
         lecture_content = await fetch_lecture_content(supabase, lecture_ids)
         chapter_content = await fetch_chapter_content(supabase, chapter_ids)
         homework_content = await fetch_homework_content(supabase, homework_ids)
-        
+        file_content = await fetch_file_content(supabase, file_ids)
+
         # Combine all content for context
         message_context = []
         if lecture_content:
@@ -130,6 +135,8 @@ async def handle_chat(
             message_context.append(chapter_content)
         if homework_content:
             message_context.append(homework_content)
+        if file_content:
+            message_context.append(file_content)
 
         # Initialize processor and response
         processor = ChatProcessor(
@@ -138,6 +145,7 @@ async def handle_chat(
             message_id=message_id,
             question=current_message['bare_question'],
             past_messages=past_messages,
+            additional_files=additional_files
         )
 
         total_response = ""
@@ -156,10 +164,10 @@ async def handle_chat(
                     text = text[:last_open_tag]
             
             # Normalize incorrect closing tags like </CHAPTER 2> to </CHAPTER>
-            text = re.sub(r'</((LECTURE|CHAPTER|HOMEWORK))\s+\d+>', r'</\1>', text)
+            text = re.sub(r'</((LECTURE|CHAPTER|HOMEWORK|FILE))\s+\d+>', r'</\1>', text)
             
             # Handle standalone tags without proper closing
-            standalone_tags = re.finditer(r'<(CHAPTER|LECTURE|HOMEWORK)\s+(\d+)>(?!\s*<(?:SLIDE|PAGE|EXERCISE|PROBLEM))', text)
+            standalone_tags = re.finditer(r'<(CHAPTER|LECTURE|HOMEWORK|FILE)\s+(\d+)>(?!\s*<(?:SLIDE|PAGE|EXERCISE|PROBLEM))', text)
             for tag in reversed(list(standalone_tags)):
                 tag_type, number = tag.groups()
                 # Replace with proper opening and closing tags
@@ -167,13 +175,14 @@ async def handle_chat(
                 text = text[:start] + f'<{tag_type} {number}></{tag_type}>' + text[end:]
             
             # Remove any malformed closing tags without matching opening tags
-            text = re.sub(r'</(?:SLIDE|LECTURE|CHAPTER|PAGE|PROBLEM|HOMEWORK|EXERCISE)>', '', text)
+            text = re.sub(r'</(?:SLIDE|LECTURE|CHAPTER|PAGE|PROBLEM|HOMEWORK|EXERCISE|FILE)>', '', text)
             
             # Remove any malformed opening tags without matching closing tags
             tag_patterns = {
                 'LECTURE': r'<LECTURE ([^>]+)>(?!(?:.*?</LECTURE>))',
                 'CHAPTER': r'<CHAPTER ([^>]+)>(?!(?:.*?</CHAPTER>))',
                 'HOMEWORK': r'<HOMEWORK ([^>]+)>(?!(?:.*?</HOMEWORK>))',
+                'FILE': r'<FILE ([^>]+)>(?!(?:.*?</FILE>))',
                 'SLIDE': r'<SLIDE ([^>]+)>(?!(?:.*?</SLIDE>))',
                 'PAGE': r'<PAGE ([^>]+)>(?!(?:.*?</PAGE>))',
                 'PROBLEM': r'<PROBLEM ([^>]+)>(?!(?:.*?</PROBLEM>))',
@@ -184,9 +193,9 @@ async def handle_chat(
                 text = re.sub(pattern, '', text)
             
             # Remove any remaining valid tags
-            cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|SLIDE|PAGE|PROBLEM|EXERCISE)[^>]*>', '', text)
-            cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK)(\s[^>]*)?>', '', cleaned_result)  # Updated to handle any content in closing tags
-            cleaned_result = re.sub(r'<(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK)>[^<]+</(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK)>', '', cleaned_result)
+            cleaned_result = re.sub(r'<(LECTURE|CHAPTER|HOMEWORK|FILE|SLIDE|PAGE|PROBLEM|EXERCISE)[^>]*>', '', text)
+            cleaned_result = re.sub(r'</(LECTURE|CHAPTER|HOMEWORK|FILE)(\s[^>]*)?>', '', cleaned_result)  # Updated to handle any content in closing tags
+            cleaned_result = re.sub(r'<(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK|FILE)>[^<]+</(?:DOCUMENT|EXERCISE)_(?:LECTURE|CHAPTER|HOMEWORK|FILE)>', '', cleaned_result)
             cleaned_result = re.sub(r'<PROBLEM_HOMEWORK>[^<]+</PROBLEM_HOMEWORK>', '', cleaned_result)
 
             return cleaned_result.strip()
@@ -256,10 +265,12 @@ async def handle_chat(
                 all_lectures=all_lectures,
                 all_chapters=all_chapters,
                 all_homeworks=all_homeworks,
+                all_files=all_files,
                 all_lecture_documents=all_lecture_documents,
                 all_chapter_documents=all_chapter_documents,
                 all_chapter_exercises=all_chapter_exercises,
                 all_homework_exercises=all_homework_exercises,
+                all_file_documents=all_file_documents,
             )
             
             # Final update to the message in Supabase
@@ -270,6 +281,7 @@ async def handle_chat(
                 "chapter_references": cleaned_result["chapter_references"],
                 "chapter_exercise_references": cleaned_result["chapter_exercise_references"],
                 "homework_exercise_references": cleaned_result["homework_exercise_references"],
+                "file_references": cleaned_result["file_references"],
                 "generation_status": "complete",
                 "generation_error": ""
             }).eq("id", message_id).execute()
@@ -346,27 +358,30 @@ async def process_figures(
         lecture_ids = message.get('lectures', []) or []
         chapter_ids = message.get('chapters', []) or []
         homework_ids = message.get('homeworks', []) or []
+        file_ids = message.get('files', []) or []
 
         # Fetch resources and their documents
         lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
         chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
         homework_resources = await fetch_homework_resources(supabase, homework_ids)
-        
+        file_resources = await fetch_file_resources(supabase, file_ids)
+
         # Extract the individual components
         all_lectures = lecture_resources.get('lectures', [])
         all_chapters = chapter_resources.get('chapters', [])
         all_homeworks = homework_resources.get('homeworks', [])
-        
+        all_files = file_resources.get('files', [])
         # Get documents for each resource type
         all_lecture_documents = lecture_resources.get('documents', [])
         all_chapter_documents = chapter_resources.get('documents', [])
         all_chapter_exercises = chapter_resources.get('exercises', [])
         all_homework_exercises = homework_resources.get('exercises', [])
-
+        all_file_documents = file_resources.get('documents', [])
         # Generate textual content for context
         lecture_content = await fetch_lecture_content(supabase, lecture_ids)
         chapter_content = await fetch_chapter_content(supabase, chapter_ids)
         homework_content = await fetch_homework_content(supabase, homework_ids)
+        file_content = await fetch_file_content(supabase, file_ids)
         
         # Combine all content for context
         message_context = []
@@ -376,12 +391,14 @@ async def process_figures(
             message_context.append(chapter_content)
         if homework_content:
             message_context.append(homework_content)
+        if file_content:
+            message_context.append(file_content)
 
          # initialize the critical instructions
         critical_instructions = get_critical_instructions(output_rules)
 
         # Initialize the figure processor
-        processor = FigureProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises) 
+        processor = FigureProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_files, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises, all_file_documents) 
         
         # Process the summaries
         try:
@@ -478,28 +495,28 @@ async def process_summaries(
         lecture_ids = message.get('lectures', []) or []
         chapter_ids = message.get('chapters', []) or []
         homework_ids = message.get('homeworks', []) or []
-
+        file_ids = message.get('files', []) or []
         # Fetch resources and their documents
         lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
         chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
         homework_resources = await fetch_homework_resources(supabase, homework_ids)
-        
+        file_resources = await fetch_file_resources(supabase, file_ids)
         # Extract the individual components
         all_lectures = lecture_resources.get('lectures', [])
         all_chapters = chapter_resources.get('chapters', [])
         all_homeworks = homework_resources.get('homeworks', [])
-        
+        all_files = file_resources.get('files', [])
         # Get documents for each resource type
         all_lecture_documents = lecture_resources.get('documents', [])
         all_chapter_documents = chapter_resources.get('documents', [])
         all_chapter_exercises = chapter_resources.get('exercises', [])
         all_homework_exercises = homework_resources.get('exercises', [])
-
+        all_file_documents = file_resources.get('documents', [])
         # Generate textual content for context
         lecture_content = await fetch_lecture_content(supabase, lecture_ids)
         chapter_content = await fetch_chapter_content(supabase, chapter_ids)
         homework_content = await fetch_homework_content(supabase, homework_ids)
-        
+        file_content = await fetch_file_content(supabase, file_ids)
         # Combine all content for context
         message_context = []
         if lecture_content:
@@ -508,12 +525,13 @@ async def process_summaries(
             message_context.append(chapter_content)
         if homework_content:
             message_context.append(homework_content)
-
+        if file_content:
+            message_context.append(file_content)
          # initialize the critical instructions
         critical_instructions = get_critical_instructions(output_rules)
 
         # Initialize the summary processor
-        processor = SummaryProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises) 
+        processor = SummaryProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_files, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises, all_file_documents) 
         
         # Process the summaries
         try:
@@ -614,28 +632,29 @@ async def process_questions(
         lecture_ids = message.get('lectures', []) or []
         chapter_ids = message.get('chapters', []) or []
         homework_ids = message.get('homeworks', []) or []
+        file_ids = message.get('files', []) or []
 
         # Fetch resources and their documents
         lecture_resources = await fetch_lecture_resources(supabase, lecture_ids)
         chapter_resources = await fetch_chapter_resources(supabase, chapter_ids)
         homework_resources = await fetch_homework_resources(supabase, homework_ids)
-        
+        file_resources = await fetch_file_resources(supabase, file_ids)
         # Extract the individual components
         all_lectures = lecture_resources.get('lectures', [])
         all_chapters = chapter_resources.get('chapters', [])
         all_homeworks = homework_resources.get('homeworks', [])
-        
+        all_files = file_resources.get('files', [])
         # Get documents for each resource type
         all_lecture_documents = lecture_resources.get('documents', [])
         all_chapter_documents = chapter_resources.get('documents', [])
         all_chapter_exercises = chapter_resources.get('exercises', [])
         all_homework_exercises = homework_resources.get('exercises', [])
-
+        all_file_documents = file_resources.get('documents', [])
         # Generate textual content for context
         lecture_content = await fetch_lecture_content(supabase, lecture_ids)
         chapter_content = await fetch_chapter_content(supabase, chapter_ids)
         homework_content = await fetch_homework_content(supabase, homework_ids)
-        
+        file_content = await fetch_file_content(supabase, file_ids)
         # Combine all content for context
         message_context = []
         if lecture_content:
@@ -644,12 +663,14 @@ async def process_questions(
             message_context.append(chapter_content)
         if homework_content:
             message_context.append(homework_content)
+        if file_content:
+            message_context.append(file_content)
 
         # initialize the critical instructions
         critical_instructions = get_critical_instructions(output_rules)
 
         # Initialize the practice problem processor
-        processor = ProblemsProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises)
+        processor = ProblemsProcessor(class_title, critical_instructions, message_context, all_lectures, all_chapters, all_homeworks, all_files, all_lecture_documents, all_chapter_documents, all_chapter_exercises, all_homework_exercises, all_file_documents)
 
         try:
             # Change this function to be async

@@ -20,6 +20,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Profile, Class } from "@/types";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useMediaQuery } from "@mantine/hooks";
 
 
 interface ClassLayoutProps {
@@ -32,6 +33,8 @@ interface ClassLayoutProps {
 export function ClassLayout({ children, classId, showHeader = true, showClasses = true }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const supabase = useSupabaseBrowser();
+
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -79,7 +82,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                         </AppShell.Header>
                     )}
 
-                    {profile && (profile.professor || profile.admin) && (classId !== null) && (
+                    {profile && (profile.professor || profile.admin) && (classId !== null) && (isMobile === false) && (
                         <AppShell.Navbar>
                             <ClassNavbar
                                 classId={classId}

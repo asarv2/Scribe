@@ -49,6 +49,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         open: chatId === "new",
     });
     const [loading, setLoading] = useState(false);
+    const [addingFiles, setAddingFiles] = useState(false);
 
     // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
@@ -57,6 +58,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
+    const [recordedVideos, setRecordedVideos] = useState<{ id: string, url: string }[]>([]);
 
     // Fetch necessary data
     const { data: existingChat } = useQuery({
@@ -110,9 +113,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         enabled: !!chapters && !!homeworkData
     });
 
-    const { data: files, isLoading: filesLoading } = useQuery({
-        queryKey: ["files", classId],
-        queryFn: () => getFiles(supabase, [classId]),
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", profile?.id, classId],
+        queryFn: () => getFiles(supabase, profile!.id, [classId]),
+        enabled: !!profile
     });
 
     const [activeChat, setActiveChat] = useState<ChatMessage>({
@@ -168,6 +172,17 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
         const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
         return allHomeworks;
+    }
+
+    const getFileContext = (uploadedFileIds: string[]) => {
+        const previousMessagesFiles = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.files) ? message.files : []
+        ) ?? [];
+
+        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles, ...uploadedFileIds]));
+        return allFiles;
+        
     }
 
     const getAdditionalContextForBareQuestion = () => {
@@ -226,7 +241,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             formData.append("class_id", classId);
             formData.append("profile_id", profile.id);
             formData.append("response_url", responseUrl);
-            formData.append("start_parse", "false"); // for now, we don't want to parse the file
+            formData.append("start_parse", "true"); // lets try it out
 
             const fileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/file`, {
                 method: 'POST',
@@ -243,6 +258,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     files: [...prev.context.files, fileId]
                 }
             }));
+            return fileId as string;
         } catch (error) {
             console.error("Error in addFile:", error);
             notifications.show({
@@ -250,6 +266,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 message: "Failed to add file. Please try again.",
                 color: "red"
             });
+            return null;
         }
     };
 
@@ -258,8 +275,16 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
         try {
             setLoading(true);
+            setAddingFiles(true);
             let profileId = profile?.id;
             let newChatId = chatId;
+                
+            // upload all the recorded videos, via the addFile function
+            const fileIds = await Promise.all(recordedVideos.map(async (video) => {
+                const videoFile = new File([video.url], `${video.id}.webm`, { type: 'video/webm' });
+                return await addFile(videoFile);
+            }));
+            setAddingFiles(false);
 
             const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
 
@@ -289,6 +314,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 lectures: getLectureContext(),
                 chapters: getChapterContext(),
                 homeworks: getHomeworkContext(),
+                files: getFileContext(fileIds.filter((id): id is string => id !== null)),
                 // exercises: activeChat.context.exercises, // these can stay as they are
             };
 
@@ -394,6 +420,16 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 [contextType]: prev.context[contextType].filter(id => id !== contextId)
             }
         }));
+    };
+
+    const handleFileDelete = () => {
+        // close the window
+        setViewerMode(prev => ({
+            ...prev,
+            active: false,
+        }));
+        // remove from context
+        removeContextFromChat("files", viewerMode.fileId ?? "");
     };
 
     const handleScrollToSection = useCallback((sectionId: string) => {
@@ -562,6 +598,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     // Add realtime subscriptions for lecture documents
     useEffect(() => {
         if (!files || files.length === 0) return;
+        if (!profile?.id) return;
 
         const channel = supabase
             .channel('realtime-file-documents')
@@ -574,10 +611,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 },
                 (payload) => {
                     const document = payload.new as Document;
-                    console.log("Document updated:", document);
                     if (document.file) {
                         queryClient.refetchQueries({
-                            queryKey: ["files", classId]
+                            queryKey: ["files", profile.id, classId]
                         })
                         queryClient.refetchQueries({
                             queryKey: ["fileDocuments", classId]
@@ -621,7 +657,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                         activeChat.title
                                     )}
                                 </Text>
-                                {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
+                                {/* {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
                                     <Badge color={
                                         existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'indigo' :
                                             existingChat.type === 'concept' ? 'green' :
@@ -643,7 +679,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                                             ? 'Other'
                                                             : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
                                     </Badge>
-                                )}
+                                )} */}
                             </Group>}
                         <Group gap="xs">
                             {viewerMode.immersive ?
@@ -758,6 +794,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     expandedSections={expandedSections}
                                     toggleSection={toggleSection}
                                     toggleImmersive={enterImmersive}
+                                    recordedVideos={recordedVideos}
+                                    setRecordedVideos={setRecordedVideos}
                                     addFile={addFile}
                                 />
                             </Card>
@@ -789,6 +827,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     makeDraggable={true}
                                     viewerMode={viewerMode}
                                     setViewerMode={setViewerMode}
+                                    onFileDelete={handleFileDelete}
                                 />
                             )}
                         </Grid.Col>

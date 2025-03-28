@@ -3,7 +3,7 @@
  * Component for viewing documents, lectures, and textbooks
  */
 
-import { Card, Stack, Group, Text, ActionIcon, Box, Button } from "@mantine/core";
+import { Card, Stack, Group, Text, ActionIcon, Box, Button, Divider } from "@mantine/core";
 import { IconMinus, IconPlus, IconX } from "@tabler/icons-react";
 import LectureViewer from "../../Viewer/LectureViewer";
 import { memo } from "react";
@@ -20,6 +20,9 @@ import { getChapters } from "@/utils/queries/get-chapters";
 import { getExercises } from "@/utils/queries/get-exercises";
 import FileViewer from "@/components/Viewer/FileViewer";
 import { getFiles } from "@/utils/queries/get-files";
+import DeleteFileModal from "@/components/Delete/DeleteFileModal";
+import { getUser } from "@/utils/queries/get-user";
+import { getProfile } from "@/utils/queries/get-profile";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
@@ -31,6 +34,17 @@ interface ViewerPanelProps {
 
 export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, classId, activeChat }: ViewerPanelProps) => {
     const supabase = useSupabaseBrowser();
+
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase),
+    })
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user
+    })
 
     const { data: lectures } = useQuery({
         queryKey: ["lectures", classId],
@@ -52,14 +66,16 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
         queryFn: () => getHomeworks(supabase, [classId])
     });
 
-    const { data: files } = useQuery({
-        queryKey: ["files", classId],
-        queryFn: () => getFiles(supabase, [classId])
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", profile?.id, classId],
+        queryFn: () => getFiles(supabase, profile!.id, [classId]),
+        enabled: !!profile
     });
+
 
     // Helper function to get viewer title
     const getViewerTitle = () => {
-        if (viewerMode.lectureId ) {
+        if (viewerMode.lectureId) {
             const lecture = lectures?.find(l => l.id === viewerMode.lectureId);
             return lecture ? `${lecture.name}` : "Lecture Viewer";
         } else if (viewerMode.textbookId && viewerMode.chapterId) {
@@ -85,7 +101,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
             setViewerMode(prev => ({
                 ...prev,
                 active: false,
-                open: false,                
+                open: false,
             }));
         } else if (viewerMode.active) {
             setViewerMode(prev => ({
@@ -104,19 +120,29 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
             style={{ height: viewerMode.immersive ? "90vh" : "80vh" }}
         >
             <Stack style={{ height: "100%" }}>
-                <Group justify="space-between" wrap="nowrap">
-                    <Text
-                        size="lg"
-                        fw={700}
-                        truncate="end"
-                        style={{ flex: 1 }}
-                    >
-                        {getViewerTitle()}
-                    </Text>
+                <Group justify="space-between" wrap="nowrap" align="flex-start" style={{ width: '100%' }}>
+                    <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
+                        <Text
+                            size="lg"
+                            fw={700}
+                            truncate="end"
+                            style={{ width: '100%' }}
+                        >
+                            {getViewerTitle()}
+                        </Text>
+                        {viewerMode.fileId && <Text
+                            size="xs"
+                            fw={500}
+                            c="red"
+                            truncate="end"
+                        > Expires at {files?.find(f => f.id === viewerMode.fileId)?.expires ? new Date(files?.find(f => f.id === viewerMode.fileId)?.expires ?? "").toLocaleString() : "No expiration date"}
+                        </Text>}
+                    </Stack>
                     <ActionIcon
                         onClick={handleClose}
                         variant="subtle"
-                        ml="auto"
+                        ml={8}
+                        style={{ flexShrink: 0 }}
                     >
                         <IconX size={20} />
                     </ActionIcon>
@@ -198,7 +224,6 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                                 fileId={viewerMode.fileId}
                                 initialDocumentId={viewerMode.documentId}
                             />
-
                         </Box>
                         {activeChat.context.files.includes(viewerMode.fileId ?? "") ? null : <Button
                             leftSection={<IconPlus size={16} />}

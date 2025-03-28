@@ -20,10 +20,12 @@ class ProblemsProcessor(BaseProcessor):
         lectures: List[Dict[str, Any]],
         chapters: List[Dict[str, Any]],
         homeworks: List[Dict[str, Any]],
+        files: List[Dict[str, Any]],
         lecture_documents: List[Dict[str, Any]],
         chapter_documents: List[Dict[str, Any]],
         chapter_exercises: List[Dict[str, Any]],
         homework_exercises: List[Dict[str, Any]],
+        file_documents: List[Dict[str, Any]],
     ):
         super().__init__()
         self.course_title = course_title
@@ -32,10 +34,12 @@ class ProblemsProcessor(BaseProcessor):
         self.lectures = lectures
         self.chapters = chapters
         self.homeworks = homeworks
+        self.files = files
         self.lecture_documents = lecture_documents
         self.chapter_documents = chapter_documents
         self.chapter_exercises = chapter_exercises
         self.homework_exercises = homework_exercises
+        self.file_documents = file_documents
         self.all_content = all_content
 
     def initialize_mcq_prompts(self) -> tuple[str, str, str, str]:
@@ -464,13 +468,14 @@ class ProblemsProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],
+        file_references: List[str],
         figures: List[str]
     ) -> None:
         """Clean the result based on question type"""
         if question_type == "mcq":
-            self.clean_mcq_result(question_id, result, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, figures)
+            self.clean_mcq_result(question_id, result, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, file_references, figures)
         else:
-            self.clean_frq_result(question_id, result, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, figures)
+            self.clean_frq_result(question_id, result, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, file_references, figures)
 
     def clean_mcq_result(
         self,
@@ -481,6 +486,7 @@ class ProblemsProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],
+        file_references: List[str],
         figures: List[str]
     ) -> None:
         """Clean MCQ-specific results"""
@@ -504,7 +510,7 @@ class ProblemsProcessor(BaseProcessor):
                         )
                         
                         if part_match:
-                            question_obj = self.process_mcq_block(question_id, part_match.group(1), tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, figures)
+                            question_obj = self.process_mcq_block(question_id, part_match.group(1), tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, file_references, figures)
                             if question_obj:
                                 multi_part_question_obj.append(question_obj)
                     
@@ -515,7 +521,7 @@ class ProblemsProcessor(BaseProcessor):
                         self.questions[question_id].append(multi_part_question_obj)
                 else:
                     # Handle single-part questions
-                    question_obj = self.process_mcq_block(question_id, block, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, figures)
+                    question_obj = self.process_mcq_block(question_id, block, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, file_references, figures)
                     if question_obj:
                         if question_id not in self.questions:
                             self.questions[question_id] = []
@@ -533,6 +539,7 @@ class ProblemsProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],
+        file_references: List[str],
         figures: List[str]
     ) -> None:
         """Clean FRQ-specific results"""
@@ -556,7 +563,7 @@ class ProblemsProcessor(BaseProcessor):
                         )
                         
                         if part_match:
-                            question_obj = self.process_frq_block(question_id, part_match.group(1), tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, figures)
+                            question_obj = self.process_frq_block(question_id, part_match.group(1), tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, file_references, figures)
                             if question_obj:
                                 multi_part_question_obj.append(question_obj)
                     
@@ -567,7 +574,7 @@ class ProblemsProcessor(BaseProcessor):
                         self.questions[question_id].append(multi_part_question_obj)
                 else:
                     # Handle single-part questions
-                    question_obj = self.process_frq_block(question_id, block, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, figures)
+                    question_obj = self.process_frq_block(question_id, block, tags, lecture_references, chapter_references, chapter_exercise_references, homework_exercise_references, file_references, figures)
                     if question_obj:
                         if question_id not in self.questions:
                             self.questions[question_id] = []
@@ -585,6 +592,7 @@ class ProblemsProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],
+        file_references: List[str],
         figures: List[str]
     ) -> Optional[MCQQuestion]:
         """Process MCQ-specific blocks"""
@@ -643,6 +651,7 @@ class ProblemsProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],
+        file_references: List[str],
         figures: List[str]
     ) -> Optional[FRQQuestion]:
         """Process FRQ-specific blocks"""
@@ -668,6 +677,7 @@ class ProblemsProcessor(BaseProcessor):
             "chapter_references": chapter_references,
             "chapter_exercise_references": chapter_exercise_references,
             "homework_exercise_references": homework_exercise_references,
+            "file_references": file_references,
             "figures": figures
         }
 
@@ -732,7 +742,7 @@ class ProblemsProcessor(BaseProcessor):
                 )
             
             # clean the result, get the figures and references, of type ChatMessage
-            figures_and_references = clean_figures_and_references(question, message_id, result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
+            figures_and_references = clean_figures_and_references(question, message_id, result, self.lectures, self.chapters, self.homeworks, self.files, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises, self.file_documents)
 
             print(f"Figures and references: {figures_and_references}")
 
@@ -745,6 +755,7 @@ class ProblemsProcessor(BaseProcessor):
                 figures_and_references['chapter_references'], 
                 figures_and_references['chapter_exercise_references'], 
                 figures_and_references['homework_exercise_references'], 
+                figures_and_references['file_references'],
                 figures_and_references['figures']
             )
 
