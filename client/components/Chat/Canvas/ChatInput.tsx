@@ -91,6 +91,9 @@ export const ChatInput = memo(({
     queryFn: () => getClass(supabase, classId)
   });
 
+  // Add state to track if Enter was pressed during recording
+  const [enterPressedDuringRecording, setEnterPressedDuringRecording] = useState(false);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -520,22 +523,57 @@ export const ChatInput = memo(({
         return;
       }
 
+      // Check if Enter key is pressed and not with modifiers
+      if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        
+        // If recording, stop recording and flag that Enter was pressed
+        if (isRecording) {
+          setEnterPressedDuringRecording(true);
+          stopRecording();
+          return;
+        }
+        
+        // Send message if there's content and not loading or transcribing
+        if (!loading && !transcribing && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
+          onSend();
+        }
+        return;
+      }
+
       // Check if the key is a single character and not a modifier key (optional)
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         // Focus the text area if not already focused
         textareaRef.current?.focus();
-        // Optionally, you could also add the pressed key to the current value:
-        // onPromptChange(activeChat.prompt + e.key);
       }
     };
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, []);
+  }, [activeChat.prompt, loading, onSend, recordedVideos.length, isRecording, transcribing]);
+
+  // Add useEffect to send message after transcription completes if Enter was pressed
+  useEffect(() => {
+    if (enterPressedDuringRecording && !transcribing && !isRecording && !recordingMode) {
+      if (!loading && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
+        onSend();
+      }
+      setEnterPressedDuringRecording(false);
+    }
+  }, [enterPressedDuringRecording, transcribing, isRecording, recordingMode, loading, activeChat.prompt, recordedVideos.length, onSend]);
 
   return (
     <Stack gap={"md"}>
-      <Box>
+      {!isRecording && <Box
+        style={{
+          position: 'absolute',
+          left: '25px',
+          right: '25px',
+          zIndex: 10,
+          transform: 'translateY(-100%)',
+          pointerEvents: 'auto'
+        }}
+      >
         <ContextBadges
           activeChat={activeChat}
           classId={classId}
@@ -544,34 +582,39 @@ export const ChatInput = memo(({
           setViewerMode={setViewerMode}
           expandedSections={expandedSections}
           toggleSection={toggleSection}
+          recordedVideos={recordedVideos}
+          handleRemoveVideo={handleRemoveVideo}
         />
-      </Box>
+      </Box>}
 
-      <Box className={classes.inputContainer}>
+      <Box className={isRecording ? classes.inputContainer : ''}>
         {(videoStream || (videoRef.current && (videoRef.current.srcObject || (videoRef.current.src && videoRef.current.src !== '')) || recordedVideos.length > 0)) && (
           <Box
             style={{
               position: 'absolute',
-              top: '-160px',
-              left: '8px',
-              right: '8px',
-              height: '150px',
-              zIndex: 100
+              top: '-310px',
+              left: '0',
+              right: '0',
+              height: '300px',
+              zIndex: 100,
+              display: 'flex',
+              justifyContent: 'center'
             }}
           >
-            <ScrollArea scrollbarSize={6} type="auto" offsetScrollbars style={{ height: '100%' }}>
-              <Group gap="sm" style={{ height: '100%' }}>
+            <ScrollArea scrollbarSize={6} type="auto" style={{ height: '100%', width: '100%' }}>
+              <Group gap="sm" style={{ height: '100%', justifyContent: 'center' }}>
                 {/* Current recording preview */}
                 {(videoStream || (videoRef.current && ((videoRef.current.srcObject || (videoRef.current.src && videoRef.current.src !== '')) && isRecording))) && (
                   <Box
                     style={{
                       position: 'relative',
-                      width: '240px',
-                      height: '150px',
-                      borderRadius: '4px',
+                      alignSelf: 'center',
+                      width: '480px',
+                      height: '300px',
+                      borderRadius: '8px',
                       overflow: 'hidden',
                       backgroundColor: '#f0f0f0',
-                      border: '1px solid #ddd',
+                      border: '2px solid #ddd',
                       flexShrink: 0
                     }}
                   >
@@ -605,65 +648,6 @@ export const ChatInput = memo(({
                     )}
                   </Box>
                 )}
-
-                {/* Past recordings */}
-                {recordedVideos.map(video => (
-                  <Box
-                    key={video.id}
-                    style={{
-                      position: 'relative',
-                      width: '240px',
-                      height: '150px',
-                      borderRadius: '4px',
-                      overflow: 'hidden',
-                      backgroundColor: '#f0f0f0',
-                      border: '1px solid #ddd',
-                      flexShrink: 0
-                    }}
-                  >
-                    <video
-                      src={video.url}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        opacity: (video as any).isLoading ? 0.5 : 1
-                      }}
-                      controls
-                      playsInline
-                    />
-                    {(video as any).isLoading ? (
-                      <Box style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0,0,0,0.2)'
-                      }}>
-                        <Text size="sm" fw={500} color="white">Uploading...</Text>
-                      </Box>
-                    ) : (
-                      <ActionIcon
-                        onClick={() => handleRemoveVideo(video.id)}
-                        style={{
-                          position: 'absolute',
-                          top: '4px',
-                          right: '4px',
-                          background: 'rgba(0,0,0,0.5)',
-                          borderRadius: '50%'
-                        }}
-                        size="xs"
-                        color="white"
-                      >
-                        <IconX size={14} />
-                      </ActionIcon>
-                    )}
-                  </Box>
-                ))}
               </Group>
             </ScrollArea>
           </Box>
@@ -740,22 +724,29 @@ export const ChatInput = memo(({
                   onChange={handleFileChange}
                   accept="image/*,application/pdf,audio/*,video/*"
                 />
-                {classData?.learn_mode_enabled && <Button color={"green"} variant={activeChat.chatType === 'concept' ? "outline" : "subtle"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                {classData?.learn_mode_enabled && <Button color={"green"} variant={activeChat.chatType === 'concept' ? "light-outline" : "outline"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
                   ...prev,
                   chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
                 }))}>Learn</Button>}
-                {classData?.homework_mode_enabled && <Button color={"indigo"} variant={activeChat.chatType === 'homework-student' ? "outline" : "subtle"} size="sm" leftSection={<IconFile size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                {classData?.homework_mode_enabled && <Button color={"indigo"} variant={activeChat.chatType === 'homework-student' ? "light-outline" : "outline"} size="sm" leftSection={<IconFile size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
                   ...prev,
                   chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
                 }))}>Homework</Button>}
-                {classData?.test_prep_mode_enabled && <Button color={"cyan"} variant={activeChat.chatType === 'review' ? "outline" : "subtle"} size="sm" leftSection={<IconPencil size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                {classData?.test_prep_mode_enabled && <Button color={"cyan"} variant={activeChat.chatType === 'review' ? "light-outline" : "outline"} size="sm" leftSection={<IconPencil size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
                   ...prev,
                   chatType: prev.chatType === 'review' ? 'general-student' : 'review'
                 }))}>Test-Prep</Button>}
-                {classData?.present_mode_enabled && <Button color={"orange"} variant={activeChat.chatType === 'present' ? "outline" : "subtle"} size="sm" leftSection={<IconPresentation size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-                  ...prev,
-                  chatType: prev.chatType === 'present' ? 'general-student' : 'present'
-                }))}>Present</Button>}
+                {classData?.present_mode_enabled && <Button
+                  color={"orange"}
+                  variant={activeChat.chatType === 'present' ? "light-outline" : "outline"}
+                  size="sm"
+                  leftSection={<IconPresentation size={16} />}
+                  radius="xl"
+                  onClick={() => setActiveChat((prev) => ({
+                    ...prev,
+                    chatType: prev.chatType === 'present' ? 'general-student' : 'present'
+                  }))}
+                >Present</Button>}
               </Group>
 
               {/* Right side icons */}

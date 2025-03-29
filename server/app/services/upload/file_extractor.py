@@ -18,6 +18,7 @@ from app.config import model_manager, MODEL_REGISTRY
 import google.generativeai as genai
 import concurrent.futures
 import threading
+from app.services.base_processor import BaseProcessor, Message
 
 load_dotenv()
 
@@ -419,6 +420,61 @@ class FileExtractor:
         except Exception as e:
             logger.error(f"Error processing image file: {str(e)}")
             raise
+
+    async def generate_video_title(self, transcriptions: List[str], file_id: str) -> str:
+        """Generate a title for a video file based on its transcriptions
+        
+        Args:
+            transcriptions: List of transcription texts from video chunks
+            file_id: ID of the file
+            
+        Returns:
+            str: Generated title for the video
+        """
+        try:
+            # Combine all transcriptions, limiting to first 2000 chars to avoid token limits
+            combined_text = " ".join(transcriptions)
+            if len(combined_text) > 2000:
+                combined_text = combined_text[:2000] + "..."
+                
+            system_prompt = (
+                "You are an expert at identifying the title of a video."
+                "Given the transcription of a video, "
+                "you will identify a descriptive title. "
+                "The title should be a single sentence that captures the essence of the video content. "
+                "You should output a single <TITLE>x</TITLE> tag, where x is the title of the video. "
+                "CRITICAL: Make sure to keep the title short and concise, it should be under 10 words. "
+                "It should be in Title Case and capture the main topic of the video."
+                "Here is an example of a good title: <TITLE>Help With Precalculus</TITLE>"
+            )
+
+            prompt = (
+                "Here is the transcription from a video. Please generate an appropriate title:\n\n"
+                f"{combined_text}\n\n"
+                "OUTPUT:\n"
+            )
+
+            # Create a temporary BaseProcessor to use its robust_generate method
+            processor = BaseProcessor()
+            
+            message = Message(content=[
+                {"type": "text", "text": prompt},
+            ])
+
+            response = await processor.robust_generate(system_prompt, message, "gemini-2.0-flash")
+            print("TITLE RESPONSE: ", response)
+            
+            # Extract title from response
+            title_match = re.search(r'<TITLE>(.*?)</TITLE>', response)
+            if title_match:
+                return title_match.group(1).strip()
+            else:
+                logger.warning(f"No title found in response: {response}")
+                return ""
+                
+        except Exception as e:
+            logger.error(f"Error generating video title: {str(e)}")
+            return ""
 
     def upload_to_supabase(self, content_items: List[Dict[str, Any]], class_id: str, file_id: str, supabase: Client):
         """Upload extracted content to Supabase

@@ -294,6 +294,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     // Remove this video from the list as it's been processed
                     setRecordedVideos(prev => prev.filter(v => v.id !== video.id));
 
+                    // invalidate the files query
+                    queryClient.invalidateQueries({ queryKey: ["files", profile?.id, classId] });
+
                     return fileId;
                 } catch (error) {
                     console.error(`Error processing video ${video.id}:`, error);

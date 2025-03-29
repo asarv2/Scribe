@@ -25,7 +25,7 @@ class ModelManager:
         
         # Whisper configuration
         self.num_whisper_instances = 10 if torch.cuda.is_available() else 1
-        self.whisper_model_size = os.environ.get('WHISPER_MODEL_SIZE', 'small')
+        self.whisper_model_size = 'tiny.en'
 
     def _get_gpu_memory(self) -> float:
         """Get available GPU memory"""
@@ -65,13 +65,11 @@ class ModelManager:
                 print(f"Available GPU memory: {available_memory:.2f} GB")
                 
                 # Adjust number of instances based on available memory
-                # Each small model takes ~1GB, tiny ~0.5GB
-                if self.whisper_model_size == 'small' and available_memory < self.num_whisper_instances:
+                if available_memory < self.num_whisper_instances:
                     self.num_whisper_instances = max(1, int(available_memory))
                     print(f"Adjusted number of Whisper instances to {self.num_whisper_instances} based on available memory")
             else:
                 # Use only one tiny model on CPU
-                self.whisper_model_size = 'tiny'
                 self.num_whisper_instances = 1
                 print("Running on CPU: Using single tiny Whisper model")
             

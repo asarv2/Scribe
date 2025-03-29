@@ -234,15 +234,7 @@ class LectureProcessor(BaseProcessor):
             # Prepare message content
             message_content = []
             additional_files = []
-            
-            # For video, include the image if available
-            if content_type == "video" and "image" in document and document["image"]:
-                base64_image = base64.b64encode(document["image"]).decode('utf-8')
-                message_content.append({
-                    "type": "image_url",
-                    "image_url": f"data:image/png;base64,{base64_image}"
-                })
-            
+
             # For audio/video, use the Gemini file_name if available
             if file_name:
                 try:
@@ -254,6 +246,15 @@ class LectureProcessor(BaseProcessor):
                         print(f"File not found in Gemini: {file_name}")
                 except Exception as e:
                     print(f"Error getting file from Gemini: {str(e)}")
+            
+            
+            # For video, include the image if available
+            if content_type == "video" and "image" in document and document["image"]:
+                base64_image = base64.b64encode(document["image"]).decode('utf-8')
+                message_content.append({
+                    "type": "image_url",
+                    "image_url": f"data:image/png;base64,{base64_image}"
+                })
             
             # Add prompt to message
             message_content.append({
@@ -273,8 +274,7 @@ class LectureProcessor(BaseProcessor):
             
             # Generate response using Gemini
             try:
-                model = "gemini-2.0-flash-lite"
-                response = await self.robust_generate(None, message, model=model, additional_files=additional_files)
+                response = await self.robust_generate(None, message, model="gemini-2.0-flash-lite", additional_files=additional_files)
                 
                 if not response:
                     response = f"Failed to generate description for {content_type} segment {chunk_num}."
@@ -323,20 +323,20 @@ class LectureProcessor(BaseProcessor):
         if content_type == "audio":
             return f"""{base}
 
-This is audio segment {chunk_num} from {start_time} to {end_time}. 
+            This is audio segment {chunk_num} from {start_time} to {end_time}. 
 
-Based on the transcription provided, please summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples mentioned. Format your response as a detailed description that would be helpful for a student reviewing this lecture.
+            Based on the transcription provided, please summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples mentioned. Format your response as a detailed description that would be helpful for a student reviewing this lecture.
 
-Be specific about the content and include any technical terms, formulas, or concepts mentioned. Use LaTeX notation (enclosed in $ signs) for any mathematical content."""
+            Be specific about the content and include any technical terms, formulas, or concepts mentioned. Use LaTeX notation (enclosed in $ signs) for any mathematical content."""
         
         else:  # video
             return f"""{base}
 
-This is video segment {chunk_num} from {start_time} to {end_time}.
+            This is video segment {chunk_num} from {start_time} to {end_time}.
 
-Based on the visual content and transcription provided, please describe what you see in the frame and summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples shown or mentioned. Format your response as a detailed description that would be helpful for a student reviewing this lecture.
+            Based on the visual content and transcription provided, please describe what you see in the frame and summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples shown or mentioned. Format your response as a detailed description that would be helpful for a student reviewing this lecture.
 
-Be specific about both the visual elements and the spoken content. Include any technical terms, formulas, or concepts mentioned. Use LaTeX notation (enclosed in $ signs) for any mathematical content."""
+            Be specific about both the visual elements and the spoken content. Include any technical terms, formulas, or concepts mentioned. Use LaTeX notation (enclosed in $ signs) for any mathematical content."""
 
     def _get_base_prompt(self) -> str:
         example_description = '''This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof is outlined, focusing on one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\leq t \\leq 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem. The term "conv. comb." is an abbreviation for "convex combination." The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.'''

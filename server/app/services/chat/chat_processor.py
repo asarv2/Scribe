@@ -143,12 +143,17 @@ class ChatProcessor(BaseProcessor):
             with open(os.path.join(MESSAGES_DIR, f"{self.message_id}.txt"), "w") as f:
                 f.write("SYSTEM PROMPT: " + system_prompt + "\n\n" + "INPUT PROMPT: " + prompt)
 
-            message = Message(content=[
-                {"type": "text", "text": prompt},
-            ])
+            # add additional files to the message content
+            message_content = []
+            additional_files = []
+            if self.additional_files:
+                additional_files.extend(self.additional_files)
+            message_content.append({"type": "text", "text": prompt})
+
+            message = Message(content=message_content)
 
             response_text = ""
-            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash", additional_files=self.additional_files):
+            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash", additional_files=additional_files):
                 response_text += chunk
                 if stream_callback:
                     yield await stream_callback(chunk)

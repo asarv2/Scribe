@@ -20,10 +20,11 @@ export default function UploadLectureButton({ classId, icon = false, startParse 
             const formData = new FormData();
             formData.append('file', file);
             formData.append('class_id', classId);
-            formData.append('title', file.name.replace('.pdf', ''));
+            formData.append('title', file.name.split('.').slice(0, -1).join('.')); // Remove file extension
             formData.append('file_path', ''); // Empty since we're uploading directly
             formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
             formData.append('start_parse', startParse ? 'true' : 'false');
+            
             // Upload the file
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/lecture`, {
                 method: 'POST',
@@ -75,7 +76,7 @@ export default function UploadLectureButton({ classId, icon = false, startParse 
                         Array.from(e.target.files).forEach(file => handleUploadLecture(file));
                     }
                 }}
-                accept="application/pdf"
+                accept="application/pdf,video/*,audio/*,image/*"
                 style={{ display: 'none' }}
                 multiple
             />

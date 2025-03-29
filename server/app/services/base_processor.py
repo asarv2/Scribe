@@ -58,7 +58,7 @@ class FRQQuestion(TypedDict):
 LiteralModel: TypeAlias = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b"]
 @dataclass
 class Message:
-    content: List[Dict[str, str]]
+    content: List[Union[Dict[str, str], File]]
 
 class CleanedResponse:
     def __init__(self, page: int, description: str, text: str):
@@ -294,7 +294,6 @@ class BaseProcessor:
                 # Add additional files to the content parts
                 if additional_files:
                     content_parts.extend(additional_files)
-
                 # Add the message content to the content parts
                 for part in message.content:
                     if part["type"] == "text":

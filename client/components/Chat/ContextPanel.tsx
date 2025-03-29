@@ -28,6 +28,7 @@ import { getFiles } from "@/utils/queries/get-files";
 import DeleteFileModal from "../Delete/DeleteFileModal";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
+import { getClass } from "@/utils/queries/get-class";
 declare global {
     interface Window {
         scrollToFirstItem?: (type: string) => void;
@@ -309,6 +310,12 @@ export function ContextPanel({
         enabled: !!user
     })
 
+    const { data: classData, isLoading: loadingClassData } = useQuery({
+        queryKey: ["class", classId],
+        queryFn: () => getClass(supabase, classId),
+        enabled: !!classId
+    })
+
     const { data: lectures, isLoading: loadingLectures } = useQuery({
         queryKey: ["lectures", classId],
         queryFn: () => getLectures(supabase, [classId])
@@ -490,9 +497,13 @@ export function ContextPanel({
     // Get all content items combined
     const getAllContentItems = () => {
         const allItems = [];
+        const filesEnabled = classData?.files_enabled;
+        const lectureEnabled = classData?.lecture_enabled;
+        const textbookEnabled = classData?.textbook_enabled;
+        const homeworkEnabled = classData?.homework_enabled;
 
         // Add files
-        if (files) {
+        if (files && filesEnabled) {
             const filteredFiles = filterBySearch(files.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
                 .filter(f => !activeChat.context.files.includes(f.id))
                 .map(f => ({
@@ -512,7 +523,7 @@ export function ContextPanel({
         }
 
         // Add homeworks
-        if (homeworks) {
+        if (homeworks && homeworkEnabled) {
             const filteredHomeworks = filterBySearch(homeworks.sort((a, b) => b.homework_number - a.homework_number), textbookDocuments || [])
                 .filter(h => !activeChat.context.homeworks.includes(h.id))
                 .map(h => ({
@@ -532,7 +543,7 @@ export function ContextPanel({
         }
 
         // Add lectures
-        if (lectures) {
+        if (lectures && lectureEnabled) {
             const filteredLectures = filterBySearch(lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)), lectureDocuments || [])
                 .filter(l => !activeChat.context.lectures.includes(l.id))
                 .map(l => ({
@@ -552,7 +563,7 @@ export function ContextPanel({
         }
 
         // Add chapters
-        if (chapters) {
+        if (chapters && textbookEnabled) {
             const filteredChapters = filterBySearch(chapters.sort((a, b) => (a.chapter_number ?? 0) - (b.chapter_number ?? 0)), textbookDocuments || [])
                 .filter(c => !activeChat.context.chapters.includes(c.id))
                 .map(c => ({
@@ -624,7 +635,7 @@ export function ContextPanel({
     };
 
     const allContentItems = getAllContentItems();
-    const isLoading = loadingLectures || loadingChapters || loadingFiles || loadingExercises || loadingHomeworks || loadingTextbooks;
+    const isLoading = loadingLectures || loadingChapters || loadingFiles || loadingExercises || loadingHomeworks || loadingTextbooks || loadingClassData;
 
     // Find first items of each type for scrolling
     const firstLectureItem = allContentItems.find(item => item.type === 'lectures');

@@ -559,6 +559,7 @@ async def process_lecture(
 ):
     """
     Process a lecture file - can be called with either an uploaded file or a file path.
+    Supports multiple file types: pdf, audio, video, image, and other.
     
     Parameters:
     - file: The uploaded lecture file (optional)
@@ -570,6 +571,7 @@ async def process_lecture(
     Returns:
     - JSON with processing information
     """
+    lecture_id = None
     try:
         # Validate that either file or file_path is provided
         if not file and not file_path:
@@ -578,18 +580,77 @@ async def process_lecture(
                 content={"error": "Either file or file_path must be provided"}
             )
         
+        # Determine filename
+        if file:
+            filename = file.filename
+        else:
+            filename = os.path.basename(file_path)
+            
+        # Determine file type based on extension
+        file_type = "other"
+        ext = os.path.splitext(filename)[1].lower()
+        
+        if ext in ['.pdf']:
+            file_type = "pdf"
+        elif ext in ['.mp3', '.wav', '.ogg', '.flac', '.m4a']:
+            file_type = "audio"
+        elif ext in ['.mp4', '.avi', '.mov', '.mkv', '.webm']:
+            file_type = "video"
+        elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+            file_type = "image"
 
-        # get exisiting lectures to find the note_number
+        # Determine file length
+        file_length = 1
+        if file_type in ["audio", "video"]:
+            try:
+                from pydub import AudioSegment
+                
+                # Make sure we have a valid file to read
+                if file:
+                    # Create a temporary file to store the uploaded content
+                    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                        temp_path = temp_file.name
+                        await file.seek(0)  # Ensure we're at the start of the file
+                        content = await file.read()
+                        temp_file.write(content)
+                        
+                    # Get the length from the temporary file
+                    media = AudioSegment.from_file(temp_path)
+                    file_length = len(media) / 1000  # Convert to seconds
+                    os.unlink(temp_path)  # Clean up the temporary file
+                elif file_path and os.path.exists(file_path):
+                    # Get the length from the existing file path
+                    media = AudioSegment.from_file(file_path)
+                    file_length = len(media) / 1000  # Convert to seconds
+                else:
+                    logger.warning("Neither file object nor valid file path available for length detection")
+                    file_length = 0
+                    
+                # Find how many 30 second chunks (rounded up)
+                file_length = max(1, math.ceil(file_length / 30))
+            except Exception as e:
+                logger.warning(f"Could not determine media length: {str(e)}")
+                file_length = 1
+        else:
+            file_length = 1
+
+        # get existing lectures to find the note_number
         lectures_response = supabase.table("lectures").select("*").eq("class", class_id).eq("deleted", False).execute()
         existing_lectures = lectures_response.data
         note_number = len(existing_lectures) + 1
         
+        # drop ext on filename for title
+        filename_for_title = os.path.splitext(filename)[0]
+        
         # create lecture in supabase
         lecture_response = supabase.table("lectures").insert({
             "class": class_id,
-            "name": title or os.path.splitext(filename)[0],
+            "name": title or filename_for_title,
             "note_number": note_number,
-            "response_url": response_url or ""
+            "response_url": response_url or "",
+            "type": file_type,
+            "pages": file_length,
+            "parse_status": "idle"
         }).execute()
 
         # Get the ID of the newly created lecture
@@ -602,8 +663,6 @@ async def process_lecture(
         # Determine file path and save if needed
         if not file_path:
             # This is an external upload
-            filename = file.filename
-            
             # Save the uploaded file
             file_path = os.path.join(lecture_dir, filename)
             await file.seek(0)
@@ -614,7 +673,6 @@ async def process_lecture(
         else:
             # This is an internal call with an existing file
             # Copy the file to the lecture directory
-            filename = os.path.basename(file_path)
             destination_path = os.path.join(lecture_dir, filename)
             
             # Create directory if it doesn't exist
@@ -624,27 +682,56 @@ async def process_lecture(
             shutil.copy2(file_path, destination_path)
             file_path = destination_path
         
-        # extracing necessary content from the lecture
-        processor = LectureExtractor(file_path)
-
-        # update the status of the lecture in the database
+        # Update lecture status to extracting
         supabase.table("lectures").update({
             "parse_status": "extracting",
             "parse_error": None,
             "last_parse_attempt": datetime.now().isoformat()
         }).eq("id", lecture_id).execute()
-
-        # Process lecture and get ID
-        pages_content, page_count = processor.extract_pdf_content()
-        # update the status of the lecture in the database
-        supabase.table("lectures").update({
-            "parse_status": "uploading",
-            "pages": page_count,
-            "parse_error": None,
-            "last_parse_attempt": datetime.now().isoformat()
-        }).eq("id", lecture_id).execute()
-
-        processor.upload_to_supabase(pages_content, class_id, lecture_id, supabase)
+        
+        # Process based on file type
+        if file_type == "pdf":
+            # Use existing PDF extraction logic
+            processor = LectureExtractor(file_path)
+            pages_content, page_count = processor.extract_pdf_content()
+            
+            # Update the status and page count
+            supabase.table("lectures").update({
+                "parse_status": "uploading",
+                "pages": page_count,
+                "parse_error": None,
+                "last_parse_attempt": datetime.now().isoformat()
+            }).eq("id", lecture_id).execute()
+            
+            processor.upload_to_supabase(pages_content, class_id, lecture_id, supabase)
+        else:
+            # Use FileExtractor for non-PDF files
+            processor = FileExtractor(file_path)
+            file_content = processor.extract_file_content()
+            
+            # Update the status
+            supabase.table("lectures").update({
+                "parse_status": "uploading",
+                "parse_error": None,
+                "last_parse_attempt": datetime.now().isoformat()
+            }).eq("id", lecture_id).execute()
+            
+            processor.upload_to_supabase(file_content, class_id, lecture_id, supabase)
+            
+            # Generate title for video files that start with "video-"
+            if file_type == "video" and filename.lower().startswith("video-"):
+                # Collect all transcriptions
+                transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
+                
+                if transcriptions:
+                    # Generate title
+                    title = await processor.generate_video_title(transcriptions, lecture_id)
+                    
+                    if title:
+                        # Update lecture title in database
+                        supabase.table("lectures").update({
+                            "name": title
+                        }).eq("id", lecture_id).execute()
         
         if start_parse:
             # Process the lecture file using the task queue
@@ -654,7 +741,8 @@ async def process_lecture(
             "status": "success",
             "message": "Lecture file received and processing started",
             "lecture_id": lecture_id,
-            "file_path": file_path
+            "file_path": file_path,
+            "file_type": file_type
         }
         
     except Exception as e:
@@ -1033,10 +1121,13 @@ async def process_file(
         else:
             file_length = 1
 
+        # drop ext on filename
+        filename_for_supabase = os.path.splitext(filename)[0]
+
         # Create file record in supabase
         file_response = supabase.table("files").insert({
             "class": class_id,
-            "title": filename,
+            "title": filename_for_supabase,
             "profile": profile_id,
             "type": file_type,
             "length": file_length,
@@ -1096,6 +1187,22 @@ async def process_file(
         
         # Upload content to Supabase
         processor.upload_to_supabase(file_content, class_id, file_id, supabase)
+        
+        # Generate title for video files that start with "video-"
+        if file_type == "video" and filename.lower().startswith("video-"):
+            # Collect all transcriptions
+            transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
+            
+            if transcriptions:
+                # Generate title
+                title = await processor.generate_video_title(transcriptions, file_id)
+                print(f"TITLE: {title}")
+                
+                if title:
+                    # Update file title in database
+                    supabase.table("files").update({
+                        "title": title
+                    }).eq("id", file_id).execute()
         
         # Process the file using the task queue if response_url is provided
         if start_parse:
