@@ -46,14 +46,15 @@ async def parse_lecture(request: ParseRequest):
 
         # Get lecture info
         lecture_response = supabase.table("lectures").select("*").eq("id", lecture_id).single().execute()
+        lecture_name = lecture_response.data.get('name')
         num_pages = lecture_response.data.get('pages')
         class_id = lecture_response.data.get('class')
+        lecture_type = lecture_response.data.get('type', 'pdf')  # Default to pdf if not specified
         print("Lecture query response:", lecture_response)
 
         # Get class title
         class_response = supabase.table("classes").select("*").eq("id", class_id).single().execute()
         class_title = class_response.data.get('title')
-        private_mode = class_response.data.get('privacy')
         print("Class query response:", class_response)
 
         # Get existing documents
@@ -74,49 +75,44 @@ async def parse_lecture(request: ParseRequest):
         all_results = []
         
         # Get images and audio from supabase
-        images = []
-        text_contents = []
+        processed_documents = []
         
         try:
             for doc in documents_to_process:
-                # Download image
-                image_path = f"{class_id}/{lecture_id}/{doc['id']}.png"
-                print(f"Trying to download: {image_path}")
+                doc_data = {
+                    "page": doc['page'],
+                    "text": doc.get("text", ""),
+                    "type": lecture_type,
+                    "start_time": doc.get("start_time"),
+                    "end_time": doc.get("end_time"),
+                    "file_name": doc.get("file_name", "")
+                }
                 
-                try:
-                    response = supabase.storage.from_("lectures").download(image_path)
-                except Exception as e:
-                    print(f"Error downloading image {doc['page']}: {e}")
-                    continue
+                # For PDF pages and video chunks, download the image
+                if lecture_type in ['pdf', 'video']:
+                    image_path = f"{class_id}/{lecture_id}/{doc['id']}.png"
+                    print(f"Trying to download: {image_path}")
+                    
+                    try:
+                        response = supabase.storage.from_("lectures").download(image_path)
+                        if response:
+                            doc_data["image"] = response
+                            print(f"Successfully downloaded image for {lecture_type} {doc['page']}")
+                        else:
+                            print(f"No data received for image {doc['page']}")
+                    except Exception as e:
+                        print(f"Error downloading image for {lecture_type} {doc['page']}: {e}")
                 
-                if not response:
-                    print(f"No data received for image {doc['page']}")
-                    continue
-
-                images.append(response)
-                print(f"Successfully downloaded image {doc['page']}")
-
-                text_contents.append(doc.get("text", ""))
+                processed_documents.append(doc_data)
 
         except Exception as error:
-            print("Error in image download process:", error)
+            print("Error in document preparation process:", error)
             raise error
 
-        print("Total images downloaded:", len(images))
+        print(f"Total documents prepared: {len(processed_documents)}")
 
-        # Prepare documents for processing
-        processed_documents = [
-            {
-                "page": doc["page"],
-                "image": img,
-                "text": text_content,
-            }
-            for doc, img, text_content in zip(documents_to_process, images, text_contents)
-        ]
-        # print("Processed documents:", processed_documents)
-
-        # Process all slides with dynamic batching
-        print("Starting lecture processing with dynamic batching...")
+        # Process all documents
+        print(f"Starting lecture processing for {lecture_type} content...")
         
         async def after_generate(result):
             # Find document ID
@@ -136,11 +132,10 @@ async def parse_lecture(request: ParseRequest):
             print("Document inserted:", result.description)
 
         results = await lecture_processor.process_slides(
-            class_title,
+            lecture_name,
             num_pages,
             processed_documents,
             after_generate,
-            private_mode
         )
         print("Lecture processing complete, results:", results)
 
@@ -734,8 +729,8 @@ async def transcribe_audio(
             temp_file.write(content)
             temp_file_path = temp_file.name
         
-        # Get the Whisper model from our model manager
-        whisper_model = model_manager._get_whisper_model()
+        # Get a Whisper model from our model manager
+        whisper_model = model_manager.get_whisper_model()
         
         # Process with Whisper
         # The model handles various audio formats automatically

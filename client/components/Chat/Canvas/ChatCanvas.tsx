@@ -182,7 +182,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
         const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles, ...uploadedFileIds]));
         return allFiles;
-        
+
     }
 
     const getAdditionalContextForBareQuestion = () => {
@@ -278,15 +278,35 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             setAddingFiles(true);
             let profileId = profile?.id;
             let newChatId = chatId;
-                
+
+            // Mark all videos as loading
+            setRecordedVideos(prev => prev.map(video => ({ ...video, isLoading: true })));
+
             // upload all the recorded videos, via the addFile function
             const fileIds = await Promise.all(recordedVideos.map(async (video) => {
-                // Fetch the actual blob data from the URL
-                const response = await fetch(video.url);
-                const blobData = await response.blob();
-                const videoFile = new File([blobData], `${video.id}.webm`, { type: 'video/webm' });
-                return await addFile(videoFile);
+                try {
+                    // Fetch the actual blob data from the URL
+                    const response = await fetch(video.url);
+                    const blobData = await response.blob();
+                    const videoFile = new File([blobData], `${video.id}.webm`, { type: 'video/webm' });
+                    const fileId = await addFile(videoFile);
+
+                    // Remove this video from the list as it's been processed
+                    setRecordedVideos(prev => prev.filter(v => v.id !== video.id));
+
+                    return fileId;
+                } catch (error) {
+                    console.error(`Error processing video ${video.id}:`, error);
+                    // Mark this video as failed but keep it in the list
+                    setRecordedVideos(prev =>
+                        prev.map(v => v.id === video.id ? { ...v, isLoading: false, error: true } : v)
+                    );
+                    return null;
+                }
             }));
+
+            // Clear any remaining videos
+            setRecordedVideos([]);
             setAddingFiles(false);
 
             const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
@@ -364,6 +384,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 message: "Failed to send message. Please try again.",
                 color: "red"
             });
+
+            // Reset loading states on videos in case of error
+            setRecordedVideos(prev => prev.map(video => ({ ...video, isLoading: false })));
         } finally {
             setLoading(false);
         }
@@ -598,6 +621,15 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     ], []
     );
 
+    // Add this new function to show loading state for a specific video
+    const setVideoLoading = (videoId: string, isLoading: boolean) => {
+        setRecordedVideos(prev =>
+            prev.map(video =>
+                video.id === videoId ? { ...video, isLoading } : video
+            )
+        );
+    };
+
     // Add realtime subscriptions for lecture documents
     useEffect(() => {
         if (!files || files.length === 0) return;
@@ -800,6 +832,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     recordedVideos={recordedVideos}
                                     setRecordedVideos={setRecordedVideos}
                                     addFile={addFile}
+                                    addingFiles={addingFiles}
+                                    setVideoLoading={setVideoLoading}
                                 />
                             </Card>
                         </Grid.Col>

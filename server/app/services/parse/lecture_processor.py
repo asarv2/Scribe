@@ -1,14 +1,12 @@
 from typing import List, Dict, Any, Optional, Callable
 import base64
 from app.services.base_processor import BaseProcessor, CleanedResponse, Message
-from app.config import model_manager
-from PIL import Image
-import io
-import torch
+from app.config import model_manager, MODEL_REGISTRY
+import concurrent.futures
 import asyncio
-import time
-from app.services.task_router import route_to_gpu_worker
-from app.config import MODEL_REGISTRY
+import google.generativeai as genai
+import torch
+import gc
 
 class LectureProcessor(BaseProcessor):
     def __init__(self, course_title: str):
@@ -48,153 +46,33 @@ class LectureProcessor(BaseProcessor):
 
         return cleaned_response
     
-    async def process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6, 
-                                     batch_callback=None) -> List[Optional[str]]:
-        """Process multiple images in parallel with Phi-4 model using optimized batching"""
-        try:
-            # Route this GPU-intensive task to the GPU worker
-            return await route_to_gpu_worker(self._process_with_phi4_batch, images, prompts, min_batch_size, max_batch_size, batch_callback)
-        except Exception as e:
-            print(f"Phi-4 batch processing failed: {str(e)}")
-            return [None] * len(images)
-
-    async def _process_with_phi4_batch(self, images: List[bytes], prompts: List[str], min_batch_size=4, max_batch_size=6,
-                                      batch_callback=None) -> List[Optional[str]]:
-        """Process multiple images in parallel with Phi-4 model using optimized batching"""
-        try:
-            # Get model and processor directly from MODEL_REGISTRY instead of global imports
-            model = MODEL_REGISTRY["model"]
-            processor = MODEL_REGISTRY["processor"]
-            
-            if model is None or processor is None:
-                raise RuntimeError("Model not available")
-            
-            # Preload and preprocess all images
-            print("Preloading and preprocessing all images...")
-            preprocess_start = time.time()
-            pil_images = []
-            for img_bytes in images:
-                img = Image.open(io.BytesIO(img_bytes))
-                # Convert to RGB if image has alpha channel or is not RGB
-                if img.mode != 'RGB':
-                    img = img.convert('RGB')
-                # Use a smaller target size to reduce memory and processing time
-                img = img.resize((384, 384), Image.LANCZOS)
-                pil_images.append(img)
-            preprocess_time = time.time() - preprocess_start
-            print(f"Preprocessing completed in {preprocess_time:.2f} seconds")
-
-            # Calculate optimal batch distribution
-            total_images = len(images)
-            batches = []
-            
-            # Determine optimal batch distribution to minimize forward passes
-            remaining = total_images
-            while remaining > 0:
-                if remaining <= max_batch_size:
-                    # Last batch with remaining images
-                    batches.append(remaining)
-                    break
-                elif remaining <= max_batch_size * 2:
-                    # Split remaining images into two balanced batches
-                    batch1 = remaining // 2
-                    batch2 = remaining - batch1
-                    if batch1 < min_batch_size:
-                        batch1 = min_batch_size
-                        batch2 = remaining - batch1
-                    batches.extend([batch1, batch2])
-                    break
-                else:
-                    # Add a max-sized batch and continue
-                    batches.append(max_batch_size)
-                    remaining -= max_batch_size
-            
-            print(f"Optimized batch distribution: {batches} (total: {sum(batches)} images)")
-            
-            # Process images according to the calculated batch sizes
-            all_responses = []
-            image_index = 0
-            
-            for batch_num, batch_size in enumerate(batches):
-                batch_images = pil_images[image_index:image_index+batch_size]
-                batch_prompts = [f"<|user|><|image_1|>{prompts[i+image_index]}<|end|><|assistant|>" for i in range(batch_size)]
-                
-                print(f"\n--- PROCESSING BATCH {batch_num + 1}/{len(batches)} ({batch_size} images) ---")
-                
-                print("Processing batch inputs")
-                # Time the input processing
-                input_start = time.time()
-                batch_inputs = processor(
-                    text=batch_prompts, 
-                    images=batch_images, 
-                    return_tensors='pt', 
-                    padding=True
-                )
-                
-                # Move all input tensors to the same device as the model
-                device = model.device
-                for key in batch_inputs:
-                    if batch_inputs[key] is not None:
-                        batch_inputs[key] = batch_inputs[key].to(device)
-                input_time = time.time() - input_start
-                print(f"Input processing completed in {input_time:.2f} seconds")
-                
-                print("Generating responses for batch")
-                # Generate responses with optimized parameters
-                generation_start = time.time()
-                with torch.no_grad():
-                    generate_ids = model.generate(
-                        **batch_inputs,
-                        max_new_tokens=1000,  # Reduced from 2000
-                        num_beams=1,
-                        do_sample=False,
-                        pad_token_id=processor.tokenizer.pad_token_id,
-                        num_logits_to_keep=1,
-                        use_cache=True,  # Explicitly enable KV cache
-                        repetition_penalty=1.0  # Disable repetition penalty for speed
-                    )
-                generation_time = time.time() - generation_start
-                print(f"Generation completed in {generation_time:.2f} seconds")
-                
-                # Process each response in the batch
-                batch_responses = []
-                for j in range(batch_size):
-                    # Extract the response for this specific image
-                    response_ids = generate_ids[j, batch_inputs['input_ids'].shape[1]:]
-                    response = processor.batch_decode(
-                        [response_ids], skip_special_tokens=True, clean_up_tokenization_spaces=False
-                    )[0]
-                    batch_responses.append(response)
-                    print(f'>>> Processed image {image_index+j+1}')
-                
-                all_responses.extend(batch_responses)
-                
-                # Call the batch callback if provided
-                if batch_callback:
-                    # Create a list of indices for this batch
-                    batch_indices = list(range(image_index, image_index + batch_size))
-                    await batch_callback(batch_responses, batch_indices)
-                
-                image_index += batch_size
-                
-                # Clear CUDA cache between batches
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-            
-            return all_responses
-            
-        except Exception as e:
-            print(f"Phi-4 batch processing failed: {str(e)}")
-            return [None] * len(images)
-
     async def process_slides(
         self,
         lecture_name: str,
         num_slides: int,
         documents: List[Dict[str, Any]],
         after_generate: Callable[[CleanedResponse], None],
-        private_mode: bool = False
     ) -> List[CleanedResponse]:
+        try:
+            # Determine the content type based on the first document
+            content_type = documents[0].get('type', 'pdf_page') if documents else 'pdf_page'
+            
+            if content_type in ['audio_chunk', 'video_chunk']:
+                return await self._process_audio_video(lecture_name, documents, after_generate)
+            else:
+                return await self._process_pdf_slides(lecture_name, num_slides, documents, after_generate)
+        except Exception as error:
+            print("Error processing content:", error)
+            raise error
+    
+    async def _process_pdf_slides(
+        self,
+        lecture_name: str,
+        num_slides: int,
+        documents: List[Dict[str, Any]],
+        after_generate: Callable[[CleanedResponse], None],
+    ) -> List[CleanedResponse]:
+        """Process PDF slides"""
         try:
             # Prepare all prompts and images
             images = []
@@ -213,101 +91,252 @@ class LectureProcessor(BaseProcessor):
                 page_numbers.append(document['page'])
                 text_contents.append(document['text'])
             
-            # Create a callback for batch processing
-            async def batch_callback(batch_responses, batch_indices):
-                for i, response in enumerate(batch_responses):
-                    if response:  # Only process successful responses
-                        idx = batch_indices[i]
-                        print(f"Processing batch result for page {page_numbers[idx]}")
-                        result = self.clean_response(
-                            response,
-                            lecture_name,
-                            page_numbers[idx],
-                            text_contents[idx]
-                        )
-                        # Call after_generate for each processed document in the batch
-                        await after_generate(result)
-
             results = []
-            if private_mode:
-                # Process all images with Phi-4 in private mode
-                print("Processing in private mode using Phi-4")
-                responses = await self.process_with_phi4_batch(images, prompts, batch_callback=batch_callback)
-                
-                # Handle any failed responses
-                for i, response in enumerate(responses):
-                    if not response:
-                        print(f"Warning: Phi-4 failed for page {page_numbers[i]} in private mode")
-                        # In private mode, we don't fall back to Gemini - just store the failure
-                        result = self.clean_response(
-                            "Error: Failed to process in private mode",
-                            lecture_name,
-                            page_numbers[i],
-                            text_contents[i]
-                        )
-                        results.append(result)
-                        await after_generate(result)
-                    else:
-                        # For successful responses, we've already processed them in the batch callback
-                        result = self.notes[lecture_name][page_numbers[i]]
-                        results.append(result)
-            else:
-                # In non-private mode, use Gemini by default
-                print("Processing in standard mode using Gemini")
-                for i in range(len(images)):
-                    try:
-                        base64_image = base64.b64encode(images[i]).decode('utf-8')
-                        
-                        message = Message(content=[
-                            {
-                                "type": "image_url",
-                                "image_url": f"data:image/png;base64,{base64_image}"
-                            },
-                            {
-                                "type": "text",
-                                "text": prompts[i]
-                            },
-                            *([] if not text_contents[i] else [{"type": "text", "text": text_contents[i]}])
-                        ])
+            # In non-private mode, use Gemini by default
+            print("Processing PDF slides using Gemini")
+            for i in range(len(images)):
+                try:
+                    base64_image = base64.b64encode(images[i]).decode('utf-8')
+                    
+                    message = Message(content=[
+                        {
+                            "type": "image_url",
+                            "image_url": f"data:image/png;base64,{base64_image}"
+                        },
+                        {
+                            "type": "text",
+                            "text": prompts[i]
+                        },
+                        *([] if not text_contents[i] else [{"type": "text", "text": text_contents[i]}])
+                    ])
 
-                        self.conversation_history.append(message)
-                        
-                        response = await self.robust_generate(
-                            None,
-                            message,
-                            model="gemini-2.0-flash-lite"
-                        )
-                        
-                        if not response:
-                            raise Exception(f"Empty response from Gemini for page {page_numbers[i]}")
-                        
-                        print(f"Successfully processed page {page_numbers[i]} with Gemini")
-                        
-                        self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
-                        
-                        result = self.clean_response(
-                            response,
-                            lecture_name,
-                            page_numbers[i],
-                            text_contents[i]
-                        )
-                        results.append(result)
-                        await after_generate(result)
-                    except Exception as e:
-                        print(f"Error processing page {page_numbers[i]}: {str(e)}")
-                        result = self.clean_response(
-                            f"Error: {str(e)}",
-                            lecture_name,
-                            page_numbers[i],
-                            text_contents[i]
-                        )
-                        results.append(result)
-                        await after_generate(result)
+                    self.conversation_history.append(message)
+                    
+                    response = await self.robust_generate(
+                        None,
+                        message,
+                        model="gemini-2.0-flash-lite"
+                    )
+                    
+                    if not response:
+                        raise Exception(f"Empty response from Gemini for page {page_numbers[i]}")
+                    
+                    print(f"Successfully processed page {page_numbers[i]} with Gemini")
+                    
+                    self.conversation_history.append(Message(content=[{"type": "text", "text": response}]))
+                    
+                    result = self.clean_response(
+                        response,
+                        lecture_name,
+                        page_numbers[i],
+                        text_contents[i]
+                    )
+                    results.append(result)
+                    await after_generate(result)
+                except Exception as e:
+                    print(f"Error processing page {page_numbers[i]}: {str(e)}")
+                    result = self.clean_response(
+                        f"Error: {str(e)}",
+                        lecture_name,
+                        page_numbers[i],
+                        text_contents[i]
+                    )
+                    results.append(result)
+                    await after_generate(result)
             
             return results
         except Exception as error:
             print("Error processing PDF:", error)
             raise error
+    
+    async def _process_audio_video(
+        self,
+        lecture_name: str,
+        documents: List[Dict[str, Any]],
+        after_generate: Callable[[CleanedResponse], None],
+    ) -> List[CleanedResponse]:
+        """Process audio or video chunks with resource-aware processing"""
+        try:
+            # Sort documents by page/chunk number to ensure proper ordering
+            documents.sort(key=lambda x: x.get('page', x.get('chunk_num', 0)))
+            
+            content_type = "video" if documents[0].get('type', '') == 'video_chunk' else "audio"
+            
+            # Determine processing approach based on available resources
+            is_cpu_only = not torch.cuda.is_available()
+            available_models = len(MODEL_REGISTRY["whisper_models"]) if MODEL_REGISTRY["whisper_initialized"] else 1
+            
+            # Use sequential processing for CPU-only environments with 1 model
+            if is_cpu_only and available_models <= 1:
+                print(f"Processing {len(documents)} {content_type} chunks sequentially (CPU-only mode)")
+                results = []
+                for i, document in enumerate(documents):
+                    print(f"Processing {content_type} chunk {i+1}/{len(documents)}")
+                    result = await self._process_audio_video_chunk(document, lecture_name, after_generate)
+                    results.append(result)
+                    print(f"Finished processing chunk {i+1}/{len(documents)}")
+                    
+                    # Force garbage collection after each chunk in CPU mode
+                    gc.collect()
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+            else:
+                # Use concurrent processing for GPU or multiple CPU models
+                max_workers = min(available_models, len(documents))
+                print(f"Processing {len(documents)} {content_type} chunks with {max_workers} concurrent workers")
+                
+                # Create tasks for each document
+                tasks = []
+                for document in documents:
+                    task = self._process_audio_video_chunk(document, lecture_name, after_generate)
+                    tasks.append(task)
+                
+                # Process chunks concurrently with asyncio
+                results = await asyncio.gather(*tasks)
+            
+            # Sort results by page number to maintain order
+            results.sort(key=lambda x: x.page)
+            
+            return results
+        except Exception as error:
+            print(f"Error processing {content_type}:", error)
+            raise error
+
+    async def _process_audio_video_chunk(
+        self,
+        document: Dict[str, Any],
+        lecture_name: str,
+        after_generate: Callable[[CleanedResponse], None],
+    ) -> CleanedResponse:
+        """Process a single audio or video chunk"""
+        try:
+            # Extract document information
+            chunk_num = document.get('page', 0)
+            text_content = document.get('text', '')
+            file_name = document.get('file_name', '')
+            content_type = "video" if document.get('type', '') == 'video_chunk' else "audio"
+            
+            # Format start and end times
+            start_time = document.get('start_time', 0)
+            end_time = document.get('end_time', 0)
+            
+            # Handle None values
+            start_time = 0 if start_time is None else start_time
+            end_time = 0 if end_time is None else end_time
+            
+            # Format times as MM:SS
+            start_time_fmt = f"{int(start_time // 60):02d}:{int(start_time % 60):02d}"
+            end_time_fmt = f"{int(end_time // 60):02d}:{int(end_time % 60):02d}"
+            
+            # Generate prompt based on content type
+            prompt = self._get_media_prompt(content_type, chunk_num, start_time_fmt, end_time_fmt)
+            
+            # Prepare message content
+            message_content = []
+            additional_files = []
+            
+            # For video, include the image if available
+            if content_type == "video" and "image" in document and document["image"]:
+                base64_image = base64.b64encode(document["image"]).decode('utf-8')
+                message_content.append({
+                    "type": "image_url",
+                    "image_url": f"data:image/png;base64,{base64_image}"
+                })
+            
+            # For audio/video, use the Gemini file_name if available
+            if file_name:
+                try:
+                    file_context = self._get_file_from_gemini(file_name)
+                    if file_context:
+                        additional_files.append(file_context)
+                        print(f"Successfully retrieved file from Gemini: {file_name}")
+                    else:
+                        print(f"File not found in Gemini: {file_name}")
+                except Exception as e:
+                    print(f"Error getting file from Gemini: {str(e)}")
+            
+            # Add prompt to message
+            message_content.append({
+                "type": "text",
+                "text": prompt
+            })
+            
+            # Add transcription if available
+            if text_content:
+                message_content.append({
+                    "type": "text",
+                    "text": f"Transcription: {text_content}"
+                })
+            
+            # Create message
+            message = Message(content=message_content)
+            
+            # Generate response using Gemini
+            try:
+                model = "gemini-2.0-flash-lite"
+                response = await self.robust_generate(None, message, model=model, additional_files=additional_files)
+                
+                if not response:
+                    response = f"Failed to generate description for {content_type} segment {chunk_num}."
+                    print(f"Warning: Empty response for {content_type} chunk {chunk_num}")
+            except Exception as e:
+                print(f"Error generating response for {content_type} chunk {chunk_num}: {str(e)}")
+                response = f"Error processing {content_type} segment {chunk_num}: {str(e)}"
+            
+            # Create result
+            result = self.clean_response(
+                response,
+                lecture_name,
+                chunk_num,
+                text_content
+            )
+            
+            # Call the after_generate callback
+            await after_generate(result)
+            
+            return result
+        except Exception as e:
+            print(f"Error processing chunk {document.get('page', 0)}: {str(e)}")
+            result = self.clean_response(
+                f"Error: {str(e)}",
+                lecture_name,
+                document.get('page', 0),
+                document.get('text', '')
+            )
+            await after_generate(result)
+            return result
+    
+    def _get_file_from_gemini(self, file_name: str) -> Any:
+        """Get a file from Gemini by name"""
+        try:
+            response = genai.get_file(file_name)
+            if response.state.name == "ACTIVE":
+                return response
+        except Exception as e:
+            print(f"Error getting file from Gemini: {str(e)}")
+        return None
+    
+    def _get_media_prompt(self, content_type: str, chunk_num: int, start_time: str, end_time: str) -> str:
+        """Generate a prompt for audio or video content"""
+        base = f"You are analyzing content from the course: {self.course_title}."
+        
+        if content_type == "audio":
+            return f"""{base}
+
+This is audio segment {chunk_num} from {start_time} to {end_time}. 
+
+Based on the transcription provided, please summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples mentioned. Format your response as a detailed description that would be helpful for a student reviewing this lecture.
+
+Be specific about the content and include any technical terms, formulas, or concepts mentioned. Use LaTeX notation (enclosed in $ signs) for any mathematical content."""
+        
+        else:  # video
+            return f"""{base}
+
+This is video segment {chunk_num} from {start_time} to {end_time}.
+
+Based on the visual content and transcription provided, please describe what you see in the frame and summarize the key points discussed in this segment. Identify any important concepts, definitions, or examples shown or mentioned. Format your response as a detailed description that would be helpful for a student reviewing this lecture.
+
+Be specific about both the visual elements and the spoken content. Include any technical terms, formulas, or concepts mentioned. Use LaTeX notation (enclosed in $ signs) for any mathematical content."""
 
     def _get_base_prompt(self) -> str:
         example_description = '''This slide presents Theorem 10.1, which states that a set $S$ is convex if and only if it contains all convex combinations of its points. The proof is outlined, focusing on one direction of the implication. It starts by assuming that $S$ contains all convex combinations of its points. Then, it shows that for any two points $z_1$ and $z_2$ in $S$, their convex combination $tz_1 + (1-t)z_2$ (where $0 \\leq t \\leq 1$) is also in $S$. This directly satisfies the definition of a convex set from the previous slide, thus proving that $S$ is convex. The underlining highlights the key steps and conclusions of the proof. The notation "pf" indicates "proof," and the double-headed arrow indicates the "if and only if" nature of the theorem. The term "conv. comb." is an abbreviation for "convex combination." The context of the course (Linear Programming) is crucial for understanding the significance of convex sets in optimization problems.'''

@@ -30,6 +30,8 @@ interface ChatInputProps {
   recordedVideos: { id: string, url: string }[];
   setRecordedVideos: React.Dispatch<React.SetStateAction<{ id: string, url: string }[]>>;
   addFile: (file: File) => void;
+  addingFiles: boolean;
+  setVideoLoading: (videoId: string, isLoading: boolean) => void;
 }
 
 export const ChatInput = memo(({
@@ -47,18 +49,25 @@ export const ChatInput = memo(({
   addFile,
   recordedVideos,
   setRecordedVideos,
+  addingFiles,
+  setVideoLoading,
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [transcribing, setTranscribing] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [recordingMode, setRecordingMode] = useState(false);
+
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const recordPluginRef = useRef<any>(null);
+
+  const waveformVideoRef = useRef<HTMLDivElement>(null);
+  const waveSurferVideoRef = useRef<WaveSurfer | null>(null);
+  const videoPluginRef = useRef<any>(null);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -192,7 +201,6 @@ export const ChatInput = memo(({
     // Set up record-end event
     recordPluginRef.current.on('record-end', (blob: Blob) => {
       console.log("Recording ended, got blob:", blob);
-      setAudioBlob(blob);
       handleTranscribe(blob);
     });
 
@@ -209,6 +217,59 @@ export const ChatInput = memo(({
       }, 500);
     });
   };
+
+  const initWaveSurferVideo = async () => {
+    if (waveSurferVideoRef.current) {
+      waveSurferVideoRef.current.destroy();
+      waveSurferVideoRef.current = null;
+      videoPluginRef.current = null;
+    }
+
+    if (!waveformVideoRef.current) return;
+
+    console.log("Initializing WaveSurfer");
+
+    // Create wavesurfer instance
+    waveSurferVideoRef.current = WaveSurfer.create({
+      container: waveformVideoRef.current,
+      waveColor: "#34374B",
+      progressColor: "#F90",
+      height: 60,
+      barWidth: 3,
+      barGap: 1,
+      barRadius: 3,
+      normalize: true,
+    });
+
+    // Initialize record plugin
+    videoPluginRef.current = waveSurferVideoRef.current.registerPlugin(
+      RecordPlugin.create({
+        renderRecordedAudio: false,
+        scrollingWaveform: false,
+        continuousWaveform: true,
+      })
+    );
+
+    // Set up record progress event
+    videoPluginRef.current.on('record-progress', (time: number) => {
+      console.log("Recording progress:", time);
+      setRecordingTime(Math.floor(time / 1000)); // Convert ms to seconds
+    });
+
+    // Return a promise that resolves when wavesurfer is ready
+    return new Promise<void>(resolve => {
+      waveSurferVideoRef.current?.on('ready', () => {
+        console.log("WaveSurfer is ready");
+        resolve();
+      });
+      // Also resolve after a timeout in case 'ready' doesn't fire
+      setTimeout(() => {
+        console.log("WaveSurfer ready timeout reached");
+        resolve();
+      }, 500);
+    });
+  }
+
 
   const initVideoStream = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -282,21 +343,39 @@ export const ChatInput = memo(({
         };
 
         mediaRecorder.start();
+
+        // Always reinitialize WaveSurfer before recording
+        await initWaveSurferVideo();
+
+        if (!videoPluginRef.current) {
+          console.error('Record plugin not initialized');
+          setRecordingMode(false);
+          return;
+        }
+
+        await videoPluginRef.current.startRecording();
+        console.log("Recording started successfully");
+        setIsRecording(true);
+        setRecordingMode(true);
+      } else {
+        // Always reinitialize WaveSurfer before recording
+        await initWaveSurfer();
+
+        if (!recordPluginRef.current) {
+          console.error('Record plugin not initialized');
+          setRecordingMode(false);
+          return;
+        }
+
+        await recordPluginRef.current.startRecording();
+        console.log("Recording started successfully");
+        setIsRecording(true);
+        setRecordingMode(true);
       }
 
-      // Always reinitialize WaveSurfer before recording
-      await initWaveSurfer();
 
-      if (!recordPluginRef.current) {
-        console.error('Record plugin not initialized');
-        setRecordingMode(false);
-        return;
-      }
 
-      await recordPluginRef.current.startRecording();
-      console.log("Recording started successfully");
-      setIsRecording(true);
-      setRecordingMode(true);
+
     } catch (error) {
       console.error('Error starting recording:', error);
       setRecordingMode(false);
@@ -310,14 +389,18 @@ export const ChatInput = memo(({
   const stopRecording = async () => {
     console.log("Stopping recording...");
 
-    // Stop video recording if active
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
-
     // Stop audio recording
     if (recordPluginRef.current && recordPluginRef.current.isRecording()) {
       recordPluginRef.current.stopRecording();
+    }
+
+    if (videoPluginRef.current && videoPluginRef.current.isRecording()) {
+      videoPluginRef.current.stopRecording();
+    }
+
+    // Stop video recording if active
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
     }
 
     // Make sure to stop all tracks in the video stream and clear the reference
@@ -343,12 +426,6 @@ export const ChatInput = memo(({
   };
 
   const handleTranscribe = async (blob: Blob) => {
-    // Skip transcription if we're in video mode
-    if (videoStream) {
-      setTranscribing(false);
-      return;
-    }
-
     setTranscribing(true);
 
     try {
@@ -410,6 +487,9 @@ export const ChatInput = memo(({
       if (wavesurferRef.current) {
         wavesurferRef.current.destroy();
       }
+      if (waveSurferVideoRef.current) {
+        waveSurferVideoRef.current.destroy();
+      }
     };
   }, []);
 
@@ -418,11 +498,15 @@ export const ChatInput = memo(({
     // Initialize wavesurfer when the component mounts and waveformRef is available
     if (waveformRef.current) {
       initWaveSurfer();
+      initWaveSurferVideo();
     }
 
     return () => {
       if (wavesurferRef.current) {
         wavesurferRef.current.destroy();
+      }
+      if (waveSurferVideoRef.current) {
+        waveSurferVideoRef.current.destroy();
       }
     };
   }, []);
@@ -542,28 +626,44 @@ export const ChatInput = memo(({
                       style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
+                        opacity: (video as any).isLoading ? 0.5 : 1
                       }}
                       controls
                       playsInline
                     />
-                    <ActionIcon
-                      onClick={() => handleRemoveVideo(video.id)}
-                      style={{
+                    {(video as any).isLoading ? (
+                      <Box style={{
                         position: 'absolute',
-                        top: '4px',
-                        right: '4px',
-                        background: 'rgba(0,0,0,0.5)',
-                        borderRadius: '50%'
-                      }}
-                      size="xs"
-                      color="white"
-                    >
-                      <IconX size={14} />
-                    </ActionIcon>
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgba(0,0,0,0.2)'
+                      }}>
+                        <Text size="sm" fw={500} color="white">Uploading...</Text>
+                      </Box>
+                    ) : (
+                      <ActionIcon
+                        onClick={() => handleRemoveVideo(video.id)}
+                        style={{
+                          position: 'absolute',
+                          top: '4px',
+                          right: '4px',
+                          background: 'rgba(0,0,0,0.5)',
+                          borderRadius: '50%'
+                        }}
+                        size="xs"
+                        color="white"
+                      >
+                        <IconX size={14} />
+                      </ActionIcon>
+                    )}
                   </Box>
-                )
-                )}
+                ))}
               </Group>
             </ScrollArea>
           </Box>
@@ -602,14 +702,22 @@ export const ChatInput = memo(({
               {isRecording ? (
                 <>
                   <Text size="lg" fw={500}>Recording... {formatTime(recordingTime)}</Text>
-                  <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
+                  {videoStream ? (
+                    <div ref={waveformVideoRef} style={{ width: '100%', height: '60px' }} />
+                  ) : (
+                    <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
+                  )}
                 </>
               ) : transcribing && !videoStream ? (
                 <Text size="lg" fw={500}>Transcribing...</Text>
               ) : (
                 <>
                   <Text size="lg" fw={500}>Initializing...</Text>
-                  <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
+                  {videoStream ? (
+                    <div ref={waveformVideoRef} style={{ width: '100%', height: '60px' }} />
+                  ) : (
+                    <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
+                  )}
                 </>
               )}
             </Box>

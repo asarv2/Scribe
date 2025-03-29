@@ -14,8 +14,10 @@ import mimetypes
 from PIL import Image
 import io
 import cv2  # For video frame extraction
-from app.config import model_manager
+from app.config import model_manager, MODEL_REGISTRY
 import google.generativeai as genai
+import concurrent.futures
+import threading
 
 load_dotenv()
 
@@ -35,7 +37,7 @@ class FileExtractor:
         if self.file_type in ['audio', 'video', 'video_audio']:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
             logger.info(f"Using device for audio processing: {self.device}")
-            self.model = model_manager._get_whisper_model()
+            # We'll get models as needed for concurrent processing
         
         logger.info(f"Initialized FileExtractor for file: {file_path} (type: {self.file_type})")
 
@@ -114,77 +116,290 @@ class FileExtractor:
         pdf_document.close()
         return pages_content
 
+    def _process_audio_chunk(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process a single audio chunk with Whisper
+        
+        Args:
+            chunk_data: Dictionary containing chunk information
+            
+        Returns:
+            Dict with processed chunk data including transcription
+        """
+        try:
+            chunk = chunk_data['audio_segment']
+            chunk_num = chunk_data['chunk_num']
+            start_ms = chunk_data['start_ms']
+            chunk_length_ms = chunk_data['chunk_length_ms']
+            
+            # Get a Whisper model from the pool
+            model = model_manager.get_whisper_model(chunk_num % len(MODEL_REGISTRY["whisper_models"]) 
+                                                   if MODEL_REGISTRY["whisper_models"] else None)
+            
+            # Create a temporary file for this chunk
+            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio:
+                temp_path = temp_audio.name
+            
+            # Export the chunk to the temporary file
+            chunk.export(temp_path, format="wav")
+            
+            # Load and transcribe the audio chunk
+            try:
+                audio_data = whisper.load_audio(temp_path)
+                
+                # Set appropriate options based on device
+                fp16 = torch.cuda.is_available()
+                
+                # Transcribe with appropriate options
+                result = model.transcribe(
+                    audio_data, 
+                    fp16=fp16,
+                    language="en"  # You can make this configurable if needed
+                )
+                transcription = result["text"]
+            except Exception as e:
+                logger.error(f"Error transcribing chunk {chunk_num}: {str(e)}")
+                transcription = f"[Transcription error: {str(e)}]"
+            finally:
+                # Clean up the temporary file
+                try:
+                    os.unlink(temp_path)
+                except Exception as e:
+                    logger.error(f"Error removing temporary file: {str(e)}")
+            
+            # Calculate start and end times in seconds
+            start_time = start_ms / 1000
+            end_time = min((start_ms + chunk_length_ms) / 1000, start_time + 30)  # Cap at 30 seconds
+            
+            return {
+                'type': 'audio_chunk',
+                'chunk_num': chunk_num,
+                'text': transcription,
+                'start_time': start_time,
+                'end_time': end_time
+            }
+        except Exception as e:
+            logger.error(f"Error processing audio chunk {chunk_data.get('chunk_num', 'unknown')}: {str(e)}")
+            return {
+                'type': 'audio_chunk',
+                'chunk_num': chunk_data.get('chunk_num', 0),
+                'text': f"[Processing error: {str(e)}]",
+                'start_time': chunk_data.get('start_ms', 0) / 1000,
+                'end_time': (chunk_data.get('start_ms', 0) + chunk_data.get('chunk_length_ms', 30000)) / 1000
+            }
+
     def _extract_audio_content(self) -> List[Dict[str, Any]]:
-        """Extract and transcribe content from audio file in 30-second chunks"""
+        """Extract and transcribe content from audio file in 30-second chunks using concurrent processing"""
         try:
             # Load audio file
             audio = AudioSegment.from_file(self.file_path)
             
             # Split into 30-second chunks
             chunk_length_ms = 30 * 1000  # 30 seconds
-            chunks = []
+            chunk_data_list = []
             
             for i, start_ms in enumerate(range(0, len(audio), chunk_length_ms)):
                 chunk = audio[start_ms:start_ms + chunk_length_ms]
-                
-                # Create a temporary file for this chunk
-                with tempfile.NamedTemporaryFile(suffix='.wav', delete=True) as temp_audio:
-                    chunk.export(temp_audio.name, format="wav")
-                    temp_audio.flush()
-                    
-                    # Load and transcribe the audio chunk
-                    audio_data = whisper.load_audio(temp_audio.name)
-                    result = self.model.transcribe(audio_data)
-                    transcription = result["text"]
-                    
-                    # Create a waveform image for visualization
-                    chunk_array = chunk.get_array_of_samples()
-                    # Simple downsampling for visualization
-                    downsampled = chunk_array[::1000] if len(chunk_array) > 1000 else chunk_array
-                    
-                    # Create a simple waveform image
-                    img_width, img_height = 800, 200
-                    img = Image.new('RGB', (img_width, img_height), color='white')
-                    
-                    # Draw the waveform
-                    from PIL import ImageDraw
-                    draw = ImageDraw.Draw(img)
-                    
-                    # Scale the values to fit in the image
-                    max_amplitude = max(abs(min(downsampled)), abs(max(downsampled))) if downsampled else 1
-                    scale_factor = (img_height / 2) / max_amplitude if max_amplitude > 0 else 1
-                    
-                    # Draw the waveform line
-                    points = []
-                    for j, sample in enumerate(downsampled):
-                        x = int(j * img_width / len(downsampled))
-                        y = int(img_height / 2 - sample * scale_factor)
-                        points.append((x, y))
-                    
-                    if len(points) > 1:
-                        draw.line(points, fill='blue', width=1)
-                    
-                    # Convert to bytes
-                    img_byte_arr = io.BytesIO()
-                    img.save(img_byte_arr, format='PNG')
-                    img_bytes = img_byte_arr.getvalue()
-                    
-                    start_time = start_ms / 1000  # Convert to seconds
-                    end_time = min((start_ms + chunk_length_ms) / 1000, len(audio) / 1000)
-                    
-                    chunks.append({
-                        'chunk_num': i + 1,
-                        'text': transcription,
-                        'image': img_bytes,
-                        'start_time': start_time,
-                        'end_time': end_time,
-                        'type': 'audio_chunk'
-                    })
+                chunk_data_list.append({
+                    'audio_segment': chunk,
+                    'chunk_num': i + 1,
+                    'start_ms': start_ms,
+                    'chunk_length_ms': chunk_length_ms
+                })
             
-            return chunks
+            # Determine how many concurrent tasks to run
+            available_models = len(MODEL_REGISTRY["whisper_models"]) if MODEL_REGISTRY["whisper_initialized"] else 1
+            max_workers = min(available_models, len(chunk_data_list))
+            
+            logger.info(f"Processing {len(chunk_data_list)} audio chunks with {max_workers} concurrent workers")
+            
+            # Process chunks concurrently
+            processed_chunks = []
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_chunk = {executor.submit(self._process_audio_chunk, chunk_data): chunk_data 
+                                  for chunk_data in chunk_data_list}
+                
+                for future in concurrent.futures.as_completed(future_to_chunk):
+                    chunk_data = future_to_chunk[future]
+                    try:
+                        processed_chunk = future.result()
+                        processed_chunks.append(processed_chunk)
+                    except Exception as e:
+                        logger.error(f"Error processing chunk {chunk_data['chunk_num']}: {str(e)}")
+            
+            # Sort chunks by chunk number to maintain order
+            processed_chunks.sort(key=lambda x: x['chunk_num'])
+            
+            return processed_chunks
             
         except Exception as e:
             logger.error(f"Error processing audio file: {str(e)}")
+            raise
+
+    def _process_video_frame(self, frame_position: int, cap) -> bytes:
+        """Extract a frame from the video at the specified position"""
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_position)
+        ret, frame = cap.read()
+        
+        if ret:
+            # Convert frame to PNG image
+            _, img_encoded = cv2.imencode('.png', frame)
+            return img_encoded.tobytes()
+        else:
+            # If frame extraction fails, create a blank image
+            img = Image.new('RGB', (640, 360), color='black')
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format='PNG')
+            return img_byte_arr.getvalue()
+
+    def _process_video_chunk(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process a single video chunk with Whisper and extract frame
+        
+        Args:
+            chunk_data: Dictionary containing chunk information
+            
+        Returns:
+            Dict with processed chunk data including transcription and frame
+        """
+        chunk = chunk_data['audio_segment']
+        chunk_num = chunk_data['chunk_num']
+        start_ms = chunk_data['start_ms']
+        chunk_length_ms = chunk_data['chunk_length_ms']
+        cap = chunk_data['cap']
+        fps = chunk_data['fps']
+        
+        # Get a Whisper model from the pool
+        model = model_manager.get_whisper_model(chunk_num % len(MODEL_REGISTRY["whisper_models"]) 
+                                               if MODEL_REGISTRY["whisper_models"] else None)
+        
+        # Create a temporary file for this chunk
+        with tempfile.NamedTemporaryFile(suffix='.wav', delete=True) as temp_audio:
+            chunk.export(temp_audio.name, format="wav")
+            temp_audio.flush()
+            
+            # Load and transcribe the audio chunk
+            audio_data = whisper.load_audio(temp_audio.name)
+            result = model.transcribe(audio_data)
+            transcription = result["text"]
+        
+        # Extract a frame at this timestamp
+        frame_position = int(start_ms / 1000 * fps)
+        img_bytes = self._process_video_frame(frame_position, cap)
+        
+        start_time = start_ms / 1000  # Convert to seconds
+        end_time = min((start_ms + chunk_length_ms) / 1000, (start_ms + len(chunk)) / 1000)
+        
+        return {
+            'chunk_num': chunk_num,
+            'text': transcription,
+            'image': img_bytes,
+            'start_time': start_time,
+            'end_time': end_time,
+            'type': 'video_chunk',
+        }
+
+    def _extract_video_content(self) -> List[Dict[str, Any]]:
+        """Extract audio from video and process it concurrently, capturing frames at 30-second intervals"""
+        try:
+            # Create a temporary file for the extracted audio
+            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio:
+                temp_audio_path = temp_audio.name
+            
+            # Extract audio from video using ffmpeg via pydub
+            logger.info(f"Extracting audio from video file: {self.file_path}")
+            video = AudioSegment.from_file(self.file_path)
+            video.export(temp_audio_path, format="wav")
+            
+            # Open the video file to extract frames
+            logger.info("Opening video file to extract frames")
+            cap = cv2.VideoCapture(self.file_path)
+            if not cap.isOpened():
+                logger.error("Failed to open video file with OpenCV")
+                raise ValueError("Failed to open video file")
+            
+            fps = cap.get(cv2.CAP_PROP_FPS)
+            if fps <= 0:
+                fps = 30  # Default to 30 fps if we can't determine it
+            
+            # Process the audio
+            logger.info("Processing audio from video")
+            audio = AudioSegment.from_file(temp_audio_path)
+            chunk_length_ms = 30 * 1000  # 30 seconds
+            chunk_data_list = []
+            
+            for i, start_ms in enumerate(range(0, len(audio), chunk_length_ms)):
+                chunk = audio[start_ms:start_ms + chunk_length_ms]
+                chunk_data_list.append({
+                    'audio_segment': chunk,
+                    'chunk_num': i + 1,
+                    'start_ms': start_ms,
+                    'chunk_length_ms': chunk_length_ms,
+                    'cap': cap,  # Pass the video capture object
+                    'fps': fps
+                })
+            
+            # Determine processing approach based on available resources
+            is_cpu_only = not torch.cuda.is_available()
+            available_models = len(MODEL_REGISTRY["whisper_models"]) if MODEL_REGISTRY["whisper_initialized"] else 1
+            
+            # Use sequential processing for CPU-only environments with 1 model
+            if is_cpu_only and available_models <= 1:
+                logger.info("Using sequential processing for CPU-only environment")
+                processed_chunks = []
+                for chunk_data in chunk_data_list:
+                    try:
+                        logger.info(f"Processing video chunk {chunk_data['chunk_num']}/{len(chunk_data_list)}")
+                        processed_chunk = self._process_video_chunk(chunk_data)
+                        processed_chunks.append(processed_chunk)
+                        logger.info(f"Finished processing chunk {chunk_data['chunk_num']}")
+                    except Exception as e:
+                        logger.error(f"Error processing chunk {chunk_data['chunk_num']}: {str(e)}")
+            else:
+                # Use concurrent processing for GPU or multiple CPU models
+                max_workers = min(available_models, len(chunk_data_list))
+                logger.info(f"Processing {len(chunk_data_list)} video chunks with {max_workers} concurrent workers")
+                
+                # Process chunks concurrently
+                processed_chunks = []
+                
+                # Create a lock for the video capture object since it's not thread-safe
+                cap_lock = threading.Lock()
+                
+                # Modify the _process_video_frame function to use the lock
+                def _process_video_frame_with_lock(frame_position: int, cap) -> bytes:
+                    with cap_lock:
+                        return self._process_video_frame(frame_position, cap)
+                
+                # Replace the method temporarily
+                original_process_frame = self._process_video_frame
+                self._process_video_frame = _process_video_frame_with_lock
+                
+                with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                    future_to_chunk = {executor.submit(self._process_video_chunk, chunk_data): chunk_data 
+                                      for chunk_data in chunk_data_list}
+                    
+                    for future in concurrent.futures.as_completed(future_to_chunk):
+                        chunk_data = future_to_chunk[future]
+                        try:
+                            processed_chunk = future.result()
+                            processed_chunks.append(processed_chunk)
+                            logger.info(f"Finished processing chunk {chunk_data['chunk_num']}")
+                        except Exception as e:
+                            logger.error(f"Error processing chunk {chunk_data['chunk_num']}: {str(e)}")
+                
+                # Restore the original method
+                self._process_video_frame = original_process_frame
+            
+            # Sort chunks by chunk number to maintain order
+            processed_chunks.sort(key=lambda x: x['chunk_num'])
+            
+            # Clean up
+            cap.release()
+            os.unlink(temp_audio_path)
+            
+            return processed_chunks
+            
+        except Exception as e:
+            logger.error(f"Error processing video file: {str(e)}")
             raise
 
     def _extract_image_content(self) -> List[Dict[str, Any]]:
@@ -203,79 +418,6 @@ class FileExtractor:
             }]
         except Exception as e:
             logger.error(f"Error processing image file: {str(e)}")
-            raise
-
-    def _extract_video_content(self) -> List[Dict[str, Any]]:
-        """Extract audio from video and process it, capturing frames at 30-second intervals"""
-        try:
-            # Create a temporary file for the extracted audio
-            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio:
-                temp_audio_path = temp_audio.name
-            
-            # Extract audio from video using ffmpeg via pydub
-            video = AudioSegment.from_file(self.file_path)
-            video.export(temp_audio_path, format="wav")
-            
-            # Open the video file to extract frames
-            cap = cv2.VideoCapture(self.file_path)
-            fps = cap.get(cv2.CAP_PROP_FPS)
-            if fps <= 0:
-                fps = 30  # Default to 30 fps if we can't determine it
-            
-            # Process the audio
-            audio = AudioSegment.from_file(temp_audio_path)
-            chunk_length_ms = 30 * 1000  # 30 seconds
-            chunks = []
-            
-            for i, start_ms in enumerate(range(0, len(audio), chunk_length_ms)):
-                chunk = audio[start_ms:start_ms + chunk_length_ms]
-                
-                # Create a temporary file for this chunk
-                with tempfile.NamedTemporaryFile(suffix='.wav', delete=True) as temp_chunk:
-                    chunk.export(temp_chunk.name, format="wav")
-                    temp_chunk.flush()
-                    
-                    # Load and transcribe the audio chunk
-                    audio_data = whisper.load_audio(temp_chunk.name)
-                    result = self.model.transcribe(audio_data)
-                    transcription = result["text"]
-                
-                # Extract a frame at this timestamp
-                frame_position = int(start_ms / 1000 * fps)
-                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_position)
-                ret, frame = cap.read()
-                
-                if ret:
-                    # Convert frame to PNG image
-                    _, img_encoded = cv2.imencode('.png', frame)
-                    img_bytes = img_encoded.tobytes()
-                else:
-                    # If frame extraction fails, create a blank image
-                    img = Image.new('RGB', (640, 360), color='black')
-                    img_byte_arr = io.BytesIO()
-                    img.save(img_byte_arr, format='PNG')
-                    img_bytes = img_byte_arr.getvalue()
-                
-                start_time = start_ms / 1000  # Convert to seconds
-                end_time = min((start_ms + chunk_length_ms) / 1000, len(audio) / 1000)
-                
-                chunks.append({
-                    'chunk_num': i + 1,
-                    'text': transcription,
-                    'image': img_bytes,
-                    'start_time': start_time,
-                    'end_time': end_time,
-                    'type': 'video_chunk',
-                })
-            
-            # Clean up
-            cap.release()
-            os.unlink(temp_audio_path)
-            
-            return chunks
-            
-        except Exception as e:
-            logger.error(f"Error processing video file: {str(e)}")
             raise
 
     def upload_to_supabase(self, content_items: List[Dict[str, Any]], class_id: str, file_id: str, supabase: Client):

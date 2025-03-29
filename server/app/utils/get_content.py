@@ -126,7 +126,7 @@ async def fetch_file_content(supabase, file_ids):
     content = []
     for file in files:
         file_docs = [doc for doc in documents if doc.get("file") == file.get("id")]
-        file_content = f"FILE {file.get('title')}\n"
+        file_content = f"FILE {file.get('file_number')}: {file.get('title')}\n"
         
         for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
             file_content += f"\nPAGE {doc.get('page')}\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"

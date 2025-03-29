@@ -21,6 +21,7 @@ from app.services.upload.file_extractor import FileExtractor
 import google.generativeai as genai
 
 import logging
+import tempfile
 
 load_dotenv()
 router = APIRouter()
@@ -579,7 +580,7 @@ async def process_lecture(
         
 
         # get exisiting lectures to find the note_number
-        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).execute()
+        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).eq("deleted", False).execute()
         existing_lectures = lectures_response.data
         note_number = len(existing_lectures) + 1
         
@@ -708,7 +709,7 @@ async def process_textbook(
             )
         
         # get existing textbooks to find the textbook_number
-        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).execute()
+        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).eq("deleted", False).execute()
         existing_textbooks = textbooks_response.data
         textbook_number = len(existing_textbooks) + 1
 
@@ -844,7 +845,7 @@ async def process_homework(
             )
         
         # get existing homeworks to find the homework_number
-        homeworks_response = supabase.table("homeworks").select("*").eq("class", class_id).execute()
+        homeworks_response = supabase.table("homeworks").select("*").eq("class", class_id).eq("deleted", False).execute()
         existing_homeworks = homeworks_response.data
         homework_number = len(existing_homeworks) + 1
 
@@ -972,6 +973,11 @@ async def process_file(
                 status_code=400,
                 content={"error": "Either file or file_path must be provided"}
             )
+        
+        # get existing files to find the file_number
+        files_response = supabase.table("files").select("*").eq("class", class_id).eq("deleted", False).execute()
+        existing_files = files_response.data
+        file_number = len(existing_files) + 1
             
         # Determine filename
         if file:
@@ -997,12 +1003,33 @@ async def process_file(
         if file_type in ["audio", "video"]:
             try:
                 from pydub import AudioSegment
-                media = AudioSegment.from_file(file_path)
-                file_length = len(media) / 1000  # Convert to seconds
-                # find how many 30 second chunks (rounded up)
-                file_length = math.ceil(file_length / 30)
+                
+                # Make sure we have a valid file to read
+                if file:
+                    # Create a temporary file to store the uploaded content
+                    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                        temp_path = temp_file.name
+                        await file.seek(0)  # Ensure we're at the start of the file
+                        content = await file.read()
+                        temp_file.write(content)
+                        
+                    # Get the length from the temporary file
+                    media = AudioSegment.from_file(temp_path)
+                    file_length = len(media) / 1000  # Convert to seconds
+                    os.unlink(temp_path)  # Clean up the temporary file
+                elif file_path and os.path.exists(file_path):
+                    # Get the length from the existing file path
+                    media = AudioSegment.from_file(file_path)
+                    file_length = len(media) / 1000  # Convert to seconds
+                else:
+                    logger.warning("Neither file object nor valid file path available for length detection")
+                    file_length = 0
+                    
+                # Find how many 30 second chunks (rounded up)
+                file_length = max(1, math.ceil(file_length / 30))
             except Exception as e:
                 logger.warning(f"Could not determine media length: {str(e)}")
+                file_length = 1
         else:
             file_length = 1
 
@@ -1014,7 +1041,8 @@ async def process_file(
             "type": file_type,
             "length": file_length,
             "parse_status": "idle",
-            "response_url": response_url or ""
+            "response_url": response_url or "",
+            "file_number": file_number
         }).execute()
         
         # get the id of the newly created file
