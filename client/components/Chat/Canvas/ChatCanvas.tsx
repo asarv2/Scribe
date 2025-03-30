@@ -40,6 +40,12 @@ import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
 import { getFiles } from "@/utils/queries/get-files";
 
+export interface RecordedVideo {
+    id: string;
+    url: string;
+    fileId?: string;
+}
+
 export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
@@ -49,7 +55,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         open: chatId === "new",
     });
     const [loading, setLoading] = useState(false);
-    const [addingFiles, setAddingFiles] = useState(false);
 
     // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
@@ -59,7 +64,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-    const [recordedVideos, setRecordedVideos] = useState<{ id: string, url: string }[]>([]);
+    const [recordedVideos, setRecordedVideos] = useState<RecordedVideo[]>([]);
 
     // Fetch necessary data
     const { data: existingChat } = useQuery({
@@ -138,6 +143,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     // Combine all loading states
     const isInitializing = !user || !profile || !lectures || !textbooks || !homeworkData || !exercises || !files;
 
+    const [isWaitingForVideos, setIsWaitingForVideos] = useState(false);
+
     // Add this state to track when we receive a realtime update
     const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
 
@@ -174,13 +181,13 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         return allHomeworks;
     }
 
-    const getFileContext = (uploadedFileIds: string[]) => {
+    const getFileContext = () => {
         const previousMessagesFiles = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
             Array.isArray(message.files) ? message.files : []
         ) ?? [];
 
-        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles, ...uploadedFileIds]));
+        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles]));
         return allFiles;
 
     }
@@ -228,89 +235,12 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         return '';
     };
 
-    const addFile = async (uploadedFile: File) => {
+    // Define sendMessage with useCallback
+    const sendMessage = useCallback(async () => {
+        setLoading(true);
         try {
-            if (!profile?.id) {
-                throw new Error("No profile found");
-            }
-
-            const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
-
-            const formData = new FormData();
-            formData.append("file", uploadedFile);
-            formData.append("class_id", classId);
-            formData.append("profile_id", profile.id);
-            formData.append("response_url", responseUrl);
-            formData.append("start_parse", "true"); // lets try it out
-
-            const fileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/file`, {
-                method: 'POST',
-                body: formData
-            });
-
-            const fileData = await fileResponse.json();
-            const fileId = fileData.file_id;
-
-            setActiveChat(prev => ({
-                ...prev,
-                context: {
-                    ...prev.context,
-                    files: [...prev.context.files, fileId]
-                }
-            }));
-            return fileId as string;
-        } catch (error) {
-            console.error("Error in addFile:", error);
-            notifications.show({
-                title: "Error",
-                message: "Failed to add file. Please try again.",
-                color: "red"
-            });
-            return null;
-        }
-    };
-
-    const handleChat = async () => {
-        if (!activeChat.prompt.trim() && recordedVideos.length === 0) return;
-
-        try {
-            setLoading(true);
-            setAddingFiles(true);
             let profileId = profile?.id;
             let newChatId = chatId;
-
-            // Mark all videos as loading
-            setRecordedVideos(prev => prev.map(video => ({ ...video, isLoading: true })));
-
-            // upload all the recorded videos, via the addFile function
-            const fileIds = await Promise.all(recordedVideos.map(async (video) => {
-                try {
-                    // Fetch the actual blob data from the URL
-                    const response = await fetch(video.url);
-                    const blobData = await response.blob();
-                    const videoFile = new File([blobData], `${video.id}.webm`, { type: 'video/webm' });
-                    const fileId = await addFile(videoFile);
-
-                    // Remove this video from the list as it's been processed
-                    setRecordedVideos(prev => prev.filter(v => v.id !== video.id));
-
-                    // invalidate the files query
-                    queryClient.invalidateQueries({ queryKey: ["files", profile?.id, classId] });
-
-                    return fileId;
-                } catch (error) {
-                    console.error(`Error processing video ${video.id}:`, error);
-                    // Mark this video as failed but keep it in the list
-                    setRecordedVideos(prev =>
-                        prev.map(v => v.id === video.id ? { ...v, isLoading: false, error: true } : v)
-                    );
-                    return null;
-                }
-            }));
-
-            // Clear any remaining videos
-            setRecordedVideos([]);
-            setAddingFiles(false);
 
             const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
 
@@ -336,12 +266,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 bare_question: activeChat.prompt + additionalContextForBareQuestion,
                 question: activeChat.prompt,
                 response_url: responseUrl,
-                // documents: getDocuments().map(doc => doc.id), // will need to remove this later
                 lectures: getLectureContext(),
                 chapters: getChapterContext(),
                 homeworks: getHomeworkContext(),
-                files: getFileContext(fileIds.filter((id) => id !== null)),
-                // exercises: activeChat.context.exercises, // these can stay as they are
+                files: getFileContext(),
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -379,6 +307,38 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             });
 
             router.push(`/classes/c/${classId}/chat/${newChatId}`);
+        } finally {
+            setLoading(false);
+        }
+    }, [
+        profile,
+        chatId,
+        classId,
+        activeChat,
+        router,
+        getAdditionalContextForBareQuestion,
+        getLectureContext,
+        getChapterContext,
+        getHomeworkContext,
+        getFileContext
+    ]);
+
+    const handleChat = async () => {
+        if (!activeChat.prompt.trim() && recordedVideos.length === 0) return;
+
+        try {
+            // Check if there are any unprocessed videos
+            const hasUnprocessedVideos = recordedVideos.some(video => video.fileId === undefined);
+
+            if (hasUnprocessedVideos) {
+                console.log("Waiting for videos to process before sending message");
+                // Set flags to indicate we're waiting for videos and should send when ready
+                setIsWaitingForVideos(true);
+                return; // Exit early, the useEffect will handle sending when videos are ready
+            }
+
+            // If all videos are already processed or there are no videos, send immediately
+            await sendMessage();
 
         } catch (error) {
             console.error("Error in message processing:", error);
@@ -388,23 +348,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 color: "red"
             });
 
-            // Reset loading states on videos in case of error
-            setRecordedVideos(prev => prev.map(video => ({ ...video, isLoading: false })));
-        } finally {
-            setLoading(false);
         }
-    };
-
-    const toggleNode = (nodeId: string) => {
-        setExpandedNodes(prev => {
-            const next = new Set(prev);
-            if (next.has(nodeId)) {
-                next.delete(nodeId);
-            } else {
-                next.add(nodeId);
-            }
-            return next;
-        });
     };
 
     const toggleSection = (section: string) => {
@@ -474,6 +418,49 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             chatType: type,
         }));
     }, []);
+
+    // Add this useEffect to monitor video processing and trigger message sending
+    useEffect(() => {
+        // Only run this effect if we're actively waiting for videos to process
+        if (!isWaitingForVideos) return;
+
+        // Check if all videos have fileIds
+        const allVideosProcessed = recordedVideos.every(video => video.fileId !== undefined);
+
+        if (allVideosProcessed) {
+            console.log("All videos processed, sending message now");
+            setIsWaitingForVideos(false);
+
+            // Trigger the message sending
+            // Make sure we're not already in a loading state
+            if (!loading) {
+                console.log("Executing sendMessage function");
+                sendMessage()
+                    .then(() => {
+                        console.log("Message sent successfully");
+                    })
+                    .catch(error => {
+                        console.error("Error sending message:", error);
+                        notifications.show({
+                            title: "Error",
+                            message: "Failed to send message. Please try again.",
+                            color: "red"
+                        });
+                    });
+            } else {
+                console.log("Already in loading state, not sending message");
+            }
+        } else {
+            // Set up a timer to check again
+            const timer = setTimeout(() => {
+                console.log("Checking video processing status...");
+                // This will trigger this effect to run again
+                setIsWaitingForVideos(state => state);
+            }, 250);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isWaitingForVideos, recordedVideos, sendMessage, loading]);
 
     // Set up realtime subscription for messages
     useEffect(() => {
@@ -624,15 +611,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     ], []
     );
 
-    // Add this new function to show loading state for a specific video
-    const setVideoLoading = (videoId: string, isLoading: boolean) => {
-        setRecordedVideos(prev =>
-            prev.map(video =>
-                video.id === videoId ? { ...video, isLoading } : video
-            )
-        );
-    };
-
     // Add realtime subscriptions for lecture documents
     useEffect(() => {
         if (!files || files.length === 0) return;
@@ -695,29 +673,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                         activeChat.title
                                     )}
                                 </Text>
-                                {/* {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
-                                    <Badge color={
-                                        existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'indigo' :
-                                            existingChat.type === 'concept' ? 'green' :
-                                                existingChat.type === 'review' ? 'cyan' :
-                                                    existingChat.type === 'method' ? 'green' :
-                                                        existingChat.type === 'generate' ? 'indigo' :
-                                                            existingChat.type === 'other' ? 'orange' :
-                                                                'gray'
-                                    }>
-                                        {existingChat.type.startsWith('homework-')
-                                            ? 'Homework'
-                                            : existingChat.type === 'concept'
-                                                ? 'Conceptual'
-                                                : existingChat.type === 'method'
-                                                    ? 'Approach'
-                                                    : existingChat.type === 'generate'
-                                                        ? 'Generated'
-                                                        : existingChat.type === 'other'
-                                                            ? 'Other'
-                                                            : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
-                                    </Badge>
-                                )} */}
                             </Group>}
                         <Group gap="xs">
                             {viewerMode.immersive ?
@@ -732,16 +687,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     </ActionIcon>
                                 </Tooltip> :
                                 <>
-                                    {/* <Tooltip label={viewerMode.filesOpen ? "Hide files" : "Add files"}>
-                                        <ActionIcon
-                                            variant="subtle"
-                                            size="md"
-                                            onClick={() => setViewerMode(prev => ({ ...prev, filesOpen: !prev.filesOpen }))}
-                                            aria-label="Toggle file panel"
-                                        >
-                                            {viewerMode.filesOpen ? <IconFileMinus size={18} /> : <IconFilePlus size={18} />}
-                                        </ActionIcon>
-                                    </Tooltip> */}
                                     <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
                                         <ActionIcon
                                             variant="subtle"
@@ -754,17 +699,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     </Tooltip>
                                 </>
                             }
-
-                            {/* <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
-                                <ActionIcon
-                                    variant="subtle"
-                                    size="md"
-                                    onClick={toggle}
-                                    aria-label="Toggle fullscreen"
-                                >
-                                    {fullscreen ? <IconMaximizeOff size={18} /> : <IconMaximize size={18} />}
-                                </ActionIcon>
-                            </Tooltip> */}
                         </Group>
                     </Flex>
                     <Grid>
@@ -834,9 +768,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                     toggleImmersive={enterImmersive}
                                     recordedVideos={recordedVideos}
                                     setRecordedVideos={setRecordedVideos}
-                                    addFile={addFile}
-                                    addingFiles={addingFiles}
-                                    setVideoLoading={setVideoLoading}
                                 />
                             </Card>
                         </Grid.Col>

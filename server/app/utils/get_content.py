@@ -228,13 +228,8 @@ async def fetch_file_resources(supabase, file_ids):
         # Fetch files
         files_response = supabase.table("files").select("*").in_("id", file_ids).order("title", desc=False).execute()
         all_files = files_response.data or []
+        all_google_file_ids = [processed_file.get("file_name") for processed_file in all_files if processed_file.get("file_name") != "" and processed_file.get("file_name") != None]
         
-        # Fetch file documents
-        documents_response = supabase.table("documents").select("*").in_("file", file_ids).order("page", desc=False).execute()
-        all_documents = documents_response.data or []
-        all_google_file_ids = [file.get("file_name") for file in all_files if file.get("file_name") != ""]
-        
-    
     return {
         "files": all_files,
         "documents": all_documents,

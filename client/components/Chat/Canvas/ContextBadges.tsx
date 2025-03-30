@@ -4,7 +4,7 @@
  */
 
 import { Badge, Group, Avatar, Text, ActionIcon, Box } from "@mantine/core";
-import { IconPlus, IconWand, IconX } from "@tabler/icons-react";
+import { IconFile, IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -14,7 +14,7 @@ import { getChapters } from "@/utils/queries/get-chapters";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getProblems } from "@/utils/queries/get-problems";
 import { getExercises } from "@/utils/queries/get-exercises";
-import { Chapter, Subchapter, ChatMessage, Document, ViewerMode } from "@/types";
+import { Chapter, Subchapter, ChatMessage, Document, ViewerMode, File } from "@/types";
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
@@ -22,6 +22,7 @@ import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
+import { RecordedVideo } from "./ChatCanvas";
 
 interface ContextBadgesProps {
     activeChat: ChatMessage;
@@ -31,8 +32,8 @@ interface ContextBadgesProps {
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
     expandedSections: Set<string>;
     toggleSection: (section: string) => void;
-    recordedVideos: { id: string, url: string }[];
-    handleRemoveVideo: (videoId: string) => void;
+    recordedVideos: RecordedVideo[];
+    setRecordedVideos: React.Dispatch<React.SetStateAction<RecordedVideo[]>>;
 }
 
 export const ContextBadges = memo(({
@@ -44,7 +45,7 @@ export const ContextBadges = memo(({
     expandedSections,
     toggleSection,
     recordedVideos,
-    handleRemoveVideo
+    setRecordedVideos
 }: ContextBadgesProps) => {
     const supabase = useSupabaseBrowser();
 
@@ -111,74 +112,113 @@ export const ContextBadges = memo(({
         enabled: !!files
     });
 
+    const renderFileBadge = (fileId: string | undefined, showPreview: boolean) => {
+        if (!fileId) return null;
+        const file = files?.find(f => f.id === fileId);
+        return file && (
+            <Badge
+                key={fileId}
+                color="violet"
+                style={{ cursor: 'pointer' }}
+                leftSection={
+                    showPreview ? <Avatar
+                        src={fileDocuments?.find(d => d.file === fileId) ?
+                            `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${fileDocuments.find(d => d.file === fileId)?.id}.png` :
+                            '/placeholder_image.svg'}
+                        size="xs"
+                        radius="sm"
+                    /> : <IconFile size={14} />
+                }
+                rightSection={onRemoveContext && (
+                    <IconX
+                        size={14}
+                        style={{ cursor: 'pointer' }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onRemoveContext('files', fileId);
+                        }}
+                    />
+                )}
+                onClick={(e) => {
+                    if (setViewerMode) {
+                        const document = fileDocuments?.find(d => d.file === fileId) // first page of the file
+                        if (document) {
+                            handleDocumentClick('files', fileId, setViewerMode, document.id);
+                        }
+                    }
+                }}
+            >
+                {file?.title}
+            </Badge>
+        )
+
+    }
+
     return (
         <>
             <Box style={{ width: '100%' }}>
                 <Group gap={"xs"}>
-                    {recordedVideos.map(video => (
-                        <Box
-                            key={video.id}
-                            style={{
-                                position: 'relative',
-                                width: '240px',
-                                height: '150px',
-                                borderRadius: '4px',
-                                overflow: 'hidden',
-                                backgroundColor: '#f0f0f0',
-                                border: '1px solid #ddd',
-                                flexShrink: 0,
-                                pointerEvents: 'all',
-                                zIndex: 5
-                            }}
-                        >
-                            <video
-                                src={video.url}
+                    {recordedVideos.map(video => {
+                        // check if the video is in the activeChat.context.files or if the file id does not exist
+                        const showVideo = activeChat.context.files.includes(video.fileId ?? '') || !video.fileId;
+                        return showVideo && (
+                            <Box
+                                key={video.id}
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    opacity: (video as any).isLoading ? 0.5 : 1,
-                                    pointerEvents: 'all'
+                                    position: 'relative',
+                                    width: '240px',
+                                    height: '150px',
+                                    borderRadius: '4px',
+                                    overflow: 'hidden',
+                                    backgroundColor: '#f0f0f0',
+                                    border: '1px solid #ddd',
+                                    flexShrink: 0,
+                                    pointerEvents: 'all',
+                                    zIndex: 5
                                 }}
-                                controls
-                                playsInline
-                            />
-
-                            {(video as any).isLoading ? (
-                                <Box style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'rgba(0,0,0,0.2)',
-                                    pointerEvents: 'none'
-                                }}>
-                                    <Text size="sm" fw={500} color="white">Uploading...</Text>
-                                </Box>
-                            ) : (
-                                <ActionIcon
-                                    onClick={() => handleRemoveVideo(video.id)}
+                            >
+                                <video
+                                    src={video.url}
                                     style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        opacity: !video.fileId ? 0.5 : 1,
+                                        pointerEvents: 'all'
+                                    }}
+                                    controls
+                                    playsInline
+                                />
+
+                                {!video.fileId ? (
+                                    <Box style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'rgba(0,0,0,0.2)',
+                                        pointerEvents: 'none'
+                                    }}>
+                                        <Text size="sm" fw={500} c="white">Uploading...</Text>
+                                    </Box>
+                                ) : (
+                                    <Box style={{
                                         position: 'absolute',
                                         top: '4px',
                                         right: '4px',
-                                        background: 'rgba(0,0,0,0.5)',
-                                        borderRadius: '50%',
                                         zIndex: 10,
                                         pointerEvents: 'auto'
-                                    }}
-                                    size="xs"
-                                    color="white"
-                                >
-                                    <IconX size={14} />
-                                </ActionIcon>
-                            )}
-                        </Box>
-                    ))}
+                                    }}>
+                                        {renderFileBadge(video.fileId, false)}
+                                    </Box>
+                                )}
+                            </Box>
+                        )
+                    })}
                 </Group>
             </Box>
 
@@ -359,45 +399,7 @@ export const ContextBadges = memo(({
                     );
                 })}
 
-                {activeChat.context.files.map(fileId => {
-                    const file = files?.find(f => f.id === fileId);
-                    return file && (
-                        <Badge
-                            key={fileId}
-                            color="violet"
-                            style={{ cursor: 'pointer' }}
-                            leftSection={
-                                <Avatar
-                                    src={fileDocuments?.find(d => d.file === fileId) ?
-                                        `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${fileDocuments.find(d => d.file === fileId)?.id}.png` :
-                                        '/placeholder_image.svg'}
-                                    size="xs"
-                                    radius="sm"
-                                />
-                            }
-                            rightSection={onRemoveContext && (
-                                <IconX
-                                    size={14}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onRemoveContext('files', fileId);
-                                    }}
-                                />
-                            )}
-                            onClick={(e) => {
-                                if (setViewerMode) {
-                                    const document = fileDocuments?.find(d => d.file === fileId) // first page of the file
-                                    if (document) {
-                                        handleDocumentClick('files', fileId, setViewerMode, document.id);
-                                    }
-                                }
-                            }}
-                        >
-                            {file.title}
-                        </Badge>
-                    );
-                })}
+                {activeChat.context.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)).map(fileId => renderFileBadge(fileId, true))}
             </Group>
         </>
     )

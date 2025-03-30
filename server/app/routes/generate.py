@@ -120,7 +120,9 @@ async def handle_chat(
         all_chapter_exercises = chapter_resources.get('exercises', [])
         all_homework_exercises = homework_resources.get('exercises', [])
         all_file_documents = file_resources.get('documents', [])
-        additional_files = file_resources.get('google_file_ids', [])
+        google_file_ids = file_resources.get('google_file_ids', [])
+        
+
         # Generate textual content for context
         lecture_content = await fetch_lecture_content(supabase, lecture_ids)
         chapter_content = await fetch_chapter_content(supabase, chapter_ids)
@@ -145,7 +147,7 @@ async def handle_chat(
             message_id=message_id,
             question=current_message['bare_question'],
             past_messages=past_messages,
-            additional_files=additional_files
+            google_file_ids=google_file_ids
         )
 
         total_response = ""

@@ -1,7 +1,7 @@
 import math
 import re
 import json
-from fastapi import APIRouter, File, UploadFile, Form, Request, BackgroundTasks
+from fastapi import APIRouter, File, UploadFile, Form, Request, BackgroundTasks, Response, HTTPException, Body
 from fastapi.responses import JSONResponse
 import os
 import uuid
@@ -22,11 +22,17 @@ import google.generativeai as genai
 
 import logging
 import tempfile
+from urllib.parse import unquote
+import magic
 
 load_dotenv()
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
+
+# Directory for storing tus uploads in progress
+TUS_UPLOADS_DIR = os.path.join(os.environ.get("DATA_DIR", "/tmp"), "tus_uploads")
+os.makedirs(TUS_UPLOADS_DIR, exist_ok=True)
 
 @router.post("/create")
 async def create_course(
@@ -1366,3 +1372,438 @@ async def parse_file_internally(file_id: str, response_url: str):
             headers={"Content-Type": "application/json"}
         )
         print(f"File parsing response: {response.text}")
+
+@router.options("/tus")
+async def tus_options(request: Request):
+    """Handle OPTIONS request for tus protocol"""
+    return Response(
+        headers={
+            "Tus-Resumable": "1.0.0",
+            "Tus-Version": "1.0.0",
+            "Tus-Extension": "creation,termination,creation-with-upload,creation-defer-length",
+            "Tus-Max-Size": "1073741824",  # 1GB max file size
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, HEAD, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Upload-Defer-Length, Content-Type",
+            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Upload-Defer-Length, Location",
+            "Access-Control-Max-Age": "86400",
+        }
+    )
+
+@router.post("/tus")
+async def tus_creation(request: Request):
+    """Handle POST request for tus protocol - create upload"""
+    # Check tus version
+    if request.headers.get("Tus-Resumable") != "1.0.0":
+        return Response(status_code=412, headers={"Tus-Version": "1.0.0"})
+    
+    # Get upload length or check for deferred length
+    upload_length = request.headers.get("Upload-Length")
+    upload_defer_length = request.headers.get("Upload-Defer-Length")
+    
+    # Either Upload-Length or Upload-Defer-Length must be present
+    if not upload_length and not upload_defer_length:
+        return Response(status_code=400, content="Missing Upload-Length header")
+    
+    # If using deferred length, it must be "1"
+    if upload_defer_length and upload_defer_length != "1":
+        return Response(status_code=400, content="Invalid Upload-Defer-Length header")
+    
+    # Parse metadata
+    metadata = {}
+    if "Upload-Metadata" in request.headers:
+        for kv in request.headers["Upload-Metadata"].split(","):
+            if " " in kv:
+                k, v = kv.strip().split(" ", 1)
+                import base64
+                metadata[k] = base64.b64decode(v).decode("utf-8")
+    
+    # Generate upload ID
+    upload_id = str(uuid.uuid4())
+    
+    # Create upload directory
+    upload_dir = os.path.join(TUS_UPLOADS_DIR, upload_id)
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    # Save metadata
+    with open(os.path.join(upload_dir, "metadata.json"), "w") as f:
+        json.dump(metadata, f)
+    
+    # Create empty file
+    with open(os.path.join(upload_dir, "file"), "wb") as f:
+        pass
+    
+    # Save upload info (length or deferred)
+    with open(os.path.join(upload_dir, "info"), "w") as f:
+        if upload_length:
+            f.write(f"length:{upload_length}\noffset:0")
+        else:
+            f.write(f"deferred:true\noffset:0")
+    
+    # Use the base URL from metadata if available, otherwise use request.base_url
+    base_url = metadata.get("baseUrl", "")
+    if not base_url:
+        # Fallback to using headers
+        forwarded_proto = request.headers.get("X-Forwarded-Proto", "http")
+        forwarded_host = request.headers.get("X-Forwarded-Host", request.headers.get("Host", "localhost:8000"))
+        base_url = f"{forwarded_proto}://{forwarded_host}"
+    
+    if not base_url.endswith('/'):
+        base_url += '/'
+    
+    # Make sure we're not using localhost with https
+    if "localhost" in base_url and base_url.startswith("https"):
+        base_url = base_url.replace("https://", "http://")
+    
+    location = f"{base_url}upload/tus/{upload_id}"
+    print(f"LOCATION: {location}")
+    
+    # Handle creation-with-upload if Content-Length > 0
+    if request.headers.get("Content-Length", "0") != "0":
+        # Read the first chunk
+        chunk = await request.body()
+        
+        # Write to file
+        with open(os.path.join(upload_dir, "file"), "wb") as f:
+            f.write(chunk)
+        
+        # Update offset
+        offset = len(chunk)
+        with open(os.path.join(upload_dir, "info"), "w") as f:
+            f.write(f"length:{upload_length}\noffset:{offset}")
+        
+        return Response(
+            status_code=201,
+            headers={
+                "Location": location,
+                "Tus-Resumable": "1.0.0",
+                "Upload-Offset": str(offset),
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location",
+            }
+        )
+    
+    return Response(
+        status_code=201,
+        headers={
+            "Location": location,
+            "Tus-Resumable": "1.0.0",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location",
+        }
+    )
+
+@router.head("/tus/{upload_id}")
+async def tus_head(upload_id: str, request: Request):
+    """Handle HEAD request for tus protocol - get upload info"""
+    upload_dir = os.path.join(TUS_UPLOADS_DIR, upload_id)
+    
+    if not os.path.exists(upload_dir):
+        return Response(status_code=404)
+    
+    # Read info file
+    with open(os.path.join(upload_dir, "info"), "r") as f:
+        info = {}
+        for line in f:
+            k, v = line.strip().split(":", 1)
+            info[k] = v
+    
+    headers = {
+        "Tus-Resumable": "1.0.0",
+        "Upload-Offset": info.get("offset", "0"),
+        "Cache-Control": "no-store",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Upload-Defer-Length, Location",
+    }
+    
+    # Add either Upload-Length or Upload-Defer-Length
+    if "deferred" in info and info["deferred"] == "true":
+        headers["Upload-Defer-Length"] = "1"
+    else:
+        headers["Upload-Length"] = info.get("length", "0")
+    
+    return Response(headers=headers)
+
+@router.patch("/tus/{upload_id}")
+async def tus_patch(upload_id: str, request: Request):
+    """Handle PATCH request for tus protocol - upload chunk"""
+    upload_dir = os.path.join(TUS_UPLOADS_DIR, upload_id)
+    
+    if not os.path.exists(upload_dir):
+        return Response(status_code=404)
+    
+    # Check tus version
+    if request.headers.get("Tus-Resumable") != "1.0.0":
+        return Response(status_code=412, headers={"Tus-Version": "1.0.0"})
+    
+    # Check content type
+    if request.headers.get("Content-Type") != "application/offset+octet-stream":
+        return Response(status_code=415)
+    
+    # Read info file
+    with open(os.path.join(upload_dir, "info"), "r") as f:
+        info = {}
+        for line in f:
+            k, v = line.strip().split(":", 1)
+            info[k] = v
+    
+    # Check offset
+    if request.headers.get("Upload-Offset") != info.get("offset"):
+        return Response(status_code=409)
+    
+    # Read chunk
+    chunk = await request.body()
+    
+    # Append to file
+    with open(os.path.join(upload_dir, "file"), "ab") as f:
+        f.write(chunk)
+    
+    # Update offset
+    new_offset = int(info.get("offset", "0")) + len(chunk)
+    
+    # Check for Upload-Length header in case of deferred length
+    upload_length = request.headers.get("Upload-Length")
+    
+    # If this was a deferred upload and we now have the length, update it
+    if "deferred" in info and info["deferred"] == "true" and upload_length:
+        info["length"] = upload_length
+        info.pop("deferred", None)  # Remove the deferred flag
+    
+    # Update offset and possibly length
+    with open(os.path.join(upload_dir, "info"), "w") as f:
+        if "deferred" in info and info["deferred"] == "true":
+            f.write(f"deferred:true\noffset:{new_offset}")
+        else:
+            f.write(f"length:{info.get('length', '0')}\noffset:{new_offset}")
+    
+    return Response(
+        headers={
+            "Tus-Resumable": "1.0.0",
+            "Upload-Offset": str(new_offset),
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location",
+        }
+    )
+
+@router.options("/tus/{upload_id}")
+async def tus_options_upload_id(upload_id: str, request: Request):
+    """Handle OPTIONS request for specific upload"""
+    return Response(
+        headers={
+            "Tus-Resumable": "1.0.0",
+            "Tus-Version": "1.0.0",
+            "Tus-Extension": "creation,termination,creation-with-upload,creation-defer-length",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Upload-Defer-Length, Content-Type",
+            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Upload-Defer-Length, Location",
+            "Access-Control-Max-Age": "86400",
+        }
+    )
+
+@router.post("/tus/finalize")
+async def finalize_upload(request: Request):
+    """Finalize an upload and process the file"""
+    try:
+        # Parse request body
+        body = await request.json()
+        file_id = body.get("fileId")
+        
+        if not file_id:
+            return JSONResponse(
+                status_code=400,
+                content={"status": "error", "message": "Missing fileId parameter"}
+            )
+        
+        # Find the upload directory
+        upload_dir = None
+        for dir_name in os.listdir(TUS_UPLOADS_DIR):
+            metadata_path = os.path.join(TUS_UPLOADS_DIR, dir_name, "metadata.json")
+            if os.path.exists(metadata_path):
+                with open(metadata_path, "r") as f:
+                    metadata = json.load(f)
+                    if metadata.get("fileId") == file_id:
+                        upload_dir = os.path.join(TUS_UPLOADS_DIR, dir_name)
+                        break
+        
+        if not upload_dir:
+            return JSONResponse(
+                status_code=404,
+                content={"status": "error", "message": f"Upload with fileId {file_id} not found"}
+            )
+        
+        # Check if file exists and has content
+        file_path = os.path.join(upload_dir, "file")
+        if not os.path.exists(file_path):
+            logger.error(f"Upload file is missing: {file_path}")
+            return JSONResponse(
+                status_code=400,
+                content={"status": "error", "message": "Upload file is missing"}
+            )
+        
+        # Check file size and content
+        file_size = os.path.getsize(file_path)
+        if file_size == 0:
+            logger.error(f"Upload file is empty: {file_path}")
+            return JSONResponse(
+                status_code=400,
+                content={"status": "error", "message": "Upload file is empty"}
+            )
+        
+        # Debug: Check file content type
+        mime = magic.Magic(mime=True)
+        detected_mime = mime.from_file(file_path)
+        logger.info(f"File {file_id} detected MIME type: {detected_mime}, size: {file_size} bytes")
+        
+        # Read first few bytes to check format
+        with open(file_path, 'rb') as f:
+            header = f.read(16)
+            hex_header = ' '.join(f'{b:02x}' for b in header)
+            logger.info(f"File header: {hex_header}")
+        
+        # Read metadata
+        with open(os.path.join(upload_dir, "metadata.json"), "r") as f:
+            metadata = json.load(f)
+        
+        # Extract necessary metadata
+        filename = metadata.get("filename", f"file-{file_id}")
+        file_type = metadata.get("filetype", "application/octet-stream")
+        class_id = metadata.get("classId")
+        profile_id = metadata.get("profileId")
+        response_url = metadata.get("responseUrl", "")
+        start_parse = metadata.get("startParse", "false").lower() == "true"
+        
+        if not class_id or not profile_id:
+            return JSONResponse(
+                status_code=400,
+                content={"status": "error", "message": "Missing required metadata (classId or profileId)"}
+            )
+        
+        # Determine file type category
+        if file_type.startswith("image/"):
+            file_type_category = "image"
+        elif file_type.startswith("audio/"):
+            file_type_category = "audio"
+        elif file_type.startswith("video/"):
+            file_type_category = "video"
+        elif file_type.startswith("application/pdf"):
+            file_type_category = "pdf"
+        elif file_type.startswith("text/"):
+            file_type_category = "text"
+        else:
+            file_type_category = "other"
+        
+        # Create a clean filename for Supabase
+        filename_for_supabase = os.path.basename(filename)
+        
+        # Get next file number for this class
+        result = supabase.table("files").select("file_number").eq("class", class_id).order("file_number", desc=True).limit(1).execute()
+        file_number = 1
+        if result.data and len(result.data) > 0:
+            file_number = result.data[0].get("file_number", 0) + 1
+        
+        # Create file record in Supabase
+        result = supabase.table("files").insert({
+            "class": class_id,
+            "title": filename_for_supabase,
+            "profile": profile_id,
+            "type": file_type_category,
+            "length": 1,  # Will update this later for audio/video
+            "parse_status": "uploading",
+            "response_url": response_url,
+            "file_number": file_number
+        }).execute()
+
+        # set the new file id from supabase
+        file_id = result.data[0].get("id")
+        
+        # Create file directory
+        file_dir = os.path.join(COURSES_DIR, class_id, "files", file_id)
+        os.makedirs(file_dir, exist_ok=True)
+        
+        # Move the uploaded file to its final destination
+        final_file_path = os.path.join(file_dir, filename)
+        shutil.copy2(os.path.join(upload_dir, "file"), final_file_path)
+        
+        # Determine file length for audio/video files
+        file_length = 1
+        if file_type_category in ["audio", "video"]:
+            try:
+                from pydub import AudioSegment
+                
+                # Get the length from the file
+                media = AudioSegment.from_file(final_file_path)
+                file_length = len(media) / 1000  # Convert to seconds
+                
+                # Find how many 30 second chunks (rounded up)
+                file_length = max(1, math.ceil(file_length / 30))
+            except Exception as e:
+                logger.warning(f"Could not determine media length: {str(e)}")
+                file_length = 1
+        
+        # Update file status to extracting and set correct length
+        supabase.table("files").update({
+            "parse_status": "extracting",
+            "parse_error": "",
+            "length": file_length,
+            "last_parse_attempt": datetime.now().isoformat()
+        }).eq("id", file_id).execute()
+        
+        # Initialize file extractor
+        processor = FileExtractor(final_file_path)
+        
+        # Extract content from the file
+        file_content = processor.extract_file_content()
+        
+        # Update file status to uploading
+        supabase.table("files").update({
+            "parse_status": "uploading",
+            "parse_error": "",
+            "last_parse_attempt": datetime.now().isoformat()
+        }).eq("id", file_id).execute()
+        
+        # Upload content to Supabase
+        processor.upload_to_supabase(file_content, class_id, file_id, supabase)
+        
+        # Generate title for video files that start with "video-"
+        if file_type_category == "video" and filename.lower().startswith("video-"):
+            # Collect all transcriptions
+            transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
+            
+            if transcriptions:
+                # Generate title
+                title = await processor.generate_video_title(transcriptions, file_id)
+                
+                if title:
+                    # Update file title in database
+                    supabase.table("files").update({
+                        "title": title
+                    }).eq("id", file_id).execute()
+        
+        # Process the file using the task queue if requested
+        if start_parse:
+            await request.app.state.add_task(parse_file_internally, file_id, response_url)
+        
+        # Clean up the tus upload directory
+        shutil.rmtree(upload_dir)
+        
+        return {
+            "status": "success",
+            "message": "File received and processing started",
+            "file_id": file_id,
+            "file_path": final_file_path,
+            "file_type": file_type_category
+        }
+        
+    except Exception as e:
+        import traceback
+        logger.error(f"Error finalizing upload: {str(e)}")
+        logger.error(traceback.format_exc())
+        
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": f"Failed to process file: {str(e)}"
+            }
+        )

@@ -13,6 +13,8 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getClass } from "@/utils/queries/get-class";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
+import * as tus from 'tus-js-client';
+import { RecordedVideo } from "./ChatCanvas";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
@@ -27,11 +29,8 @@ interface ChatInputProps {
   expandedSections: Set<string>;
   toggleSection: (section: string) => void;
   toggleImmersive: () => void;
-  recordedVideos: { id: string, url: string }[];
-  setRecordedVideos: React.Dispatch<React.SetStateAction<{ id: string, url: string }[]>>;
-  addFile: (file: File) => void;
-  addingFiles: boolean;
-  setVideoLoading: (videoId: string, isLoading: boolean) => void;
+  recordedVideos: RecordedVideo[];
+  setRecordedVideos: React.Dispatch<React.SetStateAction<RecordedVideo[]>>;
 }
 
 export const ChatInput = memo(({
@@ -46,11 +45,8 @@ export const ChatInput = memo(({
   expandedSections,
   toggleSection,
   setActiveChat,
-  addFile,
   recordedVideos,
   setRecordedVideos,
-  addingFiles,
-  setVideoLoading,
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
@@ -74,6 +70,8 @@ export const ChatInput = memo(({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const videoChunksRef = useRef<Blob[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadRef = useRef<tus.Upload | null>(null);
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -115,38 +113,172 @@ export const ChatInput = memo(({
       for (const file of files) {
         try {
           // Show loading notification
+          const notificationId = 'file-upload-' + Date.now();
           notifications.show({
-            id: 'file-upload',
+            id: notificationId,
             title: 'Uploading file',
-            message: 'Please wait while your file is being processed...',
+            message: `Preparing ${file.name}...`,
             loading: true,
             autoClose: false
           });
 
-          await addFile(file);
+          // Create a unique file identifier based on file properties
+          const fileFingerprint = `${file.name}-${file.size}-${file.lastModified}`;
+          // Use the fingerprint as the fileId for consistency
+          const fileId = fileFingerprint;
 
-          queryClient.refetchQueries({
-            queryKey: ["files", profile.id, classId]
+          // Get the base URL from environment
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
+
+          // Create a tus upload with better options
+          const upload = new tus.Upload(file, {
+            endpoint: `${baseUrl}/upload/tus`,
+            retryDelays: [0, 1000, 3000, 5000, 10000], // More retries with increasing delays
+            chunkSize: 5 * 1024 * 1024, // 5MB chunks
+            metadata: {
+              filename: file.name,
+              filetype: file.type,
+              filesize: file.size.toString(),
+              classId: classId,
+              profileId: profile.id,
+              fileId: fileId,
+              responseUrl: `${baseUrl}`,
+              startParse: 'true',
+              baseUrl: baseUrl,
+              fingerprint: fileFingerprint // Add fingerprint for better resumability
+            },
+            // Use a fingerprint function to identify uploads
+            fingerprint: () => Promise.resolve(fileFingerprint),
+            // Show more detailed progress
+            onProgress: (bytesUploaded, bytesTotal) => {
+              const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(0);
+              const uploadedMB = (bytesUploaded / (1024 * 1024)).toFixed(1);
+              const totalMB = (bytesTotal / (1024 * 1024)).toFixed(1);
+              notifications.update({
+                id: notificationId,
+                title: 'Uploading file',
+                message: `${file.name}: ${percentage}% (${uploadedMB}MB / ${totalMB}MB)`,
+                loading: true,
+                autoClose: false
+              });
+            },
+            // Better error handling
+            onError: (error) => {
+              console.error('Error uploading file:', error);
+              
+              // Check if it's a network error that might be temporary
+              if (error.name === 'NetworkError' || error.message.includes('network')) {
+                notifications.update({
+                  id: notificationId,
+                  title: 'Upload paused',
+                  message: `Connection issue with ${file.name}. Will retry automatically when connection is restored.`,
+                  color: 'yellow',
+                  loading: true,
+                  autoClose: false
+                });
+              } else {
+                notifications.update({
+                  id: notificationId,
+                  title: 'Upload failed',
+                  message: `Error uploading ${file.name}: ${error.message}. Try again later.`,
+                  color: 'red',
+                  loading: false,
+                  autoClose: 5000
+                });
+              }
+            },
+            // Callback for success
+            onSuccess: async () => {
+              try {
+                // Update notification to "Processing"
+                notifications.update({
+                  id: notificationId,
+                  title: 'Processing file',
+                  message: `${file.name} uploaded, now processing...`,
+                  loading: true,
+                  autoClose: false
+                });
+
+                // Explicitly call finalize endpoint
+                const finalizeResponse = await fetch(`${baseUrl}/upload/tus/finalize`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    fileId: fileId
+                  })
+                });
+
+                if (!finalizeResponse.ok) {
+                  throw new Error(`Failed to process file: ${finalizeResponse.statusText}`);
+                }
+
+                const fileData = await finalizeResponse.json();
+
+                // Refresh queries
+                queryClient.refetchQueries({
+                  queryKey: ["files", profile.id, classId]
+                });
+
+                queryClient.refetchQueries({
+                  queryKey: ["fileDocuments", classId]
+                });
+
+                // Update notification on success
+                notifications.update({
+                  id: notificationId,
+                  title: 'File uploaded',
+                  message: `${file.name} has been added to the chat context`,
+                  color: 'green',
+                  loading: false,
+                  autoClose: 3000
+                });
+
+                // Update chat context with the new file
+                setActiveChat(prev => ({
+                  ...prev,
+                  context: {
+                    ...prev.context,
+                    files: [...prev.context.files, fileData.file_id]
+                  }
+                }));
+              } catch (error) {
+                console.error('Error finalizing file:', error);
+                notifications.update({
+                  id: notificationId,
+                  title: 'Processing failed',
+                  message: `Error processing ${file.name}`,
+                  color: 'red',
+                  loading: false,
+                  autoClose: 5000
+                });
+              }
+            }
           });
 
-          queryClient.refetchQueries({
-            queryKey: ["fileDocuments", classId]
-          });
+          // Check for previous uploads to resume
+          const previousUploads = await upload.findPreviousUploads();
+          if (previousUploads.length) {
+            notifications.update({
+              id: notificationId,
+              title: 'Resuming upload',
+              message: `Continuing previous upload of ${file.name}...`,
+              loading: true,
+              autoClose: false
+            });
+            
+            // Resume the upload
+            upload.resumeFromPreviousUpload(previousUploads[0]);
+          }
 
-          // Update notification on success
-          notifications.update({
-            id: 'file-upload',
-            title: 'File uploaded',
-            message: `${file.name} has been added to the chat context`,
-            color: 'green',
-            loading: false,
-            autoClose: 3000
-          });
+          // Start the upload
+          upload.start();
+
         } catch (error) {
-          console.error('Error uploading file:', error);
-          // Update notification on error
-          notifications.update({
-            id: 'file-upload',
+          console.error('Error setting up file upload:', error);
+          notifications.show({
+            id: 'file-upload-error',
             title: 'Upload failed',
             message: 'There was an error uploading your file. Please try again.',
             color: 'red',
@@ -302,6 +434,8 @@ export const ChatInput = memo(({
       });
 
       if (withVideo) {
+        // Use a consistent ID format for videos
+        const videoId = `video-${profile?.id}-${Date.now()}`;
         // Set the video stream first
         setVideoStream(stream);
 
@@ -318,46 +452,121 @@ export const ChatInput = memo(({
         }
 
         // Initialize video recording
-        const mediaRecorder = new MediaRecorder(stream);
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm;codecs=vp8,opus' // Explicitly set codec
+        });
         mediaRecorderRef.current = mediaRecorder;
         videoChunksRef.current = [];
 
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            videoChunksRef.current.push(event.data);
+        // Create a ReadableStream from the MediaRecorder
+        const readableStream = new ReadableStream({
+          start(controller) {
+            // When data is available, add it to the stream
+            mediaRecorder.ondataavailable = (event) => {
+              if (event.data.size > 0) {
+                controller.enqueue(event.data);
+                videoChunksRef.current.push(event.data);
+              }
+            };
+
+            // When recording stops
+            mediaRecorder.onstop = () => {
+              controller.close();
+
+              const videoBlob = new Blob(videoChunksRef.current, { 
+                type: 'video/webm' 
+              });
+              
+              // Debug the blob
+              console.log("Video recording complete, blob size:", videoBlob.size, "bytes");
+              
+              if (videoRef.current) {
+                videoRef.current.srcObject = null;
+                videoRef.current.src = URL.createObjectURL(videoBlob);
+              }
+              
+              // Add the new video to our collection
+              const videoUrl = URL.createObjectURL(videoBlob);
+              setRecordedVideos(prev => [...prev, {
+                id: videoId,
+                url: videoUrl,
+                isLoading: true,
+                fileId: undefined
+              }]);
+
+              setRecordingMode(false);
+            };
+
+            // Start recording
+            mediaRecorder.start(1000); // Capture in 1-second chunks
+
+            // Always reinitialize WaveSurfer before recording
+            initWaveSurferVideo();
+
+            if (!videoPluginRef.current) {
+              console.error('Record plugin not initialized');
+              setRecordingMode(false);
+              return;
+            }
+
+            videoPluginRef.current.startRecording();
+            console.log("Recording started successfully");
+          },
+          cancel() {
+            mediaRecorder.stop();
           }
-        };
+        });
 
-        mediaRecorder.onstop = () => {
-          const videoBlob = new Blob(videoChunksRef.current, { type: 'video/webm' });
-          if (videoRef.current) {
-            videoRef.current.srcObject = null;
-            videoRef.current.src = URL.createObjectURL(videoBlob);
-          }
+        // Create a reader from the stream
+        const reader = readableStream.getReader();
 
-          // Add the new video to our collection
-          const videoUrl = URL.createObjectURL(videoBlob);
-          setRecordedVideos(prev => [...prev, {
-            id: `video-${Date.now()}`,
-            url: videoUrl
-          }]);
+        // Get the base URL from environment
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
 
-          setRecordingMode(false);  // Exit recording mode directly for video
-        };
-
-        mediaRecorder.start();
-
-        // Always reinitialize WaveSurfer before recording
-        await initWaveSurferVideo();
-
-        if (!videoPluginRef.current) {
-          console.error('Record plugin not initialized');
-          setRecordingMode(false);
+        if (!profile) {
+          console.error('Profile not found');
           return;
         }
 
-        await videoPluginRef.current.startRecording();
-        console.log("Recording started successfully");
+        const upload = new tus.Upload(reader, {
+          endpoint: `${baseUrl}/upload/tus`,
+          retryDelays: [0, 1000, 3000, 5000],
+          metadata: {
+            filename: `${videoId}.webm`,
+            filetype: 'video/webm',
+            classId: classId,
+            profileId: profile.id,
+            fileId: videoId,
+            baseUrl: baseUrl
+          },
+          // Required for streaming uploads
+          uploadLengthDeferred: true,
+          // Must set a chunk size for streaming
+          chunkSize: 1024 * 1024, // 1MB chunks
+          onError: (error) => {
+            console.error('Error uploading stream:', error);
+            stopRecording();
+          },
+          onProgress: (bytesUploaded) => {
+            console.log(`Uploaded ${bytesUploaded} bytes`);
+          },
+          onSuccess: async () => {
+            console.log('Stream upload complete');
+            // Finalize the upload
+            try {
+              await finalizeUpload(videoId);
+            } catch (error) {
+              console.error('Error finalizing upload:', error);
+            }
+          }
+        });
+
+        // Start the upload
+        upload.start();
+
+        // Save the upload reference to stop it later
+        uploadRef.current = upload;
+
         setIsRecording(true);
         setRecordingMode(true);
       } else {
@@ -375,7 +584,6 @@ export const ChatInput = memo(({
         setIsRecording(true);
         setRecordingMode(true);
       }
-
 
 
 
@@ -413,6 +621,71 @@ export const ChatInput = memo(({
     }
 
     setIsRecording(false);
+  };
+
+  const finalizeUpload = async (videoId: string) => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
+      
+      // Log before finalizing
+      console.log(`Finalizing upload for video ${videoId}`);
+      
+      const finalizeResponse = await fetch(`${baseUrl}/upload/tus/finalize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileId: videoId
+        })
+      });
+
+      if (!finalizeResponse.ok) {
+        const errorText = await finalizeResponse.text();
+        console.error(`Finalize failed with status ${finalizeResponse.status}: ${errorText}`);
+        throw new Error(`Failed to finalize upload: ${finalizeResponse.statusText}`);
+      }
+
+      const fileData = await finalizeResponse.json();
+      console.log("Finalize response:", fileData);
+      
+      // Update the recorded video with the file ID and set loading to false
+      setRecordedVideos(prev => 
+        prev.map(video => 
+          video.id === videoId 
+            ? { ...video, isLoading: false, fileId: fileData.file_id } 
+            : video
+        )
+      );
+
+      // Refresh queries and update UI
+      queryClient.refetchQueries({
+        queryKey: ["files", profile?.id, classId]
+      });
+
+      // Update chat context with the new file
+      setActiveChat(prev => ({
+        ...prev,
+        context: {
+          ...prev.context,
+          files: [...prev.context.files, fileData.file_id]
+        }
+      }));
+
+      notifications.show({
+        title: 'Recording Complete',
+        message: 'Your video has been uploaded and added to the chat',
+        color: 'green'
+      });
+
+    } catch (error) {
+      console.error('Error finalizing upload:', error);
+      notifications.show({
+        title: 'Processing Failed',
+        message: 'There was an error processing your recording',
+        color: 'red'
+      });
+    }
   };
 
   const handleToggleRecording = async (withVideo: boolean = false) => {
@@ -466,21 +739,6 @@ export const ChatInput = memo(({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleRemoveVideo = (videoId?: string) => {
-    if (videoId) {
-      // Remove a specific video from the collection
-      setRecordedVideos(prev => prev.filter(video => video.id !== videoId));
-    } else if (videoRef.current) {
-      // Clear the current recording preview
-      videoRef.current.src = '';
-    }
-
-    if (videoStream) {
-      videoStream.getTracks().forEach(track => track.stop());
-      setVideoStream(null);
-    }
-  };
-
   // Clean up on unmount
   useEffect(() => {
     return () => {
@@ -526,14 +784,14 @@ export const ChatInput = memo(({
       // Check if Enter key is pressed and not with modifiers
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
-        
+
         // If recording, stop recording and flag that Enter was pressed
         if (isRecording) {
           setEnterPressedDuringRecording(true);
           stopRecording();
           return;
         }
-        
+
         // Send message if there's content and not loading or transcribing
         if (!loading && !transcribing && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
           onSend();
@@ -561,7 +819,6 @@ export const ChatInput = memo(({
       setEnterPressedDuringRecording(false);
     }
   }, [enterPressedDuringRecording, transcribing, isRecording, recordingMode, loading, activeChat.prompt, recordedVideos.length, onSend]);
-
   return (
     <Stack gap={"md"}>
       {!isRecording && <Box
@@ -583,7 +840,7 @@ export const ChatInput = memo(({
           expandedSections={expandedSections}
           toggleSection={toggleSection}
           recordedVideos={recordedVideos}
-          handleRemoveVideo={handleRemoveVideo}
+          setRecordedVideos={setRecordedVideos}
         />
       </Box>}
 
@@ -630,22 +887,6 @@ export const ChatInput = memo(({
                         objectFit: 'cover'
                       }}
                     />
-                    {!isRecording && (
-                      <ActionIcon
-                        onClick={() => handleRemoveVideo()}
-                        style={{
-                          position: 'absolute',
-                          top: '4px',
-                          right: '4px',
-                          background: 'rgba(0,0,0,0.5)',
-                          borderRadius: '50%'
-                        }}
-                        size="xs"
-                        color="white"
-                      >
-                        <IconX size={14} />
-                      </ActionIcon>
-                    )}
                   </Box>
                 )}
               </Group>

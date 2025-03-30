@@ -39,40 +39,31 @@ export const deleteFile = async (
     deleteFromGemini: boolean = true,
 ) => {
     const supabase = await useSupabaseServer(cookies());
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from("files")
         .update({ deleted: true })
-        .eq("id", fileId);
+        .eq("id", fileId)
+        .select("file_name")
+        .single();
     if (error) {
         return { success: false, error: error.message };
     }
 
     // updating the file itself in google
     if (deleteFromGemini) {
-        // get file names from the documents table, where file_id = fileId
-        const { data: documents, error: documentsError } = await supabase
-            .from("documents")
-            .select("file_name")
-            .eq("file", fileId);
-        if (documentsError) {
-            return { success: false, error: documentsError.message };
-        }
-        const fileIds = documents.map((document) => document.file_name);
         const apiKey = process.env.GOOGLE_API_KEY;
+        const fileName = data?.file_name;
 
-        for (const fileId of fileIds) {
-            const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/${fileId}?key=${apiKey}`,
-                {
-                    method: "DELETE",
-                },
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/${fileName}?key=${apiKey}`,
+            {
+                method: "DELETE",
+            },
+        );
+        if (!response.ok) {
+            console.error(
+                "Failed to delete file from Gemini: " + response.statusText,
             );
-            if (!response.ok) {
-                console.error(
-                    "Failed to delete file from Gemini: " + response.statusText,
-                );
-                continue;
-            }
         }
     }
     return { success: true, error: "" };
