@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     texlive-latex-extra \
     texlive-fonts-recommended \
     latexmk \
+    libmagic1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

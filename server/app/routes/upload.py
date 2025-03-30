@@ -1725,64 +1725,217 @@ async def finalize_upload(request: Request):
         final_file_path = os.path.join(file_dir, filename)
         shutil.copy2(os.path.join(upload_dir, "file"), final_file_path)
         
-        # Determine file length for audio/video files
-        file_length = 1
-        if file_type_category in ["audio", "video"]:
-            try:
-                from pydub import AudioSegment
-                
-                # Get the length from the file
-                media = AudioSegment.from_file(final_file_path)
-                file_length = len(media) / 1000  # Convert to seconds
-                
-                # Find how many 30 second chunks (rounded up)
-                file_length = max(1, math.ceil(file_length / 30))
-            except Exception as e:
-                logger.warning(f"Could not determine media length: {str(e)}")
-                file_length = 1
-        
-        # Update file status to extracting and set correct length
-        supabase.table("files").update({
-            "parse_status": "extracting",
-            "parse_error": "",
-            "length": file_length,
-            "last_parse_attempt": datetime.now().isoformat()
-        }).eq("id", file_id).execute()
-        
-        # Initialize file extractor
-        processor = FileExtractor(final_file_path)
-        
-        # Extract content from the file
-        file_content = processor.extract_file_content()
-        
-        # Update file status to uploading
-        supabase.table("files").update({
-            "parse_status": "uploading",
-            "parse_error": "",
-            "last_parse_attempt": datetime.now().isoformat()
-        }).eq("id", file_id).execute()
-        
-        # Upload content to Supabase
-        processor.upload_to_supabase(file_content, class_id, file_id, supabase)
-        
-        # Generate title for video files that start with "video-"
-        if file_type_category == "video" and filename.lower().startswith("video-"):
-            # Collect all transcriptions
-            transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
+        # Check if this is a large video file that needs to be split
+        file_size_mb = file_size / (1024 * 1024)  # Convert to MB
+        is_large_video = file_type_category == "video" and file_size_mb > 100
+
+        if is_large_video:
+            logger.info(f"Large video file detected ({file_size_mb:.2f} MB). Processing in chunks.")
             
-            if transcriptions:
-                # Generate title
-                title = await processor.generate_video_title(transcriptions, file_id)
+            # Create a directory for chunks
+            chunks_dir = os.path.join(file_dir, "chunks")
+            os.makedirs(chunks_dir, exist_ok=True)
+            
+            # Use ffmpeg to split the video into chunks
+            import subprocess
+            import math
+            
+            # Get video duration using ffprobe
+            duration_cmd = [
+                "ffprobe", "-v", "error", "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1", final_file_path
+            ]
+            
+            try:
+                duration = float(subprocess.check_output(duration_cmd).decode('utf-8').strip())
                 
-                if title:
-                    # Update file title in database
-                    supabase.table("files").update({
-                        "title": title
-                    }).eq("id", file_id).execute()
+                # Calculate number of chunks needed (aim for ~90MB chunks to be safe)
+                target_chunk_size_mb = 90
+                num_chunks = math.ceil(file_size_mb / target_chunk_size_mb)
+                chunk_duration = duration / num_chunks
+                
+                logger.info(f"Processing {duration:.2f}s video in {num_chunks} chunks of ~{chunk_duration:.2f}s each")
+                
+                # Create chunks
+                chunk_files = []
+                for i in range(num_chunks):
+                    start_time = i * chunk_duration
+                    chunk_filename = f"chunk_{i+1:03d}_{os.path.splitext(filename)[0]}.mp4"
+                    chunk_path = os.path.join(chunks_dir, chunk_filename)
+                    
+                    # Use ffmpeg to extract chunk with copy codec (fast)
+                    cmd = [
+                        "ffmpeg", "-y", "-i", final_file_path,
+                        "-ss", str(start_time),
+                        "-t", str(chunk_duration),
+                        "-map", "0:v:0",  # Map only the first video stream
+                        "-map", "0:a:0",  # Map only the first audio stream
+                        "-c", "copy",     # Copy the selected streams
+                        "-strict", "unofficial",  # Allow unofficial features (for Dolby Vision)
+                        "-avoid_negative_ts", "1",  # Avoid negative timestamps
+                        chunk_path
+                    ]
+                    
+                    subprocess.run(cmd, check=True)
+                    chunk_files.append(chunk_path)
+                
+                # Update file status to extracting and set correct length
+                file_length = max(1, math.ceil(duration / 30))  # Convert to 30-second chunks
+                supabase.table("files").update({
+                    "parse_status": "extracting",
+                    "parse_error": "",
+                    "length": file_length,
+                    "last_parse_attempt": datetime.now().isoformat()
+                }).eq("id", file_id).execute()
+                
+                # Process each chunk and collect content
+                all_content = []
+                gemini_file_names = []
+                
+                for i, chunk_path in enumerate(chunk_files):
+                    try:
+                        logger.info(f"Processing chunk {i+1}/{len(chunk_files)}")
+                        
+                        # Process this chunk
+                        processor = FileExtractor(chunk_path)
+                        chunk_content = processor.extract_file_content()
+                        
+                        # Adjust chunk numbers to be sequential across all chunks
+                        base_chunk_num = i * 30  # Assuming ~30 chunks per segment
+                        for item in chunk_content:
+                            if item['type'] == 'video_chunk':
+                                item['chunk_num'] += base_chunk_num
+                        
+                        # Collect content
+                        all_content.extend(chunk_content)
+                        
+                        # Upload to Gemini and collect file name
+                        try:
+                            # Get MIME type
+                            mime = magic.Magic(mime=True)
+                            detected_mime = mime.from_file(chunk_path)
+                            
+                            # Upload chunk to Gemini
+                            with open(chunk_path, "rb") as f:
+                                logger.info(f"Uploading chunk {i+1} to Gemini: {detected_mime}")
+                                media_file = genai.upload_file(f, mime_type=detected_mime)
+                                gemini_file_names.append(media_file.name)
+                                logger.info(f"Successfully uploaded chunk {i+1} to Gemini: {media_file.name}")
+                        except Exception as e:
+                            logger.error(f"Error uploading chunk {i+1} to Gemini: {str(e)}")
+                        
+                    except Exception as chunk_e:
+                        logger.error(f"Error processing chunk {i+1}: {str(chunk_e)}")
+                
+                # Update file status to uploading
+                supabase.table("files").update({
+                    "parse_status": "uploading",
+                    "parse_error": "",
+                    "file_names": gemini_file_names,  # Store all Gemini file names
+                    "last_parse_attempt": datetime.now().isoformat()
+                }).eq("id", file_id).execute()
+                
+                # Upload all content to Supabase under the original file ID
+                if all_content:
+                    processor = FileExtractor(final_file_path)
+                    processor.upload_to_supabase(all_content, class_id, file_id, supabase, gemini_file_names)
+                
+                # Generate title for video files that start with "video-"
+                if filename.lower().startswith("video-"):
+                    # Collect all transcriptions
+                    transcriptions = [item.get('text', '') for item in all_content if item.get('type') == 'video_chunk']
+                    
+                    if transcriptions:
+                        # Generate title
+                        title = await processor.generate_video_title(transcriptions, file_id)
+                        
+                        if title:
+                            # Update file title in database
+                            supabase.table("files").update({
+                                "title": title
+                            }).eq("id", file_id).execute()
+                
+                # Process the file using the task queue if requested
+                if start_parse:
+                    await request.app.state.add_task(parse_file_internally, file_id, response_url)
+                
+                # Clean up the tus upload directory
+                shutil.rmtree(upload_dir)
+                
+                return {
+                    "status": "success",
+                    "message": f"Large video file processed in {len(chunk_files)} chunks",
+                    "file_id": file_id,
+                    "file_path": final_file_path,
+                    "file_type": file_type_category
+                }
+                
+            except Exception as split_e:
+                logger.error(f"Error processing video in chunks: {str(split_e)}")
+                # Fall back to processing the whole file
+                logger.info("Falling back to processing the entire file")
+                is_large_video = False
         
-        # Process the file using the task queue if requested
-        if start_parse:
-            await request.app.state.add_task(parse_file_internally, file_id, response_url)
+        # If not a large video or splitting failed, process normally
+        if not is_large_video:
+            # Determine file length for audio/video files
+            file_length = 1
+            if file_type_category in ["audio", "video"]:
+                try:
+                    from pydub import AudioSegment
+                    
+                    # Get the length from the file
+                    media = AudioSegment.from_file(final_file_path)
+                    file_length = len(media) / 1000  # Convert to seconds
+                    
+                    # Find how many 30 second chunks (rounded up)
+                    file_length = max(1, math.ceil(file_length / 30))
+                except Exception as e:
+                    logger.warning(f"Could not determine media length: {str(e)}")
+                    file_length = 1
+            
+            # Update file status to extracting and set correct length
+            supabase.table("files").update({
+                "parse_status": "extracting",
+                "parse_error": "",
+                "length": file_length,
+                "last_parse_attempt": datetime.now().isoformat()
+            }).eq("id", file_id).execute()
+            
+            # Initialize file extractor
+            processor = FileExtractor(final_file_path)
+            
+            # Extract content from the file
+            file_content = processor.extract_file_content()
+            
+            # Update file status to uploading
+            supabase.table("files").update({
+                "parse_status": "uploading",
+                "parse_error": "",
+                "last_parse_attempt": datetime.now().isoformat()
+            }).eq("id", file_id).execute()
+            
+            # Upload content to Supabase
+            processor.upload_to_supabase(file_content, class_id, file_id, supabase)
+            
+            # Generate title for video files that start with "video-"
+            if file_type_category == "video" and filename.lower().startswith("video-"):
+                # Collect all transcriptions
+                transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
+                
+                if transcriptions:
+                    # Generate title
+                    title = await processor.generate_video_title(transcriptions, file_id)
+                    
+                    if title:
+                        # Update file title in database
+                        supabase.table("files").update({
+                            "title": title
+                        }).eq("id", file_id).execute()
+        
+            # Process the file using the task queue if requested
+            if start_parse:
+                await request.app.state.add_task(parse_file_internally, file_id, response_url)
         
         # Clean up the tus upload directory
         shutil.rmtree(upload_dir)

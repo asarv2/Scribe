@@ -43,7 +43,7 @@ export const deleteFile = async (
         .from("files")
         .update({ deleted: true })
         .eq("id", fileId)
-        .select("file_name")
+        .select("file_names")
         .single();
     if (error) {
         return { success: false, error: error.message };
@@ -52,18 +52,23 @@ export const deleteFile = async (
     // updating the file itself in google
     if (deleteFromGemini) {
         const apiKey = process.env.GOOGLE_API_KEY;
-        const fileName = data?.file_name;
-
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/${fileName}?key=${apiKey}`,
-            {
-                method: "DELETE",
-            },
-        );
-        if (!response.ok) {
-            console.error(
-                "Failed to delete file from Gemini: " + response.statusText,
-            );
+        const fileNames = data?.file_names;
+        if (fileNames) {
+            for (const fileName of fileNames) {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/${fileName}?key=${apiKey}`,
+                    {
+                        method: "DELETE",
+                    },
+                );
+                if (!response.ok) {
+                    console.error(
+                        "Failed to delete file from Gemini: " +
+                            response.statusText,
+                    );
+                    continue;
+                }
+            }
         }
     }
     return { success: true, error: "" };

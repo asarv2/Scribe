@@ -754,7 +754,7 @@ export type Database = {
           created_at: string
           deleted: boolean
           expires: string
-          file_name: string
+          file_names: string[]
           file_number: number
           id: string
           last_parse_attempt: string | null
@@ -771,7 +771,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           expires?: string
-          file_name?: string
+          file_names?: string[]
           file_number?: number
           id?: string
           last_parse_attempt?: string | null
@@ -788,7 +788,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           expires?: string
-          file_name?: string
+          file_names?: string[]
           file_number?: number
           id?: string
           last_parse_attempt?: string | null

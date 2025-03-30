@@ -484,12 +484,12 @@ class FileExtractor:
             logger.error(f"Error generating video title: {str(e)}")
             return ""
 
-    def upload_to_supabase(self, content_items: List[Dict[str, Any]], class_id: str, file_id: str, supabase: Client):
+    def upload_to_supabase(self, content_items: List[Dict[str, Any]], class_id: str, file_id: str, supabase: Client, gemini_file_names=None):
         """Upload extracted content to Supabase"""
         try:
-            # First, upload the whole file to Gemini if it's audio or video
+            # First, upload the whole file to Gemini if it's audio or video and we don't already have file names
             whole_file_name = None
-            if self.file_type in ['audio', 'video']:
+            if self.file_type in ['audio', 'video'] and not gemini_file_names:
                 try:
                     # Create debug directory
                     debug_dir = os.path.join(FILES_DIR, "debug", file_id)
@@ -522,6 +522,9 @@ class FileExtractor:
                         err_file.write(f"Error: {str(e)}\n")
                         import traceback
                         err_file.write(traceback.format_exc())
+            elif gemini_file_names:
+                # If we already have Gemini file names from chunked processing, use those
+                logger.info(f"Using pre-uploaded Gemini file names: {gemini_file_names}")
             
             # Upload each content item to the documents table and store images
             for item in content_items:
