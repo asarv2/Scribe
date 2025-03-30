@@ -15,6 +15,7 @@ import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import * as tus from 'tus-js-client';
 import { RecordedVideo } from "./ChatCanvas";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
@@ -50,6 +51,8 @@ export const ChatInput = memo(({
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
+
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
@@ -165,7 +168,7 @@ export const ChatInput = memo(({
             // Better error handling
             onError: (error) => {
               console.error('Error uploading file:', error);
-              
+
               // Check if it's a network error that might be temporary
               if (error.name === 'NetworkError' || error.message.includes('network')) {
                 notifications.update({
@@ -267,7 +270,7 @@ export const ChatInput = memo(({
               loading: true,
               autoClose: false
             });
-            
+
             // Resume the upload
             upload.resumeFromPreviousUpload(previousUploads[0]);
           }
@@ -473,18 +476,18 @@ export const ChatInput = memo(({
             mediaRecorder.onstop = () => {
               controller.close();
 
-              const videoBlob = new Blob(videoChunksRef.current, { 
-                type: 'video/webm' 
+              const videoBlob = new Blob(videoChunksRef.current, {
+                type: 'video/webm'
               });
-              
+
               // Debug the blob
               console.log("Video recording complete, blob size:", videoBlob.size, "bytes");
-              
+
               if (videoRef.current) {
                 videoRef.current.srcObject = null;
                 videoRef.current.src = URL.createObjectURL(videoBlob);
               }
-              
+
               // Add the new video to our collection
               const videoUrl = URL.createObjectURL(videoBlob);
               setRecordedVideos(prev => [...prev, {
@@ -626,10 +629,10 @@ export const ChatInput = memo(({
   const finalizeUpload = async (videoId: string) => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
-      
+
       // Log before finalizing
       console.log(`Finalizing upload for video ${videoId}`);
-      
+
       const finalizeResponse = await fetch(`${baseUrl}/upload/tus/finalize`, {
         method: 'POST',
         headers: {
@@ -648,12 +651,12 @@ export const ChatInput = memo(({
 
       const fileData = await finalizeResponse.json();
       console.log("Finalize response:", fileData);
-      
+
       // Update the recorded video with the file ID and set loading to false
-      setRecordedVideos(prev => 
-        prev.map(video => 
-          video.id === videoId 
-            ? { ...video, isLoading: false, fileId: fileData.file_id } 
+      setRecordedVideos(prev =>
+        prev.map(video =>
+          video.id === videoId
+            ? { ...video, isLoading: false, fileId: fileData.file_id }
             : video
         )
       );
@@ -965,29 +968,85 @@ export const ChatInput = memo(({
                   onChange={handleFileChange}
                   accept="image/*,application/pdf,audio/*,video/*"
                 />
-                {classData?.learn_mode_enabled && <Button color={"green"} variant={activeChat.chatType === 'concept' ? "light-outline" : "outline"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-                  ...prev,
-                  chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
-                }))}>Learn</Button>}
-                {classData?.homework_mode_enabled && <Button color={"indigo"} variant={activeChat.chatType === 'homework-student' ? "light-outline" : "outline"} size="sm" leftSection={<IconFile size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-                  ...prev,
-                  chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
-                }))}>Homework</Button>}
-                {classData?.test_prep_mode_enabled && <Button color={"cyan"} variant={activeChat.chatType === 'review' ? "light-outline" : "outline"} size="sm" leftSection={<IconPencil size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-                  ...prev,
-                  chatType: prev.chatType === 'review' ? 'general-student' : 'review'
-                }))}>Test-Prep</Button>}
-                {classData?.present_mode_enabled && <Button
-                  color={"orange"}
-                  variant={activeChat.chatType === 'present' ? "light-outline" : "outline"}
-                  size="sm"
-                  leftSection={<IconPresentation size={16} />}
-                  radius="xl"
-                  onClick={() => setActiveChat((prev) => ({
+                {classData?.learn_mode_enabled && (isMobile ?
+                  <Tooltip label="Learn">
+                    <ActionIcon
+                      onClick={() => setActiveChat((prev) => ({
+                        ...prev,
+                        chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+                      }))}
+                      size="lg"
+                      color={"green"}
+                      variant={activeChat.chatType === 'concept' ? "light" : "subtle"}
+                    >
+                      <IconBook size={20} />
+                    </ActionIcon>
+                  </Tooltip> : <Button color={"green"} variant={activeChat.chatType === 'concept' ? "light" : "subtle"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
                     ...prev,
-                    chatType: prev.chatType === 'present' ? 'general-student' : 'present'
-                  }))}
-                >Present</Button>}
+                    chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+                  }))}>Lecture</Button>)}
+
+                {classData?.homework_mode_enabled && (isMobile ?
+                  <Tooltip label="Homework">
+                    <ActionIcon
+                      onClick={() => setActiveChat((prev) => ({
+                        ...prev,
+                        chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
+                      }))}
+                      size="lg"
+                      color={"indigo"}
+                      variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"}
+                    >
+                      <IconFile size={20} />
+                    </ActionIcon>
+                  </Tooltip> : <Button color={"indigo"} variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"} size="sm" leftSection={<IconFile size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                    ...prev,
+                    chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
+                  }))}>Homework</Button>)}
+
+                {classData?.test_prep_mode_enabled && (isMobile ?
+                  <Tooltip label="Test-Prep">
+                    <ActionIcon
+                      onClick={() => setActiveChat((prev) => ({
+                        ...prev,
+                        chatType: prev.chatType === 'review' ? 'general-student' : 'review'
+                      }))}
+                      size="lg"
+                      color={"cyan"}
+                      variant={activeChat.chatType === 'review' ? "light" : "subtle"}
+                    >
+                      <IconPencil size={20} />
+                    </ActionIcon>
+                  </Tooltip> : <Button color={"cyan"} variant={activeChat.chatType === 'review' ? "light" : "subtle"} size="sm" leftSection={<IconPencil size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+                    ...prev,
+                    chatType: prev.chatType === 'review' ? 'general-student' : 'review'
+                  }))}>Test-Prep</Button>)}
+
+
+                {classData?.present_mode_enabled && (isMobile ?
+                  <Tooltip label="Present">
+                    <ActionIcon
+                      onClick={() => setActiveChat((prev) => ({
+                        ...prev,
+                        chatType: prev.chatType === 'present' ? 'general-student' : 'present'
+                      }))}
+                      size="lg"
+                      color={"orange"}
+                      variant={activeChat.chatType === 'present' ? "light" : "subtle"}
+                    >
+                      <IconPresentation size={20} />
+                    </ActionIcon>
+                  </Tooltip> : <Button
+                    color={"orange"}
+                    variant={activeChat.chatType === 'present' ? "light" : "subtle"}
+                    size="sm"
+                    leftSection={<IconPresentation size={16} />}
+                    radius="xl"
+                    onClick={() => setActiveChat((prev) => ({
+                      ...prev,
+                      chatType: prev.chatType === 'present' ? 'general-student' : 'present'
+                    }))}
+                  >Present</Button>)}
               </Group>
 
               {/* Right side icons */}

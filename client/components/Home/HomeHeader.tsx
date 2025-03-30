@@ -64,7 +64,7 @@ export function HomeHeader() {
             </Group>
 
             <Group>
-                <Tooltip label="Toggle theme">
+                {/* <Tooltip label="Toggle theme">
                     <ActionIcon
                         variant="subtle"
                         onClick={toggleColorScheme}
@@ -73,7 +73,7 @@ export function HomeHeader() {
                         <IconSun className={cx(classes.icon, classes.light)} size={24} />
                         <IconMoon className={cx(classes.icon, classes.dark)} size={24} />
                     </ActionIcon>
-                </Tooltip>
+                </Tooltip> */}
                 {user && profile ? (
                     <Link href={`/classes`}>
                         <Button size="sm">

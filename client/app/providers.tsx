@@ -49,6 +49,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                             'light-outline': { variant: 'light-outline' }
                         }
                     }}
+                    defaultColorScheme="dark"
                 >
                     <Notifications />
                     <HealthCheck />

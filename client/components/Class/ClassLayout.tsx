@@ -32,6 +32,7 @@ interface ClassLayoutProps {
 
 export function ClassLayout({ children, classId, showHeader = true, showClasses = true }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const supabase = useSupabaseBrowser();
 
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -57,6 +58,11 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
 
+    // Toggle function for mobile menu
+    const toggleMobileNav = () => {
+        setMobileNavOpen(prev => !prev);
+    };
+
     return (
         <ClassMenuProvider classId={classId}>
             <DndProvider backend={HTML5Backend}>
@@ -68,6 +74,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                             expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
                         } : 0,
                         breakpoint: 'sm',
+                        collapsed: { mobile: !mobileNavOpen },
                     }}
                     padding="md"
                     styles={(theme) => ({
@@ -78,11 +85,15 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                 >
                     {showHeader && (
                         <AppShell.Header>
-                            <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} showClasses={showClasses} />
+                            <ClassHeader 
+                                classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} 
+                                showClasses={showClasses}
+                                onMobileMenuToggle={toggleMobileNav}
+                            />
                         </AppShell.Header>
                     )}
 
-                    {profile && (profile.professor || profile.admin) && (classId !== null) && (isMobile === false) && (
+                    {profile && (profile.professor || profile.admin) && (classId !== null) && (
                         <AppShell.Navbar>
                             <ClassNavbar
                                 classId={classId}

@@ -6,14 +6,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import classes from "./MicrosoftLoginButton.module.css";
 
-export default function MicrosoftLoginButton({ text = "Student Login", professor = false }: { text?: string, professor?: boolean }) {
+export default function MicrosoftLoginButton({ text = "Student", professor = false }: { text?: string, professor?: boolean }) {
     const [microsoftButtonLoading, setMicrosoftButtonLoading] = useState(false);
     const router = useRouter();
     
     const handleSignInWithMicrosoft = async () => {
         setMicrosoftButtonLoading(true);
         try {
-            const { success, error, url } = await (professor ? signInWithMicrosoftProfessor(`${window.location.origin}/auth/callback`) : signInWithMicrosoft(`${window.location.origin}/auth/callback`));
+            // const { success, error, url } = await (professor ? signInWithMicrosoftProfessor(`${window.location.origin}/auth/callback`) : signInWithMicrosoft(`${window.location.origin}/auth/callback`));
+            // temporary fix for professor login
+            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
             if (success && url) {
                 router.push(url);
             } else {
@@ -37,7 +39,7 @@ export default function MicrosoftLoginButton({ text = "Student Login", professor
             }
             className={classes.microsoftButton}
         >
-            {professor ? "Professor Login" : text}
+            {professor ? "Professor" : text}
         </Button>
     )
 }

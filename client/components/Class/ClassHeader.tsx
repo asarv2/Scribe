@@ -5,18 +5,18 @@
  * 09.01.2024
  */
 
-import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme } from '@mantine/core';
+import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { IconChevronDown, IconMoon, IconSun } from '@tabler/icons-react';
+import { IconChevronDown, IconMenu2, IconMessageCircle, IconMoon, IconSun } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getUser } from '@/utils/queries/get-user';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getClasses } from '@/utils/queries/get-classes';
-import { Menu, useMantineColorScheme, Avatar } from '@mantine/core';
+import { Menu as MantineMenu, useMantineColorScheme, Avatar } from '@mantine/core';
 import { getAvatarUrl } from '@/utils/services/images';
 import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
@@ -25,12 +25,14 @@ import { AccountMenu } from '../AccountMenu';
 import { Profile } from '@/types';
 import { Class } from '@/types';
 import cx from 'clsx';
+import { useMediaQuery } from '@mantine/hooks';
 interface ClassHeaderProps {
     classId: string
     showClasses: boolean
+    onMobileMenuToggle?: () => void
 }
 
-export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
+export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassHeaderProps) {
     const supabase = useSupabaseBrowser();
     const { setColorScheme } = useMantineColorScheme();
     const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
@@ -60,10 +62,59 @@ export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
         setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
     };
 
+    const isMobile = useMediaQuery('(max-width: 768px)');
+
+    const renderClassSelector = () => {
+        return showClasses && (
+            <Group pt={4}>
+                <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+                    <Menu.Target>
+                        <Button variant="subtle" className={classes.classSelector}>
+                            <Center>
+                                <Group gap={2}>
+                                    <Text size="sm" fw={500}>
+                                        {classData?.find(c => c.id === classId)?.class_code || 'Select Class'}
+                                    </Text>
+                                    <IconChevronDown size={14} stroke={1.5} />
+                                </Group>
+                            </Center>
+                        </Button>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {getFilteredClasses(profile, classData).map((classItem) => (
+                            <Menu.Item
+                                key={classItem.id}
+                                component={Link}
+                                href={profile?.professor || profile?.admin
+                                    ? `/classes/c/${classItem.id}`
+                                    : `/classes/c/${classItem.id}/chat/new`}
+                            >
+                                {classItem.class_code}
+                            </Menu.Item>
+                        ))}
+                    </Menu.Dropdown>
+                </Menu>
+            </Group>
+        )
+    }
+
     return (
         <Group h="100%" px="md" w="100%" justify="space-between">
-            <Group>
-            <Link href="/">
+            <Group gap="xs">
+                {profile && (profile.professor || profile.admin) && isMobile && (
+                    <Group pt={4}>
+                        <Tooltip label="Open Menu">
+                            <ActionIcon
+                                onClick={onMobileMenuToggle}
+                                variant="subtle"
+                                aria-label="Open Menu"
+                            >
+                                <IconMenu2 size={24} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Group>
+                )}
+                <Link href="/">
                     <Image
                         src={"/images/logo-light.png"}
                         priority
@@ -83,26 +134,13 @@ export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
                         className={classes['logo-dark']}
                     />
                 </Link>
+                {!isMobile && renderClassSelector()}
             </Group>
-            {showClasses && <Group gap="md">
-                {getFilteredClasses(profile, classData).map((classItem) => (
-                    <Link key={classItem.id} href={profile?.professor || profile?.admin ? `/classes/c/${classItem.id}` : `/classes/c/${classItem.id}/chat/new`}>
-                        <Button
-                            variant="subtle"
-                            styles={(theme) => ({
-                                root: {
-                                    textDecoration: classItem.id === classId ? 'underline' : 'none',
-                                    textUnderlineOffset: '4px',
-                                }
-                            })}
-                        >
-                            {classItem.class_code}
-                        </Button>
-                    </Link>
-                ))}
-            </Group>}
+
+            {isMobile && renderClassSelector()}
+
             <Group>
-            <Tooltip label="Toggle theme">
+                <Tooltip label={computedColorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
                     <ActionIcon
                         variant="subtle"
                         onClick={toggleColorScheme}
@@ -112,6 +150,16 @@ export function ClassHeader({ classId, showClasses }: ClassHeaderProps) {
                         <IconMoon className={cx(classes.icon, classes.dark)} size={24} />
                     </ActionIcon>
                 </Tooltip>
+                <Link href="/feedback" style={{ paddingTop: 5 }}>
+                    <Tooltip label="Feedback">
+                        <ActionIcon
+                            variant="subtle"
+                            aria-label="Feedback"
+                        >
+                            <IconMessageCircle className={classes.icon} size={24} />
+                        </ActionIcon>
+                    </Tooltip>
+                </Link>
                 <AccountMenu profile={profile} />
             </Group>
         </Group>

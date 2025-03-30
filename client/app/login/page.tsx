@@ -7,7 +7,7 @@
 
 "use client"
 
-import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch, useMantineColorScheme, useComputedColorScheme } from "@mantine/core"
+import { Button, Center, Container, Divider, Input, Stack, Text, PasswordInput, Switch, useMantineColorScheme, useComputedColorScheme, Paper, Group, Anchor } from "@mantine/core"
 import { useState } from "react"
 import { notifications } from '@mantine/notifications';
 import { login, createAnonymousUser, signInWithMicrosoft } from "@/utils/services/auth";
@@ -23,6 +23,7 @@ import { getUser } from "@/utils/queries/get-user";
 import { checkEmail } from "@/utils/services/profile";
 import MicrosoftIcon from "@/components/Icons/MicrosoftIcon";
 import MicrosoftLoginButton from "@/components/Buttons/MicrosoftLoginButton";
+import Image from "next/image";
 
 export default function Login() {
     const supabase = useSupabaseBrowser()
@@ -96,34 +97,41 @@ export default function Login() {
 
     return (
         <HomeLayout>
-            <Container fluid>
-                <Center>
-                    <Stack w={300} gap="md">
-                        <Text size="xl">Login</Text>
-                        <Input
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <PasswordInput
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <Button
-                            color="teal"
-                            onClick={handleLogin}
-                            loading={loading}
-                        >
-                            Login
-                        </Button>
+            <Container size="xs" style={{ height: '70vh', display: 'flex', alignItems: 'center'  }}>
+                    <Paper radius="md" p="xl" withBorder shadow="md" w="100%">
+                        <Group align="center" justify="center">
+                            <Image src="/icon.png" alt="Logo" width={60} height={60} />
+                            <Text size="xl" fw={500}>Scribe Login</Text>
+                        </Group>
+                        <Group grow mb="md" mt="md">
+                            <MicrosoftLoginButton />
+                            <MicrosoftLoginButton professor />
+                        </Group>
 
-                        <Divider />
+                        <Divider label="Or login as admin" labelPosition="center" my="lg" />
 
-                        <MicrosoftLoginButton />
-                        <MicrosoftLoginButton professor />
-                    </Stack>
-                </Center>
+                        <Stack>
+                            <Input
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                radius="md"
+                            />
+                            <PasswordInput
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                radius="md"
+                            />
+                            <Button
+                                onClick={handleLogin}
+                                loading={loading}
+                                radius="md"
+                            >
+                                Login
+                            </Button>
+                        </Stack>
+                    </Paper>
             </Container>
         </HomeLayout>
     )

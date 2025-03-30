@@ -12,7 +12,6 @@
     border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
-/* Add overlay with transition */
 .navbar::after {
     content: '';
     position: fixed;
@@ -20,14 +19,14 @@
     left: var(--collapsed-width);
     width: 0;
     height: 100vh;
-    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+    background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
     z-index: -1;
     opacity: 0;
     transition: all var(--transition-duration) ease;
 }
 
 .navbar:hover::after {
-    width: calc(var(--expanded-width) - var(--collapsed-width) - 1px); /* Subtract 1px to not cover the border */
+    width: calc(var(--expanded-width) - var(--collapsed-width) - 1px);
     opacity: 1;
 }
 
@@ -80,12 +79,10 @@
     margin-left: var(--mantine-spacing-xl);
     font-size: var(--mantine-font-size-sm);
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
-    /* Only show border when expanded */
     border-left: none;
     transition: all var(--transition-duration) ease;
 }
 
-/* Only add the border when parent is expanded */
 .navbar:hover .link {
     border-left: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
