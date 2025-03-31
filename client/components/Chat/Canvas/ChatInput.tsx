@@ -829,7 +829,7 @@ export const ChatInput = memo(({
             }))}>Test-Prep</Button>)
         }
 
-        {
+        {/* {
           newChat && classData?.present_mode_enabled && (isMobile ?
             <Tooltip label="Present">
               <ActionIcon
@@ -854,7 +854,7 @@ export const ChatInput = memo(({
                 chatType: prev.chatType === 'present' ? 'general-student' : 'present'
               }))}
             >Present</Button>)
-        }
+        } */}
       </>
     )
   }

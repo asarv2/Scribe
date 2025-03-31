@@ -1908,6 +1908,28 @@ async def finalize_upload(request: Request):
             # Extract content from the file
             file_content = processor.extract_file_content()
             
+            # Upload to Gemini if this is a video file
+            gemini_file_names = []
+            if file_type_category == "video":
+                try:
+                    # Get MIME type
+                    mime = magic.Magic(mime=True)
+                    detected_mime = mime.from_file(final_file_path)
+                    
+                    # Upload video to Gemini
+                    with open(final_file_path, "rb") as f:
+                        logger.info(f"Uploading video to Gemini: {detected_mime}")
+                        media_file = genai.upload_file(f, mime_type=detected_mime)
+                        gemini_file_names.append(media_file.name)
+                        logger.info(f"Successfully uploaded video to Gemini: {media_file.name}")
+                        
+                        # Store the Gemini file name in Supabase
+                        supabase.table("files").update({
+                            "file_names": gemini_file_names
+                        }).eq("id", file_id).execute()
+                except Exception as e:
+                    logger.error(f"Error uploading video to Gemini: {str(e)}")
+            
             # Update file status to uploading
             supabase.table("files").update({
                 "parse_status": "uploading",
@@ -1921,7 +1943,8 @@ async def finalize_upload(request: Request):
             # Generate title for video files that start with "video-"
             if file_type_category == "video" and filename.lower().startswith("video-"):
                 # Collect all transcriptions
-                transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
+                transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 
+                'video_chunk']
                 
                 if transcriptions:
                     # Generate title
@@ -1936,6 +1959,7 @@ async def finalize_upload(request: Request):
             # Process the file using the task queue if requested
             if start_parse:
                 await request.app.state.add_task(parse_file_internally, file_id, response_url)
+            
         
         # Clean up the tus upload directory
         shutil.rmtree(upload_dir)

@@ -636,6 +636,16 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         };
     }, [classId, supabase, files, queryClient]);
 
+    useEffect(() => {
+        if (classId === "547a83a8-ab2c-4f3c-9112-b1cb6414ff36") {
+            
+            setActiveChat(prev => ({
+                ...prev,
+                chatType: "present"
+            }));
+        }
+    }, [classId]);
+
     // useEffect(() => {
     //     if (!messages) return;
     //     const previousMessagesLectures = messages?.flatMap(message =>
