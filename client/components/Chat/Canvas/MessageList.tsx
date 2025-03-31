@@ -3,7 +3,7 @@
  * Used to show all the messages in the chat.
  */
 
-import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme, Divider } from "@mantine/core";
 import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
 import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, Exercise } from "@/types";
@@ -153,7 +153,7 @@ export const MessageList = memo(({
     queryKey: ["files", profile?.id, classId],
     queryFn: () => getFiles(supabase, profile!.id, [classId]),
     enabled: !!profile
-});
+  });
 
 
   const { data: fileDocuments } = useQuery({
@@ -419,7 +419,7 @@ export const MessageList = memo(({
 
   const renderWelcomeMessages = () => {
     return (
-      <Stack style={{ width: viewerMode.immersive ? "100%" : "auto" }}>
+      <Stack>
         <Flex gap="md" align="flex-start">
           <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
             <Group gap="xs" align="center">
@@ -624,7 +624,6 @@ export const MessageList = memo(({
     textbookId?: string,
     exerciseId?: string,
   ) => {
-    console.log(`Opening ${contextType} with ID: ${contextId}`);
 
     // For lectures
     if (contextType === 'lectures' && documentId) {
@@ -926,201 +925,6 @@ export const MessageList = memo(({
     return pageRanges;
   };
 
-  const renderBadges = (group: {
-    text: string;
-    documents: Document[];
-    exercises: Exercise[];
-  }) => {
-    // find all of the distinct lectures and chapters in the group
-    const groupLectures = Array.from(new Set(group.documents.filter(doc => doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
-    const groupChapters = Array.from(new Set(group.documents.filter(doc => doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
-    const groupFiles = Array.from(new Set(group.documents.filter(doc => doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
-    // get the page ranges for each lecture and chapter
-    const lecturePageRanges = groupLectures.map(lecture => getPageRanges(group.documents.filter(doc => doc.lecture === lecture), [])).flat()
-    const chapterPageRanges = groupChapters.map(chapter => getPageRanges(group.documents.filter(doc => doc.chapter === chapter), [])).flat()
-    const filePageRanges = groupFiles.map(file => getPageRanges(group.documents.filter(doc => doc.file === file), [])).flat()
-    // combine the page ranges for each lecture and chapter
-    const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges, ...filePageRanges]
-
-    // find all of the distinct exercises and chapters in the group
-    const groupExercises = Array.from(new Set(group.exercises.map(exercise => exercise.homework).filter((homeworkId) => homeworkId !== null)))
-
-    // get the page ranges for each lecture and chapter
-    const exercisePageRanges = groupExercises.map(homework => getPageRanges([], group.exercises.filter(exercise => exercise.homework === homework))).flat()
-
-    return (
-      <Flex gap="xs" wrap="wrap">
-        {allDocumentPageRanges.length > 0 && allDocumentPageRanges.map((pageRange, pageRangeIndex) => {
-          const lectureDocument: boolean = pageRange.startDocument?.lecture !== null;
-          const chapterDocument: boolean = pageRange.startDocument?.textbook !== null && pageRange.startDocument?.chapter !== null;
-          const fileDocument: boolean = pageRange.startDocument?.file !== null;
-          if (lectureDocument) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="blue"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startDocument?.lecture) {
-                    handleEnhancedDocumentClick('lectures', pageRange.startDocument.lecture, pageRange.startDocument.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${pageRange.startDocument?.lecture}/${pageRange.startDocument?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'lecture',
-                  pageRange.startDocument ?? undefined,
-                  undefined,
-                  pageRange.range
-                )}
-              </Badge>
-            );
-          } else if (chapterDocument) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="green"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startDocument?.chapter) {
-                    handleEnhancedDocumentClick('chapters', pageRange.startDocument.chapter, pageRange.startDocument.id, pageRange.startDocument.textbook || undefined);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${pageRange.startDocument?.textbook}/${pageRange.startDocument?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'chapter',
-                  pageRange.startDocument ?? undefined,
-                  undefined,
-                  pageRange.range
-                )}
-              </Badge>
-            );
-          } else if (fileDocument) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="purple"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startDocument?.file) {
-                    handleEnhancedDocumentClick('files', pageRange.startDocument.file, pageRange.startDocument.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${pageRange.startDocument?.file}/${pageRange.startDocument?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'files',
-                  pageRange.startDocument ?? undefined,
-                  undefined,
-                  pageRange.range
-                )}
-              </Badge>
-            );
-          } else {
-            return null;
-          }
-        })}
-        {exercisePageRanges.length > 0 && exercisePageRanges.map((pageRange, pageRangeIndex) => {
-          const chapterExercise: boolean = pageRange.startExercise?.chapter !== null;
-          const homeworkExercise: boolean = pageRange.startExercise?.homework !== null;
-
-          if (homeworkExercise) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="orange"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startExercise?.homework) {
-                    handleEnhancedDocumentClick('homeworks', pageRange.startExercise.homework, undefined, undefined, pageRange.startExercise.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${pageRange.startExercise?.homework}/${pageRange.startExercise?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'homework-problem',
-                  undefined,
-                  pageRange.startExercise ?? undefined
-                )}
-              </Badge>
-            );
-          } if (chapterExercise) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="teal"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startExercise?.chapter) {
-                    // Get the textbook ID for this chapter
-                    const textbookId = getTextbookForChapter(pageRange.startExercise.chapter);
-                    handleEnhancedDocumentClick('chapters', pageRange.startExercise.chapter, undefined, textbookId || undefined, pageRange.startExercise.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={pageRange.startExercise?.chapter ?
-                      `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${getTextbookForChapter(pageRange.startExercise.chapter)}/${pageRange.startExercise.id}.png` :
-                      '/placeholder_image.svg'}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'chapter-exercise',
-                  undefined,
-                  pageRange.startExercise ?? undefined
-                )}
-              </Badge>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </Flex>
-    )
-  }
 
   return (
 
@@ -1136,12 +940,11 @@ export const MessageList = memo(({
           containerRef.current = el;
         }
       }}
-      key={viewerMode.immersive ? "immersive" : "normal"}
       style={{
         flex: 1,
         overflowY: "auto",
         marginBottom: "1rem",
-        maxHeight: viewerMode.immersive ? "calc(100vh - 150px)" : "calc(80vh - 150px)",
+        maxHeight: "calc(100vh - 100px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
         transition: "all 0.2s ease-in-out",
@@ -1150,7 +953,6 @@ export const MessageList = memo(({
         padding: isOver ? '8px' : '10px',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: viewerMode.immersive ? 'center' : 'none',
       }}
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
@@ -1158,9 +960,9 @@ export const MessageList = memo(({
         <FadeList enabled={false}>
           {renderWelcomeMessages()}
           {(messages)?.map((message, index) => (
-            <Stack key={`${message.id}`} style={{ marginTop: viewerMode.immersive ? '5rem' : '0' }}>
+            <Stack key={`${message.id}`}>
               {/* User message */}
-              {!viewerMode.immersive && <Flex gap="md" justify="flex-end" align="flex-start">
+              <Flex gap="md" justify="flex-end" align="flex-start">
                 <Stack gap="xs" align="flex-end">
                   {/* User info container */}
                   <Group gap="xs" align="center">
@@ -1199,13 +1001,13 @@ export const MessageList = memo(({
                     renderMessageContext(message)
                   }
                 </Stack>
-              </Flex>}
+              </Flex>
 
               {/* AI response */}
               <Flex gap="md" align="flex-start">
                 <Stack gap="xs" align="flex-start">
                   {/* AI info container */}
-                  {!viewerMode.immersive && <Group gap="xs" align="center">
+                  <Group gap="xs" align="center">
                     <Avatar
                       src={professor ? getAvatarUrl(professor.id) : undefined}
                       size="sm"
@@ -1230,7 +1032,7 @@ export const MessageList = memo(({
                         <IconFileText size={16} />
                       </ActionIcon>
                     )}
-                  </Group>}
+                  </Group>
 
                   {/* Message container */}
                   {!message.response || message.response.trim() === '' ? (
@@ -1239,49 +1041,47 @@ export const MessageList = memo(({
                     </Group>
                   ) : (
                     <Stack gap="xs">
-                      {groupConsecutiveDocuments(
-                        splitTextByDocuments(
-                          filterCodeBlocks(message.response)
-                        ),
-                        lectureDocuments ?? [],
-                        chapterDocuments ?? [],
-                        chapterExercises ?? [],
-                        homeworkExercises ?? []
-                      ).map((group, index) => (
-                        <Box key={index}>
-                          <Stack>
-                            {splitTextByTags(group.text).map((segment, figIndex) => {
-                              if (segment.text && segment.text.trim() !== '') {
-                                return (
-                                  <MessageViewer
-                                    key={figIndex}
-                                    text={segment.text}
-                                  />
+                      <Box key={index}>
+                        <Stack>
+                          {splitTextByTags(splitTextByDocuments(
+                            filterCodeBlocks(message.response),
+                            lectureDocuments ?? [],
+                            chapterDocuments ?? [],
+                            fileDocuments ?? [],
+                            chapterExercises ?? [],
+                            homeworkExercises ?? []
+                          )).map((segment, figIndex) => {
+                            if (segment.text && segment.text.trim() !== '') {
+                              return (
+                                <MessageViewer
+                                  key={figIndex}
+                                  text={segment.text}
+                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                  classId={classId}
+                                />
+                              )
+                            } else if (segment.figureId && figures) {
+                              return (
+                                figures.find(f => f.id === segment.figureId) && (
+                                  <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
                                 )
-                              } else if (segment.figureId && figures) {
-                                return (
-                                  figures.find(f => f.id === segment.figureId) && (
-                                    <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
-                                  )
+                              )
+                            } else if (segment.summaryId && summaries) {
+                              return (
+                                summaries.find(s => s.id === segment.summaryId) && (
+                                  <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
                                 )
-                              } else if (segment.summaryId && summaries) {
-                                return (
-                                  summaries.find(s => s.id === segment.summaryId) && (
-                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} renderBadges={renderBadges} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
-                                  )
+                              )
+                            } else if (segment.questionId && questions) {
+                              return (
+                                questions.find(q => q.id === segment.questionId) && (
+                                  <QuestionViewer classId={classId} question={questions.find(q => q.id === segment.questionId)!} viewerMode={viewerMode} />
                                 )
-                              } else if (segment.questionId && questions) {
-                                return (
-                                  questions.find(q => q.id === segment.questionId) && (
-                                    <QuestionViewer classId={classId} question={questions.find(q => q.id === segment.questionId)!} viewerMode={viewerMode} />
-                                  )
-                                )
-                              }
-                            })}
-                          </Stack>
-                          {renderBadges(group)}
-                        </Box>
-                      ))}
+                              )
+                            }
+                          })}
+                        </Stack>
+                      </Box>
                     </Stack>
                   )}
                 </Stack>

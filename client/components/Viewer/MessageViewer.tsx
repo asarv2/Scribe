@@ -12,9 +12,11 @@ import styles from "./MessageViewer.module.css";
 
 interface MessageViewerProps {
     text: string;
+    classId: string;
+    handleEnhancedDocumentClick: (contextType: 'lectures' | 'chapters' | 'homeworks' | 'files', contextId: string, documentId?: string, textbookId?: string, exerciseId?: string) => void;
 }
 
-export default function MessageViewer({ text }: MessageViewerProps) {
+export default function MessageViewer({ text, classId, handleEnhancedDocumentClick }: MessageViewerProps) {
     return (
         <>
             <Card
@@ -22,7 +24,7 @@ export default function MessageViewer({ text }: MessageViewerProps) {
                 radius="md"
                 className={styles.messageCard}
             >
-                <Latex>{text}</Latex>
+                <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{text}</Latex>
             </Card>
         </>
     )

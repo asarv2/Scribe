@@ -692,7 +692,7 @@ export function ContextPanel({
             radius="md"
             withBorder
             style={{
-                height: viewerMode.immersive ? "90vh" : "80vh",
+                height: "calc(100vh - 100px)",
                 overflowY: "auto"
             }}
         >
@@ -715,7 +715,7 @@ export function ContextPanel({
                     <div
                         ref={containerRef}
                         style={{
-                            height: viewerMode.immersive ? 'calc(90vh - 100px)' : 'calc(80vh - 100px)',
+                            height:"calc(100vh - 100px)",
                             overflow: 'auto',
                             position: 'relative'
                         }}

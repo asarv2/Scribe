@@ -5,14 +5,14 @@
 
 import { Card, Stack, Group, Text, ActionIcon, Box, Button, Divider } from "@mantine/core";
 import { IconMinus, IconPlus, IconX } from "@tabler/icons-react";
-import LectureViewer from "../../Viewer/LectureViewer";
+import LectureViewer from "../Viewer/LectureViewer";
 import { memo } from "react";
 import { ChatMessage, Lecture, Textbook, ViewerMode } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import ChapterViewer from "../../Viewer/ChapterViewer";
+import ChapterViewer from "../Viewer/ChapterViewer";
 import ExerciseViewer from "@/components/Viewer/ExerciseViewer";
 import HomeworkViewer from "@/components/Viewer/HomeworkViewer";
 import { getHomeworks } from "@/utils/queries/get-homeworks";
@@ -97,13 +97,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
 
     // Modify the close handler to fully close the panel
     const handleClose = () => {
-        if (viewerMode.immersive) {
-            setViewerMode(prev => ({
-                ...prev,
-                active: false,
-                open: false,
-            }));
-        } else if (viewerMode.active) {
+        if (viewerMode.active) {
             setViewerMode(prev => ({
                 ...prev,
                 active: false,
@@ -117,7 +111,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
             padding="lg"
             radius="md"
             withBorder
-            style={{ height: viewerMode.immersive ? "90vh" : "80vh" }}
+            h="calc(100vh - 100px)"
         >
             <Stack style={{ height: "100%" }}>
                 <Group justify="space-between" wrap="nowrap" align="flex-start" style={{ width: '100%' }}>

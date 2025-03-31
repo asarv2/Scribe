@@ -223,7 +223,7 @@ export const ContextBadges = memo(({
             </Box>
 
             <Group gap={"xs"} pb={"sm"} pt={"sm"}>
-                {activeChat.context.lectures.map(lectureId => {
+                {Array.from(new Set(activeChat.context.lectures)).map(lectureId => {
                     const lecture = lectures?.find(l => l.id === lectureId);
                     return lecture && (
                         <Badge
@@ -263,7 +263,7 @@ export const ContextBadges = memo(({
                     );
                 })}
 
-                {activeChat.context.chapters.map(chapterId => {
+                {Array.from(new Set(activeChat.context.chapters)).map(chapterId => {
                     const chapter = chapters?.find(c => c.id === chapterId);
                     return chapter && (
                         <Badge
@@ -306,7 +306,7 @@ export const ContextBadges = memo(({
                     );
                 })}
 
-                {activeChat.context.exercises.map(exerciseId => {
+                {Array.from(new Set(activeChat.context.exercises)).map(exerciseId => {
                     const exercise = exercises?.find(e => e.id === exerciseId);
                     const chapter = chapters?.find(c => c.id === exercise?.chapter);
                     return exercise && chapter && (
@@ -347,7 +347,7 @@ export const ContextBadges = memo(({
                     );
                 })}
 
-                {activeChat.context.homeworks.map(homeworkId => {
+                {Array.from(new Set(activeChat.context.homeworks)).map(homeworkId => {
                     const homework = homeworkData?.find(h => h.id === homeworkId);
 
                     // find the first exercise in the homework
@@ -399,7 +399,7 @@ export const ContextBadges = memo(({
                     );
                 })}
 
-                {activeChat.context.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)).map(fileId => renderFileBadge(fileId, true))}
+                {Array.from(new Set(activeChat.context.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)))).map(fileId => renderFileBadge(fileId, true))}
             </Group>
         </>
     )

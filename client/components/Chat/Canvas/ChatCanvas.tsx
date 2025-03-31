@@ -26,7 +26,6 @@ import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, Exerc
 import { getUser } from "@/utils/queries/get-user";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
-import { ViewerPanel } from "./ViewerPanel";
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
@@ -39,6 +38,7 @@ import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
 import { getFiles } from "@/utils/queries/get-files";
+import { ViewerPanel } from "../ViewerPanel";
 
 export interface RecordedVideo {
     id: string;
@@ -50,7 +50,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
-        immersive: fullscreen,
         active: false,
         open: chatId === "new",
     });
@@ -150,44 +149,44 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     // Add this state to track message submission
     const getLectureContext = () => {
-        // const previousMessagesLectures = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.lectures) ? message.lectures : []
-        // ) ?? [];
+        const previousMessagesLectures = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.lectures) ? message.lectures : []
+        ) ?? [];
 
-        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? [])]));
+        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? []), ...previousMessagesLectures]));
         return allLectures;
     }
 
     const getChapterContext = () => {
-        // const previousMessagesChapters = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.chapters) ? message.chapters : []
-        // ) ?? [];
+        const previousMessagesChapters = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.chapters) ? message.chapters : []
+        ) ?? [];
 
         const exerciseChapters = activeChat.context.exercises.map(e => exercises?.find(ex => ex.id === e)?.chapter).filter((chapter): chapter is string => chapter !== undefined);
 
-        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters]));
+        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters, ...previousMessagesChapters]));
         return allChapters;
     }
 
     const getHomeworkContext = () => {
-        // const previousMessagesHomeworks = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.homeworks) ? message.homeworks : []
-        // ) ?? [];
+        const previousMessagesHomeworks = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.homeworks) ? message.homeworks : []
+        ) ?? [];
 
-        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? [])]));
+        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
         return allHomeworks;
     }
 
     const getFileContext = () => {
-        // const previousMessagesFiles = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.files) ? message.files : []
-        // ) ?? [];
+        const previousMessagesFiles = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.files) ? message.files : []
+        ) ?? [];
 
-        const allFiles = Array.from(new Set([...(activeChat.context.files ?? [])]));
+        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles]));
         return allFiles;
 
     }
@@ -598,13 +597,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     };
     // Add keyboard shortcuts
     useHotkeys([
-        // ['mod+I', () => {
-        //     if (viewerMode.immersive) {
-        //         exitImmersive();
-        //     } else {
-        //         enterImmersive();
-        //     }
-        // }],
         ['mod+M', () => {
             setViewerMode(prev => ({ ...prev, open: !prev.open }));
         }],
@@ -644,84 +636,105 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         };
     }, [classId, supabase, files, queryClient]);
 
-    useEffect(() => {
-        if (!messages) return;
-        const previousMessagesLectures = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.lectures) ? message.lectures : []
-        ) ?? [];
+    // useEffect(() => {
+    //     if (!messages) return;
+    //     const previousMessagesLectures = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.lectures) ? message.lectures : []
+    //     ) ?? [];
 
-        const previousMessagesChapters = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.chapters) ? message.chapters : []
-        ) ?? [];
+    //     const previousMessagesChapters = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.chapters) ? message.chapters : []
+    //     ) ?? [];
 
-        const previousMessagesHomeworks = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.homeworks) ? message.homeworks : []
-        ) ?? [];
+    //     const previousMessagesHomeworks = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.homeworks) ? message.homeworks : []
+    //     ) ?? [];
 
-        const previousMessagesFiles = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.files) ? message.files : []
-        ) ?? [];
+    //     const previousMessagesFiles = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.files) ? message.files : []
+    //     ) ?? [];
 
-        setActiveChat(prev => ({
-            ...prev,
-            context: {
-                ...prev.context,
-                lectures: previousMessagesLectures,
-                chapters: previousMessagesChapters,
-                homeworks: previousMessagesHomeworks,
-                files: previousMessagesFiles,
-            }
-        }));
+    //     setActiveChat(prev => ({
+    //         ...prev,
+    //         context: {
+    //             ...prev.context,
+    //             lectures: previousMessagesLectures,
+    //             chapters: previousMessagesChapters,
+    //             homeworks: previousMessagesHomeworks,
+    //             files: previousMessagesFiles,
+    //         }
+    //     }));
 
-    }, [messages]);
+    // }, [messages]);
 
     return (
-        <ClassLayout classId={classId} showHeader={!viewerMode.immersive}>
+        <ClassLayout classId={classId}>
             <Container fluid>
-                <Stack>
-                    <Flex justify="space-between" align="center">
-                        {viewerMode.immersive ? <div /> :
-                            <Group gap="sm">
-                                <Text size="xl" fw={700} mb={6}>
-                                    {existingChat ? (
-                                        <TypeAnimation
-                                            key={`${existingChat.id}-${receivedRealtimeUpdate}`}
-                                            sequence={[
-                                                existingChat.name || '',
-                                            ]}
-                                            wrapper="span"
-                                            cursor={false}
-                                            repeat={0}
-                                            speed={50}
-                                            preRenderFirstString={!receivedRealtimeUpdate}
-                                            style={{
-                                                fontSize: '1.25rem',
-                                                fontWeight: 700,
-                                                display: 'inline-block',
-                                            }}
-                                        />
-                                    ) : (
-                                        activeChat.title
-                                    )}
-                                </Text>
-                            </Group>}
-                        <Group gap="xs">
-                            {viewerMode.immersive ?
-                                <Tooltip label="Exit immersive">
-                                    <ActionIcon
-                                        variant="subtle"
-                                        size="md"
-                                        onClick={exitImmersive}
-                                        aria-label="Toggle immersive"
-                                    >
-                                        <IconEyeOff size={18} />
-                                    </ActionIcon>
-                                </Tooltip> :
-                                <>
+                <Grid>
+                    <Grid.Col
+                        span={isMobile ? 12 : 8 + (!viewerMode.open ? 4 : 0)}
+                        style={{
+                            transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
+                        }}
+                    >
+                        <Card
+                            shadow={"md"}
+                            withBorder
+                            padding={"lg"}
+                            radius={"md"}
+                            h="calc(100vh - 100px)"
+                        >
+                            {/* Show controls only when not in immersive mode */}
+                             <Flex justify="space-between" align="center" mb={10}>
+                                <Group gap="sm">
+                                    <Text size="xl" fw={700} mb={6}>
+                                        {existingChat ? (
+                                            <TypeAnimation
+                                                key={`${existingChat.id}-${receivedRealtimeUpdate}`}
+                                                sequence={[
+                                                    existingChat.name || '',
+                                                ]}
+                                                wrapper="span"
+                                                cursor={false}
+                                                repeat={0}
+                                                speed={50}
+                                                preRenderFirstString={!receivedRealtimeUpdate}
+                                                style={{
+                                                    fontSize: '1.25rem',
+                                                    fontWeight: 700,
+                                                    display: 'inline-block',
+                                                }}
+                                            />
+                                        ) : (
+                                            activeChat.title
+                                        )}
+                                    </Text>
+                                    {existingChat?.type === "present" && <Badge color="orange" variant="light">Present</Badge>}
+                                    {existingChat?.type === "review" && <Badge color="cyan" variant="light">Review</Badge>}
+                                    {existingChat?.type === "homework-student" && <Badge color="indigo" variant="light">Homework</Badge>}
+                                    {existingChat?.type === "concept" && <Badge color="green" variant="light">Learn</Badge>}
+                                </Group>
+                                <Group gap="xs" ml="auto">
+                                    {chatId !== "new" && <Tooltip label="New chat">
+                                        <ActionIcon
+                                            variant="subtle"
+                                            size="lg"
+                                            aria-label="Start a new chat"
+                                            onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                            mb={3}
+                                        >
+                                            <IconPlus size={20} />
+                                        </ActionIcon>
+                                    </Tooltip>}
+                                    <ChatHistoryDropdown
+                                        currentChatId={chatId}
+                                        onChatSelect={handleChatSelect}
+                                        classId={classId}
+                                    />
                                     <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
                                         <ActionIcon
                                             variant="subtle"
@@ -732,113 +745,73 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                             {viewerMode.open ? <IconCategoryMinus size={20} /> : <IconCategoryPlus size={20} />}
                                         </ActionIcon>
                                     </Tooltip>
-                                </>
-                            }
-                        </Group>
-                    </Flex>
-                    <Grid>
-                        <Grid.Col
-                            span={isMobile ? 12 : viewerMode.immersive ? 6 : (8 + (!viewerMode.open ? 4 : 0))}
-                            style={{
-                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
-                            }}
-                        >
-                            <Card
-                                shadow={viewerMode.immersive ? "none" : "sm"}
-                                padding={viewerMode.immersive ? "none" : "lg"}
-                                radius={viewerMode.immersive ? "none" : "md"}
-                                withBorder={viewerMode.immersive ? false : true}
-                                style={{
-                                    height: viewerMode.immersive ? "90vh" : "80vh"
-                                }}
-                            >
-                                {/* Show controls only when not in immersive mode */}
-                                {!viewerMode.immersive && <Flex justify="space-between" align="center" mb={10}>
-                                    {/* Chat history, context toggle, and new chat buttons */}
-                                    <Group gap="xs" ml="auto">
-                                        {chatId !== "new" && <Tooltip label="New chat">
-                                            <ActionIcon
-                                                variant="subtle"
-                                                size="lg"
-                                                aria-label="Start a new chat"
-                                                onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
-                                                mb={3}
-                                            >
-                                                <IconPlus size={20} />
-                                            </ActionIcon>
-                                        </Tooltip>}
-                                        <ChatHistoryDropdown
-                                            currentChatId={chatId}
-                                            onChatSelect={handleChatSelect}
-                                            classId={classId}
-                                        />
-                                    </Group>
-                                </Flex>}
+                                </Group>
+                            </Flex>
 
-                                <MessageList
-                                    chatId={chatId}
-                                    classId={classId}
-                                    existingChat={existingChat ?? null}
-                                    activeChat={activeChat}
-                                    setActiveChat={setActiveChat}
-                                    onOptionClick={handleOptionClick}
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    isInitializing={isInitializing}
-                                    loading={loading}
-                                />
+                            <MessageList
+                                chatId={chatId}
+                                classId={classId}
+                                existingChat={existingChat ?? null}
+                                activeChat={activeChat}
+                                setActiveChat={setActiveChat}
+                                onOptionClick={handleOptionClick}
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                isInitializing={isInitializing}
+                                loading={loading}
+                            />
 
-                                <ChatInput
-                                    activeChat={activeChat}
-                                    setActiveChat={setActiveChat}
-                                    loading={loading}
-                                    classId={classId}
-                                    onSend={handleChat}
-                                    onRemoveContext={removeContextFromChat}
-                                    onScrollToSection={handleScrollToSection}
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                    toggleImmersive={enterImmersive}
-                                    recordedVideos={recordedVideos}
-                                    setRecordedVideos={setRecordedVideos}
-                                />
-                            </Card>
-                        </Grid.Col>
-                        <Grid.Col
-                            span={isMobile ? 12 : viewerMode.immersive ? 3 : 4}
-                            style={{
-                                display: (viewerMode.open) ? 'block' : 'none',
-                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
-                                opacity: (viewerMode.open) ? 1 : 0,
-                                overflow: 'hidden',
-                            }}
-                        >
-                            {viewerMode.active ? (
-                                <ViewerPanel
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    addContextToChat={addContextToChat}
-                                    classId={classId}
-                                    activeChat={activeChat}
-                                />
-                            ) : (
-                                <ContextPanel
-                                    classId={classId}
-                                    searchQuery={contextSearchQuery}
-                                    setSearchQuery={setContextSearchQuery}
-                                    addContextToChat={addContextToChat}
-                                    activeChat={activeChat}
-                                    makeDraggable={true}
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    onFileDelete={handleFileDelete}
-                                />
-                            )}
-                        </Grid.Col>
-                    </Grid>
-                </Stack>
+                            <ChatInput
+                                activeChat={activeChat}
+                                setActiveChat={setActiveChat}
+                                loading={loading}
+                                classId={classId}
+                                chatId={chatId}
+                                onSend={handleChat}
+                                onRemoveContext={removeContextFromChat}
+                                onScrollToSection={handleScrollToSection}
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                expandedSections={expandedSections}
+                                toggleSection={toggleSection}
+                                toggleImmersive={enterImmersive}
+                                recordedVideos={recordedVideos}
+                                setRecordedVideos={setRecordedVideos}
+                            />
+                        </Card>
+                    </Grid.Col>
+                    <Grid.Col
+                        span={isMobile ? 12 : 4}
+                        style={{
+                            display: (viewerMode.open) ? 'block' : 'none',
+                            transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
+                            opacity: (viewerMode.open) ? 1 : 0,
+                            overflow: 'hidden',
+                        }}
+                    >
+                        {viewerMode.active ? (
+                            <ViewerPanel
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                addContextToChat={addContextToChat}
+                                classId={classId}
+                                activeChat={activeChat}
+                            />
+                        ) : (
+                            <ContextPanel
+                                classId={classId}
+                                searchQuery={contextSearchQuery}
+                                setSearchQuery={setContextSearchQuery}
+                                addContextToChat={addContextToChat}
+                                activeChat={activeChat}
+                                makeDraggable={true}
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                onFileDelete={handleFileDelete}
+                            />
+                        )}
+                    </Grid.Col>
+                </Grid>
             </Container>
         </ClassLayout>
     );
