@@ -24,7 +24,7 @@ class ModelManager:
         os.makedirs(self.whisper_cache_dir, exist_ok=True)
         
         # Whisper configuration
-        self.num_whisper_instances = 10 if torch.cuda.is_available() else 1
+        self.num_whisper_instances = 1 if torch.cuda.is_available() else 1
         self.whisper_model_size = 'tiny.en'
 
     def _get_gpu_memory(self) -> float:
