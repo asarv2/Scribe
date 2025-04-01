@@ -3,7 +3,7 @@
  * Used to show the context badges in the chat.
  */
 
-import { Badge, Group, Avatar, Text, ActionIcon, Box } from "@mantine/core";
+import { Badge, Group, Avatar, Text, ActionIcon, Box, Tooltip, Progress } from "@mantine/core";
 import { IconFile, IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -112,9 +112,20 @@ export const ContextBadges = memo(({
         enabled: !!files
     });
 
-    const renderFileBadge = (fileId: string | undefined, showPreview: boolean) => {
-        if (!fileId) return null;
-        const file = files?.find(f => f.id === fileId);
+    const renderFileBadge = (file: File | undefined, showPreview: boolean) => {
+        if (!file) return null;
+        const fileId = file.id;
+        const fileDocument = fileDocuments?.filter(d => d.file === fileId).sort((a, b) => a.page - b.page)[0];
+        
+        // Check if this is a video file (starts with "video-")
+        const isProcessingVideo = file.id.startsWith('video-') && 
+                                 ['extracting', 'uploading', 'processing', 'parsing'].includes(file.parse_status || '');
+        
+        // Display title - show processing state for videos
+        const displayTitle = isProcessingVideo 
+            ? `Video (${file.parse_status || 'processing'}...)` 
+            : file.title;
+        
         return file && (
             <Badge
                 key={fileId}
@@ -122,36 +133,38 @@ export const ContextBadges = memo(({
                 style={{ cursor: 'pointer' }}
                 leftSection={
                     showPreview ? <Avatar
-                        src={fileDocuments?.find(d => d.file === fileId) ?
-                            `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${fileDocuments.find(d => d.file === fileId)?.id}.png` :
-                            '/placeholder_image.svg'}
+                        src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${fileDocument?.id}.png`}
                         size="xs"
                         radius="sm"
                     /> : <IconFile size={14} />
                 }
                 rightSection={onRemoveContext && (
-                    <IconX
-                        size={14}
-                        style={{ cursor: 'pointer' }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onRemoveContext('files', fileId);
-                        }}
-                    />
+                    <Tooltip label={`Remove from chat`} openDelay={500}>
+                        <ActionIcon
+                            variant="transparent"
+                            color="gray"
+                            size={"sm"}
+                            style={{ cursor: 'pointer' }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRemoveContext('files', fileId);
+                            }}
+                        >
+                            <IconX size={16} />
+                        </ActionIcon>
+                    </Tooltip>
                 )}
                 onClick={(e) => {
                     if (setViewerMode) {
-                        const document = fileDocuments?.find(d => d.file === fileId) // first page of the file
-                        if (document) {
-                            handleDocumentClick('files', fileId, setViewerMode, document.id);
-                        }
+                        handleDocumentClick('files', fileId, setViewerMode, fileDocument?.id);
                     }
                 }}
             >
-                {file?.title}
+                <Tooltip label={`Open in viewer`} openDelay={500} offset={8}>
+                    <div>{displayTitle}</div>
+                </Tooltip>
             </Badge>
         )
-
     }
 
     return (
@@ -161,6 +174,48 @@ export const ContextBadges = memo(({
                     {recordedVideos.map(video => {
                         // check if the video is in the activeChat.context.files or if the file id does not exist
                         const showVideo = activeChat.context.files.includes(video.fileId ?? '') || !video.fileId;
+                        
+                        // Find the file if it exists
+                        const videoFile = video.fileId ? files?.find(f => f.id === video.fileId) : null;
+                        
+                        // Determine processing status from the file
+                        const processingStatus = videoFile?.parse_status || 'uploading';
+                        const processingError = videoFile?.parse_error;
+                        
+                        // Calculate progress based on status
+                        let progressValue = video.uploadProgress || 0;
+                        let statusMessage = 'Uploading...';
+                        
+                        if (videoFile) {
+                            switch (processingStatus) {
+                                case 'extracting':
+                                    progressValue = 25;
+                                    statusMessage = 'Extracting content...';
+                                    break;
+                                case 'uploading':
+                                    progressValue = 50;
+                                    statusMessage = 'Processing content...';
+                                    break;
+                                case 'processing':
+                                    progressValue = 75;
+                                    statusMessage = 'Processing video...';
+                                    break;
+                                case 'parsing':
+                                    // For parsing, we can check document progress
+                                    const totalDocs = videoFile.length || 1;
+                                    const processedDocs = fileDocuments?.filter(
+                                        doc => doc.file === video.fileId && doc.processed === true
+                                    )?.length || 0;
+                                    
+                                    progressValue = 75 + (25 * (processedDocs / totalDocs));
+                                    statusMessage = `Analyzing video (${processedDocs}/${totalDocs})`;
+                                    break;
+                                case 'error':
+                                    statusMessage = processingError || 'Error processing video';
+                                    break;
+                            }
+                        }
+                        
                         return showVideo && (
                             <Box
                                 key={video.id}
@@ -183,14 +238,14 @@ export const ContextBadges = memo(({
                                         width: '100%',
                                         height: '100%',
                                         objectFit: 'cover',
-                                        opacity: !video.fileId ? 0.5 : 1,
+                                        opacity: !video.fileId || processingStatus !== 'complete' ? 0.5 : 1,
                                         pointerEvents: 'all'
                                     }}
                                     controls
                                     playsInline
                                 />
 
-                                {!video.fileId ? (
+                                {(!video.fileId || processingStatus !== 'complete') ? (
                                     <Box style={{
                                         position: 'absolute',
                                         top: 0,
@@ -200,10 +255,26 @@ export const ContextBadges = memo(({
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
+                                        flexDirection: 'column',
                                         backgroundColor: 'rgba(0,0,0,0.2)',
-                                        pointerEvents: 'none'
+                                        pointerEvents: 'none',
+                                        padding: '0 16px'
                                     }}>
-                                        <Text size="sm" fw={500} c="white">Uploading...</Text>
+                                        <Text size="sm" fw={500} c="white" mb={8}>
+                                            {processingStatus === 'error' 
+                                                ? 'Processing Failed' 
+                                                : statusMessage}
+                                        </Text>
+                                        <Progress
+                                            value={processingStatus === 'error' ? 100 : progressValue}
+                                            size="sm"
+                                            radius="xl"
+                                            color={processingStatus === 'error' ? 'red' : 'blue'}
+                                            style={{ width: '80%' }}
+                                        />
+                                        {progressValue > 0 && processingStatus !== 'error' && (
+                                            <Text size="xs" c="white" mt={4}>{Math.round(progressValue)}%</Text>
+                                        )}
                                     </Box>
                                 ) : (
                                     <Box style={{
@@ -213,7 +284,7 @@ export const ContextBadges = memo(({
                                         zIndex: 10,
                                         pointerEvents: 'auto'
                                     }}>
-                                        {renderFileBadge(video.fileId, false)}
+                                        {renderFileBadge(files?.find(f => f.id === video.fileId), false)}
                                     </Box>
                                 )}
                             </Box>
@@ -225,89 +296,95 @@ export const ContextBadges = memo(({
             <Group gap={"xs"} pb={"sm"} pt={"sm"}>
                 {Array.from(new Set(activeChat.context.lectures)).map(lectureId => {
                     const lecture = lectures?.find(l => l.id === lectureId);
-                    return lecture && (
+                    const document = lectureDocuments?.filter(d => d.lecture === lectureId).sort((a, b) => a.page - b.page)[0];
+                    return lecture && document && (
                         <Badge
                             key={lectureId}
                             color="blue"
                             style={{ cursor: 'pointer' }}
                             leftSection={
                                 <Avatar
-                                    src={lectureDocuments?.find(d => d.lecture === lectureId) ?
-                                        `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${lectureDocuments.find(d => d.lecture === lectureId)?.id}.png` :
-                                        '/placeholder_image.svg'}
+                                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${document.id}.png`}
                                     size="xs"
                                     radius="sm"
                                 />
                             }
                             rightSection={onRemoveContext && (
-                                <IconX
-                                    size={14}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onRemoveContext('lectures', lectureId);
-                                    }}
-                                />
+                                <Tooltip label={`Remove from chat`} openDelay={500}>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        size={"sm"}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onRemoveContext('lectures', lectureId);
+                                        }}
+                                    >
+                                        <IconX size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
                             )}
                             onClick={(e) => {
                                 if (setViewerMode) {
-                                    const document = lectureDocuments?.find(d => d.lecture === lectureId) // first page of the lecture
-                                    if (document) {
-                                        handleDocumentClick('lectures', lectureId, setViewerMode, document.id);
-                                    }
+                                    handleDocumentClick('lectures', lectureId, setViewerMode, document.id);
                                 }
                             }}
                         >
-                            {lecture.name}
+                            <Tooltip label={`Open in viewer`} openDelay={500} offset={8}>
+                                <div>{lecture.name}</div>
+                            </Tooltip>
                         </Badge>
                     );
                 })}
 
                 {Array.from(new Set(activeChat.context.chapters)).map(chapterId => {
                     const chapter = chapters?.find(c => c.id === chapterId);
-                    return chapter && (
+                    const textbook = textbooks?.find(t => t.id === chapter?.textbook);
+                    const document = textbook && chapter ? textbookDocuments?.filter(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === textbook.id).sort((a, b) => a.page - b.page)[0] : null;
+                    return textbook && chapter && document && (
                         <Badge
                             key={chapterId}
                             color="green"
                             style={{ cursor: 'pointer' }}
                             leftSection={
                                 <Avatar
-                                    src={textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook) ?
-                                        `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${textbookDocuments.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === chapter.textbook)?.id}.png` :
-                                        '/placeholder_image.svg'}
+                                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`}
                                     size="xs"
                                     radius="sm"
                                 />
                             }
                             rightSection={onRemoveContext && (
-                                <IconX
-                                    size={14}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onRemoveContext('chapters', chapterId);
-                                    }}
-                                />
+                                <Tooltip label={`Remove from chat`} openDelay={500}>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        size={"sm"}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onRemoveContext('chapters', chapterId);
+                                        }}
+                                    >
+                                        <IconX size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
                             )}
                             onClick={(e) => {
                                 if (setViewerMode) {
-                                    const textbook = textbooks?.find(t => t.id === chapter.textbook)
-                                    if (textbook) {
-                                        const document = textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === textbook.id) // first page of the chapter
-                                        if (document) {
-                                            handleDocumentClick('chapters', chapterId, setViewerMode, document.id, textbook.id);
-                                        }
-                                    }
+                                    handleDocumentClick('chapters', chapterId, setViewerMode, document.id, textbook.id);
                                 }
                             }}
                         >
-                            {`Chapter ${chapter.chapter_number}: ${chapter.title}`}
+                            <Tooltip label={`Open in viewer`} openDelay={500} offset={8}>
+                                <div>{`Chapter ${chapter.chapter_number}: ${chapter.title}`}</div>
+                            </Tooltip>
                         </Badge>
                     );
                 })}
 
                 {Array.from(new Set(activeChat.context.exercises)).map(exerciseId => {
-                    const exercise = exercises?.find(e => e.id === exerciseId);
+                    const exercise = exercises?.find(e => e.id === exerciseId)
                     const chapter = chapters?.find(c => c.id === exercise?.chapter);
                     return exercise && chapter && (
                         <Badge
@@ -316,33 +393,36 @@ export const ContextBadges = memo(({
                             style={{ cursor: 'pointer' }}
                             leftSection={
                                 <Avatar
-                                    src={exercises?.find(e => e.id === exerciseId) ?
-                                        `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${chapter.textbook}/${exercise.id}.png` :
-                                        '/placeholder_image.svg'}
+                                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${chapter.textbook}/${exercise.id}.png`}
                                     size="xs"
                                     radius="sm"
                                 />
                             }
                             rightSection={onRemoveContext && (
-                                <IconX
-                                    size={14}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onRemoveContext('exercises', exerciseId);
-                                    }}
-                                />
+                                <Tooltip label={`Remove from chat`} openDelay={500}>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        size={"sm"}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onRemoveContext('exercises', exerciseId);
+                                        }}
+                                    >
+                                        <IconX size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
                             )}
                             onClick={(e) => {
                                 if (setViewerMode) {
-                                    const exercise = exercises?.find(e => e.id === exerciseId) // find first exercise of the homework
-                                    if (exercise) {
-                                        handleDocumentClick('chapters', exerciseId, setViewerMode, undefined, undefined, exercise.id);
-                                    }
+                                    handleDocumentClick('chapters', exerciseId, setViewerMode, undefined, undefined, exercise.id);
                                 }
                             }}
                         >
-                            {exercise.title}
+                            <Tooltip label={`Open in viewer`} openDelay={500} offset={8}>
+                                <div>{exercise.title}</div>
+                            </Tooltip>
                         </Badge>
                     );
                 })}
@@ -351,7 +431,7 @@ export const ContextBadges = memo(({
                     const homework = homeworkData?.find(h => h.id === homeworkId);
 
                     // find the first exercise in the homework
-                    const exercise = exercises?.find(e => e.homework === homeworkId);
+                    const exercise = exercises?.filter(e => e.homework === homeworkId).sort((a, b) => a.problem_number - b.problem_number).sort((a, b) => a.problem_part_number - b.problem_part_number)[0] // find first exercise of the homework
                     if (!exercise) return '/placeholder_image.svg';
 
                     let imageUrl = '/placeholder_image.svg';
@@ -376,30 +456,35 @@ export const ContextBadges = memo(({
                                 />
                             }
                             rightSection={onRemoveContext && (
-                                <IconX
-                                    size={14}
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onRemoveContext('homeworks', homeworkId);
-                                    }}
-                                />
+                                <Tooltip label={`Remove from chat`} openDelay={500}>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        size={"sm"}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onRemoveContext('homeworks', homeworkId);
+                                        }}
+                                    >
+                                        <IconX size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
                             )}
                             onClick={(e) => {
                                 if (setViewerMode) {
-                                    const exercise = exercises?.filter(e => e.homework === homeworkId).sort((a, b) => a.problem_number - b.problem_number).sort((a, b) => a.problem_part_number - b.problem_part_number)[0] // find first exercise of the homework
-                                    if (exercise) {
-                                        handleDocumentClick('homeworks', homeworkId, setViewerMode, undefined, undefined, exercise.id);
-                                    }
+                                    handleDocumentClick('homeworks', homeworkId, setViewerMode, undefined, undefined, exercise.id);
                                 }
                             }}
                         >
-                            {homework.title}
+                            <Tooltip label={`Open in viewer`} openDelay={500} offset={8}>
+                                <div>{homework.title}</div>
+                            </Tooltip>
                         </Badge>
                     );
                 })}
 
-                {Array.from(new Set(activeChat.context.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)))).map(fileId => renderFileBadge(fileId, true))}
+                {Array.from(new Set(activeChat.context.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)))).map(fileId => renderFileBadge(files?.find(f => f.id === fileId), true))}
             </Group>
         </>
     )

@@ -3,7 +3,7 @@
  * Component for viewing documents, lectures, and textbooks
  */
 
-import { Card, Stack, Group, Text, ActionIcon, Box, Button, Divider } from "@mantine/core";
+import { Card, Stack, Group, Text, ActionIcon, Box, Button, Divider, Tooltip } from "@mantine/core";
 import { IconMinus, IconPlus, IconX } from "@tabler/icons-react";
 import LectureViewer from "../Viewer/LectureViewer";
 import { memo } from "react";
@@ -132,14 +132,17 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                         > Expires at {files?.find(f => f.id === viewerMode.fileId)?.expires ? new Date(files?.find(f => f.id === viewerMode.fileId)?.expires ?? "").toLocaleString() : "No expiration date"}
                         </Text>}
                     </Stack>
-                    <ActionIcon
-                        onClick={handleClose}
-                        variant="subtle"
-                        ml={8}
-                        style={{ flexShrink: 0 }}
+                    <Tooltip label={`Close viewer`} openDelay={500} offset={8}>
+                        <ActionIcon
+                            onClick={handleClose}
+                            variant="subtle"
+                            color="gray"
+                            ml={8}
+                            style={{ flexShrink: 0 }}
                     >
-                        <IconX size={20} />
-                    </ActionIcon>
+                            <IconX size={20} />
+                        </ActionIcon>
+                    </Tooltip>
                 </Group>
                 {viewerMode.lectureId ? (
                     <>

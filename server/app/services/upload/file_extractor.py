@@ -484,12 +484,12 @@ class FileExtractor:
             logger.error(f"Error generating video title: {str(e)}")
             return ""
 
-    def upload_to_supabase(self, content_items: List[Dict[str, Any]], class_id: str, file_id: str, supabase: Client, gemini_file_names=None):
+    def upload_to_supabase(self, item: Dict[str, Any], class_id: str, file_id: str, supabase: Client):
         """Upload extracted content to Supabase"""
         try:
             # First, upload the whole file to Gemini if it's audio or video and we don't already have file names
             whole_file_name = None
-            if self.file_type in ['audio', 'video'] and not gemini_file_names:
+            if self.file_type in ['audio', 'video']:
                 try:
                     # Create debug directory
                     debug_dir = os.path.join(FILES_DIR, "debug", file_id)
@@ -513,7 +513,7 @@ class FileExtractor:
                     
                     # Update the file record with the Gemini file name
                     supabase.table("files").update({
-                        "file_name": whole_file_name
+                        "file_names": [whole_file_name]
                     }).eq("id", file_id).execute()
                     
                 except Exception as e:
@@ -522,53 +522,48 @@ class FileExtractor:
                         err_file.write(f"Error: {str(e)}\n")
                         import traceback
                         err_file.write(traceback.format_exc())
-            elif gemini_file_names:
-                # If we already have Gemini file names from chunked processing, use those
-                logger.info(f"Using pre-uploaded Gemini file names: {gemini_file_names}")
             
-            # Upload each content item to the documents table and store images
-            for item in content_items:
-                if item['type'] == 'pdf_page':
-                    document_data = {
-                        'page': item['page'],
-                        'file': file_id,
-                        'text': item.get('text', ''),
-                        'processed': False
-                    }
-                elif item['type'] in ['audio_chunk', 'video_chunk']:
-                    # For audio/video chunks, we don't need to upload individual chunks anymore
-                    # Just use the whole file reference for all chunks
-                    document_data = {
-                        'page': item['chunk_num'],
-                        'file': file_id,
-                        'text': item.get('text', ''),
-                        'processed': False,
-                        'start_time': item['start_time'],
-                        'end_time': item['end_time'],
-                    }
-                elif item['type'] == 'image':
-                    document_data = {
-                        'page': 1,
-                        'file': file_id,
-                        'text': '',
-                        'processed': False
-                    }
-                else:
-                    logger.warning(f"Unsupported content type: {item['type']}")
-                    continue
-                
-                # Insert document record
-                document_response = supabase.table('documents').insert(document_data).execute()
-                document_id = document_response.data[0]['id']
-                
-                # Upload image to Supabase storage
-                if 'image' in item and item['image']:
-                    storage_path = f"{class_id}/{file_id}/{document_id}.png"
-                    supabase.storage.from_("files").upload(
-                        path=storage_path,
-                        file=item['image'],
-                        file_options={"content-type": "image/png"}
-                    )
+            # Upload the item to the documents table and store images
+            if item['type'] == 'pdf_page':
+                document_data = {
+                    'page': item['page'],
+                    'file': file_id,
+                    'text': item.get('text', ''),
+                    'processed': False
+                }
+            elif item['type'] in ['audio_chunk', 'video_chunk']:
+                # For audio/video chunks, we don't need to upload individual chunks anymore
+                # Just use the whole file reference for all chunks
+                document_data = {
+                    'page': item['chunk_num'],
+                    'file': file_id,
+                    'text': item.get('text', ''),
+                    'processed': False,
+                    'start_time': item['start_time'],
+                    'end_time': item['end_time'],
+                }
+            elif item['type'] == 'image':
+                document_data = {
+                    'page': 1,
+                    'file': file_id,
+                    'text': '',
+                    'processed': False
+                }
+            else:
+                logger.warning(f"Unsupported content type: {item['type']}")
+            
+            # Insert document record
+            document_response = supabase.table('documents').insert(document_data).execute()
+            document_id = document_response.data[0]['id']
+            
+            # Upload image to Supabase storage
+            if 'image' in item and item['image']:
+                storage_path = f"{class_id}/{file_id}/{document_id}.png"
+                supabase.storage.from_("files").upload(
+                    path=storage_path,
+                    file=item['image'],
+                    file_options={"content-type": "image/png"}
+                )
 
         except Exception as e:
             logger.error(f"Error uploading to Supabase: {str(e)}")

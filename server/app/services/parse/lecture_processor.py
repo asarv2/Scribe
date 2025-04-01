@@ -213,7 +213,6 @@ class LectureProcessor(BaseProcessor):
             # Extract document information
             chunk_num = document.get('page', 0)
             text_content = document.get('text', '')
-            file_name = document.get('file_name', '')
             content_type = "video" if document.get('type', '') == 'video_chunk' else "audio"
             
             # Format start and end times
@@ -233,19 +232,6 @@ class LectureProcessor(BaseProcessor):
             
             # Prepare message content
             message_content = []
-            additional_files = []
-
-            # For audio/video, use the Gemini file_name if available
-            if file_name:
-                try:
-                    file_context = self._get_file_from_gemini(file_name)
-                    if file_context:
-                        additional_files.append(file_context)
-                        print(f"Successfully retrieved file from Gemini: {file_name}")
-                    else:
-                        print(f"File not found in Gemini: {file_name}")
-                except Exception as e:
-                    print(f"Error getting file from Gemini: {str(e)}")
             
             
             # For video, include the image if available
@@ -274,7 +260,7 @@ class LectureProcessor(BaseProcessor):
             
             # Generate response using Gemini
             try:
-                response = await self.robust_generate(None, message, model="gemini-2.0-flash-lite", additional_files=additional_files)
+                response = await self.robust_generate(None, message, model="gemini-2.0-flash-lite")
                 
                 if not response:
                     response = f"Failed to generate description for {content_type} segment {chunk_num}."
@@ -305,16 +291,6 @@ class LectureProcessor(BaseProcessor):
             )
             await after_generate(result)
             return result
-    
-    def _get_file_from_gemini(self, file_name: str) -> Any:
-        """Get a file from Gemini by name"""
-        try:
-            response = genai.get_file(file_name)
-            if response.state.name == "ACTIVE":
-                return response
-        except Exception as e:
-            print(f"Error getting file from Gemini: {str(e)}")
-        return None
     
     def _get_media_prompt(self, content_type: str, chunk_num: int, start_time: str, end_time: str) -> str:
         """Generate a prompt for audio or video content"""

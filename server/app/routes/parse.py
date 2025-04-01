@@ -85,7 +85,6 @@ async def parse_lecture(request: ParseRequest):
                     "type": lecture_type,
                     "start_time": doc.get("start_time"),
                     "end_time": doc.get("end_time"),
-                    "file_name": doc.get("file_name", "")
                 }
                 
                 # For PDF pages and video chunks, download the image
@@ -541,6 +540,7 @@ async def parse_file(request: ParseRequest):
         file_title = file_data.get('title')
         file_type = file_data.get('type')
         class_id = file_data.get('class')
+        file_names = file_data.get('file_names', [])
         print(f"File query response: {file_title}, type: {file_type}")
 
         # Get class title
@@ -615,7 +615,6 @@ async def parse_file(request: ParseRequest):
                     "text": doc.get("text", ""),
                     "start_time": doc.get("start_time"),
                     "end_time": doc.get("end_time"),
-                    "file_name": doc.get("file_name")  # Include file_name for audio/video chunks
                 }
                 
                 # Add image if available (only for PDF and image files)
@@ -647,6 +646,7 @@ async def parse_file(request: ParseRequest):
             print("Starting file processing...")
             results = await processor.process_documents(
                 processed_documents,
+                file_names,
                 after_generate
             )
             

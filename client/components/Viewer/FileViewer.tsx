@@ -62,6 +62,10 @@ export default function FileViewer({
 
     const filteredDocuments = documents?.filter(doc => doc.file === fileId);
 
+    const isProcessing = (documentId: string | null) => {
+        return filteredDocuments?.find(doc => doc.id === documentId)?.processed === false;
+    }
+
     const getActiveImage = (documentId: string | null) => {
         if (!classData || !file || !documentId) return "/placeholder_image.svg";
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${documentId}.png`;
@@ -325,7 +329,7 @@ export default function FileViewer({
                     flexGrow: 1,
                     minHeight: '80px' // Ensure description always has some minimum height
                 }}>
-                    {loadingDocuments ? (
+                    {loadingDocuments || (isProcessing(activeDocumentId)) ? (
                         <Stack>
                             <Skeleton height={16} width="90%" />
                             <Skeleton height={16} width="85%" />

@@ -1,4 +1,4 @@
-import { ChatMessage, ViewerMode } from "@/types";
+import { ChatMessage, Document, File, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
 import { memo, useRef, useState, useEffect } from "react";
@@ -16,6 +16,8 @@ import { getProfile } from "@/utils/queries/get-profile";
 import * as tus from 'tus-js-client';
 import { RecordedVideo } from "./ChatCanvas";
 import { useMediaQuery } from "@mantine/hooks";
+import { getFiles } from "@/utils/queries/get-files";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
@@ -94,28 +96,36 @@ export const ChatInput = memo(({
     queryFn: () => getClass(supabase, classId)
   });
 
-  // Add state to track if Enter was pressed during recording
-  const [enterPressedDuringRecording, setEnterPressedDuringRecording] = useState(false);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (!loading && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
-        onSend();
-      }
-    }
-  };
+  const { data: files, isLoading: loadingFiles } = useQuery({
+    queryKey: ["files", profile?.id, classId],
+    queryFn: () => getFiles(supabase, profile!.id, [classId]),
+    enabled: !!profile
+  });
 
-  const handleFileUpload = () => {
-    fileInputRef.current?.click();
-  };
+  const { data: fileDocuments } = useQuery({
+    queryKey: ["fileDocuments", classId],
+    queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
+    enabled: !!files
+  });
 
+  // Add this at the component level
+  const [processingFiles, setProcessingFiles] = useState<Record<string, {
+    notificationId: string,
+    fileName: string,
+    status: string,
+    error?: string,
+    documentsTotal: number,
+    documentsProcessed: number
+  }>>({});
+
+  // Modify the onSuccess callback in handleFileChange
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!profile?.id) return;
 
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      for (const file of files) {
+    const inputFiles = e.target.files;
+    if (inputFiles && inputFiles.length > 0) {
+      for (const file of inputFiles) {
         try {
           // Show loading notification
           const notificationId = 'file-upload-' + Date.now();
@@ -211,7 +221,7 @@ export const ChatInput = memo(({
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({
-                    fileId: fileId
+                    fileId: fileId,
                   })
                 });
 
@@ -221,6 +231,18 @@ export const ChatInput = memo(({
 
                 const fileData = await finalizeResponse.json();
 
+                // Add this file to our tracking state
+                setProcessingFiles(prev => ({
+                  ...prev,
+                  [fileData.file_id]: {
+                    notificationId,
+                    fileName: file.name,
+                    status: 'processing',
+                    documentsTotal: 0,
+                    documentsProcessed: 0
+                  }
+                }));
+
                 // Refresh queries
                 queryClient.refetchQueries({
                   queryKey: ["files", profile.id, classId]
@@ -228,16 +250,6 @@ export const ChatInput = memo(({
 
                 queryClient.refetchQueries({
                   queryKey: ["fileDocuments", classId]
-                });
-
-                // Update notification on success
-                notifications.update({
-                  id: notificationId,
-                  title: 'File uploaded',
-                  message: `${file.name} has been added to the chat context`,
-                  color: 'green',
-                  loading: false,
-                  autoClose: 3000
                 });
 
                 // Update chat context with the new file
@@ -262,21 +274,6 @@ export const ChatInput = memo(({
             }
           });
 
-          // Check for previous uploads to resume
-          const previousUploads = await upload.findPreviousUploads();
-          if (previousUploads.length) {
-            notifications.update({
-              id: notificationId,
-              title: 'Resuming upload',
-              message: `Continuing previous upload of ${file.name}...`,
-              loading: true,
-              autoClose: false
-            });
-
-            // Resume the upload
-            upload.resumeFromPreviousUpload(previousUploads[0]);
-          }
-
           // Start the upload
           upload.start();
 
@@ -298,6 +295,257 @@ export const ChatInput = memo(({
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  // Modify the realtime subscription for files
+  useEffect(() => {
+    if (!profile?.id) return;
+    const channel = supabase
+      .channel(`realtime-files-${profile.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'prod',
+          table: 'files',
+          filter: `profile=eq.${profile.id}`
+        },
+        async (payload) => {
+          console.log("Received file update:", payload);
+          const newFile = payload.new as File;
+          
+          // Check if this is a file we're tracking
+          const fileId = newFile?.id;
+          if (fileId && processingFiles[fileId]) {
+            const { notificationId, fileName } = processingFiles[fileId];
+            const newStatus = newFile.parse_status;
+            const parseError = newFile.parse_error;
+            
+            // Update our tracking state
+            setProcessingFiles(prev => ({
+              ...prev,
+              [fileId]: {
+                ...prev[fileId],
+                status: newStatus,
+                error: parseError,
+                documentsTotal: newFile.length || prev[fileId].documentsTotal
+              }
+            }));
+            
+            // Update notification based on status
+            switch (newStatus) {
+              case 'extracting':
+                notifications.update({
+                  id: notificationId,
+                  title: 'Extracting content',
+                  message: `Extracting ${newFile.length} sections from ~${fileName}...`,
+                  loading: true,
+                  autoClose: false
+                });
+                break;
+                
+              case 'uploading':
+                notifications.update({
+                  id: notificationId,
+                  title: 'Uploading content',
+                  message: `Uploading extracted content from ~${fileName}...`,
+                  loading: true,
+                  autoClose: false
+                });
+                break;
+                
+              case 'processing':
+                notifications.update({
+                  id: notificationId,
+                  title: 'Processing file',
+                  message: `Processing ${fileName}...`,
+                  loading: true,
+                  autoClose: false
+                });
+                break;
+                
+              case 'parsing':
+                notifications.update({
+                  id: notificationId,
+                  title: 'Parsing content',
+                  message: `Parsing ${fileName} (~${newFile.length} sections found)...`,
+                  loading: true,
+                  autoClose: false
+                });
+                break;
+                
+              case 'complete':
+
+                // Update chat context with the new file
+                setActiveChat(prev => ({
+                  ...prev,
+                  context: {
+                    ...prev.context,
+                    files: Array.from(new Set([...prev.context.files, fileId]))
+                  }
+                }));
+
+                notifications.update({
+                  id: notificationId,
+                  title: 'File ready',
+                  message: `${fileName} has been processed and added to the chat context`,
+                  color: 'green',
+                  loading: false,
+                  autoClose: 3000
+                });
+                
+                // Remove from tracking after a delay
+                setTimeout(() => {
+                  setProcessingFiles(prev => {
+                    const newState = {...prev};
+                    delete newState[fileId];
+                    return newState;
+                  });
+                }, 3000);
+                break;
+                
+              case 'error':
+                notifications.update({
+                  id: notificationId,
+                  title: 'Processing failed',
+                  message: parseError || `Error processing ${fileName}`,
+                  color: 'red',
+                  loading: false,
+                  autoClose: 5000
+                });
+                
+                // Remove from tracking after a delay
+                setTimeout(() => {
+                  setProcessingFiles(prev => {
+                    const newState = {...prev};
+                    delete newState[fileId];
+                    return newState;
+                  });
+                }, 5000);
+                break;
+                
+              case 'idle':
+                notifications.update({
+                  id: notificationId,
+                  title: 'Processing paused',
+                  message: `Processing of ${fileName} is currently paused`,
+                  color: 'yellow',
+                  loading: true,
+                  autoClose: false
+                });
+                break;
+            }
+          }
+          
+          // Then trigger a refetch to ensure we're in sync
+          await queryClient.invalidateQueries({
+            queryKey: ["files", profile.id, classId],
+            exact: true
+          });
+        }
+      )
+      .subscribe();
+
+    console.log("Subscribed to channel:", `realtime-files-${profile.id}`);
+
+    return () => {
+      console.log("Unsubscribing from channel:", `realtime-files-${profile.id}`);
+      supabase.removeChannel(channel);
+    };
+  }, [profile?.id, queryClient, supabase, processingFiles]);
+
+  // Modify the realtime subscription for file documents
+  useEffect(() => {
+    if (!files?.length) return;
+    const channel = supabase
+      .channel(`realtime-file-documents`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'prod',
+          table: 'documents',
+          filter: `file=in.(${files.map(file => file.id).join(',')})`
+        },
+        async (payload) => {
+          console.log("Received file document update:", payload);
+          const newFileDocument = payload.new as Document;
+          // Check if this is for a file we're tracking
+          const fileId = newFileDocument?.file;
+          if (fileId && processingFiles[fileId]) {
+            // Get the latest documents for this file
+            const latestFileDocuments = queryClient.getQueryData<any[]>(["fileDocuments", classId]) || [];
+            const docsForFile = latestFileDocuments.filter(doc => doc.file === fileId);
+            const processedDocs = docsForFile.filter(doc => doc.processed === true).length;
+            const totalDocs = docsForFile.length;
+            const newFile = files?.find(f => f.id === fileId);
+            
+            // Update our tracking state
+            setProcessingFiles(prev => ({
+              ...prev,
+              [fileId]: {
+                ...prev[fileId],
+                documentsProcessed: processedDocs,
+                documentsTotal: Math.max(totalDocs, prev[fileId].documentsTotal)
+              }
+            }));
+            
+            // If we're in parsing status, update the notification with document progress
+            if (processingFiles[fileId].status === 'parsing') {
+              const { notificationId, fileName } = processingFiles[fileId];
+              notifications.update({
+                id: notificationId,
+                title: 'Parsing content',
+                message: `Parsing ${fileName} (${processedDocs}/${totalDocs} sections)`,
+                loading: true,
+                autoClose: false
+              });
+            }
+            
+            // If we're in extracting status, update the notification with document count
+            if (processingFiles[fileId].status === 'extracting') {
+              const { notificationId, fileName } = processingFiles[fileId];
+              notifications.update({
+                id: notificationId,
+                title: 'Extracting content',
+                message: `Extracting content from ${fileName} (${totalDocs} / ${newFile?.length} sections)`,
+                loading: true,
+                autoClose: false
+              });
+            }
+          }
+
+          // Then trigger a refetch to ensure we're in sync
+          await queryClient.invalidateQueries({
+            queryKey: ["fileDocuments", classId],
+            exact: true
+          });
+        }
+      )
+      .subscribe();
+
+    console.log("Subscribed to channel:", `realtime-file-documents`);
+
+    return () => {
+      console.log("Unsubscribing from channel:", `realtime-file-documents`);
+      supabase.removeChannel(channel);
+    };
+  }, [files, queryClient, supabase, processingFiles]);
+
+  // Add state to track if Enter was pressed during recording
+  const [enterPressedDuringRecording, setEnterPressedDuringRecording] = useState(false);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!loading && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
+        onSend();
+      }
+    }
+  };
+
+  const handleFileUpload = () => {
+    fileInputRef.current?.click();
   };
 
   const initWaveSurfer = async () => {
@@ -496,7 +744,8 @@ export const ChatInput = memo(({
                 id: videoId,
                 url: videoUrl,
                 isLoading: true,
-                fileId: undefined
+                fileId: undefined,
+                uploadProgress: 0
               }]);
 
               setRecordingMode(false);
@@ -542,7 +791,9 @@ export const ChatInput = memo(({
             classId: classId,
             profileId: profile.id,
             fileId: videoId,
-            baseUrl: baseUrl
+            responseUrl: `${baseUrl}`,
+            baseUrl: baseUrl,
+            startParse: 'true'
           },
           // Required for streaming uploads
           uploadLengthDeferred: true,
@@ -552,8 +803,18 @@ export const ChatInput = memo(({
             console.error('Error uploading stream:', error);
             stopRecording();
           },
-          onProgress: (bytesUploaded) => {
+          onProgress: (bytesUploaded, bytesTotal) => {
             console.log(`Uploaded ${bytesUploaded} bytes`);
+            const percentage = (bytesUploaded / bytesTotal) * 100;
+
+            // Update the recorded video with the progress
+            setRecordedVideos(prev =>
+              prev.map(video =>
+                video.id === videoId
+                  ? { ...video, uploadProgress: percentage }
+                  : video
+              )
+            );
           },
           onSuccess: async () => {
             console.log('Stream upload complete');
@@ -658,29 +919,24 @@ export const ChatInput = memo(({
       setRecordedVideos(prev =>
         prev.map(video =>
           video.id === videoId
-            ? { ...video, isLoading: false, fileId: fileData.file_id }
+            ? { ...video, fileId: fileData.file_id }
             : video
         )
       );
-
-      // Refresh queries and update UI
-      queryClient.refetchQueries({
-        queryKey: ["files", profile?.id, classId]
-      });
-
       // Update chat context with the new file
       setActiveChat(prev => ({
         ...prev,
         context: {
           ...prev.context,
-          files: [...prev.context.files, fileData.file_id]
+          files: Array.from(new Set([...prev.context.files, fileData.file_id]))
         }
       }));
 
       notifications.show({
         title: 'Recording Complete',
-        message: 'Your video has been uploaded and added to the chat',
-        color: 'green'
+        message: 'Your video has been uploaded and added to the chat. Please wait while it is processed.',
+        color: 'blue',
+        autoClose: false
       });
 
     } catch (error) {
@@ -771,22 +1027,22 @@ export const ChatInput = memo(({
     return (
       <>
         {newChat && classData?.learn_mode_enabled && (isMobile ?
-            <Tooltip label="Learn">
-              <ActionIcon
-                onClick={() => setActiveChat((prev) => ({
-                  ...prev,
-                  chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
-                }))}
-                size="lg"
-                color={"green"}
-                variant={activeChat.chatType === 'concept' ? "light" : "subtle"}
-              >
-                <IconBook size={20} />
-              </ActionIcon>
-            </Tooltip> : <Button color={"green"} variant={activeChat.chatType === 'concept' ? "light" : "subtle"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-              ...prev,
-              chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
-            }))}>Learn</Button>)
+          <Tooltip label="Learn">
+            <ActionIcon
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+              }))}
+              size="lg"
+              color={"green"}
+              variant={activeChat.chatType === 'concept' ? "light" : "subtle"}
+            >
+              <IconBook size={20} />
+            </ActionIcon>
+          </Tooltip> : <Button color={"green"} variant={activeChat.chatType === 'concept' ? "light" : "subtle"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
+            ...prev,
+            chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+          }))}>Learn</Button>)
         }
 
         {

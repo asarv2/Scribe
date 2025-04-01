@@ -125,6 +125,7 @@ class FileProcessor(BaseProcessor):
     async def process_documents(
         self,
         documents: List[Dict[str, Any]],
+        file_names: List[str],
         after_generate: Callable[[CleanedResponse], None]
     ) -> List[CleanedResponse]:
         try:
@@ -134,17 +135,17 @@ class FileProcessor(BaseProcessor):
                 page_number = document.get('page', 1)
                 text = document.get('text', '')
                 image = document.get('image')
-                file_name = document.get('file_name')
                 
                 # Prepare the message based on file type
                 message_content = []
                 additional_files = []
                 
                 # For audio/video, use the Gemini file_name
-                if self.file_type in ['audio', 'video'] and file_name:
-                    file_context = self.get_file_from_gemini(file_name)
-                    if file_context:
-                        additional_files.append(file_context)
+                if self.file_type in ['audio', 'video']:
+                    for file_name in file_names:
+                        file_context = self.get_file_from_gemini(file_name)
+                        if file_context:
+                            additional_files.append(file_context)
                 # For images and PDFs, use the image from Supabase
                 elif image and self.file_type in ['pdf', 'image']:
                     base64_image = base64.b64encode(image).decode('utf-8')

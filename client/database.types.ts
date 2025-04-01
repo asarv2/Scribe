@@ -254,13 +254,13 @@ export type Database = {
           exercise: string | null
           exercises: string[]
           file: string | null
-          file_name: string
           homework: string | null
           homeworks: string[]
           id: string
           lecture: string | null
           page: number
           processed: boolean
+          size: Json
           start_time: number | null
           subchapter: string | null
           text: string
@@ -274,13 +274,13 @@ export type Database = {
           exercise?: string | null
           exercises?: string[]
           file?: string | null
-          file_name?: string
           homework?: string | null
           homeworks?: string[]
           id?: string
           lecture?: string | null
           page: number
           processed?: boolean
+          size?: Json
           start_time?: number | null
           subchapter?: string | null
           text?: string
@@ -294,13 +294,13 @@ export type Database = {
           exercise?: string | null
           exercises?: string[]
           file?: string | null
-          file_name?: string
           homework?: string | null
           homeworks?: string[]
           id?: string
           lecture?: string | null
           page?: number
           processed?: boolean
+          size?: Json
           start_time?: number | null
           subchapter?: string | null
           text?: string
@@ -1431,6 +1431,7 @@ export type Database = {
       parse_status:
         | "extracting"
         | "uploading"
+        | "processing"
         | "parsing"
         | "complete"
         | "idle"

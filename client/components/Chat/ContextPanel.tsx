@@ -6,8 +6,8 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button } from "@mantine/core";
-import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight } from "@tabler/icons-react";
+import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button, Box } from "@mantine/core";
+import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight, IconGripVertical } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { useQuery } from "@tanstack/react-query";
@@ -238,14 +238,23 @@ const ItemCard = ({
                         >
                             {item.newName}
                         </Text>
-                        {contextType === 'files' && <DeleteFileModal
-                            fileId={item.id}
-                            classId={classId}
-                            fileName={item.newName}
-                            navigateHome={false}
-                            profileId={profileId}
-                            onDelete={onFileDelete}
-                        />}
+                        <Group gap={2}>
+                            {contextType === 'files' && <DeleteFileModal
+                                fileId={item.id}
+                                classId={classId}
+                                fileName={item.newName}
+                                navigateHome={false}
+                                profileId={profileId}
+                                onDelete={onFileDelete}
+                            />}
+                            {makeDraggable && (
+                                <Tooltip label="Drag to chat">
+                                    <ActionIcon variant="transparent" size="md" color="gray">
+                                        <IconGripVertical size={20} />
+                                    </ActionIcon>
+                                </Tooltip>
+                            )}
+                        </Group>
                     </Group>
                 </Stack>
             </Group>
@@ -715,7 +724,7 @@ export function ContextPanel({
                     <div
                         ref={containerRef}
                         style={{
-                            height:"calc(100vh - 100px)",
+                            height: "calc(100vh - 100px)",
                             overflow: 'auto',
                             position: 'relative'
                         }}

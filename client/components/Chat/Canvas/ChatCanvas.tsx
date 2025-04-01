@@ -44,6 +44,8 @@ export interface RecordedVideo {
     id: string;
     url: string;
     fileId?: string;
+    uploadProgress?: number;
+    parseStatus?: string;
 }
 
 export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
@@ -603,42 +605,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     ], []
     );
 
-    // Add realtime subscriptions for lecture documents
-    useEffect(() => {
-        if (!files || files.length === 0) return;
-        if (!profile?.id) return;
-
-        const channel = supabase
-            .channel('realtime-file-documents')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'documents',
-                },
-                (payload) => {
-                    const document = payload.new as Document;
-                    if (document.file) {
-                        queryClient.refetchQueries({
-                            queryKey: ["files", profile.id, classId]
-                        })
-                        queryClient.refetchQueries({
-                            queryKey: ["fileDocuments", classId]
-                        });
-                    }
-                }
-            )
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, [classId, supabase, files, queryClient]);
-
     useEffect(() => {
         if (classId === "547a83a8-ab2c-4f3c-9112-b1cb6414ff36") {
-            
+
             setActiveChat(prev => ({
                 ...prev,
                 chatType: "present"
@@ -699,7 +668,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                             h="calc(100vh - 100px)"
                         >
                             {/* Show controls only when not in immersive mode */}
-                             <Flex justify="space-between" align="center" mb={10}>
+                            <Flex justify="space-between" align="center" mb={10}>
                                 <Group gap="sm">
                                     <Text size="xl" fw={700} mb={6}>
                                         {existingChat ? (
