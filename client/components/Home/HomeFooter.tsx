@@ -42,8 +42,16 @@ export function HomeFooter() {
           >
             Privacy
           </Anchor>
+          <Anchor
+            component={Link}
+            href="/terms"
+            c="dimmed"
+            size="sm"
+          >
+            Terms
+          </Anchor>
         </Group>
-        
+
       </Container>
     </div>
   );
