@@ -14,7 +14,7 @@ export default function PrivacyPage() {
 
     return (
         <HomeLayout>
-            <Container size="md" py="xl">
+            <Container size="md" fluid style={{ paddingTop: "2rem", paddingBottom: "2rem", paddingLeft: "2rem", paddingRight: "2rem" }}>
                 <style
                     dangerouslySetInnerHTML={{
                         __html: `
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
                             <strong>
                                 <span style={{ fontSize: 15 }}>
                                     <span data-custom-class="subtitle">
-                                        Last updated <span className="question">March 11, 2025</span>
+                                        Last updated <span className="question">March 31st, 2025</span>
                                     </span>
                                 </span>
                             </strong>
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
                                 <span data-custom-class="body_text">
                                     This Privacy Notice for{" "}
                                     <span className="question">
-                                        Scribe
+                                        Scribe, a service operated by LearnLoop LLC
                                         <span className="block-component" />
                                     </span>{" "}
                                     (<span className="block-component" />"<strong>we</strong>," "
@@ -232,7 +232,7 @@ export default function PrivacyPage() {
                                             policies and practices, please do not use our Services.
                                             <span className="block-component" /> If you still have any
                                             questions or concerns, please contact us at{" "}
-                                            <span className="question">scribelec.company@gmail.com</span>.
+                                            <span className="question">contact@scribe.it.com</span>.
                                         </span>
                                     </span>
                                 </span>
@@ -3555,7 +3555,7 @@ export default function PrivacyPage() {
                                                                                                                                                         <span data-custom-class="body_text">
                                                                                                                                                             <span className="block-component" />
                                                                                                                                                             <span className="question">
-                                                                                                                                                                scribelec.company@gmail.com
+                                                                                                                                                                contact@scribe.it.com
                                                                                                                                                             </span>
                                                                                                                                                             <span className="else-block" />
                                                                                                                                                         </span>
@@ -4377,7 +4377,7 @@ export default function PrivacyPage() {
                                                                                                                                                 may email us
                                                                                                                                                 at{" "}
                                                                                                                                                 <span className="question">
-                                                                                                                                                    scribelec.company@gmail.com
+                                                                                                                                                    contact@scribe.it.com
                                                                                                                                                 </span>
                                                                                                                                                 .
                                                                                                                                             </span>
@@ -8610,7 +8610,7 @@ export default function PrivacyPage() {
                                                                                                                                                                                                 us
                                                                                                                                                                                                 at{" "}
                                                                                                                                                                                                 <span className="question">
-                                                                                                                                                                                                    scribelec.company@gmail.com
+                                                                                                                                                                                                    contact@scribe.it.com
                                                                                                                                                                                                 </span>
                                                                                                                                                                                                 ,{" "}
                                                                                                                                                                                                 <span className="statement-end-if-in-editor" />
@@ -8953,7 +8953,7 @@ export default function PrivacyPage() {
                                                                                                                                                                                 at{" "}
                                                                                                                                                                                 <span className="block-component" />
                                                                                                                                                                                 <span className="question">
-                                                                                                                                                                                    scribelec.company@gmail.com
+                                                                                                                                                                                    contact@scribe.it.com
                                                                                                                                                                                 </span>
                                                                                                                                                                                 <span className="else-block" />
                                                                                                                                                                                 .
@@ -9668,16 +9668,10 @@ export default function PrivacyPage() {
                                                                                                                                                                                             <span className="block-component">
                                                                                                                                                                                                 <span className="block-component" />
                                                                                                                                                                                             </span>
-                                                                                                                                                                                            email
+                                                                                                                                                                                            contact
                                                                                                                                                                                             us
-                                                                                                                                                                                            at{" "}
-                                                                                                                                                                                            <span className="question">
-                                                                                                                                                                                                scribelec.company@gmail.com
-                                                                                                                                                                                                or&nbsp;
-                                                                                                                                                                                            </span>
-                                                                                                                                                                                            <span className="statement-end-if-in-editor">
-                                                                                                                                                                                                <span className="block-component" />
-                                                                                                                                                                                            </span>
+                                                                                                                                                                                            at:
+                                                                                                                                                                                           
                                                                                                                                                                                         </span>
                                                                                                                                                                                     </span>
                                                                                                                                                                                     <span
@@ -9687,21 +9681,7 @@ export default function PrivacyPage() {
                                                                                                                                                                                                 "rgb(89, 89, 89)"
                                                                                                                                                                                         }}
                                                                                                                                                                                     >
-                                                                                                                                                                                        <span
-                                                                                                                                                                                            style={{
-                                                                                                                                                                                                fontSize: 15,
-                                                                                                                                                                                                color:
-                                                                                                                                                                                                    "rgb(89, 89, 89)"
-                                                                                                                                                                                            }}
-                                                                                                                                                                                        >
-                                                                                                                                                                                            <span data-custom-class="body_text">
-                                                                                                                                                                                                contact
-                                                                                                                                                                                                us
-                                                                                                                                                                                                by
-                                                                                                                                                                                                post
-                                                                                                                                                                                                at:
-                                                                                                                                                                                            </span>
-                                                                                                                                                                                        </span>
+                                                                                                            
                                                                                                                                                                                     </span>
                                                                                                                                                                                 </span>
                                                                                                                                                                             </span>
@@ -9755,7 +9735,7 @@ export default function PrivacyPage() {
                                                                                                                                                                                             >
                                                                                                                                                                                                 <span data-custom-class="body_text">
                                                                                                                                                                                                     <span className="question">
-                                                                                                                                                                                                        Scribe
+                                                                                                                                                                                                    LearnLoop LLC (d/b/a Scribe) 
                                                                                                                                                                                                     </span>
                                                                                                                                                                                                 </span>
                                                                                                                                                                                             </span>
@@ -9790,7 +9770,7 @@ export default function PrivacyPage() {
                                                                                                                                                                         >
                                                                                                                                                                             <span data-custom-class="body_text">
                                                                                                                                                                                 <span className="question">
-                                                                                                                                                                                    __________
+                                                                                                                                                                                Email: contact@scribe.it.com
                                                                                                                                                                                 </span>
                                                                                                                                                                                 <span
                                                                                                                                                                                     style={{
@@ -9822,7 +9802,7 @@ export default function PrivacyPage() {
                                                                                                                                                                         >
                                                                                                                                                                             <span data-custom-class="body_text">
                                                                                                                                                                                 <span className="question">
-                                                                                                                                                                                    __________
+                                                                                                                                                                                Business Address: Available upon request
                                                                                                                                                                                 </span>
                                                                                                                                                                                 <span
                                                                                                                                                                                     style={{
@@ -9858,8 +9838,7 @@ export default function PrivacyPage() {
                                                                                                                                                                             }}
                                                                                                                                                                         >
                                                                                                                                                                             <span className="question">
-                                                                                                                                                                                United
-                                                                                                                                                                                States
+                                                                                                                
                                                                                                                                                                                 <span data-custom-class="body_text">
                                                                                                                                                                                     <span
                                                                                                                                                                                         style={{

@@ -83,54 +83,75 @@ export default function ClassesPage() {
         return profile.admin ? classes : classes?.filter(classItem => profile.classes?.includes(classItem.id));
     }
 
-    if (profile) {
-        const filteredClasses = getFilteredClasses();
-        if (filteredClasses.length > 0) {
-            if (profile.professor || profile.admin) {
-                if (profile.admin) {
-                    return redirect(`/classes/c/${filteredClasses[0].id}`);
-                } else {
-                    const classItem = filteredClasses[0];
-                    const filteredLectures = lectures?.filter(l => l.class === classItem.id) || [];
-                    const filteredTextbooks = textbooks?.filter(t => t.class === classItem.id) || [];
-                    const filteredHomeworks = homeworks?.filter(h => h.class === classItem.id) || [];
+    // Check if any data is still loading
+    const isLoading = loadingUser || loadingProfile || loadingClasses || loadingLectures || loadingTextbooks || loadingHomeworks
 
-                    const lecturesComplete = !classItem.lecture_enabled ||
-                        (filteredLectures.length > 0 && calculateParseStatus(filteredLectures).percent === 100);
-
-                    const textbooksComplete = !classItem.textbook_enabled ||
-                        (filteredTextbooks.length > 0 && calculateParseStatus(filteredTextbooks).percent === 100);
-
-                    const homeworksComplete = !classItem.homework_enabled ||
-                        (filteredHomeworks.length > 0 && calculateParseStatus(filteredHomeworks).percent === 100);
-
-                    if (lecturesComplete && textbooksComplete && homeworksComplete) {
-                        return redirect(`/classes/c/${filteredClasses[0].id}`);
-                    } else {
-                        return redirect(`/signup`);
-                    }
-                }
-            } else {
-                return redirect(`/classes/c/${filteredClasses[0].id}/chat/new`);
-            }
-        } else {
-            if (profile.professor || profile.admin) {
-                return redirect("/signup");
-            } else {
-                return redirect("/");
-            }
-        }
-    } else {
+    // Always show loading state until we're ready to redirect
+    // This prevents any blank screens during transitions
+    if (isLoading || !profile) {
         return (
             <HomeLayout>
                 <Container fluid>
                     <Center>
                         <Stack h="100vh" justify="center" align="center">
-                            <Loader />
+                            <Loader size="lg" />
+                            <Text c="dimmed">Loading your class information...</Text>
                         </Stack>
                     </Center>
                 </Container>
             </HomeLayout>
-        )
+        );
     }
+
+    // Handle redirects only when all data is loaded
+    const filteredClasses = getFilteredClasses();
+    if (filteredClasses.length > 0) {
+        if (profile.professor || profile.admin) {
+            if (profile.admin) {
+                return redirect(`/classes/c/${filteredClasses[0].id}`);
+            } else {
+                const classItem = filteredClasses[0];
+                const filteredLectures = lectures?.filter(l => l.class === classItem.id) || [];
+                const filteredTextbooks = textbooks?.filter(t => t.class === classItem.id) || [];
+                const filteredHomeworks = homeworks?.filter(h => h.class === classItem.id) || [];
+
+                const lecturesComplete = !classItem.lecture_enabled ||
+                    (filteredLectures.length > 0 && calculateParseStatus(filteredLectures).percent === 100);
+
+                const textbooksComplete = !classItem.textbook_enabled ||
+                    (filteredTextbooks.length > 0 && calculateParseStatus(filteredTextbooks).percent === 100);
+
+                const homeworksComplete = !classItem.homework_enabled ||
+                    (filteredHomeworks.length > 0 && calculateParseStatus(filteredHomeworks).percent === 100);
+
+                if (lecturesComplete && textbooksComplete && homeworksComplete) {
+                    return redirect(`/classes/c/${filteredClasses[0].id}`);
+                } else {
+                    return redirect(`/signup`);
+                }
+            }
+        } else {
+            return redirect(`/classes/c/${filteredClasses[0].id}/chat/new`);
+        }
+    } else {
+        if (profile.professor || profile.admin) {
+            return redirect("/signup");
+        } else {
+            return redirect("/");
+        }
+    }
+    
+    // Fallback loading state in case redirect doesn't happen immediately
+    return (
+        <HomeLayout>
+            <Container fluid>
+                <Center>
+                    <Stack h="100vh" justify="center" align="center">
+                        <Loader size="lg" />
+                        <Text c="dimmed">Loading your class information...</Text>
+                    </Stack>
+                </Center>
+            </Container>
+        </HomeLayout>
+    );
 }

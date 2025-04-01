@@ -6,9 +6,12 @@ from datetime import datetime
 import os
 from app.extensions import MESSAGES_DIR, UPLOAD_FOLDER
 from app.extensions import supabase
-from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt
+from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt, get_present_mode
 from app.utils.chat import get_critical_instructions
 from app.utils.get_content import process_special_tags
+import google.generativeai as genai
+from google.generativeai.types import File
+
 class ChatProcessor(BaseProcessor):
     def __init__(
         self,
@@ -17,6 +20,7 @@ class ChatProcessor(BaseProcessor):
         message_id: str,
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
+        google_file_ids: List[str] = []
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -28,6 +32,57 @@ class ChatProcessor(BaseProcessor):
         for _, q, r in past_messages:
             if q and r:  # Only add complete message pairs
                 self.chat_history.extend([q, r])
+
+
+        # get the files from gemini api
+        self.additional_files = []
+        print(f"Google file ids: {google_file_ids}")
+        for file_id in google_file_ids:
+            retrived_file = self.get_file_from_gemini(file_id)
+            if retrived_file:
+                self.additional_files.append(retrived_file)
+
+    def get_file_from_gemini(self, file_name: str) -> File | None:
+        # Get the file from Gemini
+        try:
+            response = genai.get_file(file_name)
+            if response.state.name == "ACTIVE":
+                return response
+            else:
+                error_info = ""
+                if hasattr(response, "error") and response.error:
+                    error_code = getattr(response.error, "code", "Unknown")
+                    error_message = getattr(response.error, "message", "No details available")
+                    
+                    # Try to extract detailed error information
+                    error_details = []
+                    if hasattr(response.error, "details") and response.error.details:
+                        for detail in response.error.details:
+                            if hasattr(detail, "@type"):
+                                error_details.append(f"Type: {detail['@type']}")
+                            # Add any other relevant fields from the detail object
+                            error_details_str = ", ".join(error_details) if error_details else "No details"
+                            error_info = f" (Code: {error_code}, Message: {error_message}, Details: {error_details_str})"
+                    else:
+                        error_info = f" (Code: {error_code}, Message: {error_message})"
+                
+                # Get additional metadata if available
+                metadata_info = ""
+                if hasattr(response, "updateTime"):
+                    metadata_info += f", Last updated: {response.updateTime}"
+                if hasattr(response, "sizeBytes"):
+                    metadata_info += f", Size: {response.sizeBytes} bytes"
+                
+                print(f"File {file_name} is not active. Status: {response.state.name}{error_info}{metadata_info}")
+                
+                # For error code 3 (INVALID_ARGUMENT), provide more specific guidance
+                if error_code == 3:
+                    print(f"This may indicate an issue with the file format or content. Please verify the file is valid and in a supported format.")
+                
+                return None
+        except Exception as e:
+            print(f"Error retrieving file {file_name}: {str(e)}")
+            return None
 
     async def format_conversation(self) -> str:
         """Format the conversation history into context"""
@@ -108,6 +163,8 @@ class ChatProcessor(BaseProcessor):
                     system_prompt = get_general_student_prompt()
                 case 'general-teacher':
                     system_prompt = get_general_teacher_prompt()
+                case 'present':
+                    system_prompt = get_present_mode()
 
             prompt = (
                 "Now, continue the conversation using this style.\n"
@@ -138,12 +195,17 @@ class ChatProcessor(BaseProcessor):
             with open(os.path.join(MESSAGES_DIR, f"{self.message_id}.txt"), "w") as f:
                 f.write("SYSTEM PROMPT: " + system_prompt + "\n\n" + "INPUT PROMPT: " + prompt)
 
-            message = Message(content=[
-                {"type": "text", "text": prompt},
-            ])
+            # add additional files to the message content
+            message_content = []
+            additional_files = []
+            if self.additional_files:
+                additional_files.extend(self.additional_files)
+            message_content.append({"type": "text", "text": prompt})
+
+            message = Message(content=message_content)
 
             response_text = ""
-            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash"):
+            async for chunk in self.robust_generate_stream(system_prompt, message, "gemini-2.0-flash", additional_files=additional_files):
                 response_text += chunk
                 if stream_callback:
                     yield await stream_callback(chunk)

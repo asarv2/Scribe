@@ -5,7 +5,7 @@ from typing import List, Union, Literal, Dict, TypeAlias, AsyncGenerator, TypedD
 import asyncio
 from app.services.rate_limiter import rate_limiter
 import google.generativeai as genai
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from google.generativeai.types import HarmCategory, HarmBlockThreshold, File
 from dataclasses import dataclass
 import re
 
@@ -58,7 +58,7 @@ class FRQQuestion(TypedDict):
 LiteralModel: TypeAlias = Literal["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.5-flash-8b"]
 @dataclass
 class Message:
-    content: List[Dict[str, str]]
+    content: List[Union[Dict[str, str], File]]
 
 class CleanedResponse:
     def __init__(self, page: int, description: str, text: str):
@@ -217,7 +217,8 @@ class BaseProcessor:
         message: Message,
         model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,
-        initial_wait: int = 5
+        initial_wait: int = 5,
+        additional_files: List[File] = []
     ) -> str:
         try:
             # Acquire rate limiter permission
@@ -228,6 +229,11 @@ class BaseProcessor:
                 
                 # Extract content parts from the message
                 content_parts = []
+                # Add additional files to the content parts
+                if additional_files:
+                    content_parts.extend(additional_files)
+
+                # Add the message content to the content parts
                 for part in message.content:
                     if part["type"] == "text":
                         content_parts.append(part["text"])
@@ -270,7 +276,8 @@ class BaseProcessor:
         message: Message,
         model: LiteralModel = "gemini-2.0-flash",
         retries: int = 3,
-        initial_wait: int = 5
+        initial_wait: int = 5,
+        additional_files: List[File] = []
     ) -> AsyncGenerator[str, None]:
         """
         A streaming version of robust_generate that yields chunks of the response.
@@ -284,6 +291,10 @@ class BaseProcessor:
                 
                 # Extract content parts from the message
                 content_parts = []
+                # Add additional files to the content parts
+                if additional_files:
+                    content_parts.extend(additional_files)
+                # Add the message content to the content parts
                 for part in message.content:
                     if part["type"] == "text":
                         content_parts.append(part["text"])

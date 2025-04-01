@@ -17,10 +17,12 @@ class FigureProcessor(BaseProcessor):
         lectures: List[Dict[str, Any]],
         chapters: List[Dict[str, Any]],
         homeworks: List[Dict[str, Any]],
+        files: List[Dict[str, Any]],
         lecture_documents: List[Dict[str, Any]],
         chapter_documents: List[Dict[str, Any]],
         chapter_exercises: List[Dict[str, Any]],
         homework_exercises: List[Dict[str, Any]],
+        file_documents: List[Dict[str, Any]],
     ):
         super().__init__()
         self.course_title = course_title
@@ -29,10 +31,12 @@ class FigureProcessor(BaseProcessor):
         self.lectures = lectures
         self.chapters = chapters
         self.homeworks = homeworks
+        self.files = files
         self.lecture_documents = lecture_documents
         self.chapter_documents = chapter_documents
         self.chapter_exercises = chapter_exercises
         self.homework_exercises = homework_exercises
+        self.file_documents = file_documents
         self.all_content = all_content
 
         # Base prompts
@@ -111,6 +115,7 @@ class FigureProcessor(BaseProcessor):
         chapter_references: List[str],
         chapter_exercise_references: List[str],
         homework_exercise_references: List[str],    
+        file_references: List[str],
     ) -> None:
         """Clean and process the generated figure result."""
         try:
@@ -138,7 +143,8 @@ class FigureProcessor(BaseProcessor):
                         lecture_references=lecture_references,
                         chapter_references=chapter_references,
                         chapter_exercise_references=chapter_exercise_references,
-                        homework_exercise_references=homework_exercise_references
+                        homework_exercise_references=homework_exercise_references,
+                        file_references=file_references
                     )
                         
                 except Exception as e:
@@ -236,7 +242,7 @@ class FigureProcessor(BaseProcessor):
                 )
             
             # clean the result, get the figures and references, of type ChatMessage
-            figures_and_references = clean_figures_and_references(question, message_id,result, self.lectures, self.chapters, self.homeworks, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises)
+            figures_and_references = clean_figures_and_references(question, message_id,result, self.lectures, self.chapters, self.homeworks, self.files, self.lecture_documents, self.chapter_documents, self.chapter_exercises, self.homework_exercises, self.file_documents)
 
             # there should no figure ids in the response
 
@@ -249,6 +255,7 @@ class FigureProcessor(BaseProcessor):
                 figures_and_references['chapter_references'], 
                 figures_and_references['chapter_exercise_references'], 
                 figures_and_references['homework_exercise_references'], 
+                figures_and_references['file_references']
             )
 
             if on_batch_complete:

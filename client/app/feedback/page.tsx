@@ -47,7 +47,7 @@ export default function FeedbackPage() {
     };
 
     return (
-        <ClassLayout classId={null}>
+        <ClassLayout classId={null} showClasses={false}>
             <Container size="md" py="xl">
                 <Stack gap="md">
                     <Title 

@@ -116,15 +116,20 @@ export type Database = {
           deleted: boolean
           download: boolean
           download_time: string
+          files_enabled: boolean
           homework_enabled: boolean
+          homework_mode_enabled: boolean
           homework_prompt: string
           id: string
+          learn_mode_enabled: boolean
           lecture_enabled: boolean
           lecture_prompt: string
+          present_mode_enabled: boolean
           privacy: boolean
           professors: string[]
           saved: boolean
           students: string[]
+          test_prep_mode_enabled: boolean
           textbook_enabled: boolean
           textbook_prompt: string
           title: string | null
@@ -141,15 +146,20 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          files_enabled?: boolean
           homework_enabled?: boolean
+          homework_mode_enabled?: boolean
           homework_prompt?: string
           id?: string
+          learn_mode_enabled?: boolean
           lecture_enabled?: boolean
           lecture_prompt?: string
+          present_mode_enabled?: boolean
           privacy?: boolean
           professors?: string[]
           saved?: boolean
           students?: string[]
+          test_prep_mode_enabled?: boolean
           textbook_enabled?: boolean
           textbook_prompt?: string
           title?: string | null
@@ -166,15 +176,20 @@ export type Database = {
           deleted?: boolean
           download?: boolean
           download_time?: string
+          files_enabled?: boolean
           homework_enabled?: boolean
+          homework_mode_enabled?: boolean
           homework_prompt?: string
           id?: string
+          learn_mode_enabled?: boolean
           lecture_enabled?: boolean
           lecture_prompt?: string
+          present_mode_enabled?: boolean
           privacy?: boolean
           professors?: string[]
           saved?: boolean
           students?: string[]
+          test_prep_mode_enabled?: boolean
           textbook_enabled?: boolean
           textbook_prompt?: string
           title?: string | null
@@ -245,6 +260,7 @@ export type Database = {
           lecture: string | null
           page: number
           processed: boolean
+          size: Json
           start_time: number | null
           subchapter: string | null
           text: string
@@ -264,6 +280,7 @@ export type Database = {
           lecture?: string | null
           page: number
           processed?: boolean
+          size?: Json
           start_time?: number | null
           subchapter?: string | null
           text?: string
@@ -283,6 +300,7 @@ export type Database = {
           lecture?: string | null
           page?: number
           processed?: boolean
+          size?: Json
           start_time?: number | null
           subchapter?: string | null
           text?: string
@@ -671,6 +689,7 @@ export type Database = {
           chapter_references: string[]
           code: string
           created_at: string
+          file_references: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references: string[]
@@ -688,6 +707,7 @@ export type Database = {
           chapter_references?: string[]
           code?: string
           created_at?: string
+          file_references?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -705,6 +725,7 @@ export type Database = {
           chapter_references?: string[]
           code?: string
           created_at?: string
+          file_references?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -731,27 +752,51 @@ export type Database = {
         Row: {
           class: string
           created_at: string
+          deleted: boolean
+          expires: string
+          file_names: string[]
+          file_number: number
           id: string
+          last_parse_attempt: string | null
           length: number
+          parse_error: string
+          parse_status: Database["prod"]["Enums"]["parse_status"]
           profile: string
+          response_url: string
           title: string
           type: Database["prod"]["Enums"]["file_type"]
         }
         Insert: {
           class?: string
           created_at?: string
+          deleted?: boolean
+          expires?: string
+          file_names?: string[]
+          file_number?: number
           id?: string
+          last_parse_attempt?: string | null
           length?: number
+          parse_error?: string
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
           profile: string
+          response_url?: string
           title?: string
           type: Database["prod"]["Enums"]["file_type"]
         }
         Update: {
           class?: string
           created_at?: string
+          deleted?: boolean
+          expires?: string
+          file_names?: string[]
+          file_number?: number
           id?: string
+          last_parse_attempt?: string | null
           length?: number
+          parse_error?: string
+          parse_status?: Database["prod"]["Enums"]["parse_status"]
           profile?: string
+          response_url?: string
           title?: string
           type?: Database["prod"]["Enums"]["file_type"]
         }
@@ -831,7 +876,6 @@ export type Database = {
           class: string
           created_at: string
           deleted: boolean
-          has_audio: boolean
           id: string
           last_parse_attempt: string | null
           last_upload_attempt: string | null
@@ -842,6 +886,7 @@ export type Database = {
           parse_error: string | null
           parse_status: Database["prod"]["Enums"]["parse_status"]
           response_url: string
+          type: Database["prod"]["Enums"]["file_type"]
           upload_error: string | null
           upload_progress: number
         }
@@ -850,7 +895,6 @@ export type Database = {
           class: string
           created_at?: string
           deleted?: boolean
-          has_audio?: boolean
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
@@ -861,6 +905,7 @@ export type Database = {
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
           response_url?: string
+          type?: Database["prod"]["Enums"]["file_type"]
           upload_error?: string | null
           upload_progress?: number
         }
@@ -869,7 +914,6 @@ export type Database = {
           class?: string
           created_at?: string
           deleted?: boolean
-          has_audio?: boolean
           id?: string
           last_parse_attempt?: string | null
           last_upload_attempt?: string | null
@@ -880,6 +924,7 @@ export type Database = {
           parse_error?: string | null
           parse_status?: Database["prod"]["Enums"]["parse_status"]
           response_url?: string
+          type?: Database["prod"]["Enums"]["file_type"]
           upload_error?: string | null
           upload_progress?: number
         }
@@ -903,6 +948,7 @@ export type Database = {
           chat: string | null
           created_at: string
           documents: string[]
+          file_references: string[]
           files: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
@@ -927,6 +973,7 @@ export type Database = {
           chat?: string | null
           created_at?: string
           documents?: string[]
+          file_references?: string[]
           files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
@@ -951,6 +998,7 @@ export type Database = {
           chat?: string | null
           created_at?: string
           documents?: string[]
+          file_references?: string[]
           files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
@@ -1063,6 +1111,7 @@ export type Database = {
           created_at: string
           explanations: string[]
           figures: string[]
+          file_references: string[]
           frq: boolean
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
@@ -1086,6 +1135,7 @@ export type Database = {
           created_at?: string
           explanations?: string[]
           figures?: string[]
+          file_references?: string[]
           frq?: boolean
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
@@ -1109,6 +1159,7 @@ export type Database = {
           created_at?: string
           explanations?: string[]
           figures?: string[]
+          file_references?: string[]
           frq?: boolean
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
@@ -1227,6 +1278,7 @@ export type Database = {
           conclusion: string
           created_at: string
           figures: string[]
+          file_references: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references: string[]
@@ -1245,6 +1297,7 @@ export type Database = {
           conclusion?: string
           created_at?: string
           figures?: string[]
+          file_references?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -1263,6 +1316,7 @@ export type Database = {
           conclusion?: string
           created_at?: string
           figures?: string[]
+          file_references?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
           homework_exercise_references?: string[]
@@ -1370,12 +1424,14 @@ export type Database = {
         | "concept"
         | "review"
         | "other"
-      file_type: "audio" | "video" | "video_audio" | "image" | "pdf"
+        | "present"
+      file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
       parse_status:
         | "extracting"
         | "uploading"
+        | "processing"
         | "parsing"
         | "complete"
         | "idle"

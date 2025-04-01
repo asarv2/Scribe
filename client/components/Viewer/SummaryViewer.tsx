@@ -20,18 +20,15 @@ interface SummaryViewerProps {
     classId: string;
     summary: Summary;
     viewerMode: ViewerMode;
-    renderBadges: (group: {
-        text: string;
-        documents: Document[];
-        exercises: Exercise[];
-    }) => React.ReactNode;
-    lectureDocuments: Document[];
-    chapterDocuments: Document[];
-    chapterExercises: Exercise[];
-    homeworkExercises: Exercise[];
+    lectureDocuments: Document[],
+    chapterDocuments: Document[],
+    fileDocuments: Document[],
+    chapterExercises: Exercise[],
+    homeworkExercises: Exercise[]
+    handleEnhancedDocumentClick: (contextType: 'lectures' | 'chapters' | 'homeworks' | 'files', contextId: string, documentId?: string, textbookId?: string, exerciseId?: string) => void;
 }
 
-const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerMode, renderBadges, lectureDocuments, chapterDocuments, chapterExercises, homeworkExercises }) => {
+const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerMode, handleEnhancedDocumentClick, lectureDocuments, chapterDocuments, fileDocuments, chapterExercises, homeworkExercises }) => {
 
     const [loading, setLoading] = useState(false);
 
@@ -141,39 +138,16 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
                         </Group>
 
                         <Box>
-                            {(() => {
-                                const groups = groupConsecutiveDocuments(
-                                    splitTextByDocuments(
-                                        filterCodeBlocks(summary.body)
-                                    ),
-                                    lectureDocuments ?? [],
-                                    chapterDocuments ?? [],
-                                    chapterExercises ?? [],
-                                    homeworkExercises ?? []
-                                );
-
-                                // Combine all groups into one for final badges
-                                const combinedGroup = groups.reduce((acc, group) => ({
-                                    text: acc.text + group.text,
-                                    documents: [...(acc.documents || []), ...(group.documents || [])],
-                                    exercises: [...(acc.exercises || []), ...(group.exercises || [])]
-                                }), { text: '', documents: [], exercises: [] });
-
-                                return (
-                                    <>
-                                        <Latex>{summary.preamble}</Latex>
-                                        {groups.map((group, index) => (
-                                            <Box key={index}>
-                                                <Latex>{group.text}</Latex>
-                                            </Box>
-                                        ))}
-                                        <Latex>{summary.conclusion}</Latex>
-                                        <Box pt="md">
-                                            {renderBadges(combinedGroup)}
-                                        </Box>
-                                    </>
-                                );
-                            })()}
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.preamble}</Latex>
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
+                            filterCodeBlocks(summary.body),
+                            lectureDocuments ?? [],
+                            chapterDocuments ?? [],
+                            fileDocuments ?? [],
+                            chapterExercises ?? [],
+                            homeworkExercises ?? []
+                          ) }</Latex>
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.conclusion}</Latex>
                         </Box>
                     </>
                 );
@@ -187,7 +161,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
     };
 
     return (
-        <Card withBorder p="md" w={viewerMode.immersive ? '100%' : 700}>
+        <Card withBorder p="md" w={viewerMode.open ? "100%" : "60%"}>
             {renderContent()}
         </Card>
     );

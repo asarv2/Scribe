@@ -108,6 +108,34 @@ async def fetch_homework_content(supabase, homework_ids):
     
     return "\n\n".join(content)
 
+
+async def fetch_file_content(supabase, file_ids):
+    """
+    Fetch file content from the database.
+    
+    Returns a dictionary with files and their documents.
+    """
+    """Generate textual content from lecture documents."""
+    if not file_ids:
+        return ""
+    
+    resources = await fetch_file_resources(supabase, file_ids)
+    files = resources["files"]
+    documents = resources["documents"]
+    
+    content = []
+    for file in files:
+        file_docs = [doc for doc in documents if doc.get("file") == file.get("id")]
+        file_content = f"FILE {file.get('file_number')}: {file.get('title')}\n"
+        
+        for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
+            file_content += f"\nPAGE {doc.get('page')}\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
+        
+        content.append(file_content)
+    
+    return "\n\n".join(content)
+    
+
 async def fetch_lecture_resources(supabase, lecture_ids):
     """
     Fetch lecture resources and their documents.
@@ -185,6 +213,27 @@ async def fetch_homework_resources(supabase, homework_ids):
     return {
         "homeworks": all_homeworks,
         "exercises": all_exercises
+    }
+
+async def fetch_file_resources(supabase, file_ids):
+    """
+    Fetch file resources and their documents.
+    
+    Returns a dictionary with files and their documents.
+    """
+    all_files = []
+    all_documents = []
+    all_google_file_ids = []
+    if file_ids:
+        # Fetch files
+        files_response = supabase.table("files").select("*").in_("id", file_ids).order("title", desc=False).execute()
+        all_files = files_response.data or []
+        all_google_file_ids = [file_name for gemini_file in all_files for file_name in gemini_file.get("file_names", [])]
+        
+    return {
+        "files": all_files,
+        "documents": all_documents,
+        "google_file_ids": all_google_file_ids
     }
 
 async def fetch_figure_resources(supabase, figure_id):

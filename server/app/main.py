@@ -17,13 +17,10 @@ from app.extensions import UPLOAD_FOLDER
 from app.config import MODEL_REGISTRY
 
 # Check model availability during startup
-if os.environ.get('GPU_WORKER') == 'true':
-    if MODEL_REGISTRY["initialized"]:
-        print("Model loaded successfully")
-    else:
-        print("Model not available - initialization failed")
+if MODEL_REGISTRY["whisper_initialized"]:
+    print(f"Whisper models loaded successfully: {len(MODEL_REGISTRY['whisper_models'])} instances")
 else:
-    print("Not a GPU worker - model loading skipped")
+    print("Whisper models not available - initialization failed")
 
 # Create FastAPI app with lifespan
 app = FastAPI(title="Scribe API")

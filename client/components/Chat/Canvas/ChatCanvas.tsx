@@ -22,11 +22,10 @@ import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 import { TypeAnimation } from 'react-type-animation';
 
-import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, Exercise } from "@/types";
+import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, Exercise, FileType } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
-import { ViewerPanel } from "./ViewerPanel";
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
@@ -38,42 +37,35 @@ import { getExercises } from "@/utils/queries/get-exercises";
 import { getLectures } from "@/utils/queries/get-lectures";
 import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
-import RecordingPanel from "../RecordingPanel";
+import { getFiles } from "@/utils/queries/get-files";
+import { ViewerPanel } from "../ViewerPanel";
 
+export interface RecordedVideo {
+    id: string;
+    url: string;
+    fileId?: string;
+    uploadProgress?: number;
+    parseStatus?: string;
+}
 
 export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { classId: string, chatId: string, toggle: () => void, fullscreen: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
-        immersive: fullscreen,
-        contextActive: false,
-        contextOpen: chatId === "new",
-        audio: false,
-        video: false,
-        recording: false,
-        inputActive: true,
-        paused: false,
-        saved: false,
+        active: false,
+        open: chatId === "new",
     });
     const [loading, setLoading] = useState(false);
 
     // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
-    const [filesSearchQuery, setFilesSearchQuery] = useState("");
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures']));
 
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-    // video/audio section
-    const [recordingDuration, setRecordingDuration] = useState(0);
-    const [mediaBlob, setMediaBlob] = useState<Blob | null>(null);
-    const [stream, setStream] = useState<MediaStream | null>(null);
-    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const mediaChunksRef = useRef<Blob[]>([]);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const videoPreviewRef = useRef<HTMLVideoElement | null>(null);
+    const [recordedVideos, setRecordedVideos] = useState<RecordedVideo[]>([]);
 
     // Fetch necessary data
     const { data: existingChat } = useQuery({
@@ -127,6 +119,12 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         enabled: !!chapters && !!homeworkData
     });
 
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", profile?.id, classId],
+        queryFn: () => getFiles(supabase, profile!.id, [classId]),
+        enabled: !!profile
+    });
+
     const [activeChat, setActiveChat] = useState<ChatMessage>({
         id: 1,
         title: "Chat",
@@ -144,7 +142,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     });
 
     // Combine all loading states
-    const isInitializing = !user || !profile || !lectures || !textbooks;
+    const isInitializing = !user || !profile || !lectures || !textbooks || !homeworkData || !exercises || !files;
+
+    const [isWaitingForVideos, setIsWaitingForVideos] = useState(false);
 
     // Add this state to track when we receive a realtime update
     const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
@@ -168,7 +168,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
         const exerciseChapters = activeChat.context.exercises.map(e => exercises?.find(ex => ex.id === e)?.chapter).filter((chapter): chapter is string => chapter !== undefined);
 
-        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...previousMessagesChapters, ...exerciseChapters]));
+        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters, ...previousMessagesChapters]));
         return allChapters;
     }
 
@@ -180,6 +180,17 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
         const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
         return allHomeworks;
+    }
+
+    const getFileContext = () => {
+        const previousMessagesFiles = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.files) ? message.files : []
+        ) ?? [];
+
+        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles]));
+        return allFiles;
+
     }
 
     const getAdditionalContextForBareQuestion = () => {
@@ -225,16 +236,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         return '';
     };
 
-    // Handlers
-    const handlePromptChange = useCallback((prompt: string) => {
-        setActiveChat(prev => ({ ...prev, prompt }));
-    }, []);
-
-    const handleChat = async () => {
-        if (!activeChat.prompt.trim()) return;
-
+    // Define sendMessage with useCallback
+    const sendMessage = useCallback(async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             let profileId = profile?.id;
             let newChatId = chatId;
 
@@ -262,11 +267,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 bare_question: activeChat.prompt + additionalContextForBareQuestion,
                 question: activeChat.prompt,
                 response_url: responseUrl,
-                // documents: getDocuments().map(doc => doc.id), // will need to remove this later
                 lectures: getLectureContext(),
                 chapters: getChapterContext(),
                 homeworks: getHomeworkContext(),
-                // exercises: activeChat.context.exercises, // these can stay as they are
+                files: getFileContext(),
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -304,6 +308,38 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             });
 
             router.push(`/classes/c/${classId}/chat/${newChatId}`);
+        } finally {
+            setLoading(false);
+        }
+    }, [
+        profile,
+        chatId,
+        classId,
+        activeChat,
+        router,
+        getAdditionalContextForBareQuestion,
+        getLectureContext,
+        getChapterContext,
+        getHomeworkContext,
+        getFileContext
+    ]);
+
+    const handleChat = async () => {
+        if (!activeChat.prompt.trim() && recordedVideos.length === 0) return;
+
+        try {
+            // Check if there are any unprocessed videos
+            const hasUnprocessedVideos = recordedVideos.some(video => video.fileId === undefined);
+
+            if (hasUnprocessedVideos) {
+                console.log("Waiting for videos to process before sending message");
+                // Set flags to indicate we're waiting for videos and should send when ready
+                setIsWaitingForVideos(true);
+                return; // Exit early, the useEffect will handle sending when videos are ready
+            }
+
+            // If all videos are already processed or there are no videos, send immediately
+            await sendMessage();
 
         } catch (error) {
             console.error("Error in message processing:", error);
@@ -312,21 +348,8 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 message: "Failed to send message. Please try again.",
                 color: "red"
             });
-        } finally {
-            setLoading(false);
-        }
-    };
 
-    const toggleNode = (nodeId: string) => {
-        setExpandedNodes(prev => {
-            const next = new Set(prev);
-            if (next.has(nodeId)) {
-                next.delete(nodeId);
-            } else {
-                next.add(nodeId);
-            }
-            return next;
-        });
+        }
     };
 
     const toggleSection = (section: string) => {
@@ -373,6 +396,16 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         }));
     };
 
+    const handleFileDelete = () => {
+        // close the window
+        setViewerMode(prev => ({
+            ...prev,
+            active: false,
+        }));
+        // remove from context
+        removeContextFromChat("files", viewerMode.fileId ?? "");
+    };
+
     const handleScrollToSection = useCallback((sectionId: string) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -386,6 +419,49 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             chatType: type,
         }));
     }, []);
+
+    // Add this useEffect to monitor video processing and trigger message sending
+    useEffect(() => {
+        // Only run this effect if we're actively waiting for videos to process
+        if (!isWaitingForVideos) return;
+
+        // Check if all videos have fileIds
+        const allVideosProcessed = recordedVideos.every(video => video.fileId !== undefined);
+
+        if (allVideosProcessed) {
+            console.log("All videos processed, sending message now");
+            setIsWaitingForVideos(false);
+
+            // Trigger the message sending
+            // Make sure we're not already in a loading state
+            if (!loading) {
+                console.log("Executing sendMessage function");
+                sendMessage()
+                    .then(() => {
+                        console.log("Message sent successfully");
+                    })
+                    .catch(error => {
+                        console.error("Error sending message:", error);
+                        notifications.show({
+                            title: "Error",
+                            message: "Failed to send message. Please try again.",
+                            color: "red"
+                        });
+                    });
+            } else {
+                console.log("Already in loading state, not sending message");
+            }
+        } else {
+            // Set up a timer to check again
+            const timer = setTimeout(() => {
+                console.log("Checking video processing status...");
+                // This will trigger this effect to run again
+                setIsWaitingForVideos(state => state);
+            }, 250);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isWaitingForVideos, recordedVideos, sendMessage, loading]);
 
     // Set up realtime subscription for messages
     useEffect(() => {
@@ -508,8 +584,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         setViewerMode(prev => ({
             ...prev,
             immersive: true,
-            contextOpen: false,
-            filesOpen: false,
+            open: false,
         }));
         toggle();
     };
@@ -518,564 +593,204 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         setViewerMode(prev => ({
             ...prev,
             immersive: false,
-            contextOpen: chatId === "new",
-            filesOpen: chatId === "new",
+            open: chatId === "new",
         }));
         toggle();
     };
-
-    const toggleAudio = () => {
-        setViewerMode(prev => ({
-            ...prev,
-            audio: !prev.audio
-        }));
-    };
-
-    const toggleVideo = () => {
-        setViewerMode(prev => ({
-            ...prev,
-            video: !prev.video
-        }));
-    };
-
-    // Initialize media devices on component mount
-    useEffect(() => {
-        getMediaStream();
-
-        // Cleanup on unmount
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-            }
-
-            if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-                mediaRecorderRef.current.stop();
-            }
-
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-        };
-    }, []);
-
-    // Update media stream when audio/video toggles change
-    useEffect(() => {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-        getMediaStream();
-    }, [viewerMode.audio, viewerMode.video]);
-
-    // Function to get media stream based on enabled devices
-    const getMediaStream = async () => {
-        if (!viewerMode.audio && !viewerMode.video) {
-            setStream(null);
-            return;
-        }
-
-        try {
-            const newStream = await navigator.mediaDevices.getUserMedia({
-                audio: viewerMode.audio,
-                video: viewerMode.video
-            });
-
-            setStream(newStream);
-
-            // Connect stream to video preview if video is enabled
-            if (viewerMode.video && videoPreviewRef.current) {
-                videoPreviewRef.current.srcObject = newStream;
-            }
-
-            // Create MediaRecorder instance immediately (for visualization)
-            const recorder = new MediaRecorder(newStream);
-            mediaRecorderRef.current = recorder;
-
-            // Setup data handlers even before recording starts
-            mediaChunksRef.current = [];
-
-            recorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    mediaChunksRef.current.push(event.data);
-                }
-            };
-
-            recorder.onstop = () => {
-                const mimeType = viewerMode.video ? 'video/webm' : 'audio/wav';
-                const blob = new Blob(mediaChunksRef.current, { type: mimeType });
-                setMediaBlob(blob);
-
-                // Display recorded media for video
-                if (viewerMode.video && videoPreviewRef.current) {
-                    videoPreviewRef.current.srcObject = null;
-                    videoPreviewRef.current.src = URL.createObjectURL(blob);
-                    videoPreviewRef.current.controls = true;
-                }
-            };
-
-        } catch (error) {
-            console.error('Error accessing media devices:', error);
-            notifications.show({
-                title: 'Device Access Error',
-                message: 'Could not access requested media devices. Please check permissions.',
-                color: 'red',
-            });
-        }
-    };
-
-    // Function to start recording
-    const startRecording = () => {
-        if (!stream || !mediaRecorderRef.current) {
-            notifications.show({
-                title: 'Recording Error',
-                message: 'No media devices enabled. Please enable audio or video.',
-                color: 'red',
-            });
-            return;
-        }
-
-        try {
-            // Reset chunks if starting a new recording
-            mediaChunksRef.current = [];
-
-            // Start recording
-            mediaRecorderRef.current.start();
-            setViewerMode(prev => ({
-                ...prev,
-                recording: true,
-                paused: false
-            }));
-            setRecordingDuration(0);
-
-            // Start timer
-            timerRef.current = setInterval(() => {
-                setRecordingDuration(prev => prev + 1);
-            }, 1000);
-
-        } catch (error) {
-            console.error('Error starting recording:', error);
-            notifications.show({
-                title: 'Recording Error',
-                message: 'Failed to start recording. Please try again.',
-                color: 'red',
-            });
-        }
-    };
-
-    // Function to pause recording
-    const pauseRecording = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            mediaRecorderRef.current.pause();
-            setViewerMode(prev => ({
-                ...prev,
-                paused: true
-            }));
-            // Pause timer
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = null;
-            }
-        }
-    };
-
-    // Function to resume recording
-    const resumeRecording = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'paused') {
-            mediaRecorderRef.current.resume();
-            setViewerMode(prev => ({
-                ...prev,
-                paused: false
-            }));
-            // Resume timer
-            timerRef.current = setInterval(() => {
-                setRecordingDuration(prev => prev + 1);
-            }, 1000);
-        }
-    };
-
-    // Function to stop recording
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-            mediaRecorderRef.current.stop();
-            setViewerMode(prev => ({
-                ...prev,
-                recording: false,
-                saved: true
-            }));
-        }
-
-        // Clear timer
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
-
-    };
-
-
-    const handleDiscardRecording = () => {
-        setViewerMode(prev => ({
-            ...prev,
-            recording: false,
-            saved: false
-        }));
-    };
-
-    const handleSaveRecording = () => {
-        // add to chat, reset recording state
-        // use media blob to add to chat
-        setViewerMode(prev => ({
-            ...prev,
-            recording: false,
-            saved: false
-        }));
-    };
-
-    const toggleInput = () => {
-        setViewerMode(prev => ({
-            ...prev,
-            inputActive: !prev.inputActive
-        }));
-    };
-
-
     // Add keyboard shortcuts
     useHotkeys([
-        // ['mod+I', () => {
-        //     if (viewerMode.immersive) {
-        //         exitImmersive();
-        //     } else {
-        //         enterImmersive();
-        //     }
-        // }],
         ['mod+M', () => {
-            setViewerMode(prev => ({ ...prev, contextOpen: !prev.contextOpen }));
+            setViewerMode(prev => ({ ...prev, open: !prev.open }));
         }],
     ], []
     );
 
+    useEffect(() => {
+        if (classId === "547a83a8-ab2c-4f3c-9112-b1cb6414ff36") {
+
+            setActiveChat(prev => ({
+                ...prev,
+                chatType: "present"
+            }));
+        }
+    }, [classId]);
+
+    // useEffect(() => {
+    //     if (!messages) return;
+    //     const previousMessagesLectures = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.lectures) ? message.lectures : []
+    //     ) ?? [];
+
+    //     const previousMessagesChapters = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.chapters) ? message.chapters : []
+    //     ) ?? [];
+
+    //     const previousMessagesHomeworks = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.homeworks) ? message.homeworks : []
+    //     ) ?? [];
+
+    //     const previousMessagesFiles = messages?.flatMap(message =>
+    //         // Check if references exists and is an array before accessing
+    //         Array.isArray(message.files) ? message.files : []
+    //     ) ?? [];
+
+    //     setActiveChat(prev => ({
+    //         ...prev,
+    //         context: {
+    //             ...prev.context,
+    //             lectures: previousMessagesLectures,
+    //             chapters: previousMessagesChapters,
+    //             homeworks: previousMessagesHomeworks,
+    //             files: previousMessagesFiles,
+    //         }
+    //     }));
+
+    // }, [messages]);
+
     return (
-        <ClassLayout classId={classId} showHeader={!viewerMode.immersive}>
+        <ClassLayout classId={classId}>
             <Container fluid>
-                <Stack>
-                    <Flex justify="space-between" align="center">
-                        {viewerMode.immersive ?
-                            <Group gap="xs">
-                                <div style={{ display: "none" }}>
-                                    {viewerMode.recording ?
-                                        <>
-                                            <Tooltip label={viewerMode.inputActive ? "Hide input" : "Show input"}>
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={toggleInput}
-                                                    aria-label="Toggle input"
-                                                >
-                                                    {viewerMode.inputActive ? <IconEye size={18} /> : <IconEyeOff size={18} />}
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            {viewerMode.paused ? <Tooltip label="Resume recording">
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={resumeRecording}
-                                                    aria-label="Resume recording"
-                                                >
-                                                    <IconPlayerPlay size={18} />
-                                                </ActionIcon>
-                                            </Tooltip> :
-                                                <Tooltip label="Pause recording">
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={pauseRecording}
-                                                        aria-label="Pause recording"
-                                                    >
-                                                        <IconPlayerPause size={18} />
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                            }
-                                            <Tooltip label="Stop recording">
-                                                <ActionIcon
-                                                    variant="subtle"
-                                                    size="md"
-                                                    onClick={stopRecording}
-                                                    aria-label="Stop recording"
-                                                >
-                                                    <IconPlayerStop size={18} />
-                                                </ActionIcon>
-                                            </Tooltip>
-                                        </>
-                                        : viewerMode.saved ?
-                                            <>
-                                                <Tooltip label={viewerMode.inputActive ? "Hide input" : "Show input"}>
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={toggleInput}
-                                                        aria-label="Toggle input"
-                                                    >
-                                                        {viewerMode.inputActive ? <IconEye size={18} /> : <IconEyeOff size={18} />}
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                                <Tooltip label="Discard recording">
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={handleDiscardRecording}
-                                                        aria-label="Discard recording"
-                                                    >
-                                                        <IconX size={18} />
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                                <Tooltip label="Add to chat">
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={handleSaveRecording}
-                                                        aria-label="Add to chat"
-                                                    >
-                                                        <IconFilePlus size={18} />
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                            </>
-                                            : <>
-                                                <Tooltip label="Enable microphone">
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={toggleAudio}
-                                                        aria-label="Toggle audio"
-                                                    >
-                                                        {viewerMode.audio ? <IconMicrophone size={18} /> : <IconMicrophoneOff size={18} />}
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                                <Tooltip label="Enable camera">
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={toggleVideo}
-                                                        aria-label="Toggle video"
-                                                    >
-                                                        {viewerMode.video ? <IconCamera size={18} /> : <IconCameraOff size={18} />}
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                                {(viewerMode.audio || viewerMode.video) && <Tooltip label="Start recording">
-                                                    <ActionIcon
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={startRecording}
-                                                    >
-                                                        <IconPlayerPlay size={18} />
-                                                    </ActionIcon>
-                                                </Tooltip>}
-                                            </>}
-                                </div>
-                            </Group> :
-                            <Group gap="sm">
-                                <Text size="xl" fw={700} mb={6}>
-                                    {existingChat ? (
-                                        <TypeAnimation
-                                            key={`${existingChat.id}-${receivedRealtimeUpdate}`}
-                                            sequence={[
-                                                existingChat.name || '',
-                                            ]}
-                                            wrapper="span"
-                                            cursor={false}
-                                            repeat={0}
-                                            speed={50}
-                                            preRenderFirstString={!receivedRealtimeUpdate}
-                                            style={{
-                                                fontSize: '1.25rem',
-                                                fontWeight: 700,
-                                                display: 'inline-block',
-                                            }}
-                                        />
-                                    ) : (
-                                        activeChat.title
-                                    )}
-                                </Text>
-                                {existingChat?.type && (existingChat.type !== 'general-student' && existingChat.type !== 'general-teacher') && (
-                                    <Badge color={
-                                        existingChat.type === 'homework-student' || existingChat.type === 'homework-professor' ? 'indigo' :
-                                            existingChat.type === 'concept' ? 'green' :
-                                                existingChat.type === 'review' ? 'cyan' :
-                                                    existingChat.type === 'method' ? 'green' :
-                                                        existingChat.type === 'generate' ? 'indigo' :
-                                                            existingChat.type === 'other' ? 'orange' :
-                                                                'gray'
-                                    }>
-                                        {existingChat.type.startsWith('homework-')
-                                            ? 'Homework'
-                                            : existingChat.type === 'concept'
-                                                ? 'Conceptual'
-                                                : existingChat.type === 'method'
-                                                    ? 'Approach'
-                                                    : existingChat.type === 'generate'
-                                                        ? 'Generated'
-                                                        : existingChat.type === 'other'
-                                                            ? 'Other'
-                                                            : existingChat.type.charAt(0).toUpperCase() + existingChat.type.slice(1)}
-                                    </Badge>
-                                )}
-                            </Group>}
-                        <Group gap="xs">
-                            {viewerMode.immersive ?
-                                <Tooltip label="Exit immersive">
-                                    <ActionIcon
-                                        variant="subtle"
-                                        size="md"
-                                        onClick={exitImmersive}
-                                        aria-label="Toggle immersive"
-                                    >
-                                        <IconEyeOff size={18} />
-                                    </ActionIcon>
-                                </Tooltip> :
-                                <>
-                                    {/* <Tooltip label={viewerMode.filesOpen ? "Hide files" : "Add files"}>
-                                        <ActionIcon
-                                            variant="subtle"
-                                            size="md"
-                                            onClick={() => setViewerMode(prev => ({ ...prev, filesOpen: !prev.filesOpen }))}
-                                            aria-label="Toggle file panel"
-                                        >
-                                            {viewerMode.filesOpen ? <IconFileMinus size={18} /> : <IconFilePlus size={18} />}
-                                        </ActionIcon>
-                                    </Tooltip> */}
-                                    <Tooltip label={viewerMode.contextOpen ? "Hide context" : "Add context"}>
+                <Grid>
+                    <Grid.Col
+                        span={isMobile ? 12 : 8 + (!viewerMode.open ? 4 : 0)}
+                        style={{
+                            transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
+                        }}
+                    >
+                        <Card
+                            shadow={"md"}
+                            withBorder
+                            padding={"lg"}
+                            radius={"md"}
+                            h="calc(100vh - 100px)"
+                        >
+                            {/* Show controls only when not in immersive mode */}
+                            <Flex justify="space-between" align="center" mb={10}>
+                                <Group gap="sm">
+                                    <Text size="xl" fw={700} mb={6}>
+                                        {existingChat ? (
+                                            <TypeAnimation
+                                                key={`${existingChat.id}-${receivedRealtimeUpdate}`}
+                                                sequence={[
+                                                    existingChat.name || '',
+                                                ]}
+                                                wrapper="span"
+                                                cursor={false}
+                                                repeat={0}
+                                                speed={50}
+                                                preRenderFirstString={!receivedRealtimeUpdate}
+                                                style={{
+                                                    fontSize: '1.25rem',
+                                                    fontWeight: 700,
+                                                    display: 'inline-block',
+                                                }}
+                                            />
+                                        ) : (
+                                            activeChat.title
+                                        )}
+                                    </Text>
+                                    {existingChat?.type === "present" && <Badge color="orange" variant="light">Present</Badge>}
+                                    {existingChat?.type === "review" && <Badge color="cyan" variant="light">Review</Badge>}
+                                    {existingChat?.type === "homework-student" && <Badge color="indigo" variant="light">Homework</Badge>}
+                                    {existingChat?.type === "concept" && <Badge color="green" variant="light">Learn</Badge>}
+                                </Group>
+                                <Group gap="xs" ml="auto">
+                                    {chatId !== "new" && <Tooltip label="New chat">
                                         <ActionIcon
                                             variant="subtle"
                                             size="lg"
-                                            onClick={() => setViewerMode(prev => ({ ...prev, contextOpen: !prev.contextOpen }))}
+                                            aria-label="Start a new chat"
+                                            onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                            mb={3}
+                                        >
+                                            <IconPlus size={20} />
+                                        </ActionIcon>
+                                    </Tooltip>}
+                                    <ChatHistoryDropdown
+                                        currentChatId={chatId}
+                                        onChatSelect={handleChatSelect}
+                                        classId={classId}
+                                    />
+                                    <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
+                                        <ActionIcon
+                                            variant="subtle"
+                                            size="lg"
+                                            onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
                                             aria-label="Toggle context panel"
                                         >
-                                            {viewerMode.contextOpen ? <IconCategoryMinus size={20} /> : <IconCategoryPlus size={20} />}
+                                            {viewerMode.open ? <IconCategoryMinus size={20} /> : <IconCategoryPlus size={20} />}
                                         </ActionIcon>
                                     </Tooltip>
-                                </>
-                            }
+                                </Group>
+                            </Flex>
 
-                            {/* <Tooltip label={fullscreen ? "Exit fullscreen" : "Fullscreen"}>
-                                <ActionIcon
-                                    variant="subtle"
-                                    size="md"
-                                    onClick={toggle}
-                                    aria-label="Toggle fullscreen"
-                                >
-                                    {fullscreen ? <IconMaximizeOff size={18} /> : <IconMaximize size={18} />}
-                                </ActionIcon>
-                            </Tooltip> */}
-                        </Group>
-                    </Flex>
-                    <Grid>
-                        {viewerMode.immersive && <Grid.Col span={3} >
-                            {/* <RecordingPanel
+                            <MessageList
+                                chatId={chatId}
+                                classId={classId}
+                                existingChat={existingChat ?? null}
+                                activeChat={activeChat}
+                                setActiveChat={setActiveChat}
+                                onOptionClick={handleOptionClick}
                                 viewerMode={viewerMode}
-                                mediaBlob={mediaBlob}
-                                videoPreviewRef={videoPreviewRef}
-                                mediaRecorderRef={mediaRecorderRef}
-                                recordingDuration={recordingDuration}
-                            /> */}
-                        </Grid.Col>
-                        }
-                        <Grid.Col
-                            span={isMobile ? 12 : viewerMode.immersive ? 6 : (8 + (!viewerMode.contextOpen ? 4 : 0))}
-                            style={{
-                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
-                            }}
-                        >
-                            <Card
-                                shadow={viewerMode.immersive ? "none" : "sm"}
-                                padding={viewerMode.immersive ? "none" : "lg"}
-                                radius={viewerMode.immersive ? "none" : "md"}
-                                withBorder={viewerMode.immersive ? false : true}
-                                style={{
-                                    height: viewerMode.immersive ? "90vh" : "80vh"
-                                }}
-                            >
-                                {/* Show controls only when not in immersive mode */}
-                                {!viewerMode.immersive && <Flex justify="space-between" align="center" mb={10}>
-                                    {/* Chat history, context toggle, and new chat buttons */}
-                                    <Group gap="xs" ml="auto">
-                                        {chatId !== "new" && <Tooltip label="New chat">
-                                            <ActionIcon
-                                                variant="subtle"
-                                                size="lg"
-                                                aria-label="Start a new chat"
-                                                onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
-                                                mb={3}
-                                            >
-                                                <IconPlus size={20} />
-                                            </ActionIcon>
-                                        </Tooltip>}
-                                        <ChatHistoryDropdown
-                                            currentChatId={chatId}
-                                            onChatSelect={handleChatSelect}
-                                            classId={classId}
-                                        />
-                                    </Group>
-                                </Flex>}
+                                setViewerMode={setViewerMode}
+                                isInitializing={isInitializing}
+                                loading={loading}
+                            />
 
-                                <MessageList
-                                    chatId={chatId}
-                                    classId={classId}
-                                    existingChat={existingChat ?? null}
-                                    activeChat={activeChat}
-                                    setActiveChat={setActiveChat}
-                                    onOptionClick={handleOptionClick}
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    isInitializing={isInitializing}
-                                    loading={loading}
-                                />
-
-                                <ChatInput
-                                    activeChat={activeChat}
-                                    loading={loading}
-                                    classId={classId}
-                                    onPromptChange={handlePromptChange}
-                                    onSend={handleChat}
-                                    onRemoveContext={removeContextFromChat}
-                                    onScrollToSection={handleScrollToSection}
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    expandedSections={expandedSections}
-                                    toggleSection={toggleSection}
-                                    toggleImmersive={enterImmersive}
-                                />
-                            </Card>
-                        </Grid.Col>
-                        <Grid.Col
-                            span={isMobile ? 12 : viewerMode.immersive ? 3 : 4}
-                            style={{
-                                display: (viewerMode.contextOpen) ? 'block' : 'none',
-                                transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
-                                opacity: (viewerMode.contextOpen) ? 1 : 0,
-                                overflow: 'hidden',
-                            }}
-                        >
-                            {viewerMode.contextActive ? (
-                                <ViewerPanel
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                    addContextToChat={addContextToChat}
-                                    classId={classId}
-                                    activeChat={activeChat}
-                                />
-                            ) : (
-                                <ContextPanel
-                                    classId={classId}
-                                    searchQuery={contextSearchQuery}
-                                    setSearchQuery={setContextSearchQuery}
-                                    addContextToChat={addContextToChat}
-                                    activeChat={activeChat}
-                                    makeDraggable={true}
-                                    viewerMode={viewerMode}
-                                    setViewerMode={setViewerMode}
-                                />
-                            )}
-                        </Grid.Col>
-                    </Grid>
-                </Stack>
+                            <ChatInput
+                                activeChat={activeChat}
+                                setActiveChat={setActiveChat}
+                                loading={loading}
+                                classId={classId}
+                                chatId={chatId}
+                                onSend={handleChat}
+                                onRemoveContext={removeContextFromChat}
+                                onScrollToSection={handleScrollToSection}
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                expandedSections={expandedSections}
+                                toggleSection={toggleSection}
+                                toggleImmersive={enterImmersive}
+                                recordedVideos={recordedVideos}
+                                setRecordedVideos={setRecordedVideos}
+                            />
+                        </Card>
+                    </Grid.Col>
+                    <Grid.Col
+                        span={isMobile ? 12 : 4}
+                        style={{
+                            display: (viewerMode.open) ? 'block' : 'none',
+                            transition: 'width 300ms ease-in-out, flex 300ms ease-in-out, opacity 300ms ease-in-out',
+                            opacity: (viewerMode.open) ? 1 : 0,
+                            overflow: 'hidden',
+                        }}
+                    >
+                        {viewerMode.active ? (
+                            <ViewerPanel
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                addContextToChat={addContextToChat}
+                                classId={classId}
+                                activeChat={activeChat}
+                            />
+                        ) : (
+                            <ContextPanel
+                                classId={classId}
+                                searchQuery={contextSearchQuery}
+                                setSearchQuery={setContextSearchQuery}
+                                addContextToChat={addContextToChat}
+                                activeChat={activeChat}
+                                makeDraggable={true}
+                                viewerMode={viewerMode}
+                                setViewerMode={setViewerMode}
+                                onFileDelete={handleFileDelete}
+                            />
+                        )}
+                    </Grid.Col>
+                </Grid>
             </Container>
         </ClassLayout>
     );

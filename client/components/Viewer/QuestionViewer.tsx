@@ -203,7 +203,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, question, view
     };
 
     return (
-        <Card withBorder p="md" w={viewerMode.immersive ? '100%' : 700}>
+        <Card withBorder p="md" w={viewerMode.open ? "100%" : "60%"}>
             {renderContent()}
         </Card>
     );

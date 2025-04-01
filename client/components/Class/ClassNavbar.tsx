@@ -5,22 +5,6 @@
  * 02.17.2025
  */
 
-import { useState } from 'react';
-import {
-    IconHome,
-    IconBook,
-    IconNotebook,
-    IconSettings,
-    IconLogout,
-    IconMessage,
-    IconUser,
-    IconLayoutDashboard,
-    IconFileDescription,
-    IconPresentation,
-    IconChevronDown,
-    IconBooks,
-    IconUsers,
-} from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import classes from './ClassNavbar.module.css';
@@ -35,6 +19,7 @@ import { menuConfig } from '@/utils/menu/menuConfig';
 import { ClassNavbarLinksGroup } from './ClassNavbarLinksGroup';
 import { NAVBAR_CONSTANTS } from './ClassHeader';
 import { getClasses } from '@/utils/queries/get-classes';
+import { useMediaQuery } from '@mantine/hooks';
 
 interface ClassNavbarProps {
     classId: string;
@@ -45,6 +30,7 @@ interface ClassNavbarProps {
 
 export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }: ClassNavbarProps) {
     const supabase = useSupabaseBrowser();
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ['user'],
@@ -112,7 +98,7 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
         <ClassNavbarLinksGroup 
             {...item} 
             key={item.label} 
-            isExpanded={isExpanded} 
+            isExpanded={isMobile ? true : isExpanded} 
             isLoading={loadingUser || loadingProfile}
         />
     ))
@@ -121,13 +107,13 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
         <nav
             className={classes.navbar}
             style={{
-                '--collapsed-width': `${NAVBAR_CONSTANTS.COLLAPSED_WIDTH}px`,
-                '--expanded-width': `${NAVBAR_CONSTANTS.EXPANDED_WIDTH}px`,
+                '--collapsed-width': isMobile ? '100%' : `${NAVBAR_CONSTANTS.COLLAPSED_WIDTH}px`,
+                '--expanded-width': isMobile ? '100%' : `${NAVBAR_CONSTANTS.EXPANDED_WIDTH}px`,
                 '--transition-duration': NAVBAR_CONSTANTS.TRANSITION_DURATION,
                 '--z-index': NAVBAR_CONSTANTS.Z_INDEX
             } as React.CSSProperties}
-            onMouseEnter={() => onExpandedChange(true)}
-            onMouseLeave={() => onExpandedChange(false)}
+            onMouseEnter={() => !isMobile && onExpandedChange(true)}
+            onMouseLeave={() => !isMobile && onExpandedChange(false)}
         >
             <ScrollArea className={classes.links}>
                 <div className={classes.linksInner}>
@@ -135,17 +121,7 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
                 </div>
             </ScrollArea>
 
-            <div className={classes.footerContainer}>
-                {/* <Link href="/classes" className={classes.control}>
-                        <IconLayoutDashboard className={classes.linkIcon} stroke={1.5} />
-                        <span>Dashboard</span>
-                    </Link> */}
-                {/* <ClassNavbarLinksGroup
-                    icon={IconLayoutDashboard}
-                    label="Dashboard"
-                    isExpanded={isExpanded}
-                    link={`/classes`}
-                /> */}
+            {/* <div className={classes.footerContainer}>
                 <ClassNavbarLinksGroup
                     icon={IconUsers}
                     label="Feedback"
@@ -153,7 +129,7 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
                     link={`/feedback`}
                     isLoading={loadingUser || loadingProfile}
                 />
-            </div>
+            </div> */}
         </nav>
     );
 }

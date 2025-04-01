@@ -20,6 +20,7 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Profile, Class } from "@/types";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useMediaQuery } from "@mantine/hooks";
 
 
 interface ClassLayoutProps {
@@ -31,7 +32,10 @@ interface ClassLayoutProps {
 
 export function ClassLayout({ children, classId, showHeader = true, showClasses = true }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const supabase = useSupabaseBrowser();
+
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -54,6 +58,11 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
 
+    // Toggle function for mobile menu
+    const toggleMobileNav = () => {
+        setMobileNavOpen(prev => !prev);
+    };
+
     return (
         <ClassMenuProvider classId={classId}>
             <DndProvider backend={HTML5Backend}>
@@ -65,6 +74,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                             expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
                         } : 0,
                         breakpoint: 'sm',
+                        collapsed: { mobile: !mobileNavOpen },
                     }}
                     padding="md"
                     styles={(theme) => ({
@@ -75,7 +85,11 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                 >
                     {showHeader && (
                         <AppShell.Header>
-                            <ClassHeader classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} showClasses={showClasses} />
+                            <ClassHeader 
+                                classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id} 
+                                showClasses={showClasses}
+                                onMobileMenuToggle={toggleMobileNav}
+                            />
                         </AppShell.Header>
                     )}
 

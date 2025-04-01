@@ -3,7 +3,7 @@
  * Used to show all the messages in the chat.
  */
 
-import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme, Divider } from "@mantine/core";
 import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
 import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, Exercise } from "@/types";
@@ -42,6 +42,8 @@ import FadeList from "./FadeList";
 import MessageViewer from "@/components/Viewer/MessageViewer";
 import { getFigures } from "@/utils/queries/get-figures";
 import FigureViewer from "@/components/Viewer/FigureViewer";
+import { getFiles } from "@/utils/queries/get-files";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 interface MessageListProps {
   chatId: string;
@@ -145,6 +147,19 @@ export const MessageList = memo(({
     queryKey: ["homeworkExercises", classId],
     queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
     enabled: !!homeworks
+  });
+
+  const { data: files, isLoading: loadingFiles } = useQuery({
+    queryKey: ["files", profile?.id, classId],
+    queryFn: () => getFiles(supabase, profile!.id, [classId]),
+    enabled: !!profile
+  });
+
+
+  const { data: fileDocuments } = useQuery({
+    queryKey: ["fileDocuments", classId],
+    queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
+    enabled: !!files
   });
 
   const { data: figures } = useQuery({
@@ -404,254 +419,104 @@ export const MessageList = memo(({
 
   const renderWelcomeMessages = () => {
     return (
-      <Stack style={{ width: viewerMode.immersive ? "100%" : "auto" }}>
-        {(!existingChat && (chatId === 'new')) && (
-          <Flex gap="md" align="flex-start">
-            <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
-              <Group gap="xs" align="center">
-                <Avatar
-                  src={professor ? getAvatarUrl(professor.id) : undefined}
-                  size="sm"
-                  radius="xl"
-                  alt="AI Assistant"
-                />
-                <Text size="sm" c="dimmed">
-                  {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                </Text>
-              </Group>
+      <Stack>
+        <Flex gap="md" align="flex-start">
+          <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
+            <Group gap="xs" align="center">
+              <Avatar
+                src={professor ? getAvatarUrl(professor.id) : undefined}
+                size="sm"
+                radius="xl"
+                alt="AI Assistant"
+              />
+              <Text size="sm" c="dimmed">
+                {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+              </Text>
+            </Group>
 
-              <Card
-                padding="sm"
-                radius="md"
-                style={{
-                  backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                  minWidth: "200px",
-                  width: "100%",
-                  maxWidth: "100%",
-                  border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
-                  position: "relative"
-                }}
-              >
-                <Stack gap="sm">
-                  <Flex justify="space-between" align="center">
-                    <Text>
-                      Hi {profile?.first_name || 'there'}, how can I assist you today?
-                    </Text>
-                    {/* {(profile?.admin || profile?.professor) && (
-                      <Group justify="flex-end">
-                        <Group gap="xs" align="center">
-                          <Badge size="xs" variant="light" color="blue">Teacher</Badge>
-                          <Checkbox
-                            size="xs"
-                            checked={activeChat.teacher}
-                            onChange={() => setActiveChat((prev) => ({
-                              ...prev,
-                              teacher: !prev.teacher,
-                              chatType: prev.teacher ? 'general-student' : 'general-teacher'
-                            }))}
-                          />
-                        </Group>
-                      </Group>
-                    )} */}
-                  </Flex>
-                  <Flex justify="space-between" align="center">
-                    <Group gap="xs">
-                      {!activeChat.teacher ? (
-                        <>
-                          {/* Student options */}
-                          <Button
-                            variant="light"
-                            color="green"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'concept'
-                            }))}
-                          >
-                            Learn
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="indigo"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'homework-student'
-                            }))}
-                          >
-                            Homework
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="cyan"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'review'
-                            }))}
-                          >
-                            Test-Prep
-                          </Button>
-                        </>
+            <Card
+              padding="sm"
+              radius="md"
+              style={{
+                backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
+                minWidth: "200px",
+                width: "100%",
+                maxWidth: "100%",
+                border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
+                position: "relative"
+              }}
+            >
+              <Text>
+                {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
+                  <>
+                    {/* Student follow-up text */}
+                    {existingChat ? (
+                      // Use existingChat data when available
+                      existingChat.type === 'concept' ? (
+                        <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
+                      ) : existingChat.type === 'homework-student' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
+                      ) : existingChat.type === 'present' ? (
+                        <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
+                      ) : existingChat.type === 'review' ? (
+                        <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
                       ) : (
-                        <>
-                          {/* Teacher options */}
-                          <Button
-                            variant="light"
-                            color="green"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'method'
-                            }))}
-                          >
-                            Methodology
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="indigo"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'homework-professor'
-                            }))}
-                          >
-                            Homework
-                          </Button>
-                          <Button
-                            variant="light"
-                            color="cyan"
-                            onClick={() => setActiveChat((prev) => ({
-                              ...prev,
-                              chatType: 'generate'
-                            }))}
-                          >
-                            Generate
-                          </Button>
-                        </>
-                      )}
-                    </Group>
-                    {/* Clear button in bottom right */}
-                    {activeChat.chatType &&
-                      !activeChat.chatType.startsWith('general') && (
-                        <Group justify="flex-end" mt="xs">
-                          <Tooltip label="Clear selection">
-                            <ActionIcon
-                              variant="subtle"
-                              color="red"
-                              size="md"
-                              onClick={() => setActiveChat((prev) => ({
-                                ...prev,
-                                chatType: prev.teacher ? 'general-student' : 'general-teacher'
-                              }))}
-                              title="Clear Selection"
-                            >
-                              <IconRefresh size={18} />
-                            </ActionIcon>
-                          </Tooltip>
-                        </Group>
-                      )}
-                  </Flex>
-                </Stack>
-              </Card>
-            </Stack>
-          </Flex>
-        )}
-
-        {/* Only show follow-up message if:
-            1. It's a new chat with a non-general chat type, OR
-            2. It's an existing chat with a non-general chat type */}
-        {((existingChat && !existingChat.type.startsWith('general')) ||
-          (!existingChat && activeChat.chatType && !activeChat.chatType.startsWith('general'))) && (
-            <Flex gap="md" align="flex-start">
-              <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
-                <Group gap="xs" align="center">
-                  <Avatar
-                    src={professor ? getAvatarUrl(professor.id) : undefined}
-                    size="sm"
-                    radius="xl"
-                    alt="AI Assistant"
-                  />
-                  <Text size="sm" c="dimmed">
-                    {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
-                  </Text>
-                </Group>
-
-                <Card
-                  padding="sm"
-                  radius="md"
-                  style={{
-                    backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                    minWidth: "200px",
-                    width: "100%",
-                    maxWidth: "100%",
-                    border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
-                    position: "relative"
-                  }}
-                >
-                  <Text>
-                    {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
-                      <>
-                        {/* Student follow-up text */}
-                        {existingChat ? (
-                          // Use existingChat data when available
-                          existingChat.type === 'concept' ? (
-                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                          ) : existingChat.type === 'homework-student' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                          ) : existingChat.type === 'review' ? (
-                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        ) : (
-                          // Fall back to activeChat data for new chats
-                          activeChat.chatType === 'concept' ? (
-                            <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                          ) : activeChat.chatType === 'homework-student' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                          ) : activeChat.chatType === 'review' ? (
-                            <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        )}
-                      </>
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
                     ) : (
-                      <>
-                        {/* Teacher follow-up text */}
-                        {existingChat ? (
-                          // Use existingChat data when available
-                          existingChat.type === 'method' ? (
-                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                          ) : existingChat.type === 'homework-professor' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                          ) : existingChat.type === 'generate' ? (
-                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        ) : (
-                          // Fall back to activeChat data for new chats
-                          activeChat.chatType === 'method' ? (
-                            <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                          ) : activeChat.chatType === 'homework-professor' ? (
-                            <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                          ) : activeChat.chatType === 'generate' ? (
-                            <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
-                          ) : (
-                            <>What specific <Text span fw={600} c="blue">teaching approaches</Text> would you like me to take when helping out the students?</>
-                          )
-                        )}
-                      </>
+                      // Fall back to activeChat data for new chats
+                      activeChat.chatType === 'concept' ? (
+                        <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
+                      ) : activeChat.chatType === 'homework-student' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
+                      ) : activeChat.chatType === 'present' ? (
+                        <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
+                      ) : activeChat.chatType === 'review' ? (
+                        <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
+                      ) : (
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
                     )}
-                  </Text>
-                </Card>
-              </Stack>
-            </Flex>
-          )}
+                  </>
+                ) : (
+                  <>
+                    {/* Teacher follow-up text */}
+                    {existingChat ? (
+                      // Use existingChat data when available
+                      existingChat.type === 'method' ? (
+                        <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
+                      ) : existingChat.type === 'homework-professor' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
+                      ) : existingChat.type === 'generate' ? (
+                        <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                      ) : (
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
+                    ) : (
+                      // Fall back to activeChat data for new chats
+                      activeChat.chatType === 'method' ? (
+                        <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
+                      ) : activeChat.chatType === 'homework-professor' ? (
+                        <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
+                      ) : activeChat.chatType === 'generate' ? (
+                        <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                      ) : (
+                        <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
+                      )
+                    )}
+                  </>
+                )}
+              </Text>
+            </Card>
+          </Stack>
+        </Flex>
       </Stack>
     );
   };
 
   // Get document label for display
   const getDocumentLabel = (
-    type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise',
+    type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise' | 'files',
     doc?: Document,
     exercise?: Exercise,
     range?: string
@@ -668,6 +533,9 @@ export const MessageList = memo(({
     } else if (type === 'homework-problem' && exercise) {
       const homework = homeworks?.find(h => h.id === exercise.homework);
       return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number} ${range ? `p.${range}` : ''}`;
+    } else if (type === 'files' && doc) {
+      const file = files?.find(f => f.id === doc.file);
+      return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc.page}`}`;
     }
     return 'Document Reference';
   };
@@ -750,54 +618,56 @@ export const MessageList = memo(({
 
   // Enhanced document click handler
   const handleEnhancedDocumentClick = (
-    contextType: 'lectures' | 'chapters' | 'homeworks',
+    contextType: 'lectures' | 'chapters' | 'homeworks' | 'files',
     contextId: string,
     documentId?: string,
     textbookId?: string,
-    exerciseId?: string
+    exerciseId?: string,
   ) => {
-    console.log(`Opening ${contextType} with ID: ${contextId}`);
 
     // For lectures
     if (contextType === 'lectures' && documentId) {
       // Use the setViewerMode function prop instead of directly setting state
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         documentId,
         lectureId: contextId,
         exerciseId: undefined,
         textbookId: undefined,
         chapterId: undefined,
         homeworkId: undefined,
+        fileId: undefined,
       }));
     }
     else if (contextType === 'chapters' && exerciseId) {
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         chapterId: contextId,
         exerciseId,
         lectureId: undefined,
         textbookId: undefined,
         homeworkId: undefined,
         documentId: undefined,
+        fileId: undefined,
       }));
     }
     // For chapters
     else if (contextType === 'chapters' && textbookId) {
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         documentId: documentId || undefined,
         textbookId,
         chapterId: contextId,
         exerciseId: undefined,
         lectureId: undefined,
         homeworkId: undefined,
+        fileId: undefined,
       }));
     }
     // For chapter exercises
@@ -806,14 +676,28 @@ export const MessageList = memo(({
     else if (contextType === 'homeworks' && exerciseId) {
       setViewerMode(prev => ({
         ...prev,
-        contextActive: true,
-        contextOpen: true,
+        active: true,
+        open: true,
         homeworkId: contextId,
         exerciseId,
         textbookId: undefined,
         chapterId: undefined,
         lectureId: undefined,
         documentId: undefined,
+        fileId: undefined,
+      }));
+    }
+    else if (contextType === 'files' && documentId) {
+      setViewerMode(prev => ({
+        ...prev,
+        active: true,
+        open: true,
+        documentId,
+        lectureId: undefined,
+        textbookId: undefined,
+        chapterId: undefined,
+        homeworkId: undefined,
+        fileId: contextId,
       }));
     }
   };
@@ -830,8 +714,9 @@ export const MessageList = memo(({
     const hasLectures = message.lectures && message.lectures.length > 0;
     const hasChapters = message.chapters && message.chapters.length > 0;
     const hasHomeworks = message.homeworks && message.homeworks.length > 0;
+    const hasFiles = message.files && message.files.length > 0;
 
-    if (!hasLectures && !hasChapters && !hasHomeworks) {
+    if (!hasLectures && !hasChapters && !hasHomeworks && !hasFiles) {
       return null;
     }
 
@@ -913,6 +798,32 @@ export const MessageList = memo(({
             </Badge>
           );
         })}
+
+        {/* Render file badges */}
+        {hasFiles && message.files.map((fileId: string) => {
+          const file = files?.find(f => f.id === fileId);
+          if (!file) return null;
+
+          return (
+            <Badge
+              key={`file-${fileId}`}
+              size="md"
+              color="violet"
+              radius="xl"
+              styles={{ root: { borderColor: 'white' } }}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                const document = fileDocuments?.find(d => d.file === fileId);
+                if (document) {
+                  handleEnhancedDocumentClick('files', fileId, document.id, undefined, undefined);
+                }
+              }}
+            >
+              {file.title}
+            </Badge>
+          );
+        })}
+
       </Group>
     );
   };
@@ -1014,171 +925,6 @@ export const MessageList = memo(({
     return pageRanges;
   };
 
-  const renderBadges = (group: {
-    text: string;
-    documents: Document[];
-    exercises: Exercise[];
-  }) => {
-    // find all of the distinct lectures and chapters in the group
-    const groupLectures = Array.from(new Set(group.documents.filter(doc => doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
-    const groupChapters = Array.from(new Set(group.documents.filter(doc => doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
-
-    // get the page ranges for each lecture and chapter
-    const lecturePageRanges = groupLectures.map(lecture => getPageRanges(group.documents.filter(doc => doc.lecture === lecture), [])).flat()
-    const chapterPageRanges = groupChapters.map(chapter => getPageRanges(group.documents.filter(doc => doc.chapter === chapter), [])).flat()
-
-    // combine the page ranges for each lecture and chapter
-    const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges]
-
-    // find all of the distinct exercises and chapters in the group
-    const groupExercises = Array.from(new Set(group.exercises.map(exercise => exercise.homework).filter((homeworkId) => homeworkId !== null)))
-
-    // get the page ranges for each lecture and chapter
-    const exercisePageRanges = groupExercises.map(homework => getPageRanges([], group.exercises.filter(exercise => exercise.homework === homework))).flat()
-
-    return (
-      <Flex gap="xs" wrap="wrap">
-        {allDocumentPageRanges.length > 0 && allDocumentPageRanges.map((pageRange, pageRangeIndex) => {
-          const lectureDocument: boolean = pageRange.startDocument?.lecture !== null;
-          const chapterDocument: boolean = pageRange.startDocument?.textbook !== null && pageRange.startDocument?.chapter !== null;
-
-          if (lectureDocument) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="blue"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startDocument?.lecture) {
-                    handleEnhancedDocumentClick('lectures', pageRange.startDocument.lecture, pageRange.startDocument.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${pageRange.startDocument?.lecture}/${pageRange.startDocument?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'lecture',
-                  pageRange.startDocument ?? undefined,
-                  undefined,
-                  pageRange.range
-                )}
-              </Badge>
-            );
-          } else if (chapterDocument) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="green"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startDocument?.chapter) {
-                    handleEnhancedDocumentClick('chapters', pageRange.startDocument.chapter, pageRange.startDocument.id, pageRange.startDocument.textbook || undefined);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${pageRange.startDocument?.textbook}/${pageRange.startDocument?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'chapter',
-                  pageRange.startDocument ?? undefined,
-                  undefined,
-                  pageRange.range
-                )}
-              </Badge>
-            );
-          } else {
-            return null;
-          }
-        })}
-        {exercisePageRanges.length > 0 && exercisePageRanges.map((pageRange, pageRangeIndex) => {
-          const chapterExercise: boolean = pageRange.startExercise?.chapter !== null;
-          const homeworkExercise: boolean = pageRange.startExercise?.homework !== null;
-
-          if (homeworkExercise) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="orange"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startExercise?.homework) {
-                    handleEnhancedDocumentClick('homeworks', pageRange.startExercise.homework, undefined, undefined, pageRange.startExercise.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${pageRange.startExercise?.homework}/${pageRange.startExercise?.id}.png`}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'homework-problem',
-                  undefined,
-                  pageRange.startExercise ?? undefined
-                )}
-              </Badge>
-            );
-          } if (chapterExercise) {
-            return (
-              <Badge
-                key={pageRangeIndex}
-                color="teal"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  if (pageRange.startExercise?.chapter) {
-                    // Get the textbook ID for this chapter
-                    const textbookId = getTextbookForChapter(pageRange.startExercise.chapter);
-                    handleEnhancedDocumentClick('chapters', pageRange.startExercise.chapter, undefined, textbookId || undefined, pageRange.startExercise.id);
-                  }
-                }}
-                leftSection={
-                  <Avatar
-                    src={pageRange.startExercise?.chapter ?
-                      `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${getTextbookForChapter(pageRange.startExercise.chapter)}/${pageRange.startExercise.id}.png` :
-                      '/placeholder_image.svg'}
-                    size="xs"
-                    radius="sm"
-                  />
-                }
-                rightSection={
-                  <IconChevronRight size={16} />
-                }
-              >
-                {getDocumentLabel(
-                  'chapter-exercise',
-                  undefined,
-                  pageRange.startExercise ?? undefined
-                )}
-              </Badge>
-            );
-          } else {
-            return null;
-          }
-        })}
-      </Flex>
-    )
-  }
 
   return (
 
@@ -1194,12 +940,11 @@ export const MessageList = memo(({
           containerRef.current = el;
         }
       }}
-      key={viewerMode.immersive ? "immersive" : "normal"}
       style={{
         flex: 1,
         overflowY: "auto",
         marginBottom: "1rem",
-        maxHeight: viewerMode.immersive ? "calc(100vh - 150px)" : "calc(80vh - 150px)",
+        maxHeight: "calc(100vh - 100px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
         transition: "all 0.2s ease-in-out",
@@ -1208,7 +953,6 @@ export const MessageList = memo(({
         padding: isOver ? '8px' : '10px',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: viewerMode.immersive ? 'center' : 'none',
       }}
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
@@ -1216,9 +960,9 @@ export const MessageList = memo(({
         <FadeList enabled={false}>
           {renderWelcomeMessages()}
           {(messages)?.map((message, index) => (
-            <Stack key={`${message.id}`} style={{ marginTop: viewerMode.immersive ? '5rem' : '0' }}>
+            <Stack key={`${message.id}`}>
               {/* User message */}
-              {!viewerMode.immersive && <Flex gap="md" justify="flex-end" align="flex-start">
+              <Flex gap="md" justify="flex-end" align="flex-start">
                 <Stack gap="xs" align="flex-end">
                   {/* User info container */}
                   <Group gap="xs" align="center">
@@ -1234,7 +978,7 @@ export const MessageList = memo(({
                   </Group>
 
                   {/* Message container */}
-                  <Card
+                  {message.question && <Card
                     padding="sm"
                     radius="md"
                     style={{
@@ -1252,18 +996,18 @@ export const MessageList = memo(({
                     {/* {index === 0 && !message.lectures?.length && !message.chapters?.length && !message.homeworks?.length &&
                           renderAutoAddedContextBadges()
                         } */}
-                  </Card>
-                  {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0) &&
+                  </Card>}
+                  {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0 || message.files?.length > 0) &&
                     renderMessageContext(message)
                   }
                 </Stack>
-              </Flex>}
+              </Flex>
 
               {/* AI response */}
               <Flex gap="md" align="flex-start">
                 <Stack gap="xs" align="flex-start">
                   {/* AI info container */}
-                  {!viewerMode.immersive && <Group gap="xs" align="center">
+                  <Group gap="xs" align="center">
                     <Avatar
                       src={professor ? getAvatarUrl(professor.id) : undefined}
                       size="sm"
@@ -1288,7 +1032,7 @@ export const MessageList = memo(({
                         <IconFileText size={16} />
                       </ActionIcon>
                     )}
-                  </Group>}
+                  </Group>
 
                   {/* Message container */}
                   {!message.response || message.response.trim() === '' ? (
@@ -1297,49 +1041,47 @@ export const MessageList = memo(({
                     </Group>
                   ) : (
                     <Stack gap="xs">
-                      {groupConsecutiveDocuments(
-                        splitTextByDocuments(
-                          filterCodeBlocks(message.response)
-                        ),
-                        lectureDocuments ?? [],
-                        chapterDocuments ?? [],
-                        chapterExercises ?? [],
-                        homeworkExercises ?? []
-                      ).map((group, index) => (
-                        <Box key={index}>
-                          <Stack>
-                            {splitTextByTags(group.text).map((segment, figIndex) => {
-                              if (segment.text && segment.text.trim() !== '') {
-                                return (
-                                  <MessageViewer
-                                    key={figIndex}
-                                    text={segment.text}
-                                  />
+                      <Box key={index}>
+                        <Stack>
+                          {splitTextByTags(splitTextByDocuments(
+                            filterCodeBlocks(message.response),
+                            lectureDocuments ?? [],
+                            chapterDocuments ?? [],
+                            fileDocuments ?? [],
+                            chapterExercises ?? [],
+                            homeworkExercises ?? []
+                          )).map((segment, figIndex) => {
+                            if (segment.text && segment.text.trim() !== '') {
+                              return (
+                                <MessageViewer
+                                  key={figIndex}
+                                  text={segment.text}
+                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                  classId={classId}
+                                />
+                              )
+                            } else if (segment.figureId && figures) {
+                              return (
+                                figures.find(f => f.id === segment.figureId) && (
+                                  <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
                                 )
-                              } else if (segment.figureId && figures) {
-                                return (
-                                  figures.find(f => f.id === segment.figureId) && (
-                                    <FigureViewer figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
-                                  )
+                              )
+                            } else if (segment.summaryId && summaries) {
+                              return (
+                                summaries.find(s => s.id === segment.summaryId) && (
+                                  <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
                                 )
-                              } else if (segment.summaryId && summaries) {
-                                return (
-                                  summaries.find(s => s.id === segment.summaryId) && (
-                                    <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} renderBadges={renderBadges} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
-                                  )
+                              )
+                            } else if (segment.questionId && questions) {
+                              return (
+                                questions.find(q => q.id === segment.questionId) && (
+                                  <QuestionViewer classId={classId} question={questions.find(q => q.id === segment.questionId)!} viewerMode={viewerMode} />
                                 )
-                              } else if (segment.questionId && questions) {
-                                return (
-                                  questions.find(q => q.id === segment.questionId) && (
-                                    <QuestionViewer classId={classId} question={questions.find(q => q.id === segment.questionId)!} viewerMode={viewerMode} />
-                                  )
-                                )
-                              }
-                            })}
-                          </Stack>
-                          {renderBadges(group)}
-                        </Box>
-                      ))}
+                              )
+                            }
+                          })}
+                        </Stack>
+                      </Box>
                     </Stack>
                   )}
                 </Stack>

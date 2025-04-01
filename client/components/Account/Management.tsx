@@ -65,11 +65,19 @@ export default function Management({ showCreateClass = true, showExistingClasses
         homework: string;
     }>>({});
 
+    const [classChatTypes, setClassChatTypes] = useState<Record<string, {
+        learn: boolean;
+        homework: boolean;
+        testPrep: boolean;
+        present: boolean;
+    }>>({});
+
     // States for managing class features
     const [classFeatures, setClassFeatures] = useState<Record<string, {
         lectureEnabled: boolean;
         textbookEnabled: boolean;
         homeworkEnabled: boolean;
+        filesEnabled: boolean;
     }>>({});
 
     const [saveLoading, setSaveLoading] = useState<Record<string, boolean>>({});
@@ -106,7 +114,8 @@ export default function Management({ showCreateClass = true, showExistingClasses
     useEffect(() => {
         if (classes) {
             const initialPrompts: Record<string, { lecture: string; textbook: string; homework: string }> = {};
-            const initialFeatures: Record<string, { lectureEnabled: boolean; textbookEnabled: boolean; homeworkEnabled: boolean }> = {};
+            const initialChatTypes: Record<string, { learn: boolean; homework: boolean; testPrep: boolean; present: boolean }> = {};
+            const initialFeatures: Record<string, { lectureEnabled: boolean; textbookEnabled: boolean; homeworkEnabled: boolean; filesEnabled: boolean }> = {};
 
             classes.forEach(classItem => {
                 initialPrompts[classItem.id] = {
@@ -118,7 +127,15 @@ export default function Management({ showCreateClass = true, showExistingClasses
                 initialFeatures[classItem.id] = {
                     lectureEnabled: classItem.lecture_enabled || false,
                     textbookEnabled: classItem.textbook_enabled || false,
-                    homeworkEnabled: classItem.homework_enabled || false
+                    homeworkEnabled: classItem.homework_enabled || false,
+                    filesEnabled: classItem.files_enabled || false
+                };
+
+                initialChatTypes[classItem.id] = {
+                    learn: classItem.learn_mode_enabled || false,
+                    homework: classItem.homework_mode_enabled || false,
+                    testPrep: classItem.test_prep_mode_enabled || false,
+                    present: classItem.present_mode_enabled || false
                 };
             });
 
@@ -136,6 +153,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
 
             setClassPrompts(initialPrompts);
             setClassFeatures(initialFeatures);
+            setClassChatTypes(initialChatTypes);
             setEditableClasses(initialEditableClasses);
         }
     }, [classes]);
@@ -150,7 +168,17 @@ export default function Management({ showCreateClass = true, showExistingClasses
         }));
     };
 
-    const handleFeatureToggle = (classId: string, feature: 'lectureEnabled' | 'textbookEnabled' | 'homeworkEnabled', value: boolean) => {
+    const handleChatTypeToggle = (classId: string, type: 'learn' | 'homework' | 'testPrep' | 'present', value: boolean) => {
+        setClassChatTypes(prev => ({
+            ...prev,
+            [classId]: {
+                ...prev[classId],
+                [type]: value
+            }
+        }));
+    };
+
+    const handleFeatureToggle = (classId: string, feature: 'lectureEnabled' | 'textbookEnabled' | 'homeworkEnabled' | 'filesEnabled', value: boolean) => {
         setClassFeatures(prev => ({
             ...prev,
             [classId]: {
@@ -171,9 +199,14 @@ export default function Management({ showCreateClass = true, showExistingClasses
                 classPrompts[classId].lecture,
                 classPrompts[classId].textbook,
                 classPrompts[classId].homework,
+                classChatTypes[classId].learn,
+                classChatTypes[classId].homework,
+                classChatTypes[classId].testPrep,
+                classChatTypes[classId].present,
                 classFeatures[classId].lectureEnabled,
                 classFeatures[classId].textbookEnabled,
                 classFeatures[classId].homeworkEnabled,
+                classFeatures[classId].filesEnabled,
                 editableClasses[classId].title,
                 editableClasses[classId].class_code,
                 editableClasses[classId].course_description,
@@ -372,6 +405,37 @@ export default function Management({ showCreateClass = true, showExistingClasses
                     </Text>
                 </Stack> */}
 
+                {/* Chat Types Section */}
+                <Stack gap="md">
+                    <Text fw={500} size="sm">Enabled Chat Types</Text>
+                    <Group>
+                        <Switch
+                            checked={classChatTypes[classItem.id]?.learn}
+                            onChange={(event) => handleChatTypeToggle(classItem.id, 'learn', event.currentTarget.checked)}
+                            label="Learn"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classChatTypes[classItem.id]?.homework}
+                            onChange={(event) => handleChatTypeToggle(classItem.id, 'homework', event.currentTarget.checked)}
+                            label="Homework"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classChatTypes[classItem.id]?.testPrep}
+                            onChange={(event) => handleChatTypeToggle(classItem.id, 'testPrep', event.currentTarget.checked)}
+                            label="Test Prep"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classChatTypes[classItem.id]?.present}
+                            onChange={(event) => handleChatTypeToggle(classItem.id, 'present', event.currentTarget.checked)}
+                            label="Present"
+                            labelPosition="right"
+                        />
+                    </Group>
+                </Stack>
+
                 {/* Features Section */}
                 <Stack gap="md">
                     <Text fw={500} size="sm">Enabled Content Types</Text>
@@ -392,6 +456,12 @@ export default function Management({ showCreateClass = true, showExistingClasses
                             checked={classFeatures[classItem.id]?.homeworkEnabled}
                             onChange={(event) => handleFeatureToggle(classItem.id, 'homeworkEnabled', event.currentTarget.checked)}
                             label="Homework"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classFeatures[classItem.id]?.filesEnabled}
+                            onChange={(event) => handleFeatureToggle(classItem.id, 'filesEnabled', event.currentTarget.checked)}
+                            label="Files"
                             labelPosition="right"
                         />
                     </Group>
@@ -536,13 +606,21 @@ export default function Management({ showCreateClass = true, showExistingClasses
                                     classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
                                 );
 
+                                const chatTypesChanged = classChatTypes[classItem.id] && (
+                                    classChatTypes[classItem.id].learn !== (classItem.learn_mode_enabled || false) ||
+                                    classChatTypes[classItem.id].homework !== (classItem.homework_mode_enabled || false) ||
+                                    classChatTypes[classItem.id].testPrep !== (classItem.test_prep_mode_enabled || false) ||
+                                    classChatTypes[classItem.id].present !== (classItem.present_mode_enabled || false)
+                                );
+
                                 const featuresChanged = classFeatures[classItem.id] && (
                                     classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
                                     classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
-                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false)
+                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false) ||
+                                    classFeatures[classItem.id].filesEnabled !== (classItem.files_enabled || false)
                                 );
 
-                                const hasChanges = promptsChanged || featuresChanged;
+                                const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
 
                                 return (
                                     <Accordion.Item key={classItem.id} value={classItem.id}>
@@ -608,13 +686,21 @@ export default function Management({ showCreateClass = true, showExistingClasses
                                     classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
                                 );
 
+                                const chatTypesChanged = classChatTypes[classItem.id] && (
+                                    classChatTypes[classItem.id].learn !== (classItem.learn_mode_enabled || false) ||
+                                    classChatTypes[classItem.id].homework !== (classItem.homework_mode_enabled || false) ||
+                                    classChatTypes[classItem.id].testPrep !== (classItem.test_prep_mode_enabled || false) ||
+                                    classChatTypes[classItem.id].present !== (classItem.present_mode_enabled || false)
+                                );
+
                                 const featuresChanged = classFeatures[classItem.id] && (
                                     classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
                                     classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
-                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false)
+                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false) ||
+                                    classFeatures[classItem.id].filesEnabled !== (classItem.files_enabled || false)
                                 );
 
-                                const hasChanges = promptsChanged || featuresChanged;
+                                const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
 
                                 return (
                                     <Stack key={classItem.id}>
