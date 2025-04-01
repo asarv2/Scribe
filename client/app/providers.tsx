@@ -4,7 +4,6 @@
 import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 import { createTheme, MantineColorScheme, MantineProvider, MantineTheme, defaultVariantColorsResolver, VariantColorsResolver, parseThemeColor, rgba, darken } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { Analytics } from '@vercel/analytics/next';
 import { HealthCheck } from "@/components/HealthCheck";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -53,7 +52,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 >
                     <Notifications />
                     <HealthCheck />
-                    <Analytics />
                     {children}
                 </MantineProvider>
             </ReactQueryClientProvider>
