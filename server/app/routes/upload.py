@@ -1472,7 +1472,7 @@ async def tus_options(request: Request):
             "Tus-Extension": "creation,termination,creation-with-upload,creation-defer-length",
             "Tus-Max-Size": "1073741824",  # 1GB max file size
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, HEAD, PATCH, OPTIONS",
+            "Access-Control-Allow-Methods": "POST, HEAD, PATCH, DELETE, OPTIONS",
             "Access-Control-Allow-Headers": "Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Upload-Defer-Length, Content-Type",
             "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Upload-Defer-Length, Location",
             "Access-Control-Max-Age": "86400",
@@ -1629,12 +1629,22 @@ async def tus_patch(upload_id: str, request: Request):
     if request.headers.get("Content-Type") != "application/offset+octet-stream":
         return Response(status_code=415)
     
+    # Check if info file exists
+    info_path = os.path.join(upload_dir, "info")
+    if not os.path.exists(info_path):
+        logger.error(f"Info file missing for upload {upload_id}")
+        return Response(status_code=410, content="Upload was terminated")
+    
     # Read info file
-    with open(os.path.join(upload_dir, "info"), "r") as f:
-        info = {}
-        for line in f:
-            k, v = line.strip().split(":", 1)
-            info[k] = v
+    try:
+        with open(info_path, "r") as f:
+            info = {}
+            for line in f:
+                k, v = line.strip().split(":", 1)
+                info[k] = v
+    except Exception as e:
+        logger.error(f"Error reading info file for upload {upload_id}: {str(e)}")
+        return Response(status_code=500)
     
     # Check offset
     if request.headers.get("Upload-Offset") != info.get("offset"):
@@ -1643,9 +1653,25 @@ async def tus_patch(upload_id: str, request: Request):
     # Read chunk
     chunk = await request.body()
     
+    # Check if file exists, create if not
+    file_path = os.path.join(upload_dir, "file")
+    if not os.path.exists(file_path):
+        logger.warning(f"File missing for upload {upload_id}, creating new file")
+        try:
+            # Create empty file
+            with open(file_path, "wb") as f:
+                pass
+        except Exception as e:
+            logger.error(f"Error creating file for upload {upload_id}: {str(e)}")
+            return Response(status_code=500)
+    
     # Append to file
-    with open(os.path.join(upload_dir, "file"), "ab") as f:
-        f.write(chunk)
+    try:
+        with open(file_path, "ab") as f:
+            f.write(chunk)
+    except Exception as e:
+        logger.error(f"Error writing to file for upload {upload_id}: {str(e)}")
+        return Response(status_code=500)
     
     # Update offset
     new_offset = int(info.get("offset", "0")) + len(chunk)
@@ -1659,11 +1685,15 @@ async def tus_patch(upload_id: str, request: Request):
         info.pop("deferred", None)  # Remove the deferred flag
     
     # Update offset and possibly length
-    with open(os.path.join(upload_dir, "info"), "w") as f:
-        if "deferred" in info and info["deferred"] == "true":
-            f.write(f"deferred:true\noffset:{new_offset}")
-        else:
-            f.write(f"length:{info.get('length', '0')}\noffset:{new_offset}")
+    try:
+        with open(info_path, "w") as f:
+            if "deferred" in info and info["deferred"] == "true":
+                f.write(f"deferred:true\noffset:{new_offset}")
+            else:
+                f.write(f"length:{info.get('length', '0')}\noffset:{new_offset}")
+    except Exception as e:
+        logger.error(f"Error updating info file for upload {upload_id}: {str(e)}")
+        return Response(status_code=500)
     
     return Response(
         headers={
@@ -1683,7 +1713,7 @@ async def tus_options_upload_id(upload_id: str, request: Request):
             "Tus-Version": "1.0.0",
             "Tus-Extension": "creation,termination,creation-with-upload,creation-defer-length",
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "HEAD, PATCH, OPTIONS",
+            "Access-Control-Allow-Methods": "HEAD, PATCH, DELETE, OPTIONS",
             "Access-Control-Allow-Headers": "Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Upload-Defer-Length, Content-Type",
             "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Upload-Defer-Length, Location",
             "Access-Control-Max-Age": "86400",
@@ -1852,3 +1882,30 @@ async def finalize_upload(request: Request):
                 "message": f"Failed to process file: {str(e)}"
             }
         )
+
+@router.delete("/tus/{upload_id}")
+async def tus_delete(upload_id: str, request: Request):
+    """Handle DELETE request for tus protocol - terminate upload"""
+    upload_dir = os.path.join(TUS_UPLOADS_DIR, upload_id)
+    
+    if not os.path.exists(upload_dir):
+        return Response(status_code=404)
+    
+    # Check tus version
+    if request.headers.get("Tus-Resumable") != "1.0.0":
+        return Response(status_code=412, headers={"Tus-Version": "1.0.0"})
+    
+    try:
+        # Delete the upload directory and all its contents
+        shutil.rmtree(upload_dir)
+        
+        return Response(
+            status_code=204,  # No Content
+            headers={
+                "Tus-Resumable": "1.0.0",
+                "Access-Control-Allow-Origin": "*",
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error deleting upload {upload_id}: {str(e)}")
+        return Response(status_code=500)

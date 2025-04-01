@@ -328,11 +328,20 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         if (!activeChat.prompt.trim() && recordedVideos.length === 0) return;
 
         try {
-            // Check if there are any unprocessed videos
-            const hasUnprocessedVideos = recordedVideos.some(video => video.fileId === undefined);
+            // Check if there are any unprocessed videos or videos still being processed
+            const hasUnprocessedVideos = recordedVideos.some(video => {
+                // If no fileId, it's still uploading
+                if (video.fileId === undefined) return true;
+                
+                // Find the corresponding file and check its parse_status
+                const file = files?.find(f => f.id === video.fileId);
+                
+                // If file exists, check if it's complete, otherwise consider it unprocessed
+                return !file || file.parse_status !== 'complete';
+            });
 
             if (hasUnprocessedVideos) {
-                console.log("Waiting for videos to process before sending message");
+                console.log("Waiting for videos to fully process before sending message");
                 // Set flags to indicate we're waiting for videos and should send when ready
                 setIsWaitingForVideos(true);
                 return; // Exit early, the useEffect will handle sending when videos are ready
@@ -348,7 +357,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 message: "Failed to send message. Please try again.",
                 color: "red"
             });
-
         }
     };
 
@@ -420,13 +428,22 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         }));
     }, []);
 
-    // Add this useEffect to monitor video processing and trigger message sending
+    // Add this useEffect to monitor video processing status
     useEffect(() => {
         // Only run this effect if we're actively waiting for videos to process
-        if (!isWaitingForVideos) return;
+        if (!isWaitingForVideos || !files) return;
 
-        // Check if all videos have fileIds
-        const allVideosProcessed = recordedVideos.every(video => video.fileId !== undefined);
+        // Check if all videos have fileIds AND are fully processed
+        const allVideosProcessed = recordedVideos.every(video => {
+            // If no fileId, it's not processed
+            if (video.fileId === undefined) return false;
+            
+            // Find the corresponding file
+            const file = files.find(f => f.id === video.fileId);
+            
+            // Consider it processed if file exists and status is complete
+            return file && file.parse_status === 'complete';
+        });
 
         if (allVideosProcessed) {
             console.log("All videos processed, sending message now");
@@ -461,7 +478,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
             return () => clearTimeout(timer);
         }
-    }, [isWaitingForVideos, recordedVideos, sendMessage, loading]);
+    }, [isWaitingForVideos, recordedVideos, files, sendMessage, loading]);
 
     // Set up realtime subscription for messages
     useEffect(() => {

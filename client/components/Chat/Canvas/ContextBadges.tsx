@@ -241,7 +241,7 @@ export const ContextBadges = memo(({
                                         opacity: !video.fileId || processingStatus !== 'complete' ? 0.5 : 1,
                                         pointerEvents: 'all'
                                     }}
-                                    controls
+                                    controls={processingStatus === 'complete'}
                                     playsInline
                                 />
 
@@ -272,7 +272,7 @@ export const ContextBadges = memo(({
                                             color={processingStatus === 'error' ? 'red' : 'blue'}
                                             style={{ width: '80%' }}
                                         />
-                                        {progressValue > 0 && processingStatus !== 'error' && (
+                                        {progressValue > 0 && processingStatus !== 'error' && (Math.round(progressValue) !== Infinity) && (
                                             <Text size="xs" c="white" mt={4}>{Math.round(progressValue)}%</Text>
                                         )}
                                     </Box>

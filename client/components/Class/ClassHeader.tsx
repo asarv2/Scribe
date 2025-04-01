@@ -26,6 +26,7 @@ import { Profile } from '@/types';
 import { Class } from '@/types';
 import cx from 'clsx';
 import { useMediaQuery } from '@mantine/hooks';
+import FeedbackModal from '../FeedbackModal';
 interface ClassHeaderProps {
     classId: string
     showClasses: boolean
@@ -150,16 +151,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                         <IconMoon className={cx(classes.icon, classes.dark)} size={24} />
                     </ActionIcon>
                 </Tooltip>
-                <Link href="/feedback" style={{ paddingTop: 5 }}>
-                    <Tooltip label="Feedback">
-                        <ActionIcon
-                            variant="subtle"
-                            aria-label="Feedback"
-                        >
-                            <IconMessageCircle className={classes.icon} size={24} />
-                        </ActionIcon>
-                    </Tooltip>
-                </Link>
+                <FeedbackModal />
                 <AccountMenu profile={profile} />
             </Group>
         </Group>

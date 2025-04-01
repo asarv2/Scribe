@@ -120,16 +120,6 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
                     {links}
                 </div>
             </ScrollArea>
-
-            {/* <div className={classes.footerContainer}>
-                <ClassNavbarLinksGroup
-                    icon={IconUsers}
-                    label="Feedback"
-                    isExpanded={isExpanded}
-                    link={`/feedback`}
-                    isLoading={loadingUser || loadingProfile}
-                />
-            </div> */}
         </nav>
     );
 }
