@@ -59,10 +59,10 @@ export default function Hero() {
                     <Grid.Col span={{ base: 12, md: 6 }}>
                         <Stack gap="xl">
                             <Title order={1} size={isMobile ? 32 : 48} className={styles.heroTitle}>
-                                Your AI-Powered Learning Assistant
+                                The AI Teaching Assistant
                             </Title>
                             <Text size="xl" c="dimmed" className={styles.heroText}>
-                                Scribe helps students succeed by providing personalized learning support using your teacher's content.
+                                Scribe is an AI-TA meant for both students and professors. Instantly access a 24/7 office hour chatbox, study prep generation, detailed analytics, and more.
                             </Text>
                             <Group mt="md">
                                 {user && profile ? (

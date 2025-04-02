@@ -6,18 +6,23 @@
 
 import React, { useState } from 'react';
 import { Document, Exercise, Summary } from '../../types';
-import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center } from '@mantine/core';
+import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip } from '@mantine/core';
 import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile } from '@tabler/icons-react';
 import Latex from '../Latex';
-import { getSummaryPDFUrl, getSummaryTeXUrl, getSummaryTextUrl } from '../../utils/services/images';
+import { getSummaryDownloadUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
 import { ViewerMode } from '../../types';
 import { groupConsecutiveDocuments } from '@/utils/chat/chat-helpers';
 import { filterCodeBlocks } from '@/utils/chat/chat-helpers';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
+import { getProfile } from '@/utils/queries/get-profile';
+import { getUser } from '@/utils/queries/get-user';
+import { useQuery } from '@tanstack/react-query';
+import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 
 interface SummaryViewerProps {
     classId: string;
+    chatId: string;
     summary: Summary;
     viewerMode: ViewerMode;
     lectureDocuments: Document[],
@@ -28,11 +33,24 @@ interface SummaryViewerProps {
     handleEnhancedDocumentClick: (contextType: 'lectures' | 'chapters' | 'homeworks' | 'files', contextId: string, documentId?: string, textbookId?: string, exerciseId?: string) => void;
 }
 
-const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerMode, handleEnhancedDocumentClick, lectureDocuments, chapterDocuments, fileDocuments, chapterExercises, homeworkExercises }) => {
+const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary, viewerMode, handleEnhancedDocumentClick, lectureDocuments, chapterDocuments, fileDocuments, chapterExercises, homeworkExercises }) => {
+
+    const supabase = useSupabaseBrowser();
+
+    const { data: user } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase)
+    });
+
+    const { data: profile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user!.id),
+        enabled: !!user?.id
+    });
 
     const [loading, setLoading] = useState(false);
 
-    const handleRetry = async () => {
+    const handleRetry = async (summary: Summary) => {
         try {
             setLoading(true);
 
@@ -42,6 +60,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
 
             const formData = new FormData();
             formData.append("message_id", summary.message);
+            formData.append("summary_id", summary.id);
             formData.append("class_id", classId);
 
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summaries`, {
@@ -89,7 +108,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
                             leftSection={<IconRefresh size={14} />}
                             color="red"
                             variant="outline"
-                            onClick={handleRetry}
+                            onClick={() => handleRetry(summary)}
                             loading={loading}
                         >
                             Retry
@@ -101,18 +120,23 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
                     <>
                         <Group justify="space-between">
                             <Text c="dimmed">Generated at {new Date(summary.created_at).toLocaleString()}</Text>
-                            <Menu position="bottom-end" shadow="md">
+                            {(profile?.admin || profile?.professor) ? <Menu position="bottom-end" shadow="md">
                                 <Menu.Target>
-                                    <ActionIcon>
-                                        <IconDownload size={18} />
-                                    </ActionIcon>
+                                    <Tooltip label="Download Summary">
+                                        <ActionIcon
+                                            variant="subtle"
+                                            size="md"
+                                        >
+                                            <IconDownload size={18} />
+                                        </ActionIcon>
+                                    </Tooltip>
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                     <Menu.Label>Download as</Menu.Label>
                                     <Menu.Item
                                         leftSection={<IconFile size={14} />}
                                         component="a"
-                                        href={getSummaryPDFUrl(summary.id)}
+                                        href={getSummaryDownloadUrl(chatId, summary.id, 'pdf')}
                                         download
                                     >
                                         PDF Document
@@ -120,33 +144,43 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
                                     <Menu.Item
                                         leftSection={<IconFileTypography size={14} />}
                                         component="a"
-                                        href={getSummaryTeXUrl(summary.id)}
+                                        href={getSummaryDownloadUrl(chatId, summary.id, 'latex')}
                                         download
                                     >
                                         LaTeX Source
                                     </Menu.Item>
-                                    <Menu.Item
+                                    {/* <Menu.Item
                                         leftSection={<IconFileText size={14} />}
                                         component="a"
-                                        href={getSummaryTextUrl(summary.id)}
+                                        href={getSummaryDownloadUrl(chatId, summary.id, 'text')}
                                         download
                                     >
                                         Plain Text
-                                    </Menu.Item>
+                                    </Menu.Item> */}
                                 </Menu.Dropdown>
-                            </Menu>
+                            </Menu> : <Tooltip label="Download PDF">
+                                <ActionIcon
+                                    component="a"
+                                    variant="subtle"
+                                    size="md"
+                                    href={getSummaryDownloadUrl(chatId, summary.id, 'pdf')}
+                                    download
+                                >   
+                                    <IconDownload size={18} />
+                                </ActionIcon>
+                            </Tooltip>}
                         </Group>
 
                         <Box>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.preamble}</Latex>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                            filterCodeBlocks(summary.body),
-                            lectureDocuments ?? [],
-                            chapterDocuments ?? [],
-                            fileDocuments ?? [],
-                            chapterExercises ?? [],
-                            homeworkExercises ?? []
-                          ) }</Latex>
+                                filterCodeBlocks(summary.body),
+                                lectureDocuments ?? [],
+                                chapterDocuments ?? [],
+                                fileDocuments ?? [],
+                                chapterExercises ?? [],
+                                homeworkExercises ?? []
+                            )}</Latex>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.conclusion}</Latex>
                         </Box>
                     </>
@@ -160,7 +194,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, summary, viewerM
         }
     };
 
-    return (
+    return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'error' || summary.generation_status === 'complete') && (
         <Card withBorder p="md" w={viewerMode.open ? "100%" : "60%"}>
             {renderContent()}
         </Card>

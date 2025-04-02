@@ -142,7 +142,7 @@ export const ContextBadges = memo(({
                     <Tooltip label={`Remove from chat`} openDelay={500}>
                         <ActionIcon
                             variant="transparent"
-                            color="gray"
+                            color="white"
                             size={"sm"}
                             style={{ cursor: 'pointer' }}
                             onClick={(e) => {
@@ -313,7 +313,7 @@ export const ContextBadges = memo(({
                                 <Tooltip label={`Remove from chat`} openDelay={500}>
                                     <ActionIcon
                                         variant="transparent"
-                                        color="gray"
+                                        color="white"
                                         size={"sm"}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
@@ -358,7 +358,7 @@ export const ContextBadges = memo(({
                                 <Tooltip label={`Remove from chat`} openDelay={500}>
                                     <ActionIcon
                                         variant="transparent"
-                                        color="gray"
+                                        color="white"
                                         size={"sm"}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
@@ -402,7 +402,7 @@ export const ContextBadges = memo(({
                                 <Tooltip label={`Remove from chat`} openDelay={500}>
                                     <ActionIcon
                                         variant="transparent"
-                                        color="gray"
+                                        color="white"
                                         size={"sm"}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
@@ -459,7 +459,7 @@ export const ContextBadges = memo(({
                                 <Tooltip label={`Remove from chat`} openDelay={500}>
                                     <ActionIcon
                                         variant="transparent"
-                                        color="gray"
+                                        color="white"
                                         size={"sm"}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {

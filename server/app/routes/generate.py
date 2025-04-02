@@ -320,17 +320,25 @@ async def handle_chat(
 async def process_figures(
     request: Request,
     message_id: str = Form(...),
+    figure_id: Optional[str] = Form(None),
     class_id: str = Form(...)
 ):
     """Generate figures for a given message ID."""
     try:
-
-        # Mark figures as generating
-        supabase.table("figures").update({
-            "generation_status": "generating",
-            "generation_error": "",
-            "last_generation_attempt": datetime.now().isoformat()
-        }).eq("message", message_id).execute()
+        if figure_id:
+            # Mark the specific figure as generating
+            supabase.table("figures").update({
+                "generation_status": "generating",
+                "generation_error": "",
+                "last_generation_attempt": datetime.now().isoformat()
+            }).eq("id", figure_id).execute()
+        else:
+            # Mark figures as generating
+            supabase.table("figures").update({
+                "generation_status": "generating",
+                "generation_error": "",
+                "last_generation_attempt": datetime.now().isoformat()
+            }).eq("message", message_id).execute()
 
         class_response = supabase.table("classes").select(
             "title, course_description"
@@ -344,7 +352,11 @@ async def process_figures(
         output_rules = await fetch_output_rules(supabase, class_id)
 
         # get the figures from the figures table
-        figures_response = supabase.table("figures").select("*").eq("message", message_id).execute()
+        figures_response = None
+        if figure_id:
+            figures_response = supabase.table("figures").select("*").eq("id", figure_id).execute()
+        else:
+            figures_response = supabase.table("figures").select("*").eq("message", message_id).execute()
         figures = figures_response.data
 
         if len(figures) == 0:
@@ -457,17 +469,25 @@ async def process_figures(
 async def process_summaries(
     request: Request,
     message_id: str = Form(...),
+    summary_id: Optional[str] = Form(None),
     class_id: str = Form(...)
 ):
     """Generate summaries for a given message ID."""
     try:
-
-        # Mark summaries as generating
-        supabase.table("summaries").update({
-            "generation_status": "generating",
-            "generation_error": "",
-            "last_generation_attempt": datetime.now().isoformat()
-        }).eq("message", message_id).execute()
+        if summary_id:
+            # Mark the specific summary as generating
+            supabase.table("summaries").update({
+                "generation_status": "generating",
+                "generation_error": "",
+                "last_generation_attempt": datetime.now().isoformat()
+            }).eq("id", summary_id).execute()
+        else:
+            # Mark summaries as generating
+            supabase.table("summaries").update({
+                "generation_status": "generating",
+                "generation_error": "",
+                "last_generation_attempt": datetime.now().isoformat()
+            }).eq("message", message_id).execute()
 
         class_response = supabase.table("classes").select(
             "title, course_description"
@@ -481,7 +501,11 @@ async def process_summaries(
         output_rules = await fetch_output_rules(supabase, class_id)
 
         # get the summaries from the summaries table
-        summaries_response = supabase.table("summaries").select("*").eq("message", message_id).execute()
+        summaries_response = None
+        if summary_id:
+            summaries_response = supabase.table("summaries").select("*").eq("id", summary_id).execute()
+        else:
+            summaries_response = supabase.table("summaries").select("*").eq("message", message_id).execute()
         summaries = summaries_response.data
 
         if len(summaries) == 0:
@@ -592,17 +616,25 @@ async def process_summaries(
 async def process_questions(
     request: Request,
     message_id: str = Form(...),
+    question_id: Optional[str] = Form(None),
     class_id: str = Form(...)
 ):
     """Generate questions for a given message ID."""
     try:
-
-        # Mark questions as generating
-        supabase.table("questions").update({
-            "generation_status": "generating",
-            "generation_error": "",
-            "last_generation_attempt": datetime.now().isoformat()
-        }).eq("message", message_id).neq("generation_status", "complete").execute()
+        if question_id:
+            # Mark the specific question as generating
+            supabase.table("questions").update({
+                "generation_status": "generating",
+                "generation_error": "",
+                "last_generation_attempt": datetime.now().isoformat()
+            }).eq("id", question_id).execute()
+        else:
+            # Mark all questions for the message as generating
+            supabase.table("questions").update({
+                "generation_status": "generating",
+                "generation_error": "",
+                "last_generation_attempt": datetime.now().isoformat()
+            }).eq("message", message_id).neq("generation_status", "complete").execute()
 
         class_response = supabase.table("classes").select(
             "title, course_description"
@@ -615,7 +647,11 @@ async def process_questions(
         output_rules = await fetch_output_rules(supabase, class_id)
 
         # get the practice problems from the practice_problems table
-        practice_problems_response = supabase.table("questions").select("*").eq("message", message_id).neq("generation_status", "complete").execute()
+        practice_problems_response = None
+        if question_id:
+            practice_problems_response = supabase.table("questions").select("*").eq("id", question_id).execute()
+        else:
+            practice_problems_response = supabase.table("questions").select("*").eq("message", message_id).neq("generation_status", "complete").execute()
         practice_problems = practice_problems_response.data
 
         if len(practice_problems) == 0:

@@ -69,12 +69,17 @@ class FigureProcessor(BaseProcessor):
     ) -> str:
         """Process a batch of figures"""
         try:
-            flat_figures = [
-                f["code"]
-                for figures in self.figures.values()
-                for group in figures
-                for f in group
-            ]
+            flat_figures = []
+            for figure_group in self.figures.values():
+                if isinstance(figure_group, dict) and "code" in figure_group:
+                    # Handle case where figure_group is a single Figure dict
+                    flat_figures.append(figure_group["code"])
+                elif isinstance(figure_group, list):
+                    # Handle case where figure_group is a list of Figure dicts
+                    for f in figure_group:
+                        if isinstance(f, dict) and "code" in f:
+                            flat_figures.append(f["code"])
+            
             flat_figures_str = "\n".join(flat_figures)
 
             # add additional instructions to the prompt
@@ -137,15 +142,16 @@ class FigureProcessor(BaseProcessor):
                     if not generated_figure_id:
                         raise Exception("Failed to generate figure")
                         
-                    self.figures[figure_id] = Figure(
-                        id=figure_id,
-                        code=code_block,
-                        lecture_references=lecture_references,
-                        chapter_references=chapter_references,
-                        chapter_exercise_references=chapter_exercise_references,
-                        homework_exercise_references=homework_exercise_references,
-                        file_references=file_references
-                    )
+                    # Store as a dictionary, not a list
+                    self.figures[figure_id] = {
+                        "id": figure_id,
+                        "code": code_block,
+                        "lecture_references": lecture_references,
+                        "chapter_references": chapter_references,
+                        "chapter_exercise_references": chapter_exercise_references,
+                        "homework_exercise_references": homework_exercise_references,
+                        "file_references": file_references
+                    }
                         
                 except Exception as e:
                     print(f"Error executing code block: {str(e)}")

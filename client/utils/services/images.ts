@@ -17,29 +17,33 @@ export const getFigureUrl = (figureId: string) => {
     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${figureId}.png`
 }
 
-export const getQuestionTextUrl = (messageId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?message_id=${messageId}&format=text`;
+export const getSummaryDownloadUrl = (chatId: string, summaryId: string, format: 'pdf' | 'latex' | 'text') => {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/summary`;
+    const url = new URL(baseUrl, window.location.origin);
+    url.searchParams.append('chat_id', chatId);
+    url.searchParams.append('summary_id', summaryId);
+    url.searchParams.append('format', format);
+    return url.toString();
 }
 
-export const getQuestionPDFUrl = (messageId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?message_id=${messageId}&format=pdf`;
-}
+export const getQuestionDownloadUrl = (chatId: string, questionIds: string[], format: 'pdf' | 'latex' | 'text') => {
+    
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/questions`;
+    // Create URL with properly formatted query parameters for multiple IDs
+    const url = new URL(baseUrl, window.location.origin);
+    
+    // Add each question ID as a separate query parameter with the same name
+    questionIds.forEach(id => {
+        url.searchParams.append('question_ids', id);
+    });
 
-export const getQuestionTeXUrl = (messageId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/questions?message_id=${messageId}&format=latex`;
-}
-
-export const getSummaryTextUrl = (summaryId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/summary?summary_id=${summaryId}&format=text`;
-}
-
-export const getSummaryPDFUrl = (summaryId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/summary?summary_id=${summaryId}&format=pdf`;
-}
-
-export const getSummaryTeXUrl = (summaryId: string): string => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/download/summary?summary_id=${summaryId}&format=latex`;
-}
+    url.searchParams.append('chat_id', chatId);
+    
+    // Add format parameter
+    url.searchParams.append('format', format);
+    
+    return url.toString();
+};
 
 
 

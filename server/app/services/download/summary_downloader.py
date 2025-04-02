@@ -67,8 +67,40 @@ class SummaryDownloader:
         cleaned_content = content
         for pattern in tag_patterns:
             cleaned_content = re.sub(pattern, '', cleaned_content, flags=re.DOTALL)
-            
-        return cleaned_content
+
+        # 1) Convert **bold** to \textbf{...}
+        cleaned_content = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", cleaned_content)
+
+        # 2) Convert bullet lines (* something) into \item lines,
+        #    wrapped by itemize environments. We'll do a simple pass:
+        lines = cleaned_content.split("\n")
+        new_lines = []
+        inside_itemize = False
+
+        for line in lines:
+            # Does the line start with an asterisk and some spacing?
+            bullet_match = re.match(r"^\s*\*\s+(.*)$", line)
+            if bullet_match:
+                # If we are not already inside an itemize, start one
+                if not inside_itemize:
+                    new_lines.append(r"\begin{itemize}")
+                    inside_itemize = True
+                # Convert "* text" -> "\item text"
+                bullet_text = bullet_match.group(1)
+                new_lines.append(r"\item " + bullet_text)
+            else:
+                # If we were inside an itemize block and we see a non-bullet line,
+                # close out the itemize before continuing
+                if inside_itemize:
+                    new_lines.append(r"\end{itemize}")
+                    inside_itemize = False
+                new_lines.append(line)
+
+        # If the text ended while we were still inside an itemize, close it
+        if inside_itemize:
+            new_lines.append(r"\end{itemize}")
+
+        return "\n".join(new_lines)
 
     def save(self, name: str, summary: str, base_filename: str, pdf: bool = True):
         """
