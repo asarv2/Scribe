@@ -1,18 +1,24 @@
 /**
- * app/feedback/page.tsx
- * This page is used to display the feedback, with 3 things:
- * 1. what they like about the site
- * 2. what they don't like about the site
- * 3. feature they wish were here
+ * FeedbackModal.tsx
+ * 
+ * This component is used to display a modal for feedback on the chat.
+ * It is used to collect feedback from the user on the chat and the chatbot.
+ * 
+ * @AshokSaravanan222
+ * 04-01-2025
+ * 
  */
-"use client";
-import { Button, Container, Stack, Textarea, Title, useMantineColorScheme } from '@mantine/core';
-import { useState } from 'react';
-import { notifications } from '@mantine/notifications';
-import { submitFeedback } from '@/utils/services/feedback';
-import { ClassLayout } from '@/components/Class/ClassLayout';
 
-export default function FeedbackPage() {
+import { submitFeedback } from '@/utils/services/feedback';
+import { Modal, Button, Text, Group, Rating, Tooltip, ActionIcon, Stack, Title, Textarea } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import { IconMessageCircle } from '@tabler/icons-react';
+import { useState } from 'react';
+
+export default function FeedbackModal() {
+    const [opened, { open, close }] = useDisclosure(false);
+
     const [likes, setLikes] = useState('');
     const [dislikes, setDislikes] = useState('');
     const [wishlist, setWishlist] = useState('');
@@ -43,25 +49,18 @@ export default function FeedbackPage() {
             });
         } finally {
             setLoading(false);
+            close();
         }
     };
 
     return (
-        <ClassLayout classId={null} showClasses={false}>
-            <Container size="md" py="xl">
+        <>
+            <Modal opened={opened} onClose={close} title="Help Us Improve Scribe" centered>
                 <Stack gap="md">
-                    <Title 
-                        order={1} 
-                        styles={(theme) => ({
-                            root: {
-                                fontSize: '2.5rem',
-                                marginBottom: theme.spacing.xl,
-                            }
-                        })}
-                    >
-                        Help Us Improve Scribe
-                    </Title>
-
+                    <Text size="sm" c="dimmed" mb="xs">
+                        Your feedback is completely anonymous and helps us improve Scribe.
+                    </Text>
+                    
                     <Textarea
                         label="What do you like about Scribe?"
                         placeholder="I really enjoy..."
@@ -126,7 +125,17 @@ export default function FeedbackPage() {
                         Submit Feedback
                     </Button>
                 </Stack>
-            </Container>
-        </ClassLayout>
+            </Modal>
+
+            <Tooltip label="Feedback">
+                <ActionIcon
+                    variant="subtle"
+                    aria-label="Feedback"
+                    onClick={open}
+                >
+                    <IconMessageCircle size={24} />
+                </ActionIcon>
+            </Tooltip>
+        </>
     );
 }

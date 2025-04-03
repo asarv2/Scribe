@@ -2,7 +2,7 @@ import { ChatMessage, Document, File, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
 import { memo, useRef, useState, useEffect } from "react";
-import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation } from "@tabler/icons-react";
+import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash } from "@tabler/icons-react";
 import classes from './ChatInput.module.css';
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js';
@@ -118,6 +118,11 @@ export const ChatInput = memo(({
     documentsTotal: number,
     documentsProcessed: number
   }>>({});
+
+  const [hidePreview, setHidePreview] = useState(false);
+
+  // Add this state variable near your other state declarations
+  const [userCancelledRecording, setUserCancelledRecording] = useState(false);
 
   // Modify the onSuccess callback in handleFileChange
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -313,14 +318,14 @@ export const ChatInput = memo(({
         async (payload) => {
           console.log("Received file update:", payload);
           const newFile = payload.new as File;
-          
+
           // Check if this is a file we're tracking
           const fileId = newFile?.id;
           if (fileId && processingFiles[fileId]) {
             const { notificationId, fileName } = processingFiles[fileId];
             const newStatus = newFile.parse_status;
             const parseError = newFile.parse_error;
-            
+
             // Update our tracking state
             setProcessingFiles(prev => ({
               ...prev,
@@ -331,7 +336,7 @@ export const ChatInput = memo(({
                 documentsTotal: newFile.length || prev[fileId].documentsTotal
               }
             }));
-            
+
             // Update notification based on status
             switch (newStatus) {
               case 'extracting':
@@ -343,7 +348,7 @@ export const ChatInput = memo(({
                   autoClose: false
                 });
                 break;
-                
+
               case 'uploading':
                 notifications.update({
                   id: notificationId,
@@ -353,7 +358,7 @@ export const ChatInput = memo(({
                   autoClose: false
                 });
                 break;
-                
+
               case 'processing':
                 notifications.update({
                   id: notificationId,
@@ -363,7 +368,7 @@ export const ChatInput = memo(({
                   autoClose: false
                 });
                 break;
-                
+
               case 'parsing':
                 notifications.update({
                   id: notificationId,
@@ -373,7 +378,7 @@ export const ChatInput = memo(({
                   autoClose: false
                 });
                 break;
-                
+
               case 'complete':
 
                 // Update chat context with the new file
@@ -393,17 +398,17 @@ export const ChatInput = memo(({
                   loading: false,
                   autoClose: 3000
                 });
-                
+
                 // Remove from tracking after a delay
                 setTimeout(() => {
                   setProcessingFiles(prev => {
-                    const newState = {...prev};
+                    const newState = { ...prev };
                     delete newState[fileId];
                     return newState;
                   });
                 }, 3000);
                 break;
-                
+
               case 'error':
                 notifications.update({
                   id: notificationId,
@@ -413,17 +418,17 @@ export const ChatInput = memo(({
                   loading: false,
                   autoClose: 5000
                 });
-                
+
                 // Remove from tracking after a delay
                 setTimeout(() => {
                   setProcessingFiles(prev => {
-                    const newState = {...prev};
+                    const newState = { ...prev };
                     delete newState[fileId];
                     return newState;
                   });
                 }, 5000);
                 break;
-                
+
               case 'idle':
                 notifications.update({
                   id: notificationId,
@@ -436,7 +441,7 @@ export const ChatInput = memo(({
                 break;
             }
           }
-          
+
           // Then trigger a refetch to ensure we're in sync
           await queryClient.invalidateQueries({
             queryKey: ["files", profile.id, classId],
@@ -479,7 +484,7 @@ export const ChatInput = memo(({
             const processedDocs = docsForFile.filter(doc => doc.processed === true).length;
             const totalDocs = docsForFile.length;
             const newFile = files?.find(f => f.id === fileId);
-            
+
             // Update our tracking state
             setProcessingFiles(prev => ({
               ...prev,
@@ -489,7 +494,7 @@ export const ChatInput = memo(({
                 documentsTotal: Math.max(totalDocs, prev[fileId].documentsTotal)
               }
             }));
-            
+
             // If we're in parsing status, update the notification with document progress
             if (processingFiles[fileId].status === 'parsing') {
               const { notificationId, fileName } = processingFiles[fileId];
@@ -501,7 +506,7 @@ export const ChatInput = memo(({
                 autoClose: false
               });
             }
-            
+
             // If we're in extracting status, update the notification with document count
             if (processingFiles[fileId].status === 'extracting') {
               const { notificationId, fileName } = processingFiles[fileId];
@@ -586,9 +591,15 @@ export const ChatInput = memo(({
       setRecordingTime(Math.floor(time / 1000)); // Convert ms to seconds
     });
 
-    // Set up record-end event
+    // Modify the record-end event handler in initWaveSurfer
     recordPluginRef.current.on('record-end', (blob: Blob) => {
       console.log("Recording ended, got blob:", blob);
+      // Return early if the recording was stopped by the user
+      if (userCancelledRecording) {
+        console.log("Recording was cancelled by user, skipping transcription");
+        setUserCancelledRecording(false);
+        return;
+      }
       handleTranscribe(blob);
     });
 
@@ -726,6 +737,13 @@ export const ChatInput = memo(({
             mediaRecorder.onstop = () => {
               controller.close();
 
+              // Return early if the recording was stopped by the user
+              if (userCancelledRecording) {
+                console.log("Video recording was cancelled by user, skipping processing");
+                setUserCancelledRecording(false);
+                return;
+              }
+
               const videoBlob = new Blob(videoChunksRef.current, {
                 type: 'video/webm'
               });
@@ -747,7 +765,6 @@ export const ChatInput = memo(({
                 fileId: undefined,
                 uploadProgress: 0
               }]);
-
               setRecordingMode(false);
             };
 
@@ -931,13 +948,6 @@ export const ChatInput = memo(({
           files: Array.from(new Set([...prev.context.files, fileData.file_id]))
         }
       }));
-
-      notifications.show({
-        title: 'Recording Complete',
-        message: 'Your video has been uploaded and added to the chat. Please wait while it is processed.',
-        color: 'blue',
-        autoClose: false
-      });
 
     } catch (error) {
       console.error('Error finalizing upload:', error);
@@ -1269,7 +1279,7 @@ export const ChatInput = memo(({
               right: '0',
               height: '300px',
               zIndex: 100,
-              display: 'flex',
+              display: hidePreview ? 'none' : 'flex',
               justifyContent: 'center'
             }}
           >
@@ -1302,11 +1312,48 @@ export const ChatInput = memo(({
                         objectFit: 'cover'
                       }}
                     />
+                    {isRecording && (
+                      <Tooltip label="Hide Preview">
+                        <ActionIcon
+                          onClick={() => setHidePreview(true)}
+                          style={{
+                            position: 'absolute',
+                            top: '8px',
+                            right: '8px',
+                            zIndex: 10
+                          }}
+                          variant="filled"
+                          color="dark"
+                          opacity={0.7}
+                        >
+                          <IconX size={16} />
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
                   </Box>
                 )}
               </Group>
             </ScrollArea>
           </Box>
+        )}
+
+        {/* Add a button to show preview again when hidden */}
+        {hidePreview && isRecording && videoStream && (
+          <Tooltip label="Show Camera Preview">
+            <ActionIcon
+              onClick={() => setHidePreview(false)}
+              style={{
+                position: 'absolute',
+                top: '-40px',
+                right: '8px',
+                zIndex: 10
+              }}
+              variant="filled"
+              color="blue"
+            >
+              <IconVideo size={16} />
+            </ActionIcon>
+          </Tooltip>
         )}
 
         <Box className={classes.inputBox}>
@@ -1398,11 +1445,63 @@ export const ChatInput = memo(({
               bottom: '8px',
               zIndex: 10
             }}>
+              {/* <Tooltip label="Discard Recording">
+                <ActionIcon
+                  onClick={() => {
+                    // Set the cancellation flag before stopping
+                    setUserCancelledRecording(true);
+
+                    // Stop all tracks in the video stream
+                    if (videoStream) {
+                      videoStream.getTracks().forEach(track => track.stop());
+                      setVideoStream(null);
+                    }
+
+                    // Stop the media recorder if active
+                    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+                      mediaRecorderRef.current.stop();
+                    }
+
+                    // Cancel the upload if in progress
+                    if (uploadRef.current) {
+                      uploadRef.current.abort(true).catch(err => {
+                        console.error("Error aborting upload:", err);
+                      });
+                      uploadRef.current = null;
+                    }
+
+                    // Clear video chunks to prevent blob creation
+                    if (videoChunksRef.current) {
+                      videoChunksRef.current = [];
+                    }
+
+
+                    // Stop audio recording
+                    if (recordPluginRef.current && recordPluginRef.current.isRecording()) {
+                      recordPluginRef.current.stopRecording();
+                    }
+
+                    if (videoPluginRef.current && videoPluginRef.current.isRecording()) {
+                      videoPluginRef.current.stopRecording();
+                    }
+
+                    // Reset recording state
+                    setIsRecording(false);
+                    setRecordingMode(false);
+                    setRecordingTime(0);
+                  }}
+                  size="lg"
+                  color="red"
+                  variant="subtle"
+                >
+                  <IconTrash size={20} />
+                </ActionIcon>
+              </Tooltip> */}
               <Tooltip label="Stop Recording">
                 <ActionIcon
                   onClick={() => handleToggleRecording(!!videoStream)}
                   size="lg"
-                  color="red"
+                  color="green"
                   loading={transcribing}
                   variant="subtle"
                 >
