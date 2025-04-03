@@ -13,8 +13,8 @@ import { useFullscreen } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { use } from "react";
 
-export default function ChatPage({ params }: { params: Promise<{ classId: string, chatId: string }> }) {
-    const { classId, chatId } = use(params);
+export default function ChatPage({ params }: { params: { classId: string, chatId: string } }) {
+    const { classId, chatId } = params;
     const { toggle } = useFullscreen();
     const [isFullscreen, setIsFullscreen] = useState(false);
 

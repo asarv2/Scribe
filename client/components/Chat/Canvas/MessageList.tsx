@@ -421,7 +421,7 @@ export const MessageList = memo(({
     return (
       <Stack>
         <Flex gap="md" align="flex-start">
-          <Stack gap="xs" align="flex-start" style={{ width: "100%" }}>
+          <Stack gap="xs" align="flex-start" style={{ maxWidth: "65%" }}>
             <Group gap="xs" align="center">
               <Avatar
                 src={professor ? getAvatarUrl(professor.id) : undefined}
@@ -440,7 +440,7 @@ export const MessageList = memo(({
               style={{
                 backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
                 minWidth: "200px",
-                width: "100%",
+                width: "auto",
                 maxWidth: "100%",
                 border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
                 position: "relative"
@@ -720,21 +720,51 @@ export const MessageList = memo(({
       return null;
     }
 
+    // Helper to find previous context to avoid showing duplicates
+    const isPreviousContext = (type: string, id: string, currentMsgIndex: number) => {
+      if (currentMsgIndex === 0) return false; // First message, nothing to compare with
+      
+      // Check if this context item was already in a previous message
+      for (let i = 0; i < currentMsgIndex; i++) {
+        const prevMsg = messages?.[i];
+        if (!prevMsg) continue;
+        
+        if (type === 'lecture' && prevMsg.lectures?.includes(id)) return true;
+        if (type === 'chapter' && prevMsg.chapters?.includes(id)) return true;
+        if (type === 'homework' && prevMsg.homeworks?.includes(id)) return true;
+        if (type === 'file' && prevMsg.files?.includes(id)) return true;
+      }
+      return false;
+    };
+
+    // Get the index of the current message
+    const messageIndex = messages?.findIndex(m => m.id === message.id) ?? -1;
+
     return (
       <Group gap="xs" style={{ justifyContent: 'flex-end' }}>
-        {/* Render lecture badges */}
+        {/* Render lecture references (only if not in previous messages) */}
         {hasLectures && message.lectures.map((lectureId: string) => {
+          // Skip if this was already shown in a previous message's context
+          if (isPreviousContext('lecture', lectureId, messageIndex)) return null;
+          
           const lecture = lectures?.find(l => l.id === lectureId);
           if (!lecture) return null;
 
           return (
-            <Badge
+            <Text 
               key={`lecture-${lectureId}`}
-              size="md"
-              color="blue"
-              radius="xl"
-              styles={{ root: { borderColor: 'white' } }}
-              style={{ cursor: 'pointer' }}
+              size="sm"
+              c="blue"
+              className="inline-reference lecture-reference"
+              style={{ 
+                cursor: 'pointer',
+                transition: 'text-decoration 0.2s ease' 
+              }}
+              sx={{
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
               onClick={() => {
                 const document = lectureDocuments?.find(d => d.lecture === lectureId);
                 if (document) {
@@ -742,22 +772,34 @@ export const MessageList = memo(({
                 }
               }}
             >
-              {lecture.name}
-            </Badge>
+              ({lecture.name})
+            </Text>
           );
         })}
 
-        {/* Render chapter badges */}
+        {/* Render chapter references (only if not in previous messages) */}
         {hasChapters && message.chapters.map((chapterId: string) => {
+          // Skip if this was already shown in a previous message's context
+          if (isPreviousContext('chapter', chapterId, messageIndex)) return null;
+          
           const chapter = chapters?.find(c => c.id === chapterId);
           if (!chapter) return null;
 
           return (
-            <Badge
+            <Text
               key={`chapter-${chapterId}`}
-              size="md"
-              color="green"
-              style={{ cursor: 'pointer' }}
+              size="sm"
+              c="green"
+              className="inline-reference chapter-reference"
+              style={{ 
+                cursor: 'pointer',
+                transition: 'text-decoration 0.2s ease' 
+              }}
+              sx={{
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
               onClick={() => {
                 if (chapter.textbook) {
                   const document = textbookDocuments?.find(d =>
@@ -771,22 +813,34 @@ export const MessageList = memo(({
                 }
               }}
             >
-              {chapter.chapter_number ? `Ch. ${chapter.chapter_number}` : chapter.title}
-            </Badge>
+              ({chapter.chapter_number ? `Ch. ${chapter.chapter_number}` : chapter.title})
+            </Text>
           );
         })}
 
-        {/* Render homework badges */}
+        {/* Render homework references (only if not in previous messages) */}
         {hasHomeworks && message.homeworks.map((homeworkId: string) => {
+          // Skip if this was already shown in a previous message's context
+          if (isPreviousContext('homework', homeworkId, messageIndex)) return null;
+          
           const homework = homeworks?.find(h => h.id === homeworkId);
           if (!homework) return null;
 
           return (
-            <Badge
+            <Text
               key={`homework-${homeworkId}`}
-              size="md"
-              color="orange"
-              style={{ cursor: 'pointer' }}
+              size="sm"
+              c="orange"
+              className="inline-reference homework-reference"
+              style={{ 
+                cursor: 'pointer',
+                transition: 'text-decoration 0.2s ease' 
+              }}
+              sx={{
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
               onClick={() => {
                 const exercise = homeworkExercises?.find(e => e.homework === homeworkId);
                 if (exercise) {
@@ -794,24 +848,34 @@ export const MessageList = memo(({
                 }
               }}
             >
-              {homework.homework_number ? `HW ${homework.homework_number}` : homework.title}
-            </Badge>
+              ({homework.homework_number ? `HW ${homework.homework_number}` : homework.title})
+            </Text>
           );
         })}
 
-        {/* Render file badges */}
+        {/* Render file references (only if not in previous messages) */}
         {hasFiles && message.files.map((fileId: string) => {
+          // Skip if this was already shown in a previous message's context
+          if (isPreviousContext('file', fileId, messageIndex)) return null;
+          
           const file = files?.find(f => f.id === fileId);
           if (!file) return null;
 
           return (
-            <Badge
+            <Text
               key={`file-${fileId}`}
-              size="md"
-              color="violet"
-              radius="xl"
-              styles={{ root: { borderColor: 'white' } }}
-              style={{ cursor: 'pointer' }}
+              size="sm"
+              c="violet"
+              className="inline-reference file-reference"
+              style={{ 
+                cursor: 'pointer',
+                transition: 'text-decoration 0.2s ease' 
+              }}
+              sx={{
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
               onClick={() => {
                 const document = fileDocuments?.find(d => d.file === fileId);
                 if (document) {
@@ -819,11 +883,10 @@ export const MessageList = memo(({
                 }
               }}
             >
-              {file.title}
-            </Badge>
+              ({file.title})
+            </Text>
           );
         })}
-
       </Group>
     );
   };
@@ -845,11 +908,28 @@ export const MessageList = memo(({
       .latex-wrapper .mantine-Text-root {
         white-space: pre-wrap;
       }
+      
+      /* Add these new global styles for context references */
+      .inline-reference {
+        transition: text-decoration 0.2s ease;
+      }
+      .inline-reference:hover {
+        text-decoration: underline !important;
+      }
+      .context-reference-link {
+        transition: text-decoration 0.2s ease;
+      }
+      .context-reference-link:hover {
+        text-decoration: underline !important;
+      }
     `;
     document.head.appendChild(styleEl);
 
     return () => {
-      document.head.removeChild(styleEl);
+      // Check if the element is still in document.head before removing
+      if (styleEl.parentNode === document.head) {
+        document.head.removeChild(styleEl);
+      }
     };
   }, []);
 
@@ -959,7 +1039,32 @@ export const MessageList = memo(({
         // cannot get fade list to work with immersive mode
         <FadeList enabled={false}>
           {renderWelcomeMessages()}
-          {(messages)?.map((message, index) => (
+          {/* Deduplicate messages before rendering them */}
+          {(() => {
+            // Deduplicate messages based on content similarity
+            const uniqueMessages = [];
+            const seenResponses = new Set();
+            
+            messages?.forEach((message) => {
+              // If no response yet, always include the message
+              if (!message.response) {
+                uniqueMessages.push(message);
+                return;
+              }
+              
+              // For messages with responses, check for duplicates
+              // Create a simplified fingerprint of the response (first 50 chars) to detect duplicates
+              const responseFingerprint = message.response.trim().substring(0, 100);
+              if (!seenResponses.has(responseFingerprint)) {
+                seenResponses.add(responseFingerprint);
+                uniqueMessages.push(message);
+              } else {
+                console.log("Skipping duplicate message response");
+              }
+            });
+            
+            return uniqueMessages;
+          })().map((message, index) => (
             <Stack key={`${message.id}`}>
               {/* User message */}
               <Flex gap="md" justify="flex-end" align="flex-start">
@@ -1005,7 +1110,7 @@ export const MessageList = memo(({
 
               {/* AI response */}
               <Flex gap="md" align="flex-start">
-                <Stack gap="xs" align="flex-start">
+                <Stack gap="xs" align="flex-start" style={{ maxWidth: "65%" }}>
                   {/* AI info container */}
                   <Group gap="xs" align="center">
                     <Avatar

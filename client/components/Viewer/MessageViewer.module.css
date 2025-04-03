@@ -1,13 +1,112 @@
 .messageCard {
-  padding: 8px;
-  border-radius: var(--mantine-radius-md);
+  background-color: var(--mantine-color-body);
   min-width: 200px;
+  width: 100%;
   max-width: 100%;
-  background-color: var(--mantine-color-gray-1);
   border: 1px solid var(--mantine-color-gray-3);
-  
-  @mixin dark {
-    background-color: #25262b;
-    border: 1px solid #373A40;
-  }
-} 
+  position: relative;
+  overflow-wrap: break-word;
+  word-break: normal; /* Use normal word breaking to avoid splitting within words */
+  hyphens: auto;
+}
+
+/* Dark mode adjustments */
+[data-mantine-color-scheme="dark"] .messageCard {
+  background-color: #25262b;
+  border-color: #373A40;
+}
+
+/* Code block styling */
+.codeBlock {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+/* Dark mode code block */
+[data-mantine-color-scheme="dark"] .codeBlock {
+  background-color: #2c2e33;
+}
+
+/* Inline reference styles */
+.inlineReference {
+  display: inline-block;
+  margin: 0 0.25rem;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.inlineReference:hover {
+  text-decoration: underline;
+}
+
+.lectureReference {
+  composes: inlineReference;
+  color: #228be6;
+}
+
+.lectureReference:hover {
+  background-color: rgba(34, 139, 230, 0.1);
+}
+
+.chapterReference {
+  composes: inlineReference;
+  color: #40c057;
+}
+
+.chapterReference:hover {
+  background-color: rgba(64, 192, 87, 0.1);
+}
+
+.fileReference {
+  composes: inlineReference;
+  color: #ae3ec9;
+}
+
+.fileReference:hover {
+  background-color: rgba(174, 62, 201, 0.1);
+}
+
+.homeworkReference {
+  composes: inlineReference;
+  color: #fd7e14;
+}
+
+.homeworkReference:hover {
+  background-color: rgba(253, 126, 20, 0.1);
+}
+
+.exerciseReference {
+  composes: inlineReference;
+  color: #12b886;
+}
+
+.exerciseReference:hover {
+  background-color: rgba(18, 184, 134, 0.1);
+}
+
+/* Style for inline math expressions to ensure they don't break inappropriately */
+.inlineMath {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* Ensure LaTeX expressions don't break mid-formula */
+.latexContainer {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* For longer expressions that need to wrap, ensure they wrap only at acceptable break points */
+.latexWrapper {
+  display: inline-block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

@@ -9,7 +9,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkDirective from 'remark-directive';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
-import { Avatar, Badge, Flex } from '@mantine/core';
+import { Avatar, Badge, Flex, Text } from '@mantine/core';
 import { visit } from 'unist-util-visit';
 import { Document, Exercise } from '@/types';
 import { IconChevronRight } from '@tabler/icons-react';
@@ -120,7 +120,6 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
 
         const pageRanges: { startDocument: Document | null, startExercise: Exercise | null, range: string }[] = [];
 
-
         if (documents.length > 0) {
             // Remove duplicates and sort
             const uniquePages = Array.from(new Set(documents.map(doc => doc.page))).sort((a, b) => a - b);
@@ -142,45 +141,53 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                 }
             }
         } else {
-            // Remove duplicates and sort
-            const uniqueChapterPages = Array.from(new Set(exercises.map(e => e.exercise_number))).sort((a, b) => a - b);
-            let chapterStart = uniqueChapterPages[0];
-            let chapterPrev = uniqueChapterPages[0];
+            // Check if these are chapter exercises or homework problems
+            const isHomeworkProblems = exercises.some(e => e && e.homework !== null);
+            const isChapterExercises = exercises.some(e => e && e.chapter !== null);
+            
+            if (isChapterExercises) {
+                // Process chapter exercises
+                const uniqueChapterPages = Array.from(new Set(exercises.map(e => e.exercise_number))).sort((a, b) => a - b);
+                let chapterStart = uniqueChapterPages[0];
+                let chapterPrev = uniqueChapterPages[0];
 
-            for (let i = 1; i <= uniqueChapterPages.length; i++) {
-                if (i === uniqueChapterPages.length || uniqueChapterPages[i] !== chapterPrev + 1) {
-                    const exercise = exercises.find(e => e.exercise_number === chapterStart);
-                    if (exercise) {
-                        pageRanges.push({ startDocument: null, startExercise: exercise, range: chapterStart === chapterPrev ? `${chapterStart}` : `${chapterStart}-${chapterPrev}` });
-                    }
-                    if (i < uniqueChapterPages.length) {
-                        chapterStart = uniqueChapterPages[i];
+                for (let i = 1; i <= uniqueChapterPages.length; i++) {
+                    if (i === uniqueChapterPages.length || uniqueChapterPages[i] !== chapterPrev + 1) {
+                        const exercise = exercises.find(e => e.exercise_number === chapterStart);
+                        if (exercise) {
+                            pageRanges.push({ startDocument: null, startExercise: exercise, range: chapterStart === chapterPrev ? `${chapterStart}` : `${chapterStart}-${chapterPrev}` });
+                        }
+                        if (i < uniqueChapterPages.length) {
+                            chapterStart = uniqueChapterPages[i];
+                            chapterPrev = uniqueChapterPages[i];
+                        }
+                    } else {
                         chapterPrev = uniqueChapterPages[i];
                     }
-                } else {
-                    chapterPrev = uniqueChapterPages[i];
                 }
             }
+            
+            if (isHomeworkProblems) {
+                // Process homework problems
+                const uniqueHomeworkPages = Array.from(new Set(exercises.map(e => e.problem_number))).sort((a, b) => a - b);
+                let homeworkStart = uniqueHomeworkPages[0];
+                let homeworkPrev = uniqueHomeworkPages[0];
 
-            const uniqueHomeworkPages = Array.from(new Set(exercises.map(e => e.problem_number))).sort((a, b) => a - b);
-            let homeworkStart = uniqueHomeworkPages[0];
-            let homeworkPrev = uniqueHomeworkPages[0];
-
-            for (let i = 1; i <= uniqueHomeworkPages.length; i++) {
-                if (i === uniqueHomeworkPages.length || uniqueHomeworkPages[i] !== homeworkPrev + 1) {
-                    const exercise = exercises.find(e => e.problem_number === homeworkStart);
-                    if (exercise) {
-                        pageRanges.push({ startDocument: null, startExercise: exercise, range: homeworkStart === homeworkPrev ? `${homeworkStart}` : `${homeworkStart}-${homeworkPrev}` });
-                    }
-                    if (i < uniqueHomeworkPages.length) {
-                        homeworkStart = uniqueHomeworkPages[i];
+                for (let i = 1; i <= uniqueHomeworkPages.length; i++) {
+                    if (i === uniqueHomeworkPages.length || uniqueHomeworkPages[i] !== homeworkPrev + 1) {
+                        const exercise = exercises.find(e => e.problem_number === homeworkStart);
+                        if (exercise) {
+                            pageRanges.push({ startDocument: null, startExercise: exercise, range: homeworkStart === homeworkPrev ? `${homeworkStart}` : `${homeworkStart}-${homeworkPrev}` });
+                        }
+                        if (i < uniqueHomeworkPages.length) {
+                            homeworkStart = uniqueHomeworkPages[i];
+                            homeworkPrev = uniqueHomeworkPages[i];
+                        }
+                    } else {
                         homeworkPrev = uniqueHomeworkPages[i];
                     }
-                } else {
-                    homeworkPrev = uniqueHomeworkPages[i];
                 }
             }
-
         }
 
         return pageRanges;
@@ -219,13 +226,13 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
 
     const renderBadges = (documents: Document[], exercises: Exercise[]) => {
         // find all of the distinct lectures and chapters in the group
-        const groupLectures = Array.from(new Set(documents.filter(doc => doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
-        const groupChapters = Array.from(new Set(documents.filter(doc => doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
-        const groupFiles = Array.from(new Set(documents.filter(doc => doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
+        const groupLectures = Array.from(new Set(documents.filter(doc => doc && doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
+        const groupChapters = Array.from(new Set(documents.filter(doc => doc && doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
+        const groupFiles = Array.from(new Set(documents.filter(doc => doc && doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
         // get the page ranges for each lecture and chapter
-        const lecturePageRanges = groupLectures.map(lecture => getPageRanges(documents.filter(doc => doc.lecture === lecture), [])).flat()
-        const chapterPageRanges = groupChapters.map(chapter => getPageRanges(documents.filter(doc => doc.chapter === chapter), [])).flat()
-        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc.file === file), [])).flat()
+        const lecturePageRanges = groupLectures.map(lecture => getPageRanges(documents.filter(doc => doc && doc.lecture === lecture), [])).flat()
+        const chapterPageRanges = groupChapters.map(chapter => getPageRanges(documents.filter(doc => doc && doc.chapter === chapter), [])).flat()
+        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc && doc.file === file), [])).flat()
         // combine the page ranges for each lecture and chapter
         const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges, ...filePageRanges]
 
@@ -246,94 +253,85 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                     const chapterDocument: boolean = pageRange.startDocument?.textbook !== null && pageRange.startDocument?.chapter !== null;
                     const fileDocument: boolean = pageRange.startDocument?.file !== null;
                     if (lectureDocument) {
+                        const label = getDocumentLabel(
+                            'lecture',
+                            pageRange.startDocument ?? undefined,
+                            undefined,
+                            pageRange.range
+                        );
                         return (
-                            <Badge
+                            <Text
                                 key={pageRangeIndex}
-                                color="blue"
-                                style={{ display: 'inline-block', margin: '0 0.25rem', cursor: 'pointer' }}
+                                c="blue"
+                                span
+                                className="context-reference-link"
+                                style={{ 
+                                    display: 'inline', 
+                                    margin: '0 0.25rem', 
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
                                     if (pageRange.startDocument?.lecture) {
                                         handleEnhancedDocumentClick('lectures', pageRange.startDocument.lecture, pageRange.startDocument.id);
                                     }
                                 }}
-                                leftSection={
-                                    <Avatar
-                                        src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${pageRange.startDocument?.lecture}/${pageRange.startDocument?.id}.png`}
-                                        size="xs"
-                                        radius="sm"
-                                    />
-                                }
-                                rightSection={
-                                    <IconChevronRight size={16} />
-                                }
                             >
-                                {getDocumentLabel(
-                                    'lecture',
-                                    pageRange.startDocument ?? undefined,
-                                    undefined,
-                                    pageRange.range
-                                )}
-                            </Badge>
+                                ({label})
+                            </Text>
                         );
                     } else if (chapterDocument) {
+                        const label = getDocumentLabel(
+                            'chapter',
+                            pageRange.startDocument ?? undefined,
+                            undefined,
+                            pageRange.range
+                        );
                         return (
-                            <Badge
+                            <Text
                                 key={pageRangeIndex}
-                                color="green"
-                                style={{ display: 'inline-block', margin: '0 0.25rem', cursor: 'pointer' }}
+                                c="green"
+                                span
+                                className="context-reference-link"
+                                style={{ 
+                                    display: 'inline', 
+                                    margin: '0 0.25rem', 
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
                                     if (pageRange.startDocument?.chapter) {
                                         handleEnhancedDocumentClick('chapters', pageRange.startDocument.chapter, pageRange.startDocument.id, pageRange.startDocument.textbook || undefined);
                                     }
                                 }}
-                                leftSection={
-                                    <Avatar
-                                        src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${pageRange.startDocument?.textbook}/${pageRange.startDocument?.id}.png`}
-                                        size="xs"
-                                        radius="sm"
-                                    />
-                                }
-                                rightSection={
-                                    <IconChevronRight size={16} />
-                                }
                             >
-                                {getDocumentLabel(
-                                    'chapter',
-                                    pageRange.startDocument ?? undefined,
-                                    undefined,
-                                    pageRange.range
-                                )}
-                            </Badge>
+                                ({label})
+                            </Text>
                         );
                     } else if (fileDocument) {
+                        const label = getDocumentLabel(
+                            'files',
+                            pageRange.startDocument ?? undefined,
+                            undefined,
+                            pageRange.range
+                        );
                         return (
-                            <Badge
+                            <Text
                                 key={pageRangeIndex}
-                                color="purple"
-                                style={{ display: 'inline-block', margin: '0 0.25rem', cursor: 'pointer' }}
+                                c="purple"
+                                span
+                                className="context-reference-link"
+                                style={{ 
+                                    display: 'inline', 
+                                    margin: '0 0.25rem', 
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
                                     if (pageRange.startDocument?.file) {
                                         handleEnhancedDocumentClick('files', pageRange.startDocument.file, pageRange.startDocument.id);
                                     }
                                 }}
-                                leftSection={
-                                    <Avatar
-                                        src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${pageRange.startDocument?.file}/${pageRange.startDocument?.id}.png`}
-                                        size="xs"
-                                        radius="sm"
-                                    />
-                                }
-                                rightSection={
-                                    <IconChevronRight size={16} />
-                                }
                             >
-                                {getDocumentLabel(
-                                    'files',
-                                    pageRange.startDocument ?? undefined,
-                                    undefined,
-                                    pageRange.range
-                                )}
-                            </Badge>
+                                ({label})
+                            </Text>
                         );
                     } else {
                         return null;
@@ -344,40 +342,48 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                     const homeworkExercise: boolean = pageRange.startExercise?.homework !== null;
 
                     if (homeworkExercise) {
+                        const label = getDocumentLabel(
+                            'homework-problem',
+                            undefined,
+                            pageRange.startExercise ?? undefined
+                        );
                         return (
-                            <Badge
+                            <Text
                                 key={pageRangeIndex}
-                                color="orange"
-                                style={{ display: 'inline-block', margin: '0 0.25rem', cursor: 'pointer' }}
+                                c="orange"
+                                span
+                                className="context-reference-link"
+                                style={{ 
+                                    display: 'inline', 
+                                    margin: '0 0.25rem', 
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
                                     if (pageRange.startExercise?.homework) {
                                         handleEnhancedDocumentClick('homeworks', pageRange.startExercise.homework, undefined, undefined, pageRange.startExercise.id);
                                     }
                                 }}
-                                leftSection={
-                                    <Avatar
-                                        src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${pageRange.startExercise?.homework}/${pageRange.startExercise?.id}.png`}
-                                        size="xs"
-                                        radius="sm"
-                                    />
-                                }
-                                rightSection={
-                                    <IconChevronRight size={16} />
-                                }
                             >
-                                {getDocumentLabel(
-                                    'homework-problem',
-                                    undefined,
-                                    pageRange.startExercise ?? undefined
-                                )}
-                            </Badge>
+                                ({label})
+                            </Text>
                         );
                     } if (chapterExercise) {
+                        const label = getDocumentLabel(
+                            'chapter-exercise',
+                            undefined,
+                            pageRange.startExercise ?? undefined
+                        );
                         return (
-                            <Badge
+                            <Text
                                 key={pageRangeIndex}
-                                color="teal"
-                                style={{ display: 'inline-block', margin: '0 0.25rem', cursor: 'pointer' }}
+                                c="teal"
+                                span
+                                className="context-reference-link"
+                                style={{ 
+                                    display: 'inline', 
+                                    margin: '0 0.25rem', 
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
                                     if (pageRange.startExercise?.chapter) {
                                         // Get the textbook ID for this chapter
@@ -385,25 +391,9 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                                         handleEnhancedDocumentClick('chapters', pageRange.startExercise.chapter, undefined, textbookId || undefined, pageRange.startExercise.id);
                                     }
                                 }}
-                                leftSection={
-                                    <Avatar
-                                        src={pageRange.startExercise?.chapter ?
-                                            `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${getTextbookForChapter(pageRange.startExercise.chapter)}/${pageRange.startExercise.id}.png` :
-                                            '/placeholder_image.svg'}
-                                        size="xs"
-                                        radius="sm"
-                                    />
-                                }
-                                rightSection={
-                                    <IconChevronRight size={16} />
-                                }
                             >
-                                {getDocumentLabel(
-                                    'chapter-exercise',
-                                    undefined,
-                                    pageRange.startExercise ?? undefined
-                                )}
-                            </Badge>
+                                ({label})
+                            </Text>
                         );
                     } else {
                         return null;
@@ -613,6 +603,45 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                 .mantine-Badge-label {
                     flex: 1 !important;
                     text-align: center !important;
+                }
+
+                /* Add this new style for the context references */
+                .context-reference-link {
+                    transition: text-decoration 0.2s ease;
+                }
+                
+                .context-reference-link:hover {
+                    text-decoration: underline !important;
+                }
+
+                /* Add improved handling for LaTeX content */
+                .katex {
+                    text-rendering: auto;
+                    white-space: nowrap !important;
+                }
+                
+                /* Better handling for inline math */
+                span.math.math-inline {
+                    white-space: nowrap;
+                    display: inline-block;
+                }
+                
+                /* Prevent splitting math expressions */
+                .latex-container .katex-display > .katex {
+                    display: inline-block;
+                    text-align: initial;
+                    white-space: nowrap;
+                }
+                
+                /* Ensure sub/superscripts display correctly */
+                .katex .msupsub {
+                    text-align: left;
+                }
+                
+                /* Ensure math symbols don't break across lines */
+                .math-wrapper {
+                    display: inline-block;
+                    white-space: nowrap;
                 }
             `}</style>
         </div>

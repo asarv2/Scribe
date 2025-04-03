@@ -1,7 +1,7 @@
+import React, { memo, useRef, useState, useEffect } from "react";
 import { ChatMessage, Document, File, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
-import { memo, useRef, useState, useEffect } from "react";
 import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash } from "@tabler/icons-react";
 import classes from './ChatInput.module.css';
 import WaveSurfer from "wavesurfer.js";
@@ -1244,6 +1244,18 @@ export const ChatInput = memo(({
       setEnterPressedDuringRecording(false);
     }
   }, [enterPressedDuringRecording, transcribing, isRecording, recordingMode, loading, activeChat.prompt, recordedVideos.length, onSend]);
+
+  // Check if any context is added
+  const hasContext = React.useMemo(() => {
+    return (
+      (activeChat.context.lectures && activeChat.context.lectures.length > 0) ||
+      (activeChat.context.chapters && activeChat.context.chapters.length > 0) ||
+      (activeChat.context.homeworks && activeChat.context.homeworks.length > 0) ||
+      (activeChat.context.exercises && activeChat.context.exercises.length > 0) ||
+      (activeChat.context.files && activeChat.context.files.length > 0)
+    );
+  }, [activeChat.context]);
+
   return (
     <Stack gap={"md"}>
       {!isRecording && <Box
@@ -1268,6 +1280,21 @@ export const ChatInput = memo(({
           setRecordedVideos={setRecordedVideos}
         />
       </Box>}
+
+      {/* Show context hint only when no context is added */}
+      {!hasContext && (
+        <Text 
+          size="xs" 
+          c="dimmed" 
+          ta="center" 
+          style={{ 
+            animation: 'fadeIn 0.5s ease-in-out',
+            marginBottom: -5
+          }}
+        >
+          Click or drag to add context
+        </Text>
+      )}
 
       <Box className={isRecording ? classes.inputContainer : ''}>
         {(videoStream || (videoRef.current && (videoRef.current.srcObject || (videoRef.current.src && videoRef.current.src !== '')) || recordedVideos.length > 0)) && (

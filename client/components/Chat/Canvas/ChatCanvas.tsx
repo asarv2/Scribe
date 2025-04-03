@@ -484,6 +484,9 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     useEffect(() => {
         if (chatId === "new") return;
 
+        // Add a Set to track message IDs we've already seen
+        const processedMessageIds = new Set();
+
         const channel = supabase
             .channel(`realtime-messages-${chatId}`)
             .on(
@@ -497,6 +500,22 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 async (payload) => {
                     console.log("Received message update:", payload);
 
+                    // Check if we've already processed this message update
+                    const updateKey = `${payload.eventType}-${payload.new.id}`;
+                    if (processedMessageIds.has(updateKey)) {
+                        console.log("Skipping duplicate message update:", updateKey);
+                        return;
+                    }
+                    
+                    // Mark this message update as processed
+                    processedMessageIds.add(updateKey);
+                    
+                    // Clear old entries if the set gets too large (optional cleanup)
+                    if (processedMessageIds.size > 100) {
+                        const oldestEntries = Array.from(processedMessageIds).slice(0, 50);
+                        oldestEntries.forEach(entry => processedMessageIds.delete(entry));
+                    }
+
                     // Immediately update the cache with the new data
                     queryClient.setQueryData(
                         ["messages", chatId],
@@ -505,6 +524,12 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
                             // For INSERT, add the new message
                             if (payload.eventType === 'INSERT') {
+                                // Check if this message already exists in our data
+                                const messageExists = oldData.some((msg: any) => msg.id === payload.new.id);
+                                if (messageExists) {
+                                    console.log("Message already exists in cache, not adding duplicate");
+                                    return oldData;
+                                }
                                 return [...oldData, payload.new];
                             }
 
@@ -535,7 +560,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             supabase.removeChannel(channel);
         };
     }, [chatId, queryClient, supabase]);
-
 
     // Set up realtime subscription for chat
     useEffect(() => {
