@@ -13,9 +13,9 @@ export default function MicrosoftLoginButton({ text = "Student", professor = fal
     const handleSignInWithMicrosoft = async () => {
         setMicrosoftButtonLoading(true);
         try {
-            // const { success, error, url } = await (professor ? signInWithMicrosoftProfessor(`${window.location.origin}/auth/callback`) : signInWithMicrosoft(`${window.location.origin}/auth/callback`));
+            const { success, error, url } = await (professor ? signInWithMicrosoftProfessor(`${window.location.origin}/auth/callback`) : signInWithMicrosoft(`${window.location.origin}/auth/callback`));
             // temporary fix for professor login
-            const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
+            // const { success, error, url } = await signInWithMicrosoft(`${window.location.origin}/auth/callback`);
             if (success && url) {
                 router.push(url);
             } else {

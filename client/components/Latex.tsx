@@ -219,13 +219,13 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
 
     const renderBadges = (documents: Document[], exercises: Exercise[]) => {
         // find all of the distinct lectures and chapters in the group
-        const groupLectures = Array.from(new Set(documents.filter(doc => doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
-        const groupChapters = Array.from(new Set(documents.filter(doc => doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
-        const groupFiles = Array.from(new Set(documents.filter(doc => doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
+        const groupLectures = Array.from(new Set(documents.filter(doc => doc ? doc.lecture !== null : false).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
+        const groupChapters = Array.from(new Set(documents.filter(doc => doc ? doc.textbook !== null && doc.chapter !== null : false).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
+        const groupFiles = Array.from(new Set(documents.filter(doc => doc ? doc.file !== null : false).map(doc => doc.file).filter((fileId) => fileId !== null)))
         // get the page ranges for each lecture and chapter
-        const lecturePageRanges = groupLectures.map(lecture => getPageRanges(documents.filter(doc => doc.lecture === lecture), [])).flat()
-        const chapterPageRanges = groupChapters.map(chapter => getPageRanges(documents.filter(doc => doc.chapter === chapter), [])).flat()
-        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc.file === file), [])).flat()
+        const lecturePageRanges = groupLectures.map(lecture => getPageRanges(documents.filter(doc => doc ? doc.lecture === lecture : false), [])).flat()
+        const chapterPageRanges = groupChapters.map(chapter => getPageRanges(documents.filter(doc => doc ? doc.chapter === chapter : false), [])).flat()
+        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc ? doc.file === file : false), [])).flat()
         // combine the page ranges for each lecture and chapter
         const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges, ...filePageRanges]
 

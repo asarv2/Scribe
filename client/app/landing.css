@@ -1,0 +1,17 @@
+/* Landing page specific styles */
+
+/* Custom text selection color for landing page */
+.landing-page ::selection {
+  background-color: rgba(25, 118, 210, 0.7); /* Blue selection background */
+  color: white; /* White text color when selected */
+}
+
+.landing-page ::-moz-selection {
+  background-color: rgba(25, 118, 210, 0.7);
+  color: white;
+}
+
+/* Additional landing page styles can be added here */
+.landing-page {
+  scroll-behavior: smooth;
+} 
