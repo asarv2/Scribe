@@ -309,7 +309,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             <Card
                 withBorder
                 p="md"
-                w={viewerMode.open ? "100%" : "60%"}
+                w={"100%"}
                 ref={cardRef}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}

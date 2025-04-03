@@ -179,7 +179,7 @@ export default function FigureViewer({
 
   return (figure.generation_status === 'idle' || figure.generation_status === 'generating' || figure.generation_status === 'error' || figure.generation_status === 'complete') && (
     <>
-      <Card withBorder p="md" w={viewerMode.open ? "50%" : "40%"} key={"figure-" + figure.id}>
+      <Card withBorder p="md" w={"100%"} key={"figure-" + figure.id}>
         {renderContent()}
       </Card>
 

@@ -421,7 +421,7 @@ export const MessageList = memo(({
     return (
       <Stack>
         <Flex gap="md" align="flex-start">
-          <Stack gap="xs" align="flex-start" style={{ maxWidth: "65%" }}>
+          <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
             <Group gap="xs" align="center">
               <Avatar
                 src={professor ? getAvatarUrl(professor.id) : undefined}
@@ -1100,7 +1100,7 @@ export const MessageList = memo(({
 
               {/* AI response */}
               <Flex gap="md" align="flex-start">
-                <Stack gap="xs" align="flex-start" style={{ maxWidth: "65%" }}>
+                <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
                   {/* AI info container */}
                   <Group gap="xs" align="center">
                     <Avatar
@@ -1135,8 +1135,8 @@ export const MessageList = memo(({
                       <Loader size="sm" />
                     </Group>
                   ) : (
-                    <Stack gap="xs">
-                      <Box key={index}>
+                    <Stack gap="xs" style={{ width: "100%" }}>
+                      <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
                         <Stack>
                           {splitTextByTags(splitTextByDocuments(
                             filterCodeBlocks(message.response),

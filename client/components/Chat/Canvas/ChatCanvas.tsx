@@ -151,44 +151,44 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     // Add this state to track message submission
     const getLectureContext = () => {
-        // const previousMessagesLectures = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.lectures) ? message.lectures : []
-        // ) ?? [];
+        const previousMessagesLectures = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.lectures) ? message.lectures : []
+        ) ?? [];
 
-        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? [])]));
+        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? []), ...previousMessagesLectures]));
         return allLectures;
     }
 
     const getChapterContext = () => {
-        // const previousMessagesChapters = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.chapters) ? message.chapters : []
-        // ) ?? [];
+        const previousMessagesChapters = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.chapters) ? message.chapters : []
+        ) ?? [];
 
         const exerciseChapters = activeChat.context.exercises.map(e => exercises?.find(ex => ex.id === e)?.chapter).filter((chapter): chapter is string => chapter !== undefined);
 
-        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters]));
+        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters, ...previousMessagesChapters]));
         return allChapters;
     }
 
     const getHomeworkContext = () => {
-        // const previousMessagesHomeworks = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.homeworks) ? message.homeworks : []
-        // ) ?? [];
+        const previousMessagesHomeworks = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.homeworks) ? message.homeworks : []
+        ) ?? [];
 
-        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? [])]));
+        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
         return allHomeworks;
     }
 
     const getFileContext = () => {
-        // const previousMessagesFiles = messages?.flatMap(message =>
-        //     // Check if references exists and is an array before accessing
-        //     Array.isArray(message.files) ? message.files : []
-        // ) ?? [];
+        const previousMessagesFiles = messages?.flatMap(message =>
+            // Check if references exists and is an array before accessing
+            Array.isArray(message.files) ? message.files : []
+        ) ?? [];
 
-        const allFiles = Array.from(new Set([...(activeChat.context.files ?? [])]));
+        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles]));
         return allFiles;
 
     }
@@ -484,9 +484,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     useEffect(() => {
         if (chatId === "new") return;
 
-        // Add a Set to track message IDs we've already seen
-        const processedMessageIds = new Set();
-
         const channel = supabase
             .channel(`realtime-messages-${chatId}`)
             .on(
@@ -499,23 +496,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                 },
                 async (payload) => {
                     console.log("Received message update:", payload);
-
-                    // Check if we've already processed this message update
-                    const updateKey = `${payload.eventType}-${(payload.new as Message).id}`;
-                    if (processedMessageIds.has(updateKey)) {
-                        console.log("Skipping duplicate message update:", updateKey);
-                        return;
-                    }
-                    
-                    // Mark this message update as processed
-                    processedMessageIds.add(updateKey);
-                    
-                    // Clear old entries if the set gets too large (optional cleanup)
-                    if (processedMessageIds.size > 100) {
-                        const oldestEntries = Array.from(processedMessageIds).slice(0, 50);
-                        oldestEntries.forEach(entry => processedMessageIds.delete(entry));
-                    }
-
                     // Immediately update the cache with the new data
                     queryClient.setQueryData(
                         ["messages", chatId],
@@ -655,42 +635,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             }));
         }
     }, [classId]);
-
-    // useEffect(() => {
-    //     if (!messages) return;
-    //     // get only latest messages
-    //     const previousMessagesLectures = messages?.flatMap(message =>
-    //         // Check if references exists and is an array before accessing
-    //         Array.isArray(message.lectures) ? message.lectures : []
-    //     ) ?? [];
-
-    //     const previousMessagesChapters = messages?.flatMap(message =>
-    //         // Check if references exists and is an array before accessing
-    //         Array.isArray(message.chapters) ? message.chapters : []
-    //     ) ?? [];
-
-    //     const previousMessagesHomeworks = messages?.flatMap(message =>
-    //         // Check if references exists and is an array before accessing
-    //         Array.isArray(message.homeworks) ? message.homeworks : []
-    //     ) ?? [];
-
-    //     const previousMessagesFiles = messages?.flatMap(message =>
-    //         // Check if references exists and is an array before accessing
-    //         Array.isArray(message.files) ? message.files : []
-    //     ) ?? [];
-
-    //     setActiveChat(prev => ({
-    //         ...prev,
-    //         context: {
-    //             ...prev.context,
-    //             lectures: previousMessagesLectures,
-    //             chapters: previousMessagesChapters,
-    //             homeworks: previousMessagesHomeworks,
-    //             files: previousMessagesFiles,
-    //         }
-    //     }));
-
-    // }, [messages]);
 
     return (
         <ClassLayout classId={classId}>

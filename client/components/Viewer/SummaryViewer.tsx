@@ -195,7 +195,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
     };
 
     return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'error' || summary.generation_status === 'complete') && (
-        <Card withBorder p="md" w={viewerMode.open ? "100%" : "60%"}>
+        <Card withBorder p="md" w={"100%"}>
             {renderContent()}
         </Card>
     );

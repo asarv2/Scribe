@@ -276,7 +276,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                                     }
                                 }}
                             >
-                                ({label})
+                                {`[${label}]`}
                             </Text>
                         );
                     } else if (chapterDocument) {
@@ -303,7 +303,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                                     }
                                 }}
                             >
-                                ({label})
+                                {`[${label}]`}
                             </Text>
                         );
                     } else if (fileDocument) {
@@ -330,7 +330,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                                     }
                                 }}
                             >
-                                ({label})
+                                {`[${label}]`}
                             </Text>
                         );
                     } else {
@@ -364,7 +364,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                                     }
                                 }}
                             >
-                                ({label})
+                                {`[${label}]`}
                             </Text>
                         );
                     } if (chapterExercise) {
@@ -392,7 +392,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                                     }
                                 }}
                             >
-                                ({label})
+                                {`[${label}]`}
                             </Text>
                         );
                     } else {
