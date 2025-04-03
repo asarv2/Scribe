@@ -22,7 +22,7 @@ import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 import { TypeAnimation } from 'react-type-animation';
 
-import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, Exercise, FileType } from "@/types";
+import { Chapter, ChatMessage, ChatType, Subchapter, Document, ViewerMode, Exercise, FileType, Message } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
@@ -501,7 +501,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     console.log("Received message update:", payload);
 
                     // Check if we've already processed this message update
-                    const updateKey = `${payload.eventType}-${payload.new.id}`;
+                    const updateKey = `${payload.eventType}-${(payload.new as Message).id}`;
                     if (processedMessageIds.has(updateKey)) {
                         console.log("Skipping duplicate message update:", updateKey);
                         return;

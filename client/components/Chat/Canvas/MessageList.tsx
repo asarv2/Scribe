@@ -758,9 +758,7 @@ export const MessageList = memo(({
               className="inline-reference lecture-reference"
               style={{ 
                 cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease' 
-              }}
-              sx={{
+                transition: 'text-decoration 0.2s ease',
                 '&:hover': {
                   textDecoration: 'underline',
                 }
@@ -793,12 +791,11 @@ export const MessageList = memo(({
               className="inline-reference chapter-reference"
               style={{ 
                 cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease' 
-              }}
-              sx={{
+                transition: 'text-decoration 0.2s ease', 
                 '&:hover': {
                   textDecoration: 'underline',
                 }
+
               }}
               onClick={() => {
                 if (chapter.textbook) {
@@ -834,9 +831,7 @@ export const MessageList = memo(({
               className="inline-reference homework-reference"
               style={{ 
                 cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease' 
-              }}
-              sx={{
+                transition: 'text-decoration 0.2s ease',
                 '&:hover': {
                   textDecoration: 'underline',
                 }
@@ -869,9 +864,7 @@ export const MessageList = memo(({
               className="inline-reference file-reference"
               style={{ 
                 cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease' 
-              }}
-              sx={{
+                transition: 'text-decoration 0.2s ease',
                 '&:hover': {
                   textDecoration: 'underline',
                 }
@@ -1042,7 +1035,7 @@ export const MessageList = memo(({
           {/* Deduplicate messages before rendering them */}
           {(() => {
             // Deduplicate messages based on content similarity
-            const uniqueMessages = [];
+            const uniqueMessages: Message[] = [];
             const seenResponses = new Set();
             
             messages?.forEach((message) => {
@@ -1098,9 +1091,6 @@ export const MessageList = memo(({
                     {/* Display message-specific context badges */}
 
                     {/* Show auto-added context badges only for the first message */}
-                    {/* {index === 0 && !message.lectures?.length && !message.chapters?.length && !message.homeworks?.length &&
-                          renderAutoAddedContextBadges()
-                        } */}
                   </Card>}
                   {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0 || message.files?.length > 0) &&
                     renderMessageContext(message)
