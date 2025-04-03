@@ -51,68 +51,89 @@ export default function Hero() {
             style={{
                 padding: isMobile ? "40px 20px" : "80px 40px",
                 position: "relative",
-                overflow: "hidden"
+                overflow: "hidden",
+                minHeight: "90vh",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "flex-start"
             }}
         >
-            <Container size="lg" fluid>
-                <Grid gutter={40} align="center">
-                    <Grid.Col span={{ base: 12, md: 6 }}>
-                        <Stack gap="xl">
-                            <Title order={1} size={isMobile ? 32 : 48} className={styles.heroTitle}>
-                                Your AI-Powered Learning Assistant
-                            </Title>
-                            <Text size="xl" c="dimmed" className={styles.heroText}>
-                                Scribe helps students succeed by providing personalized learning support using your teacher's content.
-                            </Text>
-                            <Group mt="md">
-                                {user && profile ? (
-                                    <>
-                                        {profile?.professor || profile?.admin ? (
-                                            <Link href={`/classes/c/${firstClass?.id}`}>
-                                                <Button size="lg" radius="md" className={styles.ctaButton}>
-                                                    Get Started
-                                                </Button>
-                                            </Link>
-                                        ) : (
-                                            <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
-                                                <Button size="lg" radius="md" className={styles.ctaButton}>
-                                                    Get Started
-                                                </Button>
-                                            </Link>
-                                        )}
-                                    </>
+            <div className={styles.gradientBackground}></div>
+            <div className={styles.noiseOverlay}></div>
+            
+            <Container size="lg" className={styles.heroContent}>
+                <Stack gap="xl" align="center" style={{ textAlign: "center", maxWidth: "900px", margin: "0 auto" }}>
+                    <Title order={1} className={styles.heroTitle}>
+                        The AI Teaching Assistant
+                    </Title>
+                    {/* <Text size="xl" c="dimmed" className={styles.heroText}>
+                        Scribe is an AI-TA meant for both <span className={styles.studentHighlight}>students</span> and <span className={styles.professorHighlight}>professors</span>. Instantly access a 24/7 office hour chatbox, study prep generation, detailed analytics, and more.
+                    </Text> */}
+                    <Text size="xl" c="dimmed" className={styles.heroText}>
+                        An AI-TA with 24/7 availability, smart study tools, and powerful analytics, Scribe helps you learn like never before.
+                    </Text>
+                    <Group mt="md" justify="center" className={styles.ctaButtonContainer}>
+                        {user && profile ? (
+                            <>
+                                {profile?.professor || profile?.admin ? (
+                                    <Link href={`/classes/c/${firstClass?.id}`}>
+                                        <Button size="lg" radius="md" className={styles.ctaButton}>
+                                            Get Started
+                                        </Button>
+                                    </Link>
                                 ) : (
-                                    <>
-                                        <Link href="/login">
-                                            <Button size="lg" radius="md" className={styles.ctaButton}>
-                                                Get Started
-                                            </Button>
-                                        </Link>
-                                    </>
+                                    <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
+                                        <Button size="lg" radius="md" className={styles.ctaButton}>
+                                            Get Started
+                                        </Button>
+                                    </Link>
                                 )}
-                            </Group>
-                        </Stack>
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 6 }}>
-                        <Box
-                            className={styles.imageContainer}
-                            style={{
-                                borderRadius: "12px",
-                                overflow: "hidden",
-                                boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
-                            }}
-                        >
-                            <Image
-                                src="/images/scribehome.png"
-                                alt="Students using Scribe AI"
-                                height={350}
-                                fallbackSrc="https://placehold.co/600x350?text=Scribe+AI+Learning+Assistant"
-                                className={styles.heroImage}
-                            />
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login">
+                                    <Button size="lg" radius="md" className={styles.ctaButton}>
+                                        Get Started
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
+                    </Group>
+                </Stack>
+                
+                <Box className={styles.videoWrapper}>
+                    <Box className={styles.videoContainer}>
+                        <Box className={styles.videoItem}>
+                            <video 
+                                className={styles.videoElement}
+                                autoPlay 
+                                loop 
+                                muted 
+                                playsInline
+                            >
+                                <source src="/videos/scribe-student-demo.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                            <div className={`${styles.videoLabel} ${styles.studentLabel}`}>Student</div>
                         </Box>
-                    </Grid.Col>
-                </Grid>
+                        <Box className={styles.videoItemIndigo}>
+                            <video 
+                                className={styles.videoElement}
+                                autoPlay 
+                                loop 
+                                muted 
+                                playsInline
+                            >
+                                <source src="/videos/scribe-professor-demo.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                            <div className={`${styles.videoLabel} ${styles.professorLabel}`}>Professor</div>
+                        </Box>
+                    </Box>
+                </Box>
             </Container>
+            <div className={styles.gradientOverlay}></div>
         </Box>
     );
 }

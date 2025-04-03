@@ -236,7 +236,7 @@ class ProblemsProcessor(BaseProcessor):
             
             CRITICAL REQUIREMENTS:
             1. This course is a graduate level class, so you will need to generate complex, multi-step questions.
-            2. Questions should directly relate to the core content of the material.
+            2. The questions should be directly related to the core content of the material.
             3. Make each explanation complete and self-contained.
             4. Each question should be difficult to answer correctly, if the student is not familiar with the content.
             5. Make sure the questions cover a diverse set of concepts from the material."""
@@ -449,7 +449,7 @@ class ProblemsProcessor(BaseProcessor):
             with open(os.path.join(QUESTIONS_DIR, f"{question_id}.txt"), "w") as f:
                 f.write("SYSTEM PROMPT: " + system_message + "\n\n" + "INPUT PROMPT: " + prompt)
             
-            # Use a faster model with higher RPM
+            # Use a faster model with higher RPM. Temp trying
             response = await self.robust_generate(system_message, message, model="gemini-2.0-flash-lite")
             print(f"Successfully generated response for {question_id}")
             return response
@@ -528,7 +528,7 @@ class ProblemsProcessor(BaseProcessor):
                         self.questions[question_id].append([question_obj])
                         
             except Exception as e:
-                print(f"Error processing question block: {str(e)}")
+                print(f"Error processing question block: {str(e.with_traceback())}")
 
     def clean_frq_result(
         self,
@@ -581,7 +581,7 @@ class ProblemsProcessor(BaseProcessor):
                         self.questions[question_id].append([question_obj])
                         
             except Exception as e:
-                print(f"Error processing question block: {str(e)}")
+                print(f"Error processing question block: {str(e.with_traceback())}")
 
     def process_mcq_block(
         self,

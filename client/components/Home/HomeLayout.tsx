@@ -17,12 +17,13 @@ export function HomeLayout({ children }: HomeLayoutProps) {
     return (
         <AppShell
             header={{ height: 60 }}
+            padding={0}
         >
-            <AppShell.Header>
+            <AppShell.Header style={{ position: 'sticky', top: 0, zIndex: 100 }}>
                 <HomeHeader />
             </AppShell.Header>
 
-            <AppShell.Main>
+            <AppShell.Main style={{ padding: 0, margin: 0 }}>
                 {children}
             </AppShell.Main>
 

@@ -151,44 +151,44 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     // Add this state to track message submission
     const getLectureContext = () => {
-        const previousMessagesLectures = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.lectures) ? message.lectures : []
-        ) ?? [];
+        // const previousMessagesLectures = messages?.flatMap(message =>
+        //     // Check if references exists and is an array before accessing
+        //     Array.isArray(message.lectures) ? message.lectures : []
+        // ) ?? [];
 
-        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? []), ...previousMessagesLectures]));
+        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? [])]));
         return allLectures;
     }
 
     const getChapterContext = () => {
-        const previousMessagesChapters = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.chapters) ? message.chapters : []
-        ) ?? [];
+        // const previousMessagesChapters = messages?.flatMap(message =>
+        //     // Check if references exists and is an array before accessing
+        //     Array.isArray(message.chapters) ? message.chapters : []
+        // ) ?? [];
 
         const exerciseChapters = activeChat.context.exercises.map(e => exercises?.find(ex => ex.id === e)?.chapter).filter((chapter): chapter is string => chapter !== undefined);
 
-        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters, ...previousMessagesChapters]));
+        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters]));
         return allChapters;
     }
 
     const getHomeworkContext = () => {
-        const previousMessagesHomeworks = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.homeworks) ? message.homeworks : []
-        ) ?? [];
+        // const previousMessagesHomeworks = messages?.flatMap(message =>
+        //     // Check if references exists and is an array before accessing
+        //     Array.isArray(message.homeworks) ? message.homeworks : []
+        // ) ?? [];
 
-        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
+        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? [])]));
         return allHomeworks;
     }
 
     const getFileContext = () => {
-        const previousMessagesFiles = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.files) ? message.files : []
-        ) ?? [];
+        // const previousMessagesFiles = messages?.flatMap(message =>
+        //     // Check if references exists and is an array before accessing
+        //     Array.isArray(message.files) ? message.files : []
+        // ) ?? [];
 
-        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles]));
+        const allFiles = Array.from(new Set([...(activeChat.context.files ?? [])]));
         return allFiles;
 
     }
@@ -658,6 +658,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
 
     // useEffect(() => {
     //     if (!messages) return;
+    //     // get only latest messages
     //     const previousMessagesLectures = messages?.flatMap(message =>
     //         // Check if references exists and is an array before accessing
     //         Array.isArray(message.lectures) ? message.lectures : []

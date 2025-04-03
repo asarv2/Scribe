@@ -11,15 +11,18 @@ import ForStudents from "@/components/Landing/ForStudents";
 import ForTeachers from "@/components/Landing/ForTeachers";
 import HowItWorks from "@/components/Landing/HowItWorks";
 import CallToAction from "@/components/Landing/CallToAction";
+import './landing.css';
 
 export default function Landing() {
   return (
-    <HomeLayout>
-      <Hero />
-      <ForStudents />
-      <ForTeachers />
-      <HowItWorks />
-      <CallToAction />
-    </HomeLayout>
+    <div className="landing-page">
+      <HomeLayout>
+        <Hero />
+        <ForStudents />
+        <ForTeachers />
+        <HowItWorks />
+        <CallToAction />
+      </HomeLayout>
+    </div>
   );
 }

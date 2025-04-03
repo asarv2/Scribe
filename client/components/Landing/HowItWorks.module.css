@@ -2,15 +2,139 @@
 .container {
   @mixin light {
     background-color: #f8f9fa;
+    background-image: linear-gradient(to bottom, #1A1B1E, #f8f9fa 250px);
   }
   
   @mixin dark {
     background-color: #1A1B1E;
+    background-image: linear-gradient(to bottom, #0a0c1b, #1A1B1E 250px);
+  }
+  position: relative;
+  overflow: hidden;
+}
+
+.backgroundGradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 50%, rgba(95, 75, 255, 0.1), transparent 70%),
+              radial-gradient(circle at 70% 70%, rgba(66, 165, 245, 0.1), transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  
+  @mixin light {
+    color: #333;
+    background: linear-gradient(to right, #333, #5F4BFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  @mixin dark {
+    color: #fff;
+    background: linear-gradient(to right, #ffffff, #a2d2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
-.card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.carousel {
+  @mixin hover {
+    .carouselControls {
+      opacity: 1;
+    }
+  }
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.carouselControls {
+  transition: opacity 150ms ease;
+  opacity: 0.7;
+}
+
+.carousel :global(.mantine-Carousel-control) {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
+  @mixin light {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+  }
+  
+  @mixin dark {
+    background-color: rgba(50, 50, 50, 0.8);
+    color: #fff;
+  }
+}
+
+.carousel :global(.mantine-Carousel-control svg) {
+  width: 24px;
+  height: 24px;
+}
+
+.carouselIndicator {
+  width: 8px;
+  height: 8px;
+  transition: width 250ms ease;
+  border-radius: 4px;
+  margin: 0 4px;
+  z-index: 20;
+  
+  @mixin light {
+    background-color: rgba(200, 200, 200, 0.7);
+    
+    &[data-active] {
+      background-color: var(--mantine-color-blue-6);
+    }
+  }
+  
+  @mixin dark {
+    background-color: rgba(100, 100, 100, 0.7);
+    
+    &[data-active] {
+      background-color: var(--mantine-color-blue-4);
+    }
+  }
+
+  &[data-active] {
+    width: 24px;
+  }
+}
+
+.carousel :global(.mantine-Carousel-indicators) {
+  bottom: 16px;
+  z-index: 20;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.carouselSlide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.imageCard {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
   
   @mixin light {
     background-color: #ffffff;
@@ -23,9 +147,7 @@
   }
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  
+.imageCard:hover {
   @mixin light {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   }
@@ -37,29 +159,93 @@
 
 .avatar {
   transition: transform 0.3s ease;
+  margin-bottom: 1rem;
 }
 
-.card:hover .avatar {
+.imageCard:hover .avatar {
   transform: scale(1.1);
 }
 
 .imageWrapper {
   position: relative;
-  width: 120px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.card:hover .imageWrapper {
-  transform: scale(1.05);
+  aspect-ratio: 16/9;
 }
 
 .stepImage {
-  object-fit: contain;
+  object-fit: cover;
   width: 100%;
   height: 100%;
+}
+
+.imageCard:hover .stepImage {
+  transform: none;
+}
+
+.contentCol {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+}
+
+.stepsContent {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stepContent {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.5s ease, height 0.5s ease;
+}
+
+.activeStep {
+  opacity: 1;
+  height: auto;
+}
+
+.stepTitle {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  
+  @mixin light {
+    color: #333;
+    background: linear-gradient(to right, #333, #5F4BFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  @mixin dark {
+    color: #fff;
+    background: linear-gradient(to right, #ffffff, #a2d2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.stepDescription {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  
+  @mixin light {
+    color: #555;
+  }
+  
+  @mixin dark {
+    color: #ddd;
+  }
 }
 
 @media (max-width: 768px) {
@@ -68,7 +254,19 @@
     padding-bottom: 40px;
   }
   
-  .card {
+  .stepContent {
     margin-bottom: 20px;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  
+  .stepTitle {
+    font-size: 1.5rem;
+  }
+  
+  .stepDescription {
+    font-size: 1rem;
   }
 }

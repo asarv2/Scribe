@@ -1,51 +1,284 @@
 /* ForTeachers.module.css */
 .container {
+  position: relative;
+  
   @mixin light {
-    background-color: #f8f9fa;
+    background-color: #ffffff;
+    background-image: linear-gradient(to top, #0a0c1b, #ffffff 250px);
   }
   
   @mixin dark {
     background-color: #1A1B1E;
+    background-image: linear-gradient(to top, #0a0c1b, #1A1B1E 250px);
   }
 }
 
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  background: linear-gradient(to right, #ffffff, #a2d2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(162, 210, 255, 0.5);
+  animation: fadeIn 0.8s ease-out forwards;
+
+  @mixin light {
+    color: #333;
+  }
+  
+  @mixin dark {
+    color: #fff;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.backgroundStripes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 40px,
+    rgba(95, 75, 255, 0.03) 40px,
+    rgba(95, 75, 255, 0.03) 80px
+  );
+  z-index: 0;
+  overflow: hidden;
+}
+
+.backgroundStripes::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(95, 75, 255, 0.05) 0%,
+    transparent 70%
+  );
+}
+
+/* Changed from topFade to bottomFade for reversed gradient */
+.bottomFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, rgba(10, 12, 27, 0.5) 90%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cardsContainer {
+  animation: fadeIn 0.8s ease-out 0.3s forwards;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 450px;
+  margin: 0 auto;
+  max-width: 1200px;
+  gap: 20px;
+}
+
+.cardWrapper {
+  width: 30%;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  padding: 10px;
+}
+
+.activeCardWrapper {
+  width: 36%;
+  transform: translateY(-25px) scale(1.05) !important;
+  z-index: 10;
+}
+
+.inactiveCardWrapper {
+  width: 27%;
+  opacity: 0.65;
+  filter: blur(1px);
+  transform: translateY(15px) !important;
+}
+
 .card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.4s ease;
+  overflow: visible;
+  border: none;
+  height: 100%;
   
   @mixin light {
     background-color: #ffffff;
-    border-color: #e9ecef;
   }
   
   @mixin dark {
     background-color: #25262b;
-    border-color: #2c2e33;
   }
 }
 
-.card:hover {
-  transform: translateY(-5px);
+.cardContent {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Added video container styles */
+.videoContainer {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
   
   @mixin light {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background-color: rgba(95, 75, 255, 0.05);
   }
   
   @mixin dark {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    background-color: rgba(95, 75, 255, 0.1);
   }
 }
 
-.avatar {
-  transition: transform 0.3s ease;
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-.card:hover .avatar {
-  transform: scale(1.1);
+.activeCardWrapper .video {
+  transform: scale(1.05);
+}
+
+.cardBorder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  border: 2px solid transparent;
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    transparent
+  ), 
+  linear-gradient(90deg, #5F4BFF, #9F8FFF, #5F4BFF);
+  
+  @mixin light {
+    background-image: linear-gradient(
+      to right,
+      #ffffff,
+      #ffffff
+    ), 
+    linear-gradient(90deg, #5F4BFF, #9F8FFF, #5F4BFF);
+  }
+  
+  @mixin dark {
+    background-image: linear-gradient(
+      to right,
+      #25262b,
+      #25262b
+    ), 
+    linear-gradient(90deg, #5F4BFF, #9F8FFF, #5F4BFF);
+  }
+  
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  background-size: 200% 200%;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.card:hover .cardBorder {
+  opacity: 1;
+  animation: gradientBorder 3s ease infinite;
+}
+
+.activeCard {
+  transform: scale(1.05);
+  
+  @mixin light {
+    box-shadow: 0 20px 40px rgba(95, 75, 255, 0.2);
+  }
+  
+  @mixin dark {
+    box-shadow: 0 20px 40px rgba(95, 75, 255, 0.4);
+  }
+}
+
+@keyframes gradientBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @media (max-width: 768px) {
   .container {
     padding-top: 40px;
     padding-bottom: 40px;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  
+  .cardsContainer {
+    flex-direction: column;
+    min-height: auto;
+    gap: 30px;
+  }
+  
+  .cardWrapper {
+    width: 100%;
+    padding: 0;
+  }
+  
+  .activeCardWrapper {
+    width: 100%;
+    transform: translateY(-5px) scale(1.02) !important;
+    filter: blur(0);
+  }
+  
+  .inactiveCardWrapper {
+    width: 100%;
+    opacity: 0.9;
+    filter: blur(0);
+    transform: none !important;
+  }
+  
+  .videoContainer {
+    height: 140px;
+  }
+  
+  .cardContent {
+    max-width: 100%;
   }
 }

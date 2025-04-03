@@ -6,16 +6,11 @@
  */
 
 import { Button } from "@mantine/core";
-
 import { getClasses } from "@/utils/queries/get-classes";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { Card, Group, Stack, Text, Title } from "@mantine/core";
-
-import { Container } from "@mantine/core";
-
-import { Box } from "@mantine/core";
+import { Box, Container, Image } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
@@ -49,47 +44,51 @@ export default function CallToAction() {
     const firstClass = getFilteredClasses()?.[0];
 
     return (
-        <Box style={{
-            padding: isMobile ? "40px 20px" : "80px 40px",
-            position: "relative",
-            overflow: "hidden"
-        }} className={styles.container}>
-            <Container size="lg" fluid>
-                <Card shadow="lg" p={isMobile ? "xl" : 40} radius="lg" withBorder className={styles.card}>
-                    <Stack align="center" gap="xl">
-                        <Title order={2} ta="center" className={styles.title}>Ready to Transform Your Learning Experience?</Title>
-                        <Text size="lg" ta="center" maw={600} mx="auto" className={styles.description}>
-                            Join Scribe today and get the personalized academic support you need to excel in your classes.
-                        </Text>
-                        <Group mt="md">
-                            {user && profile ? (
-                                <>
-                                    {profile?.professor || profile?.admin ? (
-                                        <Link href={`/classes/c/${firstClass?.id}`}>
-                                            <Button size="lg" radius="md" className={styles.ctaButton}>
-                                                Get Started
-                                            </Button>
-                                        </Link>
-                                    ) : (
-                                        <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
-                                            <Button size="lg" radius="md" className={styles.ctaButton}>
-                                                Get Started
-                                            </Button>
-                                        </Link>
-                                    )}
-                                </>
-                            ) : (
-                                <>
-                                    <Link href="/login">
+        <Box 
+            className={styles.container}
+            style={{
+                padding: isMobile ? "60px 20px" : "100px 40px",
+            }}
+        >
+            <div className={styles.gradientBackground}></div>
+            <div className={styles.noiseOverlay}></div>
+            
+            <Container size="lg">
+                <div className={styles.ctaContent}>
+                    <div className={styles.leftSection}>
+                        <h2 className={styles.title}>Learn with Scribe Now</h2>
+                        {user && profile ? (
+                            <>
+                                {profile?.professor || profile?.admin ? (
+                                    <Link href={`/classes/c/${firstClass?.id}`}>
                                         <Button size="lg" radius="md" className={styles.ctaButton}>
                                             Get Started
                                         </Button>
                                     </Link>
-                                </>
-                            )}
-                        </Group>
-                    </Stack>
-                </Card>
+                                ) : (
+                                    <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
+                                        <Button size="lg" radius="md" className={styles.ctaButton}>
+                                            Get Started
+                                        </Button>
+                                    </Link>
+                                )}
+                            </>
+                        ) : (
+                            <Link href="/login">
+                                <Button size="lg" radius="md" className={styles.ctaButton}>
+                                    Get Started
+                                </Button>
+                            </Link>
+                        )}
+                    </div>
+                    <div className={styles.rightSection}>
+                        <Image 
+                            src="/icon.png" 
+                            alt="Scribe Logo" 
+                            className={styles.logo}
+                        />
+                    </div>
+                </div>
             </Container>
         </Box>
     );

@@ -13,64 +13,163 @@ import { Box } from "@mantine/core";
 import { IconLock, IconPuzzle, IconSettings } from "@tabler/icons-react";
 import styles from './ForTeachers.module.css';
 import { useMediaQuery } from "@mantine/hooks";
+import { useRef, useState, useEffect } from 'react';
 
 export default function ForTeachers() {
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const [activeCard, setActiveCard] = useState<number | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
+    
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.1 }
+        );
+        
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+        
+        return () => observer.disconnect();
+    }, []);
+    
+    // Calculate card positions for animation
+    const handleCardHover = (index: number | null) => {
+        setActiveCard(index);
+    };
+    
     return (
         <Box style={{
             padding: isMobile ? "40px 20px" : "80px 40px",
             position: "relative",
             overflow: "hidden"
         }} className={styles.container}>
-            <Container size="lg">
-                <Title order={2} ta="center" mb={20}>For Teachers</Title>
-                <Text ta="center" size="lg" c="dimmed" mb={50} maw={800} mx="auto">
-                    Empower your teaching with AI tools that align with your curriculum and teaching style.
-                </Text>
+            <div className={styles.backgroundStripes}></div>
+            <div className={styles.bottomFade}></div>
+            
+            <Container size="lg" style={{ position: "relative", zIndex: 1 }}>
+                <Box mb={50}>
+                    <Title order={1} ta="right" mb={20} className={`${styles.sectionTitle} ${isVisible ? styles.visible : ''}`}>Professors</Title>
+                </Box>
 
-                <Grid gutter={40}>
-                    <Grid.Col span={{ base: 12, md: 4 }}>
-                        <Card shadow="sm" p="xl" radius="md" withBorder h="100%" className={styles.card}>
-                            <Center mb="md">
-                                <Avatar size="xl" radius="xl" color="indigo" className={styles.avatar}>
-                                    <IconSettings size={32} />
-                                </Avatar>
-                            </Center>
-                            <Title order={3} ta="center" mb="md">Control AI Outputs</Title>
-                            <Text ta="center">
-                                Customize what Scribe can and cannot help with, ensuring AI assistance aligns with your teaching goals and academic integrity policies.
-                            </Text>
+                <div className={styles.cardsContainer} ref={containerRef}>
+                    <div 
+                        className={`${styles.cardWrapper} ${activeCard === 0 ? styles.activeCardWrapper : ''} ${activeCard !== null && activeCard !== 0 ? styles.inactiveCardWrapper : ''}`}
+                        onMouseEnter={() => handleCardHover(0)}
+                        onMouseLeave={() => handleCardHover(null)}
+                        style={{ 
+                            zIndex: activeCard === 0 ? 3 : 1,
+                            transform: activeCard === 1 ? 'translateX(-10%)' : activeCard === 2 ? 'translateX(-20%)' : 'translateX(0)'
+                        }}
+                    >
+                        <Card 
+                            shadow="sm" 
+                            p="xl" 
+                            radius="md" 
+                            className={`${styles.card} ${activeCard === 0 ? styles.activeCard : ''}`}
+                        >
+                            <div className={styles.cardBorder}></div>
+                            <div className={styles.cardContent}>
+                                <div className={styles.videoContainer}>
+                                    <video 
+                                        className={styles.video}
+                                        autoPlay 
+                                        muted 
+                                        loop 
+                                        playsInline
+                                    >
+                                        <source src="/videos/analytics.mp4" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <Title order={3} ta="center" mb="md" mt="lg">Analytics</Title>
+                                <Text ta="center">
+                                    See where your students are struggling and adjust your teaching accordingly with detailed analytics.
+                                </Text>
+                            </div>
                         </Card>
-                    </Grid.Col>
+                    </div>
 
-                    <Grid.Col span={{ base: 12, md: 4 }}>
-                        <Card shadow="sm" p="xl" radius="md" withBorder h="100%" className={styles.card}>
-                            <Center mb="md">
-                                <Avatar size="xl" radius="xl" color="indigo" className={styles.avatar}>
-                                    <IconPuzzle size={32} />
-                                </Avatar>
-                            </Center>
-                            <Title order={3} ta="center" mb="md">Generate Practice Problems</Title>
-                            <Text ta="center">
-                                Create unlimited practice problems with solutions that match your teaching style and curriculum requirements.
-                            </Text>
+                    <div 
+                        className={`${styles.cardWrapper} ${activeCard === 1 ? styles.activeCardWrapper : ''} ${activeCard !== null && activeCard !== 1 ? styles.inactiveCardWrapper : ''}`}
+                        onMouseEnter={() => handleCardHover(1)}
+                        onMouseLeave={() => handleCardHover(null)}
+                        style={{ 
+                            zIndex: activeCard === 1 ? 3 : 2,
+                            transform: activeCard === 0 ? 'translateX(10%)' : activeCard === 2 ? 'translateX(-10%)' : 'translateX(0)'
+                        }}
+                    >
+                        <Card 
+                            shadow="sm" 
+                            p="xl" 
+                            radius="md" 
+                            className={`${styles.card} ${activeCard === 1 ? styles.activeCard : ''}`}
+                        >
+                            <div className={styles.cardBorder}></div>
+                            <div className={styles.cardContent}>
+                                <div className={styles.videoContainer}>
+                                    <video 
+                                        className={styles.video}
+                                        autoPlay 
+                                        muted 
+                                        loop 
+                                        playsInline
+                                    >
+                                        <source src="/videos/quality-control.mp4" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <Title order={3} ta="center" mb="md" mt="lg">Quality Control</Title>
+                                <Text ta="center">
+                                    You decide what content is used for the AI, and can control the outputs with custom prompts.
+                                </Text>
+                            </div>
                         </Card>
-                    </Grid.Col>
+                    </div>
 
-                    <Grid.Col span={{ base: 12, md: 4 }}>
-                        <Card shadow="sm" p="xl" radius="md" withBorder h="100%" className={styles.card}>
-                            <Center mb="md">
-                                <Avatar size="xl" radius="xl" color="indigo" className={styles.avatar}>
-                                    <IconLock size={32} />
-                                </Avatar>
-                            </Center>
-                            <Title order={3} ta="center" mb="md">Private Mode</Title>
-                            <Text ta="center">
-                                You can choose to keep your course content private, and we will use our own AI models to parse your content.
-                            </Text>
+                    <div 
+                        className={`${styles.cardWrapper} ${activeCard === 2 ? styles.activeCardWrapper : ''} ${activeCard !== null && activeCard !== 2 ? styles.inactiveCardWrapper : ''}`}
+                        onMouseEnter={() => handleCardHover(2)}
+                        onMouseLeave={() => handleCardHover(null)}
+                        style={{ 
+                            zIndex: activeCard === 2 ? 3 : 1,
+                            transform: activeCard === 0 ? 'translateX(20%)' : activeCard === 1 ? 'translateX(10%)' : 'translateX(0)'
+                        }}
+                    >
+                        <Card 
+                            shadow="sm" 
+                            p="xl" 
+                            radius="md" 
+                            className={`${styles.card} ${activeCard === 2 ? styles.activeCard : ''}`}
+                        >
+                            <div className={styles.cardBorder}></div>
+                            <div className={styles.cardContent}>
+                                <div className={styles.videoContainer}>
+                                    <video 
+                                        className={styles.video}
+                                        autoPlay 
+                                        muted 
+                                        loop 
+                                        playsInline
+                                    >
+                                        <source src="/videos/secure.mp4" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <Title order={3} ta="center" mb="md" mt="lg">Develop</Title>
+                                <Text ta="center">
+                                    Use your existing content and course materials to create similar problems.
+                                </Text>
+                            </div>
                         </Card>
-                    </Grid.Col>
-                </Grid>
+                    </div>
+                </div>
             </Container>
         </Box>
     );

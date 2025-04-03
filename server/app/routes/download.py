@@ -7,6 +7,7 @@ import traceback
 import os
 from app.services.download.summary_downloader import SummaryDownloader
 from app.services.download.questions_downloader import QuestionsDownloader
+import re
 
 router = APIRouter()
 
@@ -14,18 +15,56 @@ router = APIRouter()
 async def download_summary_get(
     request: Request,
     summary_id: str = Query(...),
+    chat_id: str = Query(...),
     format: str = Query(...),  # 'pdf', 'latex', or 'text'
 ):
     """Download a summary for a given summary ID using GET method."""
     try:
+        # Get chat data
+        chat_response = supabase.table("chats").select("*").eq("id", chat_id).execute()
+
+        if not chat_response.data:
+            raise HTTPException(status_code=404, detail="Chat not found")
+        
+        chat_data = chat_response.data[0]
+        chat_title = chat_data.get('name', 'Summary')
+
+
+        # get all messages for this chat
+        messages_response = supabase.table("messages").select("*").eq("chat", chat_id).execute()
+
+        if not messages_response.data:
+            raise HTTPException(status_code=404, detail="Messages not found")
+        
+        
+        
         # Get summary data
         summary_response = supabase.table("summaries").select("*").eq("id", summary_id).execute()
-
         
         if not summary_response.data:
             raise HTTPException(status_code=404, detail="Summary not found")
         
         summary_data = summary_response.data[0]
+        
+        # Get all summaries for this chat to determine position/number
+        all_summaries_response = supabase.table("summaries").select("*").in_("message", [message.get('id') for message in messages_response.data]).execute()
+        all_summaries = all_summaries_response.data
+        
+        # Sort all summaries by created_at to determine their position/number
+        all_summaries.sort(key=lambda s: s.get('created_at', ''))
+        
+        # Find the position of this summary
+        summary_position = None
+        for idx, s in enumerate(all_summaries):
+            if s.get('id') == summary_id:
+                summary_position = idx + 1
+                break
+        
+        # Create a suffix based on the summary position
+        suffix = f"Summary{summary_position}" if summary_position else "Summary"
+        
+        # Create document title
+        document_title = f"{chat_title} {suffix}"
         
         # Create Summary object
         summary = {
@@ -47,20 +86,23 @@ async def download_summary_get(
         if format == 'pdf':
             filepath = downloader.download_pdf()
             media_type = 'application/pdf'
-            filename = f"{summary_id}.pdf"
+            filename = f"{document_title}.pdf"
         elif format == 'latex':
             filepath = downloader.download_latex()
             media_type = 'application/x-tex'
-            filename = f"{summary_id}.tex"
+            filename = f"{document_title}.tex"
         elif format == 'text':
             filepath = downloader.download_text()
             media_type = 'text/plain'
-            filename = f"{summary_id}.txt"
+            filename = f"{document_title}.txt"
         else:
             raise HTTPException(status_code=400, detail="Invalid format")
         
         if not filepath or not os.path.exists(filepath):
             raise HTTPException(status_code=500, detail="Failed to generate file")
+        
+        # Clean filename for safe download
+        filename = re.sub(r'[^\w\s.-]', '', filename).replace(' ', '_')
             
         return FileResponse(
             path=filepath,
@@ -87,14 +129,46 @@ async def download_summary_get(
 @router.get('/questions')
 async def download_questions_get(
     request: Request,
-    message_id: str = Query(...),
+    chat_id: str = Query(...),
+    question_ids: list[str] = Query(...),
     format: str = Query(...),  # 'pdf', 'latex', or 'text'
 ):
     """Download questions for a given questions ID using GET method."""
     try:
-        # Get questions data
-        questions_response = supabase.table("questions").select("*").eq("message", message_id).execute()
+        # Get chat data
+        chat_response = supabase.table("chats").select("*").eq("id", chat_id).execute()
 
+        if not chat_response.data:
+            raise HTTPException(status_code=404, detail="Chat not found")
+        
+        chat_data = chat_response.data[0]
+        chat_title = chat_data.get('name', 'Questions')
+
+        # get messages
+        messages_response = supabase.table("messages").select("*").eq("chat", chat_id).execute()
+
+        if not messages_response.data:
+            raise HTTPException(status_code=404, detail="Messages not found")
+        
+        messages_data = messages_response.data
+
+        # get all question ids from messages
+        all_message_ids = [message.get('id') for message in messages_data]
+        all_questions_response = supabase.table("questions").select("*").in_("message", all_message_ids).execute()
+        
+        if not all_questions_response.data:
+            raise HTTPException(status_code=404, detail="Questions not found")
+        
+        all_questions = all_questions_response.data
+        
+        # Sort all questions by created_at to determine their position/number
+        all_questions.sort(key=lambda q: q.get('created_at', ''))
+        
+        # Create a mapping of question_id to question number
+        question_numbers = {q.get('id'): idx + 1 for idx, q in enumerate(all_questions)}
+        
+        # Get questions data for the selected questions
+        questions_response = supabase.table("questions").select("*").in_("id", question_ids).execute()
         
         if not questions_response.data:
             raise HTTPException(status_code=404, detail="Questions not found")
@@ -137,27 +211,46 @@ async def download_questions_get(
                 }
                 questions_data.append([frq_question])
         
+        # Create a suffix based on the question numbers
+        selected_question_numbers = [question_numbers.get(qid) for qid in question_ids if qid in question_numbers]
+        selected_question_numbers.sort()
+        
+        if len(selected_question_numbers) == 1:
+            # Single question
+            suffix = f"Q{selected_question_numbers[0]}"
+        elif len(selected_question_numbers) > 1:
+            # Multiple questions
+            suffix = f"Q{selected_question_numbers[0]}-Q{selected_question_numbers[-1]}"
+        else:
+            suffix = "Questions"
+        
+        # Create document title
+        document_title = f"{chat_title} {suffix}"
+        
         # Create downloader
-        downloader = QuestionsDownloader(questions_data)
+        downloader = QuestionsDownloader(questions_data, document_title)
         
         # Generate file based on format
         if format == 'pdf':
             filepath = downloader.download_pdf()
             media_type = 'application/pdf'
-            filename = f"{message_id}.pdf"
+            filename = f"{document_title}.pdf"
         elif format == 'latex':
             filepath = downloader.download_latex()
             media_type = 'application/x-tex'
-            filename = f"{message_id}.tex"
+            filename = f"{document_title}.tex"
         elif format == 'text':
             filepath = downloader.download_text()
             media_type = 'text/plain'
-            filename = f"{message_id}.txt"
+            filename = f"{document_title}.txt"
         else:
             raise HTTPException(status_code=400, detail="Invalid format")
         
         if not filepath or not os.path.exists(filepath):
             raise HTTPException(status_code=500, detail="Failed to generate file")
+        
+        # Clean filename for safe download
+        filename = re.sub(r'[^\w\s.-]', '', filename).replace(' ', '_')
             
         return FileResponse(
             path=filepath,

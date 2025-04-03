@@ -1174,13 +1174,13 @@ export const MessageList = memo(({
                             } else if (segment.summaryId && summaries) {
                               return (
                                 summaries.find(s => s.id === segment.summaryId) && (
-                                  <SummaryViewer classId={classId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
+                                  <SummaryViewer classId={classId} chatId={chatId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
                                 )
                               )
-                            } else if (segment.questionId && questions) {
+                            } else if (segment.questionIds && questions) {
                               return (
-                                questions.find(q => q.id === segment.questionId) && (
-                                  <QuestionViewer classId={classId} question={questions.find(q => q.id === segment.questionId)!} viewerMode={viewerMode} />
+                                questions.filter(q => segment.questionIds.includes(q.id)) && (
+                                  <QuestionViewer classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
                                 )
                               )
                             }

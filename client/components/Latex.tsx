@@ -411,7 +411,8 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
         .replace(/::chapter{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="chapter" data-tag-id="$1"></span>')
         .replace(/::file{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="file" data-tag-id="$1"></span>')
         .replace(/::exercise{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="exercise" data-tag-id="$1"></span>')
-        .replace(/::problem{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="problem" data-tag-id="$1"></span>');
+        .replace(/::problem{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="problem" data-tag-id="$1"></span>')
+        .replace(/\n/g, '  \n');
 
     return (
         <div className="latex-container">
