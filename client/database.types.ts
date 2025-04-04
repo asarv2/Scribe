@@ -960,6 +960,7 @@ export type Database = {
           lectures: string[]
           profile: string | null
           question: string
+          rating: boolean | null
           references: string[]
           response: string
           response_url: string
@@ -985,6 +986,7 @@ export type Database = {
           lectures?: string[]
           profile?: string | null
           question?: string
+          rating?: boolean | null
           references?: string[]
           response?: string
           response_url?: string
@@ -1010,6 +1012,7 @@ export type Database = {
           lectures?: string[]
           profile?: string | null
           question?: string
+          rating?: boolean | null
           references?: string[]
           response?: string
           response_url?: string

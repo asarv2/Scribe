@@ -75,44 +75,27 @@ function ChatSkeleton() {
 function ChatTableSkeleton() {
     return (
         <Table.Tbody>
-            {Array(5).fill(0).map((_, index) => (
+            {Array(25).fill(0).map((_, index) => (
                 <Table.Tr key={index}>
                     <Table.Td><Skeleton height={40} circle /></Table.Td>
                     <Table.Td><Skeleton height={20} width="80%" /></Table.Td>
+                    <Table.Td><Skeleton height={20} width="70%" /></Table.Td>
                     <Table.Td><Skeleton height={20} width={80} radius="xl" /></Table.Td>
+                    <Table.Td><Skeleton height={20} width={40} /></Table.Td>
                     <Table.Td><Skeleton height={20} width={60} /></Table.Td>
-                    <Table.Td><Skeleton height={20} width={100} /></Table.Td>
                 </Table.Tr>
             ))}
         </Table.Tbody>
     );
 }
 
-// Add this CSS module import at the top of your file
-const tableClasses = {
-    header: {
-        position: 'sticky',
-        top: 0,
-        backgroundColor: 'var(--mantine-color-body)',
-        transition: 'box-shadow 150ms ease',
-        zIndex: 1,
-    },
-    scrolled: {
-        boxShadow: 'var(--mantine-shadow-sm)',
-    },
-    clickableRow: {
-        cursor: 'pointer',
-        '&:hover': {
-            backgroundColor: 'var(--mantine-color-gray-0)',
-        }
-    }
-};
-
 // Define the interface for chat data sorting
 interface ChatSortData {
   id: string;
   name: string;
+  profile: string;
   type: string;
+  messageCount: number;
   rating: number | null;
   created_at: string;
 }
@@ -155,7 +138,8 @@ function filterData(data: Chat[], search: string) {
 // Function to sort data based on field and direction
 function sortData(
   data: Chat[],
-  payload: { sortBy: keyof ChatSortData | null; reversed: boolean; search: string }
+  payload: { sortBy: keyof ChatSortData | null; reversed: boolean; search: string },
+  messages?: Message[]
 ) {
   const { sortBy } = payload;
 
@@ -177,8 +161,14 @@ function sortData(
         return payload.reversed ? ratingB - ratingA : ratingA - ratingB;
       }
       
-      const valueA = String(a[sortBy] || '');
-      const valueB = String(b[sortBy] || '');
+      if (sortBy === 'messageCount' && messages) {
+        const countA = messages.filter(m => m.chat === a.id).length;
+        const countB = messages.filter(m => m.chat === b.id).length;
+        return payload.reversed ? countB - countA : countA - countB;
+      }
+      
+      const valueA = String(a[sortBy as keyof Chat] || '');
+      const valueB = String(b[sortBy as keyof Chat] || '');
       
       return payload.reversed 
         ? valueB.localeCompare(valueA) 
@@ -187,6 +177,56 @@ function sortData(
     payload.search
   );
 }
+
+// Function to get the appropriate image URL for a chat
+const getActiveImage = (chat: Chat, classId: string, messages?: Message[], messagesReferences?: Document[]) => {
+    if (!messages) return "/placeholder_image.svg";
+    
+    // Get all messages for this chat
+    const messagesForChat = messages.filter(message => message.chat === chat.id);
+    
+    // Get all references from these messages
+    const references = messagesForChat
+        .flatMap(message => [
+            ...(message.references || []),
+            ...(message.lecture_references || []),
+            ...(message.chapter_references || [])
+        ]);
+    
+    if (references.length === 0) return "/placeholder_image.svg";
+    
+    // Find the first document reference
+    const firstReference = references[0];
+    
+    // Check if it's a lecture document
+    const lectureRef = messagesReferences?.find(doc => 
+        doc.id === firstReference && doc.lecture
+    );
+    
+    if (lectureRef && lectureRef.lecture) {
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureRef.lecture}/${lectureRef.id}.png`;
+    }
+    
+    // Check if it's a textbook document
+    const textbookRef = messagesReferences?.find(doc => 
+        doc.id === firstReference && doc.textbook
+    );
+    
+    if (textbookRef && textbookRef.textbook) {
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookRef.textbook}/${textbookRef.id}.png`;
+    }
+    
+    // Check if it's a file document
+    const fileRef = messagesReferences?.find(doc => 
+        doc.id === firstReference && doc.file
+    );
+    
+    if (fileRef && fileRef.file) {
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileRef.file}/${fileRef.id}.png`;
+    }
+    
+    return "/placeholder_image.svg";
+};
 
 export default function ChatPage({ params }: { params: Promise<{ classId: string }> }) {
     const { classId } = use(params);
@@ -351,16 +391,6 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
         return undefined;
     }
 
-    const getActiveImage = (document: Document | undefined) => {
-        if (!document) return "/placeholder_image.svg";
-        if (document.lecture) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`
-        } else if (document.textbook) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
-        }
-        return "/placeholder_image.svg";
-    }
-
     // Add state for student and type filters
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -435,7 +465,10 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
     const [sortBy, setSortBy] = useState<keyof ChatSortData | null>(null);
     const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-    // Replace the renderChatTable function with this sortable version
+    // Add state for sort order
+    const [sortOrder, setSortOrder] = useState<string>('newest');
+
+    // Replace the renderChatTable function with this updated version
     const renderChatTable = (chatList: Chat[] | undefined, title: string) => {
         if (!chatList || chatList.length === 0) return null;
         
@@ -451,17 +484,48 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
             setSearch(event.currentTarget.value);
         };
         
+        // Apply date sorting based on sortOrder
+        let dateFilteredData = [...chatList];
+        if (sortOrder === 'newest') {
+            dateFilteredData.sort((a, b) => {
+                const dateA = new Date(a.created_at || '').getTime();
+                const dateB = new Date(b.created_at || '').getTime();
+                return dateB - dateA;
+            });
+        } else if (sortOrder === 'oldest') {
+            dateFilteredData.sort((a, b) => {
+                const dateA = new Date(a.created_at || '').getTime();
+                const dateB = new Date(b.created_at || '').getTime();
+                return dateA - dateB;
+            });
+        }
+        
         // Sort and filter the data
-        const sortedData = sortData(chatList, { 
+        const sortedData = sortData(dateFilteredData, { 
             sortBy, 
             reversed: reverseSortDirection, 
             search 
-        });
+        }, messages);
         
         const rows = sortedData.map((chat) => {
             const messagesForChat = messages?.filter(message => message.chat === chat.id) ?? [];
-            const references = messagesForChat.map(message => getReferences(message) ?? []).flat();
-            const context = references?.[0];
+            
+            // Calculate average rating (true = 1, false = 0)
+            const messageRatings = messagesForChat
+                .filter(m => m.rating !== null)
+                .map(m => m.rating === true ? 1 : 0);
+            
+            const averageRating = messageRatings.length > 0 
+                ? messageRatings.reduce((sum, rating) => (sum + rating) as 0 | 1, 0) / messageRatings.length
+                : null;
+            
+            // Find student name
+            const student = students?.find(s => s.id === chat.profile);
+            const studentName = student 
+                ? `${student.first_name} ${student.last_name}`
+                : profile?.id === chat.profile
+                    ? `${profile.first_name} ${profile.last_name} (Me)`
+                    : 'Unknown';
             
             return (
                 <Table.Tr 
@@ -471,7 +535,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                 >
                     <Table.Td>
                         <Avatar 
-                            src={getActiveImage(context)} 
+                            src={getActiveImage(chat, classId, messages, messagesReferences)} 
                             size={40} 
                             radius="sm"
                         />
@@ -480,27 +544,22 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                         <Text lineClamp={1}>{chat.name}</Text>
                     </Table.Td>
                     <Table.Td>
+                        <Text size="sm">{studentName}</Text>
+                    </Table.Td>
+                    <Table.Td>
                         <Badge color={getBadgeColor(chat.type)}>
                             {formatChatType(chat.type)}
                         </Badge>
                     </Table.Td>
                     <Table.Td>
-                        {chat.rating ? (
-                            <Group gap={2}>
-                                {Array(5).fill(0).map((_, i) => (
-                                    <Box key={i} c={i < (chat.rating ?? 0) ? 'yellow.5' : 'gray.3'}>
-                                        ★
-                                    </Box>
-                                ))}
-                            </Group>
-                        ) : (
-                            <Text size="sm" c="dimmed">No rating</Text>
-                        )}
+                        <Text size="sm">{messagesForChat.length}</Text>
                     </Table.Td>
                     <Table.Td>
-                        <Text size="sm" c="dimmed">
-                            {new Date(chat.created_at ?? "").toLocaleDateString()}
-                        </Text>
+                        {averageRating !== null ? (
+                            <Text size="sm">{(averageRating * 100).toFixed(0)}%</Text>
+                        ) : (
+                            <Text size="sm" c="dimmed">N/A</Text>
+                        )}
                     </Table.Td>
                 </Table.Tr>
             );
@@ -508,16 +567,6 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
 
         return (
             <Stack>
-                {title && <Text size="lg" fw={600}>{title}</Text>}
-                
-                <TextInput
-                    placeholder="Search chats..."
-                    mb="md"
-                    leftSection={<IconSearch size={16} stroke={1.5} />}
-                    value={search}
-                    onChange={handleSearchChange}
-                />
-                
                 <ScrollArea h={Math.min(600, rows.length * 60 + 60)} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
                     <Table striped highlightOnHover>
                         <Table.Thead style={{ 
@@ -537,11 +586,25 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                                     Chat Name
                                 </Th>
                                 <Th
+                                    sorted={sortBy === 'profile'}
+                                    reversed={reverseSortDirection}
+                                    onSort={() => setSorting('profile')}
+                                >
+                                    Student
+                                </Th>
+                                <Th
                                     sorted={sortBy === 'type'}
                                     reversed={reverseSortDirection}
                                     onSort={() => setSorting('type')}
                                 >
                                     Type
+                                </Th>
+                                <Th
+                                    sorted={sortBy === 'messageCount'}
+                                    reversed={reverseSortDirection}
+                                    onSort={() => setSorting('messageCount')}
+                                >
+                                    Messages
                                 </Th>
                                 <Th
                                     sorted={sortBy === 'rating'}
@@ -550,13 +613,6 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                                 >
                                     Rating
                                 </Th>
-                                <Th
-                                    sorted={sortBy === 'created_at'}
-                                    reversed={reverseSortDirection}
-                                    onSort={() => setSorting('created_at')}
-                                >
-                                    Date
-                                </Th>
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
@@ -564,7 +620,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                                 rows
                             ) : (
                                 <Table.Tr>
-                                    <Table.Td colSpan={5}>
+                                    <Table.Td colSpan={6}>
                                         <Text fw={500} ta="center">
                                             No chats found
                                         </Text>
@@ -580,7 +636,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
 
     // Update the renderSkeletons function for table view
     const renderSkeletons = () => (
-        <ScrollArea h={400}>
+        <ScrollArea h={600}>
             <Table striped>
                 <Table.Thead style={{ 
                     position: 'sticky' as const, 
@@ -592,9 +648,10 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                     <Table.Tr>
                         <Table.Th style={{ width: 60 }}>Image</Table.Th>
                         <Table.Th>Chat Name</Table.Th>
+                        <Table.Th>Student</Table.Th>
                         <Table.Th>Type</Table.Th>
+                        <Table.Th>Messages</Table.Th>
                         <Table.Th>Rating</Table.Th>
-                        <Table.Th>Date</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
                 <ChatTableSkeleton />
@@ -611,43 +668,35 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
         <ClassLayout classId={classId}>
             <Container fluid>
                 <Stack>
-                    <Flex justify="space-between" align="center">
-                        <Group>
-                            <Text size="xl" fw={700} mb={6} pl={4}>History</Text>
-                        </Group>
-                    </Flex>
+                    <Group justify="space-between" align="center">
+                        <Text size="xl" fw={700}>History</Text>
+                        <Select
+                            data={[
+                                { value: 'newest', label: 'Newest First' },
+                                { value: 'oldest', label: 'Oldest First' },
+                            ]}
+                            value={sortOrder}
+                            onChange={(value) => setSortOrder(value || 'newest')}
+                        />
+                    </Group>
+
+                    <TextInput
+                        placeholder="Search chats..."
+                        leftSection={<IconSearch size={16} stroke={1.5} />}
+                        value={search}
+                        onChange={(e) => setSearch(e.currentTarget.value)}
+                        mb="md"
+                    />
 
                     {loadingChats || loadingMessages || loadingLectureMessagesReferences || loadingChapterMessagesReferences || loadingMessagesReferences ? (
                         renderSkeletons()
                     ) : (chats && classData) && chats.length > 0 ? (
                         isStudent() ? (
                             // Student view - only show their chats
-                            renderChatTable(userChats, "My Chats")
+                            renderChatTable(userChats, "")
                         ) : (
                             // Admin/Professor view - show only student chats without tabs
-                            <Stack gap="md">
-                                <Group align="flex-start" grow>
-                                    <Select
-                                        label="Filter by Student"
-                                        placeholder="Select a student"
-                                        data={studentOptions}
-                                        value={selectedStudent}
-                                        onChange={setSelectedStudent}
-                                        defaultValue="all"
-                                        clearable
-                                    />
-                                    <Select
-                                        label="Filter by Type"
-                                        placeholder="Select chat type"
-                                        data={chatTypes}
-                                        value={selectedType}
-                                        onChange={setSelectedType}
-                                        defaultValue="all"
-                                        clearable
-                                    />
-                                </Group>
-                                {renderChatTable(filteredStudentChats, "")}
-                            </Stack>
+                            renderChatTable(filteredStudentChats, "")
                         )
                     ) : (
                         <Text c="dimmed" ta="center">No chats found</Text>
