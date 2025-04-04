@@ -269,7 +269,7 @@ async def upload_content(
             status_code=400,
             content={"error": "File must be a ZIP archive"}
         )
-    
+
     # Create timestamp for file naming
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
@@ -280,7 +280,12 @@ async def upload_content(
             status_code=400,
             content={"error": "Class not found"}
         )
-    
+
+    class_data = class_response.data[0] or {}
+    lecture_enabled = class_data.get('lecture_enabled', False)
+    textbook_enabled = class_data.get('textbook_enabled', False)
+    homework_enabled = class_data.get('homework_enabled', False)
+
     # Update the class with the updated_at timestamp
     supabase.table("classes").update({
         "updated_at": datetime.now().isoformat()
@@ -429,7 +434,7 @@ async def upload_content(
                     continue
 
                 # Check if this file is in the new_files list
-                if os.path.exists(full_path) and filename_only in new_files:
+                if os.path.exists(full_path) and filename_only in new_files and lecture_enabled:
                     print(f"Processing new lecture: {full_path}")
                     # Add to task queue instead of background tasks
                     await request.app.state.add_task(
@@ -457,7 +462,7 @@ async def upload_content(
                     continue
 
                 # Check if this file is in the new_files list
-                if os.path.exists(full_path) and filename_only in new_files:
+                if os.path.exists(full_path) and filename_only in new_files and textbook_enabled:
                     print(f"Processing new reading: {full_path}")
                     # Add to task queue
                     await request.app.state.add_task(
@@ -485,7 +490,7 @@ async def upload_content(
                     continue
 
                 # Check if this file is in the new_files list
-                if os.path.exists(full_path) and filename_only in new_files:
+                if os.path.exists(full_path) and filename_only in new_files and homework_enabled:
                     print(f"Processing new assignment: {full_path}")
                     # Add to task queue
                     await request.app.state.add_task(
