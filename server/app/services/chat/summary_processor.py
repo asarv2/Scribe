@@ -137,12 +137,17 @@ class SummaryProcessor(BaseProcessor):
     ) -> str:
         """Process a batch of questions"""
         try:
-            flat_summaries = [
-                s["summary"]
-                for summaries in self.summaries.values()
-                for group in summaries
-                for s in group
-            ]
+            flat_summaries = []
+            for summaries in self.summaries.values():
+                # Check if summaries is a dictionary with the expected structure
+                if isinstance(summaries, dict) and "content" in summaries:
+                    flat_summaries.append(summaries["content"])
+                # If it's a list (as in the original code)
+                elif isinstance(summaries, list):
+                    for group in summaries:
+                        if isinstance(group, dict) and "summary" in group:
+                            flat_summaries.append(group["summary"])
+            
             flat_summaries_str = "\n".join(flat_summaries)
 
             # add additional instructions to the prompt
