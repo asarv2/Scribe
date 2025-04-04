@@ -84,7 +84,7 @@ export default function ForTeachers() {
                                         loop 
                                         playsInline
                                     >
-                                        <source src="/videos/analytics.mp4" type="video/mp4" />
+                                        <source src="/videos/scribe-analytics.mp4" type="video/mp4" />
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
@@ -121,7 +121,7 @@ export default function ForTeachers() {
                                         loop 
                                         playsInline
                                     >
-                                        <source src="/videos/quality-control.mp4" type="video/mp4" />
+                                        <source src="/videos/scribe-develop.mp4" type="video/mp4" />
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
@@ -158,13 +158,13 @@ export default function ForTeachers() {
                                         loop 
                                         playsInline
                                     >
-                                        <source src="/videos/secure.mp4" type="video/mp4" />
+                                        <source src="/videos/scribe-secure.mp4" type="video/mp4" />
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
-                                <Title order={3} ta="center" mb="md" mt="lg">Develop</Title>
+                                <Title order={3} ta="center" mb="md" mt="lg">Secure</Title>
                                 <Text ta="center">
-                                    Use your existing content and course materials to create similar problems.
+                                    Students and professors must login with Microsoft, keeping your content secure.
                                 </Text>
                             </div>
                         </Card>

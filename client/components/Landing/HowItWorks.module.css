@@ -25,6 +25,28 @@
   pointer-events: none;
 }
 
+.topFade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to top, transparent, rgba(10, 12, 27, 0.5) 90%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bottomFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, rgba(10, 12, 27, 0.5) 90%);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .sectionTitle {
   font-weight: 700;
   font-size: 2.5rem;

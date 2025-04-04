@@ -51,8 +51,9 @@ export default function CallToAction() {
             }}
         >
             <div className={styles.gradientBackground}></div>
-            <div className={styles.noiseOverlay}></div>
-            
+            <div className={styles.topFade}></div>
+            <div className={styles.bottomFade}></div>
+
             <Container size="lg">
                 <div className={styles.ctaContent}>
                     <div className={styles.leftSection}>

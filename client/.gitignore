@@ -37,4 +37,4 @@ next-env.d.ts
 
 .env
 
-*.mp4
+# *.mp4

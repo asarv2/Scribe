@@ -91,6 +91,8 @@ export default function HowItWorks() {
             overflow: "hidden"
         }} className={styles.container}>
             <div className={styles.backgroundGradient}></div>
+            <div className={styles.topFade}></div>
+            <div className={styles.bottomFade}></div>
             
             <Container size="lg" style={{ position: "relative", zIndex: 1 }}>
                 <Title order={2} ta="center" mb={20} className={styles.sectionTitle}>How It Works</Title>
