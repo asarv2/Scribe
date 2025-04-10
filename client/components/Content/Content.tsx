@@ -297,7 +297,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 <Stack>
                     <Group justify="space-between" align="center">
                         <Text size="xl" fw={700}>Lectures</Text>
-                        <UploadLectureButton classId={classId} startParse={true} />
+                        <UploadLectureButton classId={classId} startParse={true} lectureNumber={lectures?.length ? lectures.length + 1 : 1} />
                     </Group>
 
                     <Group align="center" mb="md">
@@ -471,7 +471,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                                             </Card>
                                         ) : (
                                             <Link
-                                                href={`/classes/c/${classId}/lecture/${lecture.id}`}
+                                                href={`/classes/c/${classId}/content/lecture/${lecture.id}`}
                                                 key={lecture.id}
                                                 style={{ textDecoration: 'none' }}
                                             >
@@ -516,7 +516,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 <Stack>
                     <Group justify="space-between" align="center">
                         <Text size="xl" fw={700}>Textbooks</Text>
-                        <UploadTextbookButton classId={classId} startParse={true} />
+                        <UploadTextbookButton classId={classId} startParse={true} textbookNumber={textbooks?.length ? textbooks.length + 1 : 1} />
                     </Group>
 
                     <Group align="center" mb="md">
@@ -683,7 +683,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                                             </Card>
                                         ) : (
                                             <Link
-                                                href={`/classes/c/${classId}/textbook/${textbook.id}`}
+                                                href={`/classes/c/${classId}/content/textbook/${textbook.id}`}
                                                 key={textbook.id}
                                                 style={{ textDecoration: 'none' }}
                                             >
@@ -728,7 +728,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 <Stack>
                     <Group justify="space-between" align="center">
                         <Text size="xl" fw={700}>Homework</Text>
-                        <UploadHomeworkButton classId={classId} startParse={true} />
+                        <UploadHomeworkButton classId={classId} startParse={true} homeworkNumber={homeworks?.length ? homeworks.length + 1 : 1} />
                     </Group>
 
                     <Group align="center" mb="md">
@@ -897,7 +897,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                                             </Card>
                                         ) : (
                                             <Link
-                                                href={`/classes/c/${classId}/homework/${homework.id}`}
+                                                href={`/classes/c/${classId}/content/homework/${homework.id}`}
                                                 key={homework.id}
                                                 style={{ textDecoration: 'none' }}
                                             >

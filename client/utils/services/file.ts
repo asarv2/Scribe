@@ -9,11 +9,12 @@ import useSupabaseServer from "../supabase/supabase-server";
 import { FileType } from "@/types";
 
 export const createFile = async (
-    classId: string,
-    title: string,
-    type: FileType,
-    length: number,
+    classId: string, 
     profile: string,
+    fileTitle: string, 
+    fileNumber: number, 
+    fileType: FileType,
+    response_url: string
 ) => {
     const supabase = await useSupabaseServer(cookies());
     console.log("Creating file");
@@ -21,9 +22,10 @@ export const createFile = async (
         .from("files")
         .insert({
             class: classId,
-            title: title,
-            type: type,
-            length: parseInt(length.toString()),
+            name: fileTitle,
+            file_number: fileNumber,
+            response_url: response_url,
+            type: fileType,
             profile: profile,
         })
         .select("*")

@@ -98,7 +98,7 @@ export const signInWithMicrosoftProfessor = async (redirectTo: string): Promise<
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'azure',
         options: {
-            scopes: 'openid profile email Files.Read',
+            scopes: 'openid profile email offline_access Files.Read',
             queryParams: {
                 domain_hint: 'purdue.edu',
             },

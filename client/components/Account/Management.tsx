@@ -37,15 +37,17 @@ import { TimeInput } from "@mantine/dates";
 import { Class } from "@/types";
 import Link from "next/link";
 import { updateProfile } from "@/utils/services/profile";
+import { getClass } from "@/utils/queries/get-class";
 
 interface ManagementProps {
+    classId: string;
     showCreateClass?: boolean;
     showExistingClasses?: boolean;
     showOuterAccordion?: boolean;
     showInitialClassInfo?: boolean;
 }
 
-export default function Management({ showCreateClass = true, showExistingClasses = true, showOuterAccordion = true, showInitialClassInfo = true }: ManagementProps) {
+export default function Management({ classId, showCreateClass = true, showExistingClasses = true, showOuterAccordion = true, showInitialClassInfo = true }: ManagementProps) {
     const theme = useMantineTheme();
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
@@ -105,58 +107,56 @@ export default function Management({ showCreateClass = true, showExistingClasses
         enabled: !!user
     });
 
-    const { data: classes, isLoading: classesLoading } = useQuery({
-        queryKey: ["classes"],
-        queryFn: () => getClasses(supabase)
+    const { data: classData, isLoading: loadingClassData } = useQuery({
+        queryKey: ["class", classId],
+        queryFn: () => getClass(supabase, classId),
+        enabled: !!classId
     });
 
-    // Initialize prompts and features when classes data is loaded
+    // Initialize prompts and features when class data is loaded
     useEffect(() => {
-        if (classes) {
+        if (classData) {
             const initialPrompts: Record<string, { lecture: string; textbook: string; homework: string }> = {};
             const initialChatTypes: Record<string, { learn: boolean; homework: boolean; testPrep: boolean; present: boolean }> = {};
             const initialFeatures: Record<string, { lectureEnabled: boolean; textbookEnabled: boolean; homeworkEnabled: boolean; filesEnabled: boolean }> = {};
-
-            classes.forEach(classItem => {
-                initialPrompts[classItem.id] = {
-                    lecture: classItem.lecture_prompt || '',
-                    textbook: classItem.textbook_prompt || '',
-                    homework: classItem.homework_prompt || ''
-                };
-
-                initialFeatures[classItem.id] = {
-                    lectureEnabled: classItem.lecture_enabled || false,
-                    textbookEnabled: classItem.textbook_enabled || false,
-                    homeworkEnabled: classItem.homework_enabled || false,
-                    filesEnabled: classItem.files_enabled || false
-                };
-
-                initialChatTypes[classItem.id] = {
-                    learn: classItem.learn_mode_enabled || false,
-                    homework: classItem.homework_mode_enabled || false,
-                    testPrep: classItem.test_prep_mode_enabled || false,
-                    present: classItem.present_mode_enabled || false
-                };
-            });
-
             const initialEditableClasses: Record<string, any> = {};
-            classes.forEach(classItem => {
-                initialEditableClasses[classItem.id] = {
-                    title: classItem.title || '',
-                    class_code: classItem.class_code || '',
-                    course_description: classItem.course_description || '',
-                    download: classItem.download || false,
-                    download_time: classItem.download_time || '',
-                    privateMode: classItem.privacy || false
-                };
-            });
+
+            // Initialize for the single class
+            initialPrompts[classId] = {
+                lecture: classData.lecture_prompt || '',
+                textbook: classData.textbook_prompt || '',
+                homework: classData.homework_prompt || ''
+            };
+
+            initialFeatures[classId] = {
+                lectureEnabled: classData.lecture_enabled || false,
+                textbookEnabled: classData.textbook_enabled || false,
+                homeworkEnabled: classData.homework_enabled || false,
+                filesEnabled: classData.files_enabled || false
+            };
+
+            initialChatTypes[classId] = {
+                learn: classData.learn_mode_enabled || false,
+                homework: classData.homework_mode_enabled || false,
+                testPrep: classData.test_prep_mode_enabled || false,
+                present: classData.present_mode_enabled || false
+            };
+
+            initialEditableClasses[classId] = {
+                title: classData.title || '',
+                class_code: classData.class_code || '',
+                course_description: classData.course_description || '',
+                download: classData.download || false,
+                download_time: classData.download_time || '',
+                privateMode: classData.privacy || false
+            };
 
             setClassPrompts(initialPrompts);
             setClassFeatures(initialFeatures);
             setClassChatTypes(initialChatTypes);
             setEditableClasses(initialEditableClasses);
         }
-    }, [classes]);
+    }, [classData, classId]);
 
     const handlePromptChange = (classId: string, type: 'lecture' | 'textbook' | 'homework', value: string) => {
         setClassPrompts(prev => ({
@@ -191,8 +191,6 @@ export default function Management({ showCreateClass = true, showExistingClasses
     const handleSavePrompts = async (classId: string) => {
         setSaveLoading(prev => ({ ...prev, [classId]: true }));
         try {
-            const classToUpdate = classes?.find(c => c.id === classId);
-            if (!classToUpdate) return;
 
             const { success, error } = await updateClassPrompts(
                 classId,
@@ -304,54 +302,6 @@ export default function Management({ showCreateClass = true, showExistingClasses
         }));
     };
 
-    const handleDownloadToggle = (classId: string, value: boolean) => {
-        setEditableClasses(prev => ({
-            ...prev,
-            [classId]: {
-                ...prev[classId],
-                download: value,
-                download_time: value ? prev[classId].download_time : ''
-            }
-        }));
-    };
-
-    const handlePrivateModeToggle = (classId: string, value: boolean) => {
-        setEditableClasses(prev => ({
-            ...prev,
-            [classId]: {
-                ...prev[classId],
-                privateMode: value
-            }
-        }));
-    };
-
-    const handleDeleteClass = async (classId: string) => {
-        setDeleteLoading(true);
-        try {
-            const { success, error } = await deleteClass(classId);
-
-            if (!success) {
-                throw new Error(error);
-            }
-
-            queryClient.invalidateQueries({ queryKey: ["classes"] });
-            notifications.show({
-                title: 'Success',
-                message: 'Class deleted successfully',
-                color: 'green'
-            });
-            setDeleteModalOpen(null);
-        } catch (error: any) {
-            notifications.show({
-                title: 'Error',
-                message: error.message,
-                color: 'red'
-            });
-        } finally {
-            setDeleteLoading(false);
-        }
-    };
-
     const renderClassInfo = (classItem: Class, hasChanges: boolean) => {
         return (
             <Stack gap="xl">
@@ -379,35 +329,9 @@ export default function Management({ showCreateClass = true, showExistingClasses
 
                 </Stack>}
 
-                {/* Privacy Mode Section */}
-                {/* <Stack gap="xs">
-                    <Switch
-                        checked={editableClasses[classItem.id]?.privateMode}
-                        onChange={(e) => handlePrivateModeToggle(classItem.id, e.currentTarget.checked)}
-                        label="Private mode"
-                        labelPosition="right"
-                    />
-                    <Text size="xs" c="dimmed">
-                        When private mode is enabled, all lecture content will be processed using our own models
-                        instead of external services, ensuring complete data privacy.
-                    </Text>
-                </Stack> */}
-
-                {/* <Stack gap="xs">
-                    <Switch
-                        checked={editableClasses[classItem.id]?.download}
-                        onChange={(e) => handleDownloadToggle(classItem.id, e.currentTarget.checked)}
-                        label="Download with Chrome Extension"
-                        labelPosition="right"
-                    />
-                    <Text size="xs" c="dimmed">
-                        When enabled, you and your students will be able to download content from Brightspace using the <Link href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb" target="_blank">Scribe Chrome Extension</Link>.
-                    </Text>
-                </Stack> */}
-
                 {/* Chat Types Section */}
                 <Stack gap="md">
-                    <Text fw={500} size="sm">Enabled Chat Types</Text>
+                    <Text fw={500} size="sm">Enabled Student Modes</Text>
                     <Group>
                         <Switch
                             checked={classChatTypes[classItem.id]?.learn}
@@ -560,7 +484,7 @@ export default function Management({ showCreateClass = true, showExistingClasses
     // Check if user is professor or admin
     const canManageClasses = profile?.professor || profile?.admin;
 
-    if (loadingProfile || loadingUser) {
+    if (loadingProfile || loadingUser || loadingClassData) {
         return (
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack gap="xl">
@@ -579,166 +503,35 @@ export default function Management({ showCreateClass = true, showExistingClasses
         );
     }
 
-    return (
-        <Stack gap="xl">
-            {classesLoading ? (
-                <Stack gap="md">
-                    <Skeleton height={60} />
-                    <Skeleton height={60} />
-                    <Skeleton height={60} />
-                </Stack>
-            ) : (
-                <>
-                    {showOuterAccordion ? <Accordion
-                        variant="separated"
-                        defaultValue={classes
-                            ?.filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))?.[0]?.id
-                        }
-                        chevronPosition="left"
-                    >
-                        {/* Existing Classes */}
-                        {showExistingClasses && classes && classes
-                            .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
-                            .map((classItem: Class) => {
-                                const promptsChanged = classPrompts[classItem.id] && (
-                                    classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
-                                    classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
-                                    classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
-                                );
+    if (!classData) {
+        return (
+            <Container fluid style={{ marginTop: "30px" }}>
+                <Text>Class not found.</Text>
+            </Container>
+        );
+    }
 
-                                const chatTypesChanged = classChatTypes[classItem.id] && (
-                                    classChatTypes[classItem.id].learn !== (classItem.learn_mode_enabled || false) ||
-                                    classChatTypes[classItem.id].homework !== (classItem.homework_mode_enabled || false) ||
-                                    classChatTypes[classItem.id].testPrep !== (classItem.test_prep_mode_enabled || false) ||
-                                    classChatTypes[classItem.id].present !== (classItem.present_mode_enabled || false)
-                                );
-
-                                const featuresChanged = classFeatures[classItem.id] && (
-                                    classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
-                                    classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
-                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false) ||
-                                    classFeatures[classItem.id].filesEnabled !== (classItem.files_enabled || false)
-                                );
-
-                                const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
-
-                                return (
-                                    <Accordion.Item key={classItem.id} value={classItem.id}>
-                                        <Accordion.Control>
-                                            <Group justify="space-between">
-                                                <Text fw={500}>{classItem.class_code}</Text>
-                                                <Group gap="xs">
-                                                    {hasChanges && (
-                                                        <Text size="xs" c="blue" fw={500}>Unsaved changes</Text>
-                                                    )}
-                                                    <ActionIcon
-                                                        color="red"
-                                                        variant="subtle"
-                                                        size="md"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setDeleteModalOpen(classItem.id);
-                                                        }}
-                                                    >
-                                                        <IconTrash size={16} />
-                                                    </ActionIcon>
-                                                </Group>
-                                            </Group>
-                                        </Accordion.Control>
-                                        <Accordion.Panel>
-                                            {renderClassInfo(classItem, hasChanges)}
-                                        </Accordion.Panel>
-                                    </Accordion.Item>
-                                );
-                            })}
-
-
-                        {/* Add New Class Accordion Item */}
-                        {showCreateClass && (
-                            <Accordion.Item value="new-class">
-                                <Accordion.Control>
-                                    <Group justify="space-between">
-                                        <Group gap="xs">
-                                            <ActionIcon
-                                                variant="light"
-                                                color="blue"
-                                                size="sm"
-                                                radius="xl"
-                                            >
-                                                <IconPlus size={16} />
-                                            </ActionIcon>
-                                            <Text fw={500} c="blue">Add New Class</Text>
-                                        </Group>
-                                    </Group>
-                                </Accordion.Control>
-                                <Accordion.Panel>
-                                    {renderCreateClass()}
-                                </Accordion.Panel>
-                            </Accordion.Item>
-                        )}
-                    </Accordion> : <>
-                        {showExistingClasses && classes && classes
-                            .filter(classItem => (profile?.classes?.includes(classItem.id) || profile?.admin))
-                            .map((classItem: Class) => {
-                                const promptsChanged = classPrompts[classItem.id] && (
-                                    classPrompts[classItem.id].lecture !== (classItem.lecture_prompt || '') ||
-                                    classPrompts[classItem.id].textbook !== (classItem.textbook_prompt || '') ||
-                                    classPrompts[classItem.id].homework !== (classItem.homework_prompt || '')
-                                );
-
-                                const chatTypesChanged = classChatTypes[classItem.id] && (
-                                    classChatTypes[classItem.id].learn !== (classItem.learn_mode_enabled || false) ||
-                                    classChatTypes[classItem.id].homework !== (classItem.homework_mode_enabled || false) ||
-                                    classChatTypes[classItem.id].testPrep !== (classItem.test_prep_mode_enabled || false) ||
-                                    classChatTypes[classItem.id].present !== (classItem.present_mode_enabled || false)
-                                );
-
-                                const featuresChanged = classFeatures[classItem.id] && (
-                                    classFeatures[classItem.id].lectureEnabled !== (classItem.lecture_enabled || false) ||
-                                    classFeatures[classItem.id].textbookEnabled !== (classItem.textbook_enabled || false) ||
-                                    classFeatures[classItem.id].homeworkEnabled !== (classItem.homework_enabled || false) ||
-                                    classFeatures[classItem.id].filesEnabled !== (classItem.files_enabled || false)
-                                );
-
-                                const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
-
-                                return (
-                                    <Stack key={classItem.id}>
-                                        {renderClassInfo(classItem, hasChanges)}
-                                    </Stack>
-                                )
-                            })}
-                        {showCreateClass && renderCreateClass()}
-                    </>}
-                </>
-            )}
-            <Modal
-                opened={!!deleteModalOpen}
-                onClose={() => setDeleteModalOpen(null)}
-                title="Delete Class"
-                size="sm"
-            >
-                <Stack>
-                    <Text size="sm">
-                        Are you sure you want to delete this class? This action cannot be undone.
-                    </Text>
-                    <Group justify="flex-end">
-                        <Button
-                            variant="subtle"
-                            onClick={() => setDeleteModalOpen(null)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            color="red"
-                            loading={deleteLoading}
-                            onClick={() => deleteModalOpen && handleDeleteClass(deleteModalOpen)}
-                        >
-                            Delete
-                        </Button>
-                    </Group>
-                </Stack>
-            </Modal>
-        </Stack>
+    const promptsChanged = classPrompts[classId] && (
+        classPrompts[classId].lecture !== (classData.lecture_prompt || '') ||
+        classPrompts[classId].textbook !== (classData.textbook_prompt || '') ||
+        classPrompts[classId].homework !== (classData.homework_prompt || '')
     );
+
+    const chatTypesChanged = classChatTypes[classId] && (
+        classChatTypes[classId].learn !== (classData.learn_mode_enabled || false) ||
+        classChatTypes[classId].homework !== (classData.homework_mode_enabled || false) ||
+        classChatTypes[classId].testPrep !== (classData.test_prep_mode_enabled || false) ||
+        classChatTypes[classId].present !== (classData.present_mode_enabled || false)
+    );
+
+    const featuresChanged = classFeatures[classId] && (
+        classFeatures[classId].lectureEnabled !== (classData.lecture_enabled || false) ||
+        classFeatures[classId].textbookEnabled !== (classData.textbook_enabled || false) ||
+        classFeatures[classId].homeworkEnabled !== (classData.homework_enabled || false) ||
+        classFeatures[classId].filesEnabled !== (classData.files_enabled || false)
+    );
+
+    const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
+
+    return renderClassInfo(classData, hasChanges);
 }

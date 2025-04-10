@@ -53,3 +53,6 @@ os.makedirs(SUMMARIES_DIR, exist_ok=True)
 FILES_DIR = os.path.join(UPLOAD_FOLDER, 'files')
 os.makedirs(FILES_DIR, exist_ok=True)
 
+# make onedrive_files directory if it doesn't exist, under the uploads directory
+ONEDRIVE_FILES_DIR = os.path.join(UPLOAD_FOLDER, 'onedrive_files')
+os.makedirs(ONEDRIVE_FILES_DIR, exist_ok=True)

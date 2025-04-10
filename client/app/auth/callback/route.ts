@@ -3,6 +3,8 @@ import useSupabaseServer from "@/utils/supabase/supabase-server";
 import { cookies } from "next/headers";
 import { updateProfile } from "@/utils/services/profile";
 import { getClasses } from "@/utils/queries/get-classes";
+import { upsertOneDrive } from "@/utils/services/microsoft";
+import { getOneDrive } from "@/utils/queries/get-onedrive";
 
 type DirectoryUser = {
     name: string;
@@ -18,17 +20,16 @@ export async function GET(request: Request) {
     if (code) {
         const supabase = await useSupabaseServer(cookies());
         // Exchange the code for a session
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (!error) {
+        const { data, error } = await supabase.auth.exchangeCodeForSession(
+            code,
+        );
+        const session = data.session;
+        if (
+            !error && session && session.provider_token &&
+            session.provider_refresh_token && session.expires_at
+        ) {
             // Retrieve the user information from the session
-            const { data: { user }, error: userError } = await supabase.auth
-                .getUser();
-
-            // Handle potential errors or missing user data
-            if (userError || !user) {
-                return NextResponse.redirect(`${origin}/auth/auth-code-error`);
-            }
-
+            const user = session.user;
             const email = user.email;
 
             // Verify the email domain
@@ -60,36 +61,51 @@ export async function GET(request: Request) {
             const classes = await getClasses(supabase);
 
             if (directoryUser) {
-                const splitNames = directoryUser.name.split(' ')
-                const firstName = (splitNames[0]).toLowerCase()
-                const formattedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1)
-                const lastName = (splitNames[splitNames.length - 1]).toLowerCase()
-                const formattedLastName = lastName.charAt(0).toUpperCase() + lastName.slice(1)
+                const splitNames = directoryUser.name.split(" ");
+                const firstName = splitNames[0].toLowerCase();
+                const formattedFirstName = firstName.charAt(0).toUpperCase() +
+                    firstName.slice(1);
+                const lastName = splitNames[splitNames.length - 1]
+                    .toLowerCase();
+                const formattedLastName = lastName.charAt(0).toUpperCase() +
+                    lastName.slice(1);
                 // professor status update
-                const isProfessor = (directoryUser.title !== null && directoryUser.title.toLowerCase().includes("professor")) || classes.some((c) => c.professors.includes(email));
-                if (isProfessor) {
-                    const filteredClasses = classes.filter((c) => c.professors.includes(email));
-                    const { success, error } = await updateProfile(user.id, {
-                        first_name: formattedFirstName,
-                        last_name: formattedLastName,
-                        professor: true,
-                        classes: filteredClasses.map((c) => c.id),
-                    });
-                    if (!success || error) {
-                        console.error(error);
-                    }
-                } else {
-                    const filteredClasses = classes.filter((c) => c.students.includes(email));
-                    const { success, error } = await updateProfile(user.id, {
-                        first_name: formattedFirstName,
-                        last_name: formattedLastName,
-                        professor: false,
-                        classes: filteredClasses.map((c) => c.id),
-                    });
-                    if (!success || error) {
-                        console.error(error);
-                    }
+                const isProfessor = (directoryUser.title !== null &&
+                    directoryUser.title.toLowerCase().includes(
+                        "professor",
+                    )) || classes.some((c) => c.professors.includes(email));
 
+                // we need to add onedrive data if they are a professor
+                if (isProfessor) {
+                    // check if they already have onedrive data
+                    const existingOneDrive = await getOneDrive(
+                        supabase,
+                        user.id,
+                    );
+                    const onedrive = await upsertOneDrive(
+                        user.id,
+                        session.provider_token,
+                        session.provider_refresh_token,
+                        new Date(session.expires_at).toISOString(),
+                        existingOneDrive?.id,
+                    );
+                    if (!onedrive) {
+                        console.error(onedrive);
+                    }
+                }
+
+                const filteredClasses = isProfessor
+                    ? classes.filter((c) => c.professors.includes(email))
+                    : classes.filter((c) => c.students.includes(email));
+
+                const { success, error } = await updateProfile(user.id, {
+                    first_name: formattedFirstName,
+                    last_name: formattedLastName,
+                    professor: isProfessor,
+                    classes: filteredClasses.map((c) => c.id),
+                });
+                if (!success || error) {
+                    console.error(error);
                 }
             }
 
@@ -99,7 +115,9 @@ export async function GET(request: Request) {
             if (isLocalEnv) {
                 return NextResponse.redirect(`${origin}/classes`);
             } else if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}/classes`);
+                return NextResponse.redirect(
+                    `https://${forwardedHost}/classes`,
+                );
             } else {
                 return NextResponse.redirect(`${origin}/classes`);
             }

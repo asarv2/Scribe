@@ -10,8 +10,9 @@ import { IconUpload } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { ParseStatus } from "@/types";
+import { createTextbook } from "@/utils/services/textbook";
 
-export default function UploadTextbookButton({ classId, icon = false, startParse = false }: { classId: string, icon?: boolean, startParse?: boolean }) {
+export default function UploadTextbookButton({ classId, icon = false, startParse = false, textbookNumber }: { classId: string, icon?: boolean, startParse?: boolean, textbookNumber?: number }) {
     const queryClient = useQueryClient();
 
     const handleUploadTextbook = async (file: File) => {
@@ -22,13 +23,21 @@ export default function UploadTextbookButton({ classId, icon = false, startParse
         }
 
         try {
+            if (!textbookNumber) {
+                throw new Error('Textbook number is required');
+            }
+
+            const title = file.name.replace('.pdf', '');
+            const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+
+            const textbookId = await createTextbook(classId, title, textbookNumber, responseUrl);
+
             // Create form data to match server requirements
             const formData = new FormData();
             formData.append('file', file);
             formData.append('class_id', classId);
-            formData.append('title', file.name.replace('.pdf', ''));
+            formData.append('textbook_id', textbookId);
             formData.append('file_path', ''); // Empty string for direct uploads
-            formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
             formData.append('start_parse', startParse ? 'true' : 'false');
             // Upload the file
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/textbook`, {

@@ -35,6 +35,14 @@ export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"]
 
 export type FileType = Database[SchemaName]["Enums"]["file_type"]
 
+export type OneDrive = Database[SchemaName]["Tables"]["onedrive"]["Row"]
+
+export type OneDriveFolder = {
+    id: string;
+    name: string;
+    path: string;
+}
+
 export interface ChatMessage {
     id: number;
     title: string

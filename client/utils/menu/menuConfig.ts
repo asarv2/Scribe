@@ -50,8 +50,13 @@ export const menuConfig = {
   history: {
     label: 'History',
     icon: IconHistory,
-    link: '/chat',
+    link: '/history',
   },
+  settings: {
+    label: 'Settings',
+    icon: IconSettings,
+    link: '/settings',
+  }
 //   settings: {
 //     label: 'Settings',
 //     icon: IconSettings,

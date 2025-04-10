@@ -7,18 +7,17 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
-export const createTextbook = async (classId: string, textbookTitle: string, numPages: number, response_url: string) => {
+export const createTextbook = async (classId: string, textbookTitle: string, textbookNumber: number, response_url: string) => {
     const supabase = await useSupabaseServer(cookies());
-    console.log("Creating textbook", classId, textbookTitle, numPages);
     const { data, error } = await supabase
         .from("textbooks")
-        .insert({class: classId, title: textbookTitle, pages: numPages, response_url: response_url})
+        .insert({class: classId, title: textbookTitle, textbook_number: textbookNumber, response_url: response_url})
         .select("*")
         .single();
     if (error) {
         throw new Error(error.message);
     }
-    return data
+    return data.id;
 }
 
 export const deleteTextbook = async (textbookId: string) => {

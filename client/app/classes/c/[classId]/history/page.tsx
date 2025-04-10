@@ -1,5 +1,12 @@
-"use client";
+/**
+ * app/classes/c/[classId]/history/page.tsx
+ * 
+ * This page is used to display the history of the class.
+ * @AshokSaravanan222
+ * 04-08-2025
+ */
 
+"use client";
 import { use, useEffect, useMemo, useState } from "react";
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from "@mantine/hooks";
@@ -54,22 +61,6 @@ const formatChatType = (type: string) => {
     }
     return type.charAt(0).toUpperCase() + type.slice(1);
 };
-
-// Update the skeleton component
-function ChatSkeleton() {
-    return (
-        <Card withBorder>
-            <Stack>
-                <Skeleton height={200} radius="md" />
-                <Skeleton height={48} width="100%" /> {/* Height for 2 lines of text */}
-                <Group justify="space-between" align="center">
-                    <Skeleton height={16} width={150} />
-                    <Skeleton height={20} width={80} radius="xl" />
-                </Group>
-            </Stack>
-        </Card>
-    );
-}
 
 // Update the skeleton component for table view
 function ChatTableSkeleton() {
@@ -228,7 +219,7 @@ const getActiveImage = (chat: Chat, classId: string, messages?: Message[], messa
     return "/placeholder_image.svg";
 };
 
-export default function ChatPage({ params }: { params: Promise<{ classId: string }> }) {
+export default function HistoryPage({ params }: { params: Promise<{ classId: string }> }) {
     const { classId } = use(params);
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();

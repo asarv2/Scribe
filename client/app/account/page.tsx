@@ -307,7 +307,7 @@ export default function AccountPage() {
     }, [classes]);
 
     return (
-        <ClassLayout classId={null}>
+        <ClassLayout classId={null} showClasses={false}>
             <Container fluid style={{ marginTop: "30px" }}>
                 <Stack style={{ maxWidth: '100%', margin: '0 auto' }} gap="xl">
                     <Stack gap="xl">
@@ -446,14 +446,6 @@ export default function AccountPage() {
                                         </Button>
                                     </Stack>
                                 </Card>
-                            </div>
-                        )}
-
-                        {/* Class Management Section */}
-                        {(profile?.admin || profile?.professor) && (
-                            <div>
-                                <Text size="lg" fw={500} mb="md">Class Management</Text>
-                                <Management />
                             </div>
                         )}
 

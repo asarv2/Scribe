@@ -66,6 +66,7 @@ from app.routes.evaluate import router as evaluate_router
 from app.routes.generate import router as generate_router
 from app.routes.upload import router as upload_router
 from app.routes.download import router as download_router
+
 # Include routers
 app.include_router(parse_router, prefix="/parse")
 app.include_router(evaluate_router, prefix="/evaluate")

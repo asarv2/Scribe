@@ -18,12 +18,17 @@ from app.services.upload.textbook_extractor import TextbookExtractor
 from app.services.upload.homework_extractor import HomeworkExtractor
 from app.services.upload.lecture_extractor import LectureExtractor
 from app.services.upload.file_extractor import FileExtractor
+from app.services.classify.file_classifier import FileClassifier
+from app.routes.download import download_file_from_onedrive
 import google.generativeai as genai
+import traceback
 
 import logging
 import tempfile
 from urllib.parse import unquote
 import magic
+
+
 
 load_dotenv()
 router = APIRouter()
@@ -439,9 +444,11 @@ async def upload_content(
                     # Add to task queue instead of background tasks
                     await request.app.state.add_task(
                         process_lecture_internally,
+                        request,
                         full_path,
                         class_id,
                         response_url,
+                        True,
                         start_parse
                     )
                 else:
@@ -467,9 +474,11 @@ async def upload_content(
                     # Add to task queue
                     await request.app.state.add_task(
                         process_textbook_internally,
+                        request,
                         full_path,
                         class_id,
                         response_url,
+                        True,
                         start_parse
                     )
                 else:
@@ -495,9 +504,11 @@ async def upload_content(
                     # Add to task queue
                     await request.app.state.add_task(
                         process_homework_internally,
+                        request,
                         full_path,
                         class_id,
                         response_url,
+                        True,
                         start_parse
                     )
                 else:
@@ -564,8 +575,7 @@ async def process_lecture(
     file: UploadFile = File(None),
     file_path: str = Form(None),
     class_id: str = Form(...),
-    title: str = Form(None),
-    response_url: str = Form(None),
+    lecture_id: str = Form(...),
     start_parse: bool = Form(False)
 ):
     """
@@ -576,13 +586,10 @@ async def process_lecture(
     - file: The uploaded lecture file (optional)
     - file_path: Path to an existing lecture file (optional)
     - class_id: Class ID
-    - title: Optional title for the lecture
-    - response_url: Optional response url for the lecture
-
+    - lecture_id: Lecture ID
     Returns:
     - JSON with processing information
     """
-    lecture_id = None
     try:
         # Validate that either file or file_path is provided
         if not file and not file_path:
@@ -596,19 +603,14 @@ async def process_lecture(
             filename = file.filename
         else:
             filename = os.path.basename(file_path)
-            
-        # Determine file type based on extension
-        file_type = "other"
-        ext = os.path.splitext(filename)[1].lower()
-        
-        if ext in ['.pdf']:
-            file_type = "pdf"
-        elif ext in ['.mp3', '.wav', '.ogg', '.flac', '.m4a']:
-            file_type = "audio"
-        elif ext in ['.mp4', '.avi', '.mov', '.mkv', '.webm']:
-            file_type = "video"
-        elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
-            file_type = "image"
+
+        # get lecture from supabase
+        lecture_response = supabase.table("lectures").select("*").eq("id", lecture_id).execute()
+        lecture = lecture_response.data[0]
+
+        # get file type from lecture
+        file_type = lecture.get("type")
+        response_url = lecture.get("response_url")
 
         # Determine file length
         file_length = 1
@@ -644,28 +646,11 @@ async def process_lecture(
                 file_length = 1
         else:
             file_length = 1
-
-        # get existing lectures to find the note_number
-        lectures_response = supabase.table("lectures").select("*").eq("class", class_id).eq("deleted", False).execute()
-        existing_lectures = lectures_response.data
-        note_number = len(existing_lectures) + 1
         
-        # drop ext on filename for title
-        filename_for_title = os.path.splitext(filename)[0]
-        
-        # create lecture in supabase
-        lecture_response = supabase.table("lectures").insert({
-            "class": class_id,
-            "name": title or filename_for_title,
-            "note_number": note_number,
-            "response_url": response_url or "",
-            "type": file_type,
+        # update lecture in supabase
+        supabase.table("lectures").update({
             "pages": file_length,
-            "parse_status": "idle"
-        }).execute()
-
-        # Get the ID of the newly created lecture
-        lecture_id = lecture_response.data[0]["id"]
+        }).eq("id", lecture_id).execute()
         
         # Create lecture directory
         lecture_dir = os.path.join(COURSES_DIR, class_id, "lectures", lecture_id)
@@ -753,7 +738,6 @@ async def process_lecture(
             "message": "Lecture file received and processing started",
             "lecture_id": lecture_id,
             "file_path": file_path,
-            "file_type": file_type
         }
         
     except Exception as e:
@@ -761,12 +745,12 @@ async def process_lecture(
         print(f"Error processing lecture: {str(e)}")
         print(traceback.format_exc())
 
-        if lecture_id:
-            # update the status of the lecture in the database
-            supabase.table("lectures").update({
-                "parse_status": "error",
-                "parse_error": str(e),
-            }).eq("id", lecture_id).execute()
+        # update the status of the lecture in the database
+        supabase.table("lectures").update({
+            "parse_status": "error",
+            "parse_error": str(e),
+        }).eq("id", lecture_id).execute()
+            
         
         return JSONResponse(
             status_code=500,
@@ -782,8 +766,7 @@ async def process_textbook(
     file: UploadFile = File(None),
     file_path: str = Form(None),
     class_id: str = Form(...),
-    title: str = Form(None),
-    response_url: str = Form(None),
+    textbook_id: str = Form(...),
     start_parse: bool = Form(False)
 ):
     """
@@ -794,7 +777,6 @@ async def process_textbook(
     - file_path: Path to an existing textbook file (optional)
     - class_id: Class ID
     - title: Optional title for the textbook
-    - response_url: Optional response url for the textbook
     
     Returns:
     - JSON with processing information
@@ -807,21 +789,12 @@ async def process_textbook(
                 content={"error": "Either file or file_path must be provided"}
             )
         
-        # get existing textbooks to find the textbook_number
-        textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).eq("deleted", False).execute()
-        existing_textbooks = textbooks_response.data
-        textbook_number = len(existing_textbooks) + 1
+        # get textbook from supabase
+        textbook_response = supabase.table("textbooks").select("*").eq("id", textbook_id).execute()
+        textbook = textbook_response.data[0]
 
-        # create textbook in supabase
-        textbook_response = supabase.table("textbooks").insert({
-            "class": class_id,
-            "title": title or os.path.splitext(filename)[0],
-            "textbook_number": textbook_number,
-            "response_url": response_url or ""
-        }).execute()
-
-        # get the id of the newly created textbook
-        textbook_id = textbook_response.data[0]["id"]
+        # get response url from textbook
+        response_url = textbook.get("response_url")
         
         # Create textbook directory
         textbook_dir = os.path.join(COURSES_DIR, class_id, "textbooks", textbook_id)
@@ -918,8 +891,7 @@ async def process_homework(
     file: UploadFile = File(None),
     file_path: str = Form(None),
     class_id: str = Form(...),
-    title: str = Form(None),
-    response_url: str = Form(None),
+    homework_id: str = Form(...),
     start_parse: bool = Form(False)
 ):
     """
@@ -943,21 +915,12 @@ async def process_homework(
                 content={"error": "Either file or file_path must be provided"}
             )
         
-        # get existing homeworks to find the homework_number
-        homeworks_response = supabase.table("homeworks").select("*").eq("class", class_id).eq("deleted", False).execute()
-        existing_homeworks = homeworks_response.data
-        homework_number = len(existing_homeworks) + 1
+        # get homework from supabase
+        homework_response = supabase.table("homeworks").select("*").eq("id", homework_id).execute()
+        homework = homework_response.data[0]
 
-        # create homework in supabase
-        homework_response = supabase.table("homeworks").insert({
-            "class": class_id,
-            "title": title or os.path.splitext(filename)[0],
-            "homework_number": homework_number,
-            "response_url": response_url or ""
-        }).execute()
-        
-        # get the id of the newly created homework
-        homework_id = homework_response.data[0]["id"]
+        # get response url from homework
+        response_url = homework.get("response_url")
         
         # Create homework directory
         homework_dir = os.path.join(COURSES_DIR, class_id, "homeworks", homework_id)
@@ -1035,12 +998,11 @@ async def process_homework(
         print(f"Error processing homework: {str(e)}")
         print(traceback.format_exc())
 
-        if homework_id:
-            # update the status of the homework in the database
-            supabase.table("homeworks").update({
-                "parse_status": "error",
-                "parse_error": str(e),
-            }).eq("id", homework_id).execute()
+        # update the status of the homework in the database
+        supabase.table("homeworks").update({
+            "parse_status": "error",
+            "parse_error": str(e),
+        }).eq("id", homework_id).execute()
 
         return JSONResponse(
             status_code=500,
@@ -1054,22 +1016,79 @@ async def process_homework(
 @router.post("/file")
 async def process_file(
     request: Request,
-    file_dir: str, 
-    final_file_path: str, 
-    file_type_category: str, 
-    file_size: int,
-    file_id: str,
-    class_id: str,
-    filename: str,
-    start_parse: bool,
-    response_url: str,
-    upload_dir: str
+    file: UploadFile = File(None),
+    file_path: str = Form(None),
+    class_id: str = Form(...),
+    file_id: str = Form(...),
+    start_parse: bool = Form(False),
+    upload_dir: str = Form(None)
 ):
     """
     Process a file - can be called with either an uploaded file or a file path.
+    Supports multiple file types: pdf, audio, video, image, and other.
+    
+    Parameters:
+    - file: The uploaded file (optional)
+    - file_path: Path to an existing file (optional)
+    - class_id: Class ID
+    - file_id: File ID
+    - title: Optional title for the file
+    - response_url: Optional response url for the file
+    - start_parse: Whether to start parsing the file
+    - file_type_category: Type of file (video, audio, pdf, etc.)
+    - file_size: Size of the file in bytes
+    - upload_dir: Directory where the file was uploaded (for TUS uploads)
+
+    Returns:
+    - JSON with processing information
     """
     try:
-        # set the status of the file in the database to processing (breif to calculate the length of the file)
+        # Validate that either file or file_path is provided
+        if not file and not file_path:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Either file or file_path must be provided"}
+            )
+        
+        # Determine filename and file directory
+        if file:
+            filename = file.filename
+            # Create file directory
+            file_dir = os.path.join(COURSES_DIR, class_id, "files", file_id)
+            os.makedirs(file_dir, exist_ok=True)
+            
+            # Save the uploaded file
+            final_file_path = os.path.join(file_dir, filename)
+            await file.seek(0)
+            
+            async with aiofiles.open(final_file_path, "wb") as f:
+                content = await file.read()
+                await f.write(content)
+        else:
+            filename = os.path.basename(file_path)
+            file_dir = os.path.join(COURSES_DIR, class_id, "files", file_id)
+            os.makedirs(file_dir, exist_ok=True)
+            
+            # Copy the file to the file directory
+            final_file_path = os.path.join(file_dir, filename)
+            
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(final_file_path), exist_ok=True)
+            
+            # Copy the file
+            shutil.copy2(file_path, final_file_path)
+
+        # get file from supabase
+        file_response = supabase.table("files").select("*").eq("id", file_id).execute()
+        file_data = file_response.data[0]
+
+        # get file type from file
+        file_type_category = file_data.get("type")
+        file_size = file_data.get("file_size")
+        response_url = file_data.get("response_url")
+
+        
+        # set the status of the file in the database to processing (brief to calculate the length of the file)
         supabase.table("files").update({
             "parse_status": "processing",
             "parse_error": "",
@@ -1202,8 +1221,9 @@ async def process_file(
                 if start_parse:
                     await request.app.state.add_task(parse_file_internally, file_id, response_url)
                 
-                # Clean up the tus upload directory
-                shutil.rmtree(upload_dir)
+                # Clean up the tus upload directory if it was provided
+                if upload_dir and os.path.exists(upload_dir):
+                    shutil.rmtree(upload_dir)
                 
                 return {
                     "status": "success",
@@ -1288,8 +1308,7 @@ async def process_file(
             # Generate title for video files that start with "video-"
             if file_type_category == "video" and filename.lower().startswith("video-"):
                 # Collect all transcriptions
-                transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 
-                'video_chunk']
+                transcriptions = [item.get('text', '') for item in file_content if item.get('type') == 'video_chunk']
                 
                 if transcriptions:
                     # Generate title
@@ -1306,8 +1325,9 @@ async def process_file(
                 await request.app.state.add_task(parse_file_internally, file_id, response_url)
             
         
-        # Clean up the tus upload directory
-        shutil.rmtree(upload_dir)
+        # Clean up the tus upload directory if it was provided
+        if upload_dir and os.path.exists(upload_dir):
+            shutil.rmtree(upload_dir)
         
         return {
             "status": "success",
@@ -1338,23 +1358,51 @@ async def process_file(
     
 
 # Helper functions for internal processing
-async def process_lecture_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):
+async def process_lecture_internally(request: Request, file_path: str, class_id: str, response_url: str, start_upload: bool, start_parse: bool):
     """Helper function to call the lecture endpoint internally."""
-    import httpx
+
+    # get existing lectures to find the note_number
+    lectures_response = supabase.table("lectures").select("*").eq("class", class_id).eq("deleted", False).execute()
+    existing_lectures = lectures_response.data
+    note_number = len(existing_lectures) + 1
+
+    # get the filename
+    filename = os.path.splitext(os.path.basename(file_path))[0]
     
-    # Prepare form data
-    form_data = {
-        "file_path": file_path,
-        "class_id": class_id,
-        "title": os.path.splitext(os.path.basename(file_path))[0],
+    # Determine file type based on extension
+    file_type = "other"
+    ext = os.path.splitext(filename)[1].lower()
+    
+    if ext in ['.pdf']:
+        file_type = "pdf"
+    elif ext in ['.mp3', '.wav', '.ogg', '.flac', '.m4a']:
+        file_type = "audio"
+    elif ext in ['.mp4', '.avi', '.mov', '.mkv', '.webm']:
+        file_type = "video"
+    elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+        file_type = "image"
+
+    
+    # drop ext on filename for title
+    filename_for_title = os.path.splitext(filename)[0]
+
+    # create new lecture in supabase
+    lecture_response = supabase.table("lectures").insert({
+        "class": class_id,
         "response_url": response_url,
-        "start_parse": start_parse
-    }
+        "name": filename_for_title,
+        "note_number": note_number,
+        "type": file_type,
+    }).execute()
+
+    # get the lecture id from the response
+    lecture_id = lecture_response.data[0]['id']
     
-    # Call the endpoint
-    async with httpx.AsyncClient() as client:
-        response = await client.post(f"{response_url}/upload/lecture", data=form_data)
-        print(f"Lecture processing response: {response.text}")
+    if start_upload:
+        await request.app.state.add_task(process_lecture, request, None, file_path, class_id, response_url, start_upload, start_parse)
+
+    # return the lecture id
+    return lecture_id
 
 async def parse_lecture_internally(lecture_id: str, response_url: str):
     """Helper function to call the lecture endpoint internally."""
@@ -1375,23 +1423,36 @@ async def parse_lecture_internally(lecture_id: str, response_url: str):
         print(f"Lecture parsing response: {response.text}")
 
 
-async def process_textbook_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):
+async def process_textbook_internally(request: Request, file_path: str, class_id: str, response_url: str, start_upload: bool, start_parse: bool):
     """Helper function to call the textbook endpoint internally."""
-    import httpx
+
+    # get existing textbooks to find the textbook_number
+    textbooks_response = supabase.table("textbooks").select("*").eq("class", class_id).eq("deleted", False).execute()
+    existing_textbooks = textbooks_response.data
+    textbook_number = len(existing_textbooks) + 1
+
+    # get the filename
+    filename = os.path.splitext(os.path.basename(file_path))[0]
+
+    # get supabase format without extension
+    title = os.path.splitext(filename)[0]
+
+    # insert textbook in supabase
+    textbook_response = supabase.table("textbooks").insert({
+        "class": class_id,
+        "title": title,
+        "textbook_number": textbook_number,
+        "response_url": response_url
+    }).execute()
+
+    # get the textbook id from the response
+    textbook_id = textbook_response.data[0]['id']
+
     
-    # Prepare form data
-    form_data = {
-        "file_path": file_path,
-        "class_id": class_id,
-        "title": os.path.splitext(os.path.basename(file_path))[0],
-        "response_url": response_url,
-        "start_parse": start_parse
-    }
-    
-    # Call the endpoint
-    async with httpx.AsyncClient() as client:
-        response = await client.post(f"{response_url}/upload/textbook", data=form_data)
-        print(f"Textbook processing response: {response.text}")
+    if start_upload:
+        await request.app.state.add_task(process_textbook, request, None, file_path, class_id, response_url, start_upload, start_parse)
+
+    return textbook_id
 
 async def parse_textbook_internally(textbook_id: str, response_url: str):
     """Helper function to call the textbook endpoint internally."""
@@ -1412,23 +1473,35 @@ async def parse_textbook_internally(textbook_id: str, response_url: str):
         print(f"Textbook parsing response: {response.text}")
 
 
-async def process_homework_internally(file_path: str, class_id: str, response_url: str, start_parse: bool):
+async def process_homework_internally(request: Request, file_path: str, class_id: str, response_url: str, start_upload: bool, start_parse: bool):
     """Helper function to call the homework endpoint internally."""
-    import httpx
+
+    # get existing homeworks to find the homework_number
+    homeworks_response = supabase.table("homeworks").select("*").eq("class", class_id).eq("deleted", False).execute()
+    existing_homeworks = homeworks_response.data
+    homework_number = len(existing_homeworks) + 1
+
+    # get the filename
+    filename = os.path.splitext(os.path.basename(file_path))[0]
+
+    # get supabase format without extension
+    title = os.path.splitext(filename)[0]
+
+    # update homework in supabase
+    homework_response = supabase.table("homeworks").insert({
+        "class": class_id,
+        "title": title,
+        "homework_number": homework_number,
+        "response_url": response_url
+    }).execute()
+
+    # get the homework id from the response
+    homework_id = homework_response.data[0]['id']
     
-    # Prepare form data
-    form_data = {
-        "file_path": file_path,
-        "class_id": class_id,
-        "title": os.path.splitext(os.path.basename(file_path))[0],
-        "response_url": response_url,
-        "start_parse": start_parse
-    }
-    
-    # Call the endpoint
-    async with httpx.AsyncClient() as client:
-        response = await client.post(f"{response_url}/upload/homework", data=form_data)
-        print(f"Homework processing response: {response.text}")
+    if start_upload:
+        await request.app.state.add_task(process_homework, request, None, file_path, class_id, response_url, start_upload, start_parse)
+
+    return homework_id
 
 async def parse_homework_internally(homework_id: str, response_url: str):
     """Helper function to call the homework endpoint internally."""
@@ -1448,6 +1521,43 @@ async def parse_homework_internally(homework_id: str, response_url: str):
         )
         print(f"Homework parsing response: {response.text}")
 
+async def process_file_internally(request: Request, file_path: str, class_id: str, response_url: str, start_upload: bool, start_parse: bool):
+    """Helper function to call the file endpoint internally."""
+    
+    # Get file type based on extension
+    filename = os.path.basename(file_path)
+    ext = os.path.splitext(filename)[1].lower()
+    file_type_category = "other"
+    
+    if ext in ['.pdf']:
+        file_type_category = "pdf"
+    elif ext in ['.mp3', '.wav', '.ogg', '.flac', '.m4a']:
+        file_type_category = "audio"
+    elif ext in ['.mp4', '.avi', '.mov', '.mkv', '.webm']:
+        file_type_category = "video"
+    elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']:
+        file_type_category = "image"
+    
+    # Get file size
+    file_size = os.path.getsize(file_path) if os.path.exists(file_path) else 0
+    
+    # create file from supabase
+    file_response = supabase.table("files").insert({
+        "class": class_id,
+        "type": file_type_category,
+        "file_size": file_size,
+        "title": os.path.splitext(os.path.basename(file_path))[0],
+        "response_url": response_url
+    }).execute()
+
+    # get the file id from the response
+    file_id = file_response.data[0]['id']
+    
+
+    if start_upload:
+        await request.app.state.add_task(process_file, request, None, file_path, class_id, response_url, start_upload, start_parse)
+
+    return file_id
 
 async def parse_file_internally(file_id: str, response_url: str):
     """Helper function to call the file endpoint internally."""
@@ -1819,31 +1929,22 @@ async def finalize_upload(request: Request):
         final_file_path = os.path.join(file_dir, filename)
         shutil.copy2(os.path.join(upload_dir, "file"), final_file_path)
         
-        # Return early with the file ID so the client can start tracking status
-        # Start the rest of the processing in a background task
-        await request.app.state.add_task(
-            process_file,
-            request,
-            file_dir, 
-            final_file_path, 
-            file_type_category, 
-            file_size,
-            db_file_id,
-            class_id,
-            filename,
-            start_parse,
-            response_url,
-            upload_dir
+        # Process the file using the new process_file endpoint
+        response = await process_file(
+            request=request,
+            file=None,  # No direct file upload
+            file_path=final_file_path,  # Use the path to the uploaded file
+            class_id=class_id,
+            file_id=db_file_id,
+            title=filename_for_supabase.split('.')[0],  # Use filename without extension as title
+            response_url=response_url,
+            start_parse=start_parse,
+            file_type_category=file_type_category,
+            file_size=file_size,
+            upload_dir=upload_dir  # Pass the upload_dir for cleanup
         )
         
-        # Return immediately with the file ID
-        return {
-            "status": "success",
-            "message": "File received and processing started",
-            "file_id": db_file_id,
-            "file_path": final_file_path,
-            "file_type": file_type_category,
-        }
+        return response
         
     except Exception as e:
         import traceback
@@ -1855,5 +1956,169 @@ async def finalize_upload(request: Request):
             content={
                 "status": "error",
                 "message": f"Failed to process file: {str(e)}"
+            }
+        )
+    
+
+@router.post("/onedrive")
+async def upload_onedrive(
+    request: Request,
+    class_id: str = Form(...),
+    onedrive_id: str = Form(...),
+    files: str = Form(...),  # JSON string of file IDs or [fileId, category] pairs
+    response_url: str = Form(...),
+    only_active: bool = Form(True),
+    start_upload: bool = Form(True),
+    start_parse: bool = Form(False)
+):
+    try:
+        # Get the class data
+        class_data = supabase.table("classes").select("*").eq("id", class_id).execute()
+        class_title = class_data.data[0]["title"]
+        
+        # Parse the files input - handle both formats
+        files_data = json.loads(files)
+        
+        # Determine if we have simple file IDs or [fileId, category] pairs
+        if files_data and isinstance(files_data, list):
+            if isinstance(files_data[0], list) or isinstance(files_data[0], tuple):
+                # Format is [[fileId, category], ...]
+                file_category_pairs = files_data
+                file_ids = [pair[0] for pair in file_category_pairs]
+            else:
+                # Format is [fileId, fileId, ...]
+                file_ids = files_data
+                file_category_pairs = [(file_id, None) for file_id in file_ids]
+        else:
+            # Single file ID as string
+            file_ids = [files_data]
+            file_category_pairs = [(files_data, None)]
+            
+        # Get all onedrive files for this class
+        all_onedrive_files_response = supabase.table("onedrive_files").select("*").eq("class", class_id).execute()
+        all_onedrive_files = all_onedrive_files_response.data
+        
+        if only_active:
+            all_onedrive_files = [f for f in all_onedrive_files if f.get("active", True)]
+            
+        # Create a mapping of file IDs to their database records
+        file_map = {f["id"]: f for f in all_onedrive_files}
+        
+        # Initialize category lists
+        lecture_files = []
+        textbook_files = []
+        homework_files = []
+        other_files = []
+        unclassified_files = []
+        
+        # Process files with explicit categories
+        for file_id, category in file_category_pairs:
+            if file_id not in file_map:
+                continue
+                
+            if category == "lecture":
+                lecture_files.append(file_id)
+            elif category == "textbook":
+                textbook_files.append(file_id)
+            elif category == "homework":
+                homework_files.append(file_id)
+            elif category == "file":
+                other_files.append(file_id)
+            else:
+                unclassified_files.append(file_id)
+                
+        # Classify unclassified files if needed
+        if unclassified_files:
+            # Create a file classifier
+            file_classifier = FileClassifier()
+            
+            # Get file metadata for classification
+            unclassified_file_data = [file_map[f_id] for f_id in unclassified_files if f_id in file_map]
+            
+            # Using agents SDK to classify files
+            classified_lecture_files, classified_textbook_files, classified_homework_files, classified_other_files = await file_classifier.classify_files(class_title, unclassified_file_data)
+            
+            # Add the classified files to the lists
+            lecture_files.extend(classified_lecture_files)
+            textbook_files.extend(classified_textbook_files)
+            homework_files.extend(classified_homework_files)
+            other_files.extend(classified_other_files)
+            
+        # Process files by category
+        updates = []  # tuple of updates for supabase
+            
+        # Process lectures
+        for onedrive_file_id in lecture_files:
+            # find the onedrive entry from all_onedrive_files
+            onedrive_entry = next((f for f in all_onedrive_files if f["id"] == onedrive_file_id), None)
+            if start_upload:
+                # Download the file from OneDrive
+                local_file_path, original_filename = await download_file_from_onedrive(onedrive_id, onedrive_file_id)
+                lecture_id = await process_lecture_internally(request, local_file_path, class_id, response_url, start_upload, start_parse)
+            else:
+                # call the download endpoint asynchronously
+                await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
+                lecture_id = await process_lecture_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
+            updates.append({"id": onedrive_file_id, "lecture": lecture_id})
+        
+        # Similar processing for other categories...
+        for onedrive_file_id in textbook_files:
+            # find the onedrive entry from all_onedrive_files
+            onedrive_entry = next((f for f in all_onedrive_files if f["id"] == onedrive_file_id), None)
+            if start_upload:
+                local_file_path, original_filename = await download_file_from_onedrive(onedrive_id, onedrive_file_id)
+                textbook_id = await process_textbook_internally(request, local_file_path, class_id, response_url, start_upload, start_parse)
+            else:
+                # call the download endpoint asynchronously
+                await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
+                textbook_id = await process_textbook_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
+            updates.append({"id": onedrive_file_id, "textbook": textbook_id})
+        
+        for onedrive_file_id in homework_files:
+            # find the onedrive entry from all_onedrive_files
+            onedrive_entry = next((f for f in all_onedrive_files if f["id"] == onedrive_file_id), None)
+            if start_upload:
+                local_file_path, original_filename = await download_file_from_onedrive(onedrive_id, onedrive_file_id)
+                homework_id = await process_homework_internally(request, local_file_path, class_id, response_url, start_upload, start_parse, onedrive_file_id)
+            else:
+                # call the download endpoint asynchronously
+                await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
+                homework_id = await process_homework_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
+            updates.append({"id": onedrive_file_id, "homework": homework_id})
+            
+        for onedrive_file_id in other_files:
+            # find the onedrive entry from all_onedrive_files
+            onedrive_entry = next((f for f in all_onedrive_files if f["id"] == onedrive_file_id), None)
+            if start_upload:
+                local_file_path, original_filename = await download_file_from_onedrive(onedrive_id, onedrive_file_id)
+                file_id = await process_file_internally(request, local_file_path, class_id, response_url, start_upload, start_parse, onedrive_file_id)
+            else:
+                # call the download endpoint asynchronously
+                await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
+                file_id = await process_file_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
+            updates.append({"id": onedrive_file_id, "file": file_id})
+
+        # Update the onedrive files in supabase
+        if updates:
+            supabase.table("onedrive_files").upsert(updates).execute()
+
+        return JSONResponse(
+            status_code=200,
+            content={
+                "status": "success",
+                "message": "Files classified successfully"
+            }
+        )
+    except Exception as e:
+        print("Error in classify function:", {
+            "name": type(e).__name__,
+            "message": str(e),
+            "stack": traceback.format_exc()
+        })
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": f"Failed to classify files: {str(e)}"
             }
         )

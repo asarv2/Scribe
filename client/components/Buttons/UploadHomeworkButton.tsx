@@ -10,8 +10,9 @@ import { IconUpload } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { ParseStatus } from "@/types";
+import { createHomework } from "@/utils/services/homework";
 
-export default function UploadHomeworkButton({ classId, icon = false, startParse = false }: { classId: string, icon?: boolean, startParse?: boolean }) {
+export default function UploadHomeworkButton({ classId, icon = false, startParse = false, homeworkNumber }: { classId: string, icon?: boolean, startParse?: boolean, homeworkNumber?: number }) {
     const queryClient = useQueryClient();
 
     const handleUploadHomework = async (file: File) => {
@@ -22,13 +23,24 @@ export default function UploadHomeworkButton({ classId, icon = false, startParse
         }
 
         try {
+
+            if (!homeworkNumber) {
+                throw new Error('Homework number is required');
+            }
+
+            const title = file.name.replace(/\.(pdf|txt)$/i, '');
+            const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+
+            // Create homework for supabase
+            const homeworkId = await createHomework(classId, title, homeworkNumber, responseUrl);
+
             // Create form data to match server requirements
             const formData = new FormData();
             formData.append('file', file);
             formData.append('class_id', classId);
-            formData.append('title', file.name.replace(/\.(pdf|txt)$/i, ''));
+            formData.append('homework_id', homeworkId);
+            formData.append('title', title);
             formData.append('file_path', ''); // Empty string for direct uploads
-            formData.append('response_url', `${process.env.NEXT_PUBLIC_API_URL}`);
             formData.append('start_parse', startParse ? 'true' : 'false');
             // Upload the file
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload/homework`, {

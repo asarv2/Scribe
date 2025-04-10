@@ -68,12 +68,12 @@ import UploadLectureButton from "@/components/Buttons/UploadLectureButton";
 import UploadTextbookButton from "@/components/Buttons/UploadTextbookButton";
 import UploadHomeworkButton from "@/components/Buttons/UploadHomeworkButton";
 import Content from "@/components/Content/Content";
+import DeleteClassModal from "@/components/Delete/DeleteClassModal";
 
 export default function ProfessorSignup() {
     const supabase = useSupabaseBrowser();
     const router = useRouter();
     const queryClient = useQueryClient();
-    const [deleteClassModalId, setDeleteClassModalId] = useState<string | null>(null);
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -134,7 +134,6 @@ export default function ProfessorSignup() {
                 message: 'Class deleted successfully',
                 color: 'green'
             });
-            setDeleteClassModalId(null);
         } catch (error: any) {
             notifications.show({
                 title: 'Error',
@@ -530,7 +529,7 @@ export default function ProfessorSignup() {
                                                             </Tabs.Panel>
 
                                                             <Tabs.Panel value="manual" pt="md">
-                                                                <Management showExistingClasses={false} showOuterAccordion={false} />
+                                                                <Management classId={classData?.id ?? ""} showExistingClasses={false} showOuterAccordion={false} />
                                                             </Tabs.Panel>
                                                         </Tabs>
                                                     </Stack> : (<Stack pt="md">
@@ -538,35 +537,13 @@ export default function ProfessorSignup() {
                                                             <Group>
                                                                 <IconCheck size={16} />
                                                                 <Text>Added {classData.class_code} from Brightspace at {new Date(classData.created_at ?? "").toLocaleString()}</Text>
-                                                                <Tooltip label="Remove Course">
-                                                                    <ActionIcon
-                                                                        variant="subtle"
-                                                                        size="md"
-                                                                        color="red"
-                                                                        onClick={() => {
-                                                                            setDeleteClassModalId(classData.id);
-                                                                        }}
-                                                                    >
-                                                                        <IconTrash size={16} />
-                                                                    </ActionIcon>
-                                                                </Tooltip>
+                                                                <DeleteClassModal classId={classData?.id ?? ""} />
                                                             </Group>
                                                         ) : (
                                                             <Group>
                                                                 <IconCheck size={16} />
                                                                 <Text>Added {classData?.class_code} manually at {new Date(classData?.created_at ?? "").toLocaleString()}</Text>
-                                                                <Tooltip label="Remove Course">
-                                                                    <ActionIcon
-                                                                        variant="subtle"
-                                                                        size="md"
-                                                                        color="red"
-                                                                        onClick={() => {
-                                                                            setDeleteClassModalId(classData?.id ?? "");
-                                                                        }}
-                                                                    >
-                                                                        <IconTrash size={16} />
-                                                                    </ActionIcon>
-                                                                </Tooltip>
+                                                                <DeleteClassModal classId={classData?.id ?? ""} />
                                                             </Group>
                                                         )
                                                         }
@@ -607,7 +584,7 @@ export default function ProfessorSignup() {
                                                 ) : (
                                                     !loading && classes && classes.length > 0 && (
                                                         <Stack mt="md">
-                                                            <Management showCreateClass={false} showOuterAccordion={false} />
+                                                            <Management classId={classData?.id ?? ""} showCreateClass={false} showOuterAccordion={false} />
                                                         </Stack>
                                                     )
                                                 )}
@@ -668,9 +645,9 @@ export default function ProfessorSignup() {
 
                                                             <Tabs.Panel value="manual" pt="md">
                                                                 <Group>
-                                                                    {classData?.lecture_enabled && (calculateUploadStatus(lectures?.filter(l => l.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Lectures Uploaded</Button> : <UploadLectureButton classId={classData?.id ?? ""} />)}
-                                                                    {classData?.textbook_enabled && (calculateUploadStatus(textbooks?.filter(t => t.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Textbooks Uploaded</Button> : <UploadTextbookButton classId={classData?.id ?? ""} />)}
-                                                                    {classData?.homework_enabled && (calculateUploadStatus(homeworks?.filter(h => h.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Homeworks Uploaded</Button> : <UploadHomeworkButton classId={classData?.id ?? ""} />)}
+                                                                    {classData?.lecture_enabled && (calculateUploadStatus(lectures?.filter(l => l.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Lectures Uploaded</Button> : <UploadLectureButton classId={classData?.id ?? ""} lectureNumber={lectures?.length ? lectures.length + 1 : 1}/>)}
+                                                                    {classData?.textbook_enabled && (calculateUploadStatus(textbooks?.filter(t => t.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Textbooks Uploaded</Button> : <UploadTextbookButton classId={classData?.id ?? ""} textbookNumber={textbooks?.length ? textbooks.length + 1 : 1} />)}
+                                                                    {classData?.homework_enabled && (calculateUploadStatus(homeworks?.filter(h => h.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Homeworks Uploaded</Button> : <UploadHomeworkButton classId={classData?.id ?? ""} homeworkNumber={homeworks?.length ? homeworks.length + 1 : 1} />)}
                                                                 </Group>
                                                             </Tabs.Panel>
                                                         </Tabs>
@@ -848,12 +825,6 @@ export default function ProfessorSignup() {
                                 </Text>
                             )}
                         </Timeline>
-                        <Modal opened={!!deleteClassModalId} onClose={() => setDeleteClassModalId(null)} title="Delete Class">
-                            <Stack>
-                                <Text>Are you sure you want to delete {classData?.class_code}?</Text>
-                                <Button onClick={() => handleDeleteClass(deleteClassModalId!)} color="red">Delete</Button>
-                            </Stack>
-                        </Modal>
                     </Stack>
                 </Paper>
             </Container>

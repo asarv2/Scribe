@@ -6,19 +6,20 @@
 
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
+import { FileType } from "@/types";
 
-export const createLecture = async (classId: string, lectureTitle: string, lectureNumber: number, numPages: number, upload_progress: number, response_url: string) => {
+export const createLecture = async (classId: string, lectureTitle: string, lectureNumber: number, fileType: FileType, response_url: string) => {
     const supabase = await useSupabaseServer(cookies());
-    console.log("Creating lecture", classId, lectureTitle, lectureNumber, numPages, response_url);
+    console.log("Creating lecture", classId, lectureTitle, lectureNumber, response_url);
     const { data, error } = await supabase
         .from("lectures")
-        .insert({class: classId, name: lectureTitle, note_number: lectureNumber, pages: numPages, upload_progress: upload_progress, response_url: response_url})
+        .insert({class: classId, name: lectureTitle, note_number: lectureNumber, type: fileType, response_url: response_url})
         .select("*")
         .single();
     if (error) {
         throw new Error(error.message);
     }
-    return data
+    return data?.id;
 }
 
 export const deleteLecture = async (lectureId: string) => {

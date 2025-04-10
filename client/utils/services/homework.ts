@@ -7,18 +7,18 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
 
-export const createHomework = async (classId: string, homeworkTitle: string, homeworkNumber: number, upload_progress: number, response_url: string) => {
+export const createHomework = async (classId: string, homeworkTitle: string, homeworkNumber: number, response_url: string) => {
     const supabase = await useSupabaseServer(cookies());
-    console.log("Creating homework", classId, homeworkTitle, homeworkNumber, upload_progress, response_url);
+    console.log("Creating homework", classId, homeworkTitle, homeworkNumber, response_url);
     const { data, error } = await supabase
         .from("homeworks")
-        .insert({class: classId, name: homeworkTitle, homework_number: homeworkNumber, upload_progress: upload_progress, response_url: response_url})
+        .insert({class: classId, name: homeworkTitle, homework_number: homeworkNumber, response_url: response_url})
         .select("*")
         .single();
     if (error) {
         throw new Error(error.message);
     }
-    return data
+    return data?.id;
 }
 
 export const deleteHomework = async (homeworkId: string) => {
