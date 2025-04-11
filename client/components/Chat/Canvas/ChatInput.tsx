@@ -98,8 +98,8 @@ export const ChatInput = memo(({
 
 
   const { data: files, isLoading: loadingFiles } = useQuery({
-    queryKey: ["files", profile?.id, classId],
-    queryFn: () => getFiles(supabase, profile!.id, [classId]),
+    queryKey: ["files", classId],
+    queryFn: () => getFiles(supabase, [classId]),
     enabled: !!profile
   });
 
@@ -250,7 +250,7 @@ export const ChatInput = memo(({
 
                 // Refresh queries
                 queryClient.refetchQueries({
-                  queryKey: ["files", profile.id, classId]
+                  queryKey: ["files", classId]
                 });
 
                 queryClient.refetchQueries({
@@ -444,7 +444,7 @@ export const ChatInput = memo(({
 
           // Then trigger a refetch to ensure we're in sync
           await queryClient.invalidateQueries({
-            queryKey: ["files", profile.id, classId],
+            queryKey: ["files", classId],
             exact: true
           });
         }

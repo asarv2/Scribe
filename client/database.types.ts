@@ -759,12 +759,13 @@ export type Database = {
           expires: string
           file_names: string[]
           file_number: number
+          file_size: number
           id: string
           last_parse_attempt: string | null
           length: number
           parse_error: string
           parse_status: Database["prod"]["Enums"]["parse_status"]
-          profile: string
+          profile: string | null
           response_url: string
           title: string
           type: Database["prod"]["Enums"]["file_type"]
@@ -776,12 +777,13 @@ export type Database = {
           expires?: string
           file_names?: string[]
           file_number?: number
+          file_size?: number
           id?: string
           last_parse_attempt?: string | null
           length?: number
           parse_error?: string
           parse_status?: Database["prod"]["Enums"]["parse_status"]
-          profile: string
+          profile?: string | null
           response_url?: string
           title?: string
           type: Database["prod"]["Enums"]["file_type"]
@@ -793,12 +795,13 @@ export type Database = {
           expires?: string
           file_names?: string[]
           file_number?: number
+          file_size?: number
           id?: string
           last_parse_attempt?: string | null
           length?: number
           parse_error?: string
           parse_status?: Database["prod"]["Enums"]["parse_status"]
-          profile?: string
+          profile?: string | null
           response_url?: string
           title?: string
           type?: Database["prod"]["Enums"]["file_type"]
@@ -1058,7 +1061,15 @@ export type Database = {
           provider_token?: string
           refresh_token?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "onedrive_profile_fkey"
+            columns: ["profile"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       onedrive_files: {
         Row: {

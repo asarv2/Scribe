@@ -20,7 +20,6 @@ import { getLecture } from "@/utils/queries/get-lecture";
 import { Grid } from "@mantine/core";
 import { Flex } from "@mantine/core";
 import { Container } from "@mantine/core";
-import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
 import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
 import Latex from "@/components/Latex";
 import { getProfile } from "@/utils/queries/get-profile";

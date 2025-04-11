@@ -26,7 +26,7 @@ export default function UploadLectureButton({ classId, icon = false, startParse 
             const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
 
             let file_type: FileType = "other";
-            let ext = title.split('.').pop()?.toLowerCase();
+            let ext = file.name.split('.').pop()?.toLowerCase();
             if (!ext) {
                 throw new Error('File extension is required');
             }

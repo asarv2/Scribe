@@ -608,9 +608,10 @@ async def process_lecture(
         lecture_response = supabase.table("lectures").select("*").eq("id", lecture_id).execute()
         lecture = lecture_response.data[0]
 
+
         # get file type from lecture
-        file_type = lecture.get("type")
         response_url = lecture.get("response_url")
+        file_type = lecture.get("type")
 
         # Determine file length
         file_length = 1
@@ -1372,6 +1373,8 @@ async def process_lecture_internally(request: Request, file_path: str, class_id:
     # Determine file type based on extension
     file_type = "other"
     ext = os.path.splitext(filename)[1].lower()
+    print(f"File type: {ext}")
+    print(f"File name: {filename}")
     
     if ext in ['.pdf']:
         file_type = "pdf"
@@ -1997,6 +2000,9 @@ async def upload_onedrive(
         # Get all onedrive files for this class
         all_onedrive_files_response = supabase.table("onedrive_files").select("*").eq("class", class_id).execute()
         all_onedrive_files = all_onedrive_files_response.data
+
+        # create mapping from onedrive_file_id to item_id
+        onedrive_file_id_to_item_id = {f["id"]: f["item"] for f in all_onedrive_files}
         
         if only_active:
             all_onedrive_files = [f for f in all_onedrive_files if f.get("active", True)]
@@ -2010,6 +2016,11 @@ async def upload_onedrive(
         homework_files = []
         other_files = []
         unclassified_files = []
+
+        lectures_to_deactivate = []
+        textbooks_to_deactivate = []
+        homework_to_deactivate = []
+        files_to_deactivate = []
         
         # Process files with explicit categories
         for file_id, category in file_category_pairs:
@@ -2017,13 +2028,35 @@ async def upload_onedrive(
                 continue
                 
             if category == "lecture":
-                lecture_files.append(file_id)
+                if file_map[file_id]["lecture"] is None:
+                    lecture_files.append(file_id)
+                # deactivate the other sections
+                textbooks_to_deactivate.append(file_map[file_id]["textbook"])
+                homework_to_deactivate.append(file_map[file_id]["homework"])
+                files_to_deactivate.append(file_map[file_id]["file"])
             elif category == "textbook":
-                textbook_files.append(file_id)
+                if file_map[file_id]["textbook"] is None:
+                    textbook_files.append(file_id)
+                # deactivate the other sections
+                lectures_to_deactivate.append(file_map[file_id]["lecture"])
+                homework_to_deactivate.append(file_map[file_id]["homework"])
+                files_to_deactivate.append(file_map[file_id]["file"])
             elif category == "homework":
-                homework_files.append(file_id)
+                if file_map[file_id]["homework"] is None:
+                    homework_files.append(file_id)
+                # deactivate the other sections
+                lectures_to_deactivate.append(file_map[file_id]["lecture"])
+                textbooks_to_deactivate.append(file_map[file_id]["textbook"])
+                files_to_deactivate.append(file_map[file_id]["file"])
+                
             elif category == "file":
-                other_files.append(file_id)
+                if file_map[file_id]["file"] is None:
+                    other_files.append(file_id)
+                # deactivate the other sections
+                lectures_to_deactivate.append(file_map[file_id]["lecture"])
+                textbooks_to_deactivate.append(file_map[file_id]["textbook"])
+                homework_to_deactivate.append(file_map[file_id]["homework"])
+                
             else:
                 unclassified_files.append(file_id)
                 
@@ -2043,6 +2076,48 @@ async def upload_onedrive(
             textbook_files.extend(classified_textbook_files)
             homework_files.extend(classified_homework_files)
             other_files.extend(classified_other_files)
+
+            # deactivate the other sections
+            for file_id in classified_lecture_files:
+                textbooks_to_deactivate.append(file_map[file_id]["textbook"])
+                homework_to_deactivate.append(file_map[file_id]["homework"])
+                files_to_deactivate.append(file_map[file_id]["file"])
+            for file_id in classified_textbook_files:
+                lectures_to_deactivate.append(file_map[file_id]["lecture"])
+                homework_to_deactivate.append(file_map[file_id]["homework"])
+                files_to_deactivate.append(file_map[file_id]["file"])
+            for file_id in classified_homework_files:
+                lectures_to_deactivate.append(file_map[file_id]["lecture"])
+                textbooks_to_deactivate.append(file_map[file_id]["textbook"])
+                files_to_deactivate.append(file_map[file_id]["file"])
+            for file_id in classified_other_files:
+                lectures_to_deactivate.append(file_map[file_id]["lecture"])
+                textbooks_to_deactivate.append(file_map[file_id]["textbook"])
+                homework_to_deactivate.append(file_map[file_id]["homework"])
+
+
+                # filter out none and duplicates
+        lectures_to_deactivate = list(set(lectures_to_deactivate) - {None})
+        textbooks_to_deactivate = list(set(textbooks_to_deactivate) - {None})
+        homework_to_deactivate = list(set(homework_to_deactivate) - {None})
+        files_to_deactivate = list(set(files_to_deactivate) - {None})
+        print(f"lectures_to_deactivate: {lectures_to_deactivate}")
+        print(f"textbooks_to_deactivate: {textbooks_to_deactivate}")
+        print(f"homework_to_deactivate: {homework_to_deactivate}")
+        print(f"files_to_deactivate: {files_to_deactivate}")
+
+        # deactivate lectures
+        if lectures_to_deactivate:
+            supabase.table("lectures").update({"active": False}).in_("id", lectures_to_deactivate).execute()
+        # deactivate textbooks
+        if textbooks_to_deactivate:
+            supabase.table("textbooks").update({"active": False}).in_("id", textbooks_to_deactivate).execute()
+        # deactivate homework
+        if homework_to_deactivate:
+            supabase.table("homework").update({"active": False}).in_("id", homework_to_deactivate).execute()
+        # deactivate files
+        if files_to_deactivate:
+            supabase.table("files").update({"active": False}).in_("id", files_to_deactivate).execute()
             
         # Process files by category
         updates = []  # tuple of updates for supabase
@@ -2059,7 +2134,7 @@ async def upload_onedrive(
                 # call the download endpoint asynchronously
                 await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
                 lecture_id = await process_lecture_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
-            updates.append({"id": onedrive_file_id, "lecture": lecture_id})
+            updates.append({"id": onedrive_file_id, "lecture": lecture_id, "class": class_id, "item": onedrive_file_id_to_item_id[onedrive_file_id]})
         
         # Similar processing for other categories...
         for onedrive_file_id in textbook_files:
@@ -2072,7 +2147,7 @@ async def upload_onedrive(
                 # call the download endpoint asynchronously
                 await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
                 textbook_id = await process_textbook_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
-            updates.append({"id": onedrive_file_id, "textbook": textbook_id})
+            updates.append({"id": onedrive_file_id, "textbook": textbook_id, "class": class_id, "item": onedrive_file_id_to_item_id[onedrive_file_id]})
         
         for onedrive_file_id in homework_files:
             # find the onedrive entry from all_onedrive_files
@@ -2084,7 +2159,7 @@ async def upload_onedrive(
                 # call the download endpoint asynchronously
                 await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
                 homework_id = await process_homework_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
-            updates.append({"id": onedrive_file_id, "homework": homework_id})
+            updates.append({"id": onedrive_file_id, "homework": homework_id, "class": class_id, "item": onedrive_file_id_to_item_id[onedrive_file_id]})
             
         for onedrive_file_id in other_files:
             # find the onedrive entry from all_onedrive_files
@@ -2096,7 +2171,7 @@ async def upload_onedrive(
                 # call the download endpoint asynchronously
                 await request.app.state.add_task(download_file_from_onedrive, onedrive_id, onedrive_file_id)
                 file_id = await process_file_internally(request, onedrive_entry["name"], class_id, response_url, False, False)
-            updates.append({"id": onedrive_file_id, "file": file_id})
+            updates.append({"id": onedrive_file_id, "file": file_id, "class": class_id, "item": onedrive_file_id_to_item_id[onedrive_file_id]})
 
         # Update the onedrive files in supabase
         if updates:

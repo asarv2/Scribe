@@ -112,7 +112,7 @@ export default function Hero() {
                                 muted 
                                 playsInline
                             >
-                                <source src="/videos/scribe-student-demo.mp4" type="video/mp4" />
+                                <source src="/videos/scribe-student-demo.webm" type="video/webm" />
                                 Your browser does not support the video tag.
                             </video>
                             <div className={`${styles.videoLabel} ${styles.studentLabel}`}>Student</div>
@@ -125,7 +125,7 @@ export default function Hero() {
                                 muted 
                                 playsInline
                             >
-                                <source src="/videos/scribe-professor-demo.mp4" type="video/mp4" />
+                                <source src="/videos/scribe-professor-demo.webm" type="video/webm" />
                                 Your browser does not support the video tag.
                             </video>
                             <div className={`${styles.videoLabel} ${styles.professorLabel}`}>Professor</div>

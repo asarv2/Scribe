@@ -6,6 +6,8 @@ export async function getOneDrive(client: TypedSupabaseClient, profileId: string
         .select("*")
         .eq("profile", profileId)
         .eq("active", true)
+    
+    console.log("ONEDRIVE", data);
 
     if (error) {
         throw new Error(error.message);

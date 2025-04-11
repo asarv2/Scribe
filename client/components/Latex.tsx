@@ -103,9 +103,9 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
     });
 
     const { data: files, isLoading: loadingFiles } = useQuery({
-        queryKey: ["files", profile?.id, classId],
-        queryFn: () => getFiles(supabase, profile!.id, classId ? [classId] : []),
-        enabled: !!profile && !!classId
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, classId ? [classId] : []),
+        enabled: !!classId
     });
 
 

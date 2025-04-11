@@ -101,8 +101,8 @@ export const ContextBadges = memo(({
     });
 
     const { data: files, isLoading: loadingFiles } = useQuery({
-        queryKey: ["files", profile?.id, classId],
-        queryFn: () => getFiles(supabase, profile!.id, [classId]),
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, [classId]),
         enabled: !!profile
     });
 

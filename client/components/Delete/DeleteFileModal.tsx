@@ -9,10 +9,12 @@ import { useDisclosure } from "@mantine/hooks"
 import { IconTrash } from "@tabler/icons-react"
 import { useState } from "react"
 import { notifications } from "@mantine/notifications"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { Profile } from "@/types"
 import { deleteFile } from "@/utils/services/file"
+import { getFile } from "@/utils/queries/get-file"
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
 
 type DeleteFileModalProps = {
     classId: string
@@ -24,10 +26,16 @@ type DeleteFileModalProps = {
 }
 
 export default function DeleteFileModal({ fileId, fileName, classId, navigateHome = true, onDelete, profileId }: DeleteFileModalProps) {
+    const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
+
+    const { data: file, isLoading: fileLoading } = useQuery({
+        queryKey: ["file", fileId],
+        queryFn: () => getFile(supabase, fileId)
+    })
 
     const handleDeleteClass = async (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
@@ -42,7 +50,7 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
                     queryKey: ["file", fileId]
                 });
                 queryClient.invalidateQueries({
-                    queryKey: ["files", profileId, classId]
+                    queryKey: ["files", classId]
                 });
                 if (onDelete) {
                     onDelete();
@@ -71,7 +79,7 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
 
     return (
         <>
-            <Tooltip label="Delete File">
+            {file && file.profile && file.profile === profileId && <Tooltip label="Delete File">
                 <ActionIcon
                     variant="subtle"
                     size="lg"
@@ -83,7 +91,7 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
                 >
                     <IconTrash size={20} />
                 </ActionIcon>
-            </Tooltip>
+            </Tooltip>}
             <Modal 
                 opened={opened} 
                 onClose={() => {
