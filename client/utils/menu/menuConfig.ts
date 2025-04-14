@@ -47,11 +47,11 @@ export const menuConfig = {
     icon: IconMessage,
     link: '/chat/new',
   },
-  history: {
-    label: 'History',
-    icon: IconHistory,
-    link: '/history',
-  },
+  // history: {
+  //   label: 'History',
+  //   icon: IconHistory,
+  //   link: '/history',
+  // },
   settings: {
     label: 'Settings',
     icon: IconSettings,

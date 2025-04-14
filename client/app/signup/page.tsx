@@ -117,7 +117,7 @@ export default function ProfessorSignup() {
         queryKey: ["homeworks", classData?.id],
         queryFn: () => getHomeworks(supabase, [classData?.id!]),
         enabled: !!classData?.id
-    }); 
+    });
 
 
     const handleDeleteClass = async (classId: string) => {
@@ -468,7 +468,7 @@ export default function ProfessorSignup() {
     const loading = loadingUser || loadingProfile || loadingClasses || loadingLectures || loadingTextbooks || loadingHomeworks;
 
     return (
-        <ClassLayout classId={null} showClasses={false}>
+        <ClassLayout classId={classData?.id ?? null} showNavbar={false}>
             <Container size="lg" style={{ marginTop: "50px", marginBottom: "50px" }}>
                 <Title order={1} mb="xl" ta="center">
                     {loading ? (
@@ -510,26 +510,26 @@ export default function ProfessorSignup() {
                                                     activeStep === 0 ? <Stack mt="md">
                                                         <Tabs defaultValue="brightspace">
                                                             <Tabs.List>
-                                                                <Tabs.Tab value="brightspace">Import from Brightspace</Tabs.Tab>
                                                                 <Tabs.Tab value="manual">Create Manually</Tabs.Tab>
+                                                                <Tabs.Tab value="brightspace">Import from Brightspace</Tabs.Tab>
                                                             </Tabs.List>
-
-                                                            <Tabs.Panel value="brightspace" pt="md">
-                                                                <Stack gap="md">
-                                                                    <Text size="md">
-                                                                        1. Install the <Link href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb" target="_blank">Scribe Chrome Extension</Link>
-                                                                    </Text>
-                                                                    <Text size="md">
-                                                                        2. Login with your Microsoft account and go to homepage of <Link href="https://purdue.brightspace.com/d2l/home/6824" target="_blank">Brightspace</Link>
-                                                                    </Text>
-                                                                    <Text size="md">
-                                                                        3. Once your course is detected, press 'Add Course'
-                                                                    </Text>
-                                                                </Stack>
-                                                            </Tabs.Panel>
 
                                                             <Tabs.Panel value="manual" pt="md">
                                                                 <Management classId={classData?.id ?? ""} showExistingClasses={false} showOuterAccordion={false} />
+
+                                                                <Tabs.Panel value="brightspace" pt="md">
+                                                                    <Stack gap="md">
+                                                                        <Text size="md">
+                                                                            1. Install the <Link href="https://chromewebstore.google.com/detail/bckhgcbgegchbplocbfopipkdoohfaeb?utm_source=item-share-cb" target="_blank">Scribe Chrome Extension</Link>
+                                                                        </Text>
+                                                                        <Text size="md">
+                                                                            2. Login with your Microsoft account and go to homepage of <Link href="https://purdue.brightspace.com/d2l/home/6824" target="_blank">Brightspace</Link>
+                                                                        </Text>
+                                                                        <Text size="md">
+                                                                            3. Once your course is detected, press 'Add Course'
+                                                                        </Text>
+                                                                    </Stack>
+                                                                </Tabs.Panel>
                                                             </Tabs.Panel>
                                                         </Tabs>
                                                     </Stack> : (<Stack pt="md">
@@ -645,7 +645,7 @@ export default function ProfessorSignup() {
 
                                                             <Tabs.Panel value="manual" pt="md">
                                                                 <Group>
-                                                                    {classData?.lecture_enabled && (calculateUploadStatus(lectures?.filter(l => l.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Lectures Uploaded</Button> : <UploadLectureButton classId={classData?.id ?? ""} lectureNumber={lectures?.length ? lectures.length + 1 : 1}/>)}
+                                                                    {classData?.lecture_enabled && (calculateUploadStatus(lectures?.filter(l => l.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Lectures Uploaded</Button> : <UploadLectureButton classId={classData?.id ?? ""} lectureNumber={lectures?.length ? lectures.length + 1 : 1} />)}
                                                                     {classData?.textbook_enabled && (calculateUploadStatus(textbooks?.filter(t => t.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Textbooks Uploaded</Button> : <UploadTextbookButton classId={classData?.id ?? ""} textbookNumber={textbooks?.length ? textbooks.length + 1 : 1} />)}
                                                                     {classData?.homework_enabled && (calculateUploadStatus(homeworks?.filter(h => h.class === classData?.id) || []).percent === 100 ? <Button leftSection={<IconCheck size={16} />} disabled>Homeworks Uploaded</Button> : <UploadHomeworkButton classId={classData?.id ?? ""} homeworkNumber={homeworks?.length ? homeworks.length + 1 : 1} />)}
                                                                 </Group>

@@ -28,9 +28,10 @@ interface ClassLayoutProps {
     classId: string | null;
     showHeader?: boolean;
     showClasses?: boolean;
+    showNavbar?: boolean;
 }
 
-export function ClassLayout({ children, classId, showHeader = true, showClasses = true }: ClassLayoutProps) {
+export function ClassLayout({ children, classId, showHeader = true, showClasses = true, showNavbar = true }: ClassLayoutProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const supabase = useSupabaseBrowser();
@@ -69,7 +70,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                 <AppShell
                     header={{ height: showHeader ? 60 : 0 }}
                     navbar={{
-                        width: profile && (profile.professor || profile.admin) ? {
+                        width: profile && (profile.professor || profile.admin) && showNavbar ? {
                             base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
                             expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
                         } : 0,
@@ -93,7 +94,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                         </AppShell.Header>
                     )}
 
-                    {profile && (profile.professor || profile.admin) && (classId !== null) && (
+                    {profile && (profile.professor || profile.admin) && (classId !== null) && (showNavbar) && (
                         <AppShell.Navbar>
                             <ClassNavbar
                                 classId={classId}

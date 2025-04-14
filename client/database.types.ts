@@ -135,6 +135,7 @@ export type Database = {
           textbook_prompt: string
           title: string | null
           updated_at: string
+          video_enabled: boolean
         }
         Insert: {
           active?: boolean
@@ -166,6 +167,7 @@ export type Database = {
           textbook_prompt?: string
           title?: string | null
           updated_at?: string
+          video_enabled?: boolean
         }
         Update: {
           active?: boolean
@@ -197,6 +199,7 @@ export type Database = {
           textbook_prompt?: string
           title?: string | null
           updated_at?: string
+          video_enabled?: boolean
         }
         Relationships: []
       }
@@ -251,10 +254,12 @@ export type Database = {
       documents: {
         Row: {
           chapter: string | null
+          chapter_number: number | null
           created_at: string
           description: string
           end_time: number | null
           exercise: string | null
+          exercise_number: number | null
           exercises: string[]
           file: string | null
           homework: string | null
@@ -262,6 +267,8 @@ export type Database = {
           id: string
           lecture: string | null
           page: number
+          problem_number: number | null
+          problem_part_number: number | null
           processed: boolean
           size: Json
           start_time: number | null
@@ -271,10 +278,12 @@ export type Database = {
         }
         Insert: {
           chapter?: string | null
+          chapter_number?: number | null
           created_at?: string
           description?: string
           end_time?: number | null
           exercise?: string | null
+          exercise_number?: number | null
           exercises?: string[]
           file?: string | null
           homework?: string | null
@@ -282,6 +291,8 @@ export type Database = {
           id?: string
           lecture?: string | null
           page: number
+          problem_number?: number | null
+          problem_part_number?: number | null
           processed?: boolean
           size?: Json
           start_time?: number | null
@@ -291,10 +302,12 @@ export type Database = {
         }
         Update: {
           chapter?: string | null
+          chapter_number?: number | null
           created_at?: string
           description?: string
           end_time?: number | null
           exercise?: string | null
+          exercise_number?: number | null
           exercises?: string[]
           file?: string | null
           homework?: string | null
@@ -302,6 +315,8 @@ export type Database = {
           id?: string
           lecture?: string | null
           page?: number
+          problem_number?: number | null
+          problem_part_number?: number | null
           processed?: boolean
           size?: Json
           start_time?: number | null
@@ -753,6 +768,7 @@ export type Database = {
       }
       files: {
         Row: {
+          active: boolean
           class: string
           created_at: string
           deleted: boolean
@@ -771,6 +787,7 @@ export type Database = {
           type: Database["prod"]["Enums"]["file_type"]
         }
         Insert: {
+          active?: boolean
           class?: string
           created_at?: string
           deleted?: boolean
@@ -789,6 +806,7 @@ export type Database = {
           type: Database["prod"]["Enums"]["file_type"]
         }
         Update: {
+          active?: boolean
           class?: string
           created_at?: string
           deleted?: boolean
@@ -825,6 +843,7 @@ export type Database = {
       }
       homeworks: {
         Row: {
+          active: boolean
           additional_info: string
           class: string | null
           created_at: string
@@ -839,6 +858,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          active?: boolean
           additional_info?: string
           class?: string | null
           created_at?: string
@@ -853,6 +873,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          active?: boolean
           additional_info?: string
           class?: string | null
           created_at?: string
@@ -876,8 +897,47 @@ export type Database = {
           },
         ]
       }
+      learning_connections: {
+        Row: {
+          class_id: string
+          created_at: string
+          id: string
+          source_id: string
+          source_type: string
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          class_id?: string
+          created_at?: string
+          id?: string
+          source_id?: string
+          source_type: string
+          target_id?: string
+          target_type: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          id?: string
+          source_id?: string
+          source_type?: string
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_connections_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lectures: {
         Row: {
+          active: boolean
           additional_info: string
           class: string
           created_at: string
@@ -897,6 +957,7 @@ export type Database = {
           upload_progress: number
         }
         Insert: {
+          active?: boolean
           additional_info?: string
           class: string
           created_at?: string
@@ -916,6 +977,7 @@ export type Database = {
           upload_progress?: number
         }
         Update: {
+          active?: boolean
           additional_info?: string
           class?: string
           created_at?: string
@@ -1033,6 +1095,44 @@ export type Database = {
           },
         ]
       }
+      objectives: {
+        Row: {
+          class: string | null
+          created_at: string
+          description: string | null
+          id: string
+          position_x: number | null
+          position_y: number | null
+          title: string | null
+        }
+        Insert: {
+          class?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          position_x?: number | null
+          position_y?: number | null
+          title?: string | null
+        }
+        Update: {
+          class?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          position_x?: number | null
+          position_y?: number | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "objectives_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       onedrive: {
         Row: {
           active: boolean
@@ -1142,6 +1242,44 @@ export type Database = {
             columns: ["textbook"]
             isOneToOne: false
             referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outcomes: {
+        Row: {
+          class: string | null
+          created_at: string
+          description: string | null
+          id: string
+          position_x: number | null
+          position_y: number | null
+          title: string | null
+        }
+        Insert: {
+          class?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          position_x?: number | null
+          position_y?: number | null
+          title?: string | null
+        }
+        Update: {
+          class?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          position_x?: number | null
+          position_y?: number | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcomes_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]
@@ -1462,6 +1600,7 @@ export type Database = {
       }
       textbooks: {
         Row: {
+          active: boolean
           additional_info: string
           class: string
           created_at: string
@@ -1476,6 +1615,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          active?: boolean
           additional_info?: string
           class: string
           created_at?: string
@@ -1490,6 +1630,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          active?: boolean
           additional_info?: string
           class?: string
           created_at?: string

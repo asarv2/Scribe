@@ -1128,16 +1128,18 @@ export const ChatInput = memo(({
   const renderRightChatIcons = () => {
     return (
       <>
-        <Tooltip label={isRecording ? "Stop Video" : "Start Video"}>
-          <ActionIcon
-            onClick={() => handleToggleRecording(true)}
-            size="lg"
-            color={isRecording && videoStream ? "red" : "blue"}
-            variant="subtle"
+        {classData?.video_enabled && (
+          <Tooltip label={isRecording ? "Stop Video" : "Start Video"}>
+            <ActionIcon
+              onClick={() => handleToggleRecording(true)}
+              size="lg"
+              color={isRecording && videoStream ? "red" : "blue"}
+              variant="subtle"
           >
             <IconVideo size={20} />
-          </ActionIcon>
-        </Tooltip>
+            </ActionIcon>
+          </Tooltip>
+        )}
         <Tooltip label={isRecording ? "Stop Audio" : "Start Audio"}>
           <ActionIcon
             onClick={() => handleToggleRecording(false)}

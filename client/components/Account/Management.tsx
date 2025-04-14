@@ -80,6 +80,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
         textbookEnabled: boolean;
         homeworkEnabled: boolean;
         filesEnabled: boolean;
+        videoEnabled: boolean;
     }>>({});
 
     const [saveLoading, setSaveLoading] = useState<Record<string, boolean>>({});
@@ -118,7 +119,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
         if (classData) {
             const initialPrompts: Record<string, { lecture: string; textbook: string; homework: string }> = {};
             const initialChatTypes: Record<string, { learn: boolean; homework: boolean; testPrep: boolean; present: boolean }> = {};
-            const initialFeatures: Record<string, { lectureEnabled: boolean; textbookEnabled: boolean; homeworkEnabled: boolean; filesEnabled: boolean }> = {};
+            const initialFeatures: Record<string, { lectureEnabled: boolean; textbookEnabled: boolean; homeworkEnabled: boolean; filesEnabled: boolean; videoEnabled: boolean }> = {};
             const initialEditableClasses: Record<string, any> = {};
 
             // Initialize for the single class
@@ -132,7 +133,8 @@ export default function Management({ classId, showCreateClass = true, showExisti
                 lectureEnabled: classData.lecture_enabled || false,
                 textbookEnabled: classData.textbook_enabled || false,
                 homeworkEnabled: classData.homework_enabled || false,
-                filesEnabled: classData.files_enabled || false
+                filesEnabled: classData.files_enabled || false,
+                videoEnabled: classData.video_enabled || false
             };
 
             initialChatTypes[classId] = {
@@ -178,7 +180,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
         }));
     };
 
-    const handleFeatureToggle = (classId: string, feature: 'lectureEnabled' | 'textbookEnabled' | 'homeworkEnabled' | 'filesEnabled', value: boolean) => {
+    const handleFeatureToggle = (classId: string, feature: 'lectureEnabled' | 'textbookEnabled' | 'homeworkEnabled' | 'filesEnabled' | 'videoEnabled', value: boolean) => {
         setClassFeatures(prev => ({
             ...prev,
             [classId]: {
@@ -205,6 +207,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
                 classFeatures[classId].textbookEnabled,
                 classFeatures[classId].homeworkEnabled,
                 classFeatures[classId].filesEnabled,
+                classFeatures[classId].videoEnabled,
                 editableClasses[classId].title,
                 editableClasses[classId].class_code,
                 editableClasses[classId].course_description,
@@ -382,10 +385,22 @@ export default function Management({ classId, showCreateClass = true, showExisti
                             label="Homework"
                             labelPosition="right"
                         />
+                    </Group>
+                </Stack>
+
+                <Stack gap="md">
+                    <Text fw={500} size="sm">Enabled Chat Types</Text>
+                    <Group>
                         <Switch
                             checked={classFeatures[classItem.id]?.filesEnabled}
                             onChange={(event) => handleFeatureToggle(classItem.id, 'filesEnabled', event.currentTarget.checked)}
                             label="Files"
+                            labelPosition="right"
+                        />
+                        <Switch
+                            checked={classFeatures[classItem.id]?.videoEnabled}
+                            onChange={(event) => handleFeatureToggle(classItem.id, 'videoEnabled', event.currentTarget.checked)}
+                            label="Video"
                             labelPosition="right"
                         />
                     </Group>
@@ -528,7 +543,8 @@ export default function Management({ classId, showCreateClass = true, showExisti
         classFeatures[classId].lectureEnabled !== (classData.lecture_enabled || false) ||
         classFeatures[classId].textbookEnabled !== (classData.textbook_enabled || false) ||
         classFeatures[classId].homeworkEnabled !== (classData.homework_enabled || false) ||
-        classFeatures[classId].filesEnabled !== (classData.files_enabled || false)
+        classFeatures[classId].filesEnabled !== (classData.files_enabled || false) ||
+        classFeatures[classId].videoEnabled !== (classData.video_enabled || false)
     );
 
     const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
