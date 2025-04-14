@@ -5,7 +5,7 @@
  * 02/20/2025
  */
 
-import { IconHome, IconBook, IconFileDescription, IconSettings, IconMessage, IconHistory, IconPresentation } from '@tabler/icons-react';
+import { IconHome, IconBook, IconFileDescription, IconSettings, IconClipboard, IconMessage, IconHistory, IconPresentation, IconBinaryTree } from '@tabler/icons-react';
 
 export const menuConfig = {
   home: {
@@ -51,6 +51,16 @@ export const menuConfig = {
     label: 'History',
     icon: IconHistory,
     link: '/history',
+  },
+  learning: {
+    label: 'Learning',
+    icon: IconBinaryTree,
+    link: '/Learning',
+  },
+  grader: {
+    label: 'Grader',
+    icon: IconClipboard,
+    link: '/grader',
   },
   settings: {
     label: 'Settings',
