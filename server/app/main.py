@@ -66,6 +66,7 @@ from app.routes.evaluate import router as evaluate_router
 from app.routes.generate import router as generate_router
 from app.routes.upload import router as upload_router
 from app.routes.download import router as download_router
+from app.routes.grader import router as grader_router  # Import the new grader router
 
 # Include routers
 app.include_router(parse_router, prefix="/parse")
@@ -73,6 +74,7 @@ app.include_router(evaluate_router, prefix="/evaluate")
 app.include_router(generate_router, prefix="/generate")
 app.include_router(upload_router, prefix="/upload")
 app.include_router(download_router, prefix="/download")
+app.include_router(grader_router)
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
