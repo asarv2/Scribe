@@ -84,7 +84,7 @@ export default function ForStudents() {
                                         loop 
                                         playsInline
                                     >
-                                        <source src="/videos/scribe-ready-content.mp4" type="video/mp4" />
+                                        <source src="/videos/scribe-ready-content.webm" type="video/webm" />
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
@@ -121,7 +121,7 @@ export default function ForStudents() {
                                         loop 
                                         playsInline
                                     >
-                                        <source src="/videos/scribe-visual.mp4" type="video/mp4" />
+                                        <source src="/videos/scribe-visual.webm" type="video/webm" />
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
@@ -158,7 +158,7 @@ export default function ForStudents() {
                                         loop 
                                         playsInline
                                     >
-                                        <source src="/videos/scribe-exam.mp4" type="video/mp4" />
+                                        <source src="/videos/scribe-exam.webm" type="video/webm" />
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>

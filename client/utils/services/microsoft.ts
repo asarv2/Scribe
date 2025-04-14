@@ -74,9 +74,8 @@ export async function createGraphClient(accessToken: string) {
 /**
  * Gets OneDrive folders with automatic token refresh
  * @param onedriveId The ID of the OneDrive record
- * @param includeSubfolders Whether to include subfolders (default: false)
  * @param maxDepth Maximum depth of subfolders to fetch (default: 3)
- * @returns Array of folders with path information
+ * @returns Array of folders with path information and parent-child relationships
  */
 export async function getOneDriveFolders(
   onedriveId: string,
@@ -87,12 +86,14 @@ export async function getOneDriveFolders(
 
     // New behavior: Get folders up to maxDepth levels deep
     const allFolders: OneDriveFolder[] = [];
+    const folderMap: Record<string, OneDriveFolder> = {};
 
     // Function to fetch folders up to a certain depth
     async function fetchFoldersWithDepth(
       folderId = "root",
       parentPath = "",
       currentDepth = 0,
+      parentId?: string,
     ) {
       if (currentDepth > maxDepth) return;
 
@@ -110,7 +111,18 @@ export async function getOneDriveFolders(
               id: folder.id || "",
               name: folder.name || "",
               path: parentPath,
+              parentId: parentId,
+              children: [],
+              level: currentDepth,
             };
+
+            // Store in map for quick lookup
+            folderMap[folderWithPath.id] = folderWithPath;
+            
+            // Add to parent's children if applicable
+            if (parentId && folderMap[parentId]) {
+              folderMap[parentId].children?.push(folderWithPath);
+            }
 
             allFolders.push(folderWithPath);
 
@@ -120,6 +132,7 @@ export async function getOneDriveFolders(
                 folder.id || "",
                 parentPath ? `${parentPath}/${folder.name}` : folder.name || "",
                 currentDepth + 1,
+                folder.id,
               );
             }
           }
@@ -171,7 +184,7 @@ export async function createAuthenticatedGraphClient(onedriveId: string) {
 export async function getOneDriveFilesWithAuth(
   onedriveId: string,
   folderId?: string,
-) {
+): Promise<DriveItem[]> {
   try {
     const client = await createAuthenticatedGraphClient(onedriveId);
 
@@ -181,29 +194,9 @@ export async function getOneDriveFilesWithAuth(
       : "/me/drive/root/children";
 
     const response = await client.api(endpoint).get();
-    return response.value;
+    return response.value as DriveItem[];
   } catch (error: any) {
     console.error("Error fetching OneDrive files:", error);
-    throw error;
-  }
-}
-
-/**
- * Gets folder details with automatic token refresh
- * @param onedriveId The ID of the OneDrive record
- * @param folderId The folder ID to get details for
- */
-export async function getFolderDetailsWithAuth(
-  onedriveId: string,
-  folderId: string,
-) {
-  try {
-    const client = await createAuthenticatedGraphClient(onedriveId);
-    const endpoint = `/me/drive/items/${folderId}`;
-    const response = await client.api(endpoint).get();
-    return response;
-  } catch (error: any) {
-    console.error("Error fetching folder details:", error);
     throw error;
   }
 }
@@ -373,7 +366,7 @@ export async function getAndSyncOneDriveFiles(
   onedriveId: string,
   classId: string,
   folderId?: string,
-) {
+): Promise<DriveItem[]> {
   try {
     // Get files from Microsoft Graph API
     const files = await getOneDriveFilesWithAuth(onedriveId, folderId);
@@ -385,5 +378,100 @@ export async function getAndSyncOneDriveFiles(
   } catch (error: any) {
     console.error("Error syncing OneDrive files:", error);
     throw error;
+  }
+}
+
+/**
+ * Gets OneDrive folder structure with files
+ * @param onedriveId The ID of the OneDrive record
+ * @param rootFolderId The root folder ID to start from
+ * @param maxDepth Maximum depth of subfolders to fetch (default: 2)
+ * @returns Hierarchical structure of folders and files
+ */
+export async function getOneDriveFolderStructure(
+  onedriveId: string,
+  rootFolderId?: string,
+  maxDepth = 3,
+): Promise<{ folders: OneDriveFolder[]; files: DriveItem[] }> {
+  try {
+    if (!onedriveId) {
+      return { folders: [], files: [] };
+    }
+    
+    const client = await createAuthenticatedGraphClient(onedriveId);
+    const allFiles: DriveItem[] = [];
+    const folderMap: Record<string, OneDriveFolder> = {};
+    
+    // Function to recursively fetch folder contents
+    async function fetchFolderContents(folderId: string, parentPath = "", depth = 0, parentId?: string) {
+      if (depth > maxDepth) return;
+      
+      const endpoint = folderId === "root" 
+        ? "/me/drive/root/children"
+        : `/me/drive/items/${folderId}/children`;
+      
+      try {
+        const response = await client.api(endpoint).get();
+        const items = response.value || [];
+        
+        for (const item of items) {
+          if (item.folder) {
+            // It's a folder
+            const folder: OneDriveFolder = {
+              id: item.id || "",
+              name: item.name || "",
+              path: parentPath ? `${parentPath}/${item.name}` : item.name || "",
+              parentId: parentId,
+              children: [],
+              level: depth
+            };
+            
+            folderMap[folder.id] = folder;
+            
+            // Recursively fetch contents if not at max depth
+            if (depth < maxDepth) {
+              await fetchFolderContents(
+                item.id || "", 
+                folder.path,
+                depth + 1,
+                folder.id
+              );
+            }
+          } else {
+            // It's a file
+            allFiles.push(item);
+          }
+        }
+      } catch (error) {
+        console.error(`Error fetching contents of folder ${folderId}:`, error);
+      }
+    }
+    
+    // Start with the specified root folder or use "root" if not provided
+    const startFolderId = rootFolderId || "root";
+    await fetchFolderContents(startFolderId);
+    
+    // Build the folder hierarchy
+    const rootFolders: OneDriveFolder[] = [];
+    
+    // First pass: identify all folders
+    Object.values(folderMap).forEach(folder => {
+      // If this folder has a parent and the parent exists in our map
+      if (folder.parentId && folderMap[folder.parentId]) {
+        // Add this folder as a child of its parent
+        folderMap[folder.parentId].children?.push(folder);
+      } else if (!folder.parentId || folder.parentId === startFolderId) {
+        // This is a top-level folder
+        rootFolders.push(folder);
+      }
+    });
+    
+    return {
+      folders: rootFolders,
+      files: allFiles
+    };
+  } catch (error) {
+    console.error("Error fetching OneDrive folder structure:", error);
+    return { folders: [], files: [] };
   }
 }

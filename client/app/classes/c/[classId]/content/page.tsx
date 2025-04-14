@@ -261,7 +261,7 @@ export default function ContentPage({ params }: { params: Promise<{ classId: str
     return (
         <ClassLayout classId={classId}>
             <Container fluid style={{ marginTop: "30px" }}>
-                <Content classId={classId} />
+                <Content classId={classId} navigateHomeAfterDelete={false} />
             </Container>
         </ClassLayout>
     )

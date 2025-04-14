@@ -291,11 +291,13 @@ async def get_valid_access_token(onedrive_id: str) -> str:
     onedrive_data = response.data[0]
     access_token = onedrive_data.get("provider_token", "")
     refresh_token = onedrive_data.get("refresh_token", "")
-    expires_at = onedrive_data.get("expires_at")
+    expires_at = onedrive_data.get("expires_at") # this is an iso string
+    expires_at_timestamp = datetime.fromisoformat(expires_at).timestamp()
+
     
     # Check if token is expired or will expire soon (within 5 minutes)
     current_time = datetime.now().timestamp()
-    token_expired = not expires_at or current_time >= (expires_at - 300)  # 5 minutes buffer
+    token_expired = not expires_at or current_time >= (expires_at_timestamp - 300)  # 5 minutes buffer
     
     if token_expired and refresh_token:
         try:
@@ -376,34 +378,69 @@ async def download_file_from_onedrive(onedrive_id: str, onedrive_file_id: str) -
     try:
         # Get access token from environment or request it using client credentials
         access_token = await get_valid_access_token(onedrive_id)
+
+        # get actual item id from microsoft, using onedrive_file_id
+        onedrive_file_response = supabase.table("onedrive_files").select("*").eq("id", onedrive_file_id).execute()
+
+        if not onedrive_file_response.data:
+            raise HTTPException(status_code=404, detail="OneDrive file not found")
+        
+        onedrive_file_data = onedrive_file_response.data[0]
+        item_id = onedrive_file_data.get("item")
         
         # Download file from OneDrive/Graph API
-        download_url = f"https://graph.microsoft.com/v1.0/me/drive/items/{onedrive_file_id}/content"
+        download_url = f"https://graph.microsoft.com/v1.0/me/drive/items/{item_id}/content"
         headers = {"Authorization": f"Bearer {access_token}"}
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(follow_redirects=True) as client:
             # Get file metadata first to determine filename
             metadata_response = await client.get(
-                f"https://graph.microsoft.com/v1.0/me/drive/items/{onedrive_file_id}",
+                f"https://graph.microsoft.com/v1.0/me/drive/items/{item_id}",
                 headers=headers
             )
             metadata_response.raise_for_status()
             metadata = metadata_response.json()
             original_filename = metadata.get("name", f"file_{onedrive_file_id}")
             
+            # Extract file extension from original filename
+            _, file_extension = os.path.splitext(original_filename)
+            
+            # Add extension to local file path
+            local_file_path_with_ext = f"{local_file_path}{file_extension}"
+            
             # Download the actual file
+            print(f"Downloading file from: {download_url}")
             download_response = await client.get(download_url, headers=headers)
             download_response.raise_for_status()
             
-            # Save the file
-            with open(local_file_path, "wb") as f:
-                f.write(download_response.content)
+            # Debug information
+            content_type = download_response.headers.get("content-type", "unknown")
+            content_length = download_response.headers.get("content-length", "unknown")
+            print(f"Downloaded file: content-type={content_type}, content-length={content_length}")
+            print(f"Saving to: {local_file_path_with_ext} (original name: {original_filename})")
+            
+            # Save the file with extension
+            with open(local_file_path_with_ext, "wb") as f:
+                content = download_response.content
+                print(f"Content size: {len(content)} bytes")
+                f.write(content)
+                f.flush()
+                os.fsync(f.fileno())  # Ensure data is written to disk
+            
+            # Verify file was written correctly
+            if os.path.exists(local_file_path_with_ext):
+                file_size = os.path.getsize(local_file_path_with_ext)
+                print(f"Saved file size: {file_size} bytes")
+                if file_size == 0:
+                    raise ValueError("File was saved but is empty")
+            else:
+                raise ValueError("File was not saved successfully")
             
             # Save metadata (original filename)
             with open(metadata_path, "w") as f:
                 f.write(original_filename)
             
-            return local_file_path, original_filename
+            return local_file_path_with_ext, original_filename
     except Exception as e:
         print(f"Error downloading file from OneDrive: {str(e)}")
         raise HTTPException(

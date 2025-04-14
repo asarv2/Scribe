@@ -30,6 +30,9 @@ WORKDIR /app
 # Copy requirements files
 COPY app/requirements.txt app/
 
+# Install Python dependencies
+RUN pip install --no-cache-dir -r app/requirements.txt
+
 # Create directory for gunicorn logs
 RUN mkdir -p /var/log/gunicorn && \
     chmod 777 /var/log/gunicorn
