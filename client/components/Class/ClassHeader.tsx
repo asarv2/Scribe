@@ -87,8 +87,8 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                                 key={classItem.id}
                                 component={Link}
                                 href={profile?.professor || profile?.admin
-                                    ? `/classes/c/${classItem.id}`
-                                    : `/classes/c/${classItem.id}/chat/new`}
+                                    ? `/class/${classItem.id}`
+                                    : `/class/${classItem.id}/chat/new`}
                             >
                                 {classItem.class_code}
                             </Menu.Item>

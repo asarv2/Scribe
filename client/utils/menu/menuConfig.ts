@@ -47,15 +47,10 @@ export const menuConfig = {
     icon: IconMessage,
     link: '/chat/new',
   },
-  history: {
-    label: 'History',
-    icon: IconHistory,
-    link: '/history',
-  },
   learning: {
     label: 'Learning',
     icon: IconBinaryTree,
-    link: '/Learning',
+    link: '/learning',
   },
   grader: {
     label: 'Grader',

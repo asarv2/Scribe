@@ -1,51 +1,14 @@
 import { Chapter, Document, Exercise, Homework, Lecture, Textbook, ViewerMode } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 
-// Filter out code blocks from text but preserve text content
-export const filterCodeBlocks = (text: string): string => {
-    if (!text) return '';
-
-    let result = text;
-    
-    // Replace complete <FIGURE> tags with placeholders
-    result = result.replace(/<FIGURE>[\s\S]*?<\/FIGURE>/g, '<FIGURE_GENERATION>figure-placeholder</FIGURE_GENERATION>');
-    
-    // Replace complete <SUMMARY> tags with placeholders
-    result = result.replace(/<SUMMARY>[\s\S]*?<\/SUMMARY>/g, '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>');
-    
-    // Replace complete <QUESTION> tags with placeholders
-    result = result.replace(/<QUESTION>[\s\S]*?<\/QUESTION>/g, '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>');
-    
-    // Handle incomplete tags (only opening tag present)
-    // This will remove everything after the opening tag to the end of the text
-    result = result.replace(/<FIGURE>[\s\S]*$/, '<FIGURE_GENERATION>figure-placeholder</FIGURE_GENERATION>');
-    result = result.replace(/<SUMMARY>[\s\S]*$/, '<SUMMARY_GENERATION>summary-placeholder</SUMMARY_GENERATION>');
-    result = result.replace(/<QUESTION>[\s\S]*$/, '<QUESTION_GENERATION>question-placeholder</QUESTION_GENERATION>');
-    
-    return result;
-};
-
 // Split text by document references and preserve formatting
-export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
-    chapterDocuments: Document[],
-    fileDocuments: Document[],
-    chapterExercises: Exercise[],
-    homeworkExercises: Exercise[]): string => {
+export const splitTextByDocuments = (text: string, fileDocuments: Document[]): string => {
 
-    const documentTags: Array<{id: string, type: 'lecture' | 'chapter' | 'file'}> = [];
-    const exerciseTags: Array<{id: string, type: 'chapter_exercise' | 'homework_problem'}> = [];
-    let cleanedText = text;
+    const documentTags: Array<{id: string}> = [];
 
     // Extract all document tags and store them with their types
     const documentPatterns = [
-        { regex: /<DOCUMENT_LECTURE>([^<]+)<\/DOCUMENT_LECTURE>/g, type: 'lecture', tagFormat: 'lecture' },
-        { regex: /<DOCUMENT_CHAPTER>([^<]+)<\/DOCUMENT_CHAPTER>/g, type: 'chapter', tagFormat: 'chapter' },
-        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>/g, type: 'file', tagFormat: 'file' }
-    ];
-
-    const exercisePatterns = [
-        { regex: /<EXERCISE_CHAPTER>([^<]+)<\/EXERCISE_CHAPTER>/g, type: 'chapter_exercise', tagFormat: 'exercise' },
-        { regex: /<PROBLEM_HOMEWORK>([^<]+)<\/PROBLEM_HOMEWORK>/g, type: 'homework_problem', tagFormat: 'problem' }
+        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>/g, tagFormat: 'file' }
     ];
 
     // Find consecutive document tags followed by a period
@@ -64,20 +27,11 @@ export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
             let tagMatch;
             while ((tagMatch = tagRegex.exec(tagGroup)) !== null) {
                 const id = tagMatch[1];
-                documentTags.push({ id, type: pattern.type as 'lecture' | 'chapter' | 'file' });
+                documentTags.push({ id });
                 
                 // Find the document to check its parent attribute
-                let parentAttribute = '';
-                if (pattern.type === 'lecture') {
-                    const doc = lectureDocuments.find(d => d.id === id);
-                    parentAttribute = doc?.lecture || 'unknown';
-                } else if (pattern.type === 'chapter') {
-                    const doc = chapterDocuments.find(d => d.id === id);
-                    parentAttribute = doc?.chapter || 'unknown';
-                } else if (pattern.type === 'file') {
-                    const doc = fileDocuments.find(d => d.id === id);
-                    parentAttribute = doc?.file || 'unknown';
-                }
+                const doc = fileDocuments.find(d => d.id === id);
+                const parentAttribute = doc?.file || 'unknown';
                 
                 // Group by tag type and parent attribute
                 if (!groupedTags[pattern.tagFormat]) {
@@ -103,64 +57,7 @@ export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
         
         // Find any text before the tag group and trim trailing whitespace
         const beforeTagIndex = text.substring(0, match.index).trimEnd();
-        cleanedText = cleanedText.replace(
-            text.substring(beforeTagIndex.length, match.index + fullMatch.length),
-            replacementText + tagsReplacement
-        );
-    }
-
-    // Find consecutive exercise tags followed by a period
-    const consecutiveExTagsWithPeriod = /((?:<(?:EXERCISE_CHAPTER|PROBLEM_HOMEWORK)>[^<]+<\/(?:EXERCISE_CHAPTER|PROBLEM_HOMEWORK)>\s*)+)\./g;
-    while ((match = consecutiveExTagsWithPeriod.exec(text)) !== null) {
-        const tagGroup = match[1];
-        const fullMatch = match[0];
-        
-        // Group tags by their type and parent attribute
-        const groupedTags: Record<string, Record<string, string[]>> = {};
-        
-        // Process each exercise tag in the group
-        exercisePatterns.forEach(pattern => {
-            const tagRegex = new RegExp(pattern.regex.source, 'g');
-            let tagMatch;
-            while ((tagMatch = tagRegex.exec(tagGroup)) !== null) {
-                const id = tagMatch[1];
-                exerciseTags.push({ id, type: pattern.type as 'chapter_exercise' | 'homework_problem' });
-                
-                // Find the exercise to check its parent attribute
-                let parentAttribute = '';
-                if (pattern.type === 'chapter_exercise') {
-                    const exercise = chapterExercises.find(e => e.id === id);
-                    parentAttribute = exercise?.chapter || 'unknown';
-                } else if (pattern.type === 'homework_problem') {
-                    const exercise = homeworkExercises.find(e => e.id === id);
-                    parentAttribute = exercise?.homework || 'unknown';
-                }
-                
-                // Group by tag type and parent attribute
-                if (!groupedTags[pattern.tagFormat]) {
-                    groupedTags[pattern.tagFormat] = {};
-                }
-                if (!groupedTags[pattern.tagFormat][parentAttribute]) {
-                    groupedTags[pattern.tagFormat][parentAttribute] = [];
-                }
-                groupedTags[pattern.tagFormat][parentAttribute].push(id);
-            }
-        });
-        
-        // Replace the entire group with period first, then grouped tags
-        let replacementText = '.';
-        let tagsReplacement = '';
-        
-        // Create combined tags for each group
-        Object.entries(groupedTags).forEach(([tagFormat, parentGroups]) => {
-            Object.entries(parentGroups).forEach(([_, ids]) => {
-                tagsReplacement += `::${tagFormat}{id=${ids.join(',')}}`;
-            });
-        });
-        
-        // Find any text before the tag group and trim trailing whitespace
-        const beforeTagIndex = text.substring(0, match.index).trimEnd();
-        cleanedText = cleanedText.replace(
+        text = text.replace(
             text.substring(beforeTagIndex.length, match.index + fullMatch.length),
             replacementText + tagsReplacement
         );
@@ -168,15 +65,7 @@ export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
 
     // Handle document tags followed by periods (non-consecutive case)
     const docPeriodPatterns = [
-        { regex: /<DOCUMENT_LECTURE>([^<]+)<\/DOCUMENT_LECTURE>\s*\./g, type: 'lecture', tagFormat: 'lecture' },
-        { regex: /<DOCUMENT_CHAPTER>([^<]+)<\/DOCUMENT_CHAPTER>\s*\./g, type: 'chapter', tagFormat: 'chapter' },
-        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>\s*\./g, type: 'file', tagFormat: 'file' }
-    ];
-
-    // Handle exercise tags followed by periods (non-consecutive case)
-    const exercisePeriodPatterns = [
-        { regex: /<EXERCISE_CHAPTER>([^<]+)<\/EXERCISE_CHAPTER>\s*\./g, type: 'chapter_exercise', tagFormat: 'exercise' },
-        { regex: /<PROBLEM_HOMEWORK>([^<]+)<\/PROBLEM_HOMEWORK>\s*\./g, type: 'homework_problem', tagFormat: 'problem' }
+        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>\s*\./g, tagFormat: 'file' }
     ];
 
     // Process remaining single tags with periods
@@ -185,25 +74,10 @@ export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
             // Skip if this was already handled by the consecutive tags logic
             if (consecutiveDocTagsWithPeriod.test(match[0])) continue;
             
-            documentTags.push({ id: match[1], type: pattern.type as 'lecture' | 'chapter' | 'file' });
+            documentTags.push({ id: match[1] });
             // Move the period to the front and trim any whitespace
             const beforeTagIndex = text.substring(0, match.index).trimEnd();
-            cleanedText = cleanedText.replace(
-                text.substring(beforeTagIndex.length, match.index + match[0].length),
-                `.::${pattern.tagFormat}{id=${match[1]}}`
-            );
-        }
-    });
-
-    exercisePeriodPatterns.forEach(pattern => {
-        while ((match = pattern.regex.exec(text)) !== null) {
-            // Skip if this was already handled by the consecutive tags logic
-            if (consecutiveExTagsWithPeriod.test(match[0])) continue;
-            
-            exerciseTags.push({ id: match[1], type: pattern.type as 'chapter_exercise' | 'homework_problem' });
-            // Move the period to the front and trim any whitespace
-            const beforeTagIndex = text.substring(0, match.index).trimEnd();
-            cleanedText = cleanedText.replace(
+            text = text.replace(
                 text.substring(beforeTagIndex.length, match.index + match[0].length),
                 `.::${pattern.tagFormat}{id=${match[1]}}`
             );
@@ -231,17 +105,8 @@ export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
                 const id = tagMatch[1];
                 
                 // Find the document to check its parent attribute
-                let parentAttribute = '';
-                if (pattern.type === 'lecture') {
-                    const doc = lectureDocuments.find(d => d.id === id);
-                    parentAttribute = doc?.lecture || 'unknown';
-                } else if (pattern.type === 'chapter') {
-                    const doc = chapterDocuments.find(d => d.id === id);
-                    parentAttribute = doc?.chapter || 'unknown';
-                } else if (pattern.type === 'file') {
-                    const doc = fileDocuments.find(d => d.id === id);
-                    parentAttribute = doc?.file || 'unknown';
-                }
+                const doc = fileDocuments.find(d => d.id === id);
+                const parentAttribute = doc?.file || 'unknown';
                 
                 // Group by tag type and parent attribute
                 if (!groupedTags[pattern.tagFormat]) {
@@ -265,79 +130,18 @@ export const splitTextByDocuments = (text: string, lectureDocuments: Document[],
         });
         
         if (tagsReplacement) {
-            cleanedText = cleanedText.replace(fullMatch, tagsReplacement);
-        }
-    }
-    
-    // Group consecutive exercise tags of the same type
-    const consecutiveExTags = /((?:<(EXERCISE_CHAPTER|PROBLEM_HOMEWORK)>[^<]+<\/\2>\s*)+)/g;
-    while ((match = consecutiveExTags.exec(text)) !== null) {
-        const tagGroup = match[1];
-        const fullMatch = match[0];
-        
-        // Skip if this was already handled by the period logic
-        if (tagGroup.endsWith('.')) continue;
-        
-        // Group tags by their type and parent attribute
-        const groupedTags: Record<string, Record<string, string[]>> = {};
-        
-        // Process each exercise tag in the group
-        exercisePatterns.forEach(pattern => {
-            const tagRegex = new RegExp(pattern.regex.source, 'g');
-            let tagMatch;
-            while ((tagMatch = tagRegex.exec(tagGroup)) !== null) {
-                const id = tagMatch[1];
-                
-                // Find the exercise to check its parent attribute
-                let parentAttribute = '';
-                if (pattern.type === 'chapter_exercise') {
-                    const exercise = chapterExercises.find(e => e.id === id);
-                    parentAttribute = exercise?.chapter || 'unknown';
-                } else if (pattern.type === 'homework_problem') {
-                    const exercise = homeworkExercises.find(e => e.id === id);
-                    parentAttribute = exercise?.homework || 'unknown';
-                }
-                
-                // Group by tag type and parent attribute
-                if (!groupedTags[pattern.tagFormat]) {
-                    groupedTags[pattern.tagFormat] = {};
-                }
-                if (!groupedTags[pattern.tagFormat][parentAttribute]) {
-                    groupedTags[pattern.tagFormat][parentAttribute] = [];
-                }
-                groupedTags[pattern.tagFormat][parentAttribute].push(id);
-            }
-        });
-        
-        // Replace the entire group with grouped tags
-        let tagsReplacement = '';
-        
-        // Create combined tags for each group
-        Object.entries(groupedTags).forEach(([tagFormat, parentGroups]) => {
-            Object.entries(parentGroups).forEach(([_, ids]) => {
-                tagsReplacement += `::${tagFormat}{id=${ids.join(',')}}`;
-            });
-        });
-        
-        if (tagsReplacement) {
-            cleanedText = cleanedText.replace(fullMatch, tagsReplacement);
+            text = text.replace(fullMatch, tagsReplacement);
         }
     }
 
     // Process any remaining individual tags
     documentPatterns.forEach(pattern => {
-        cleanedText = cleanedText.replace(pattern.regex, (match, id) => {
+        text = text.replace(pattern.regex, (match, id) => {
             return `::${pattern.tagFormat}{id=${id}}`;
         });
     });
 
-    exercisePatterns.forEach(pattern => {
-        cleanedText = cleanedText.replace(pattern.regex, (match, id) => {
-            return `::${pattern.tagFormat}{id=${id}}`;
-        });
-    });
-
-    return cleanedText;
+    return text;
 };
 
 // Split text by figure references and other special tags
@@ -347,7 +151,7 @@ export const splitTextByTags = (text: string): { text: string; figureId: string 
     const result: { text: string; figureId: string | null; summaryId: string | null; questionIds: string[] }[] = [];
     
     // Use regex to properly extract tags and content
-    const tagPattern = /<(FIGURE_GENERATION|SUMMARY_GENERATION|QUESTION_GENERATION)>(.*?)<\/(FIGURE_GENERATION|SUMMARY_GENERATION|QUESTION_GENERATION)>/g;
+    const tagPattern = /<(FIGURE|SUMMARY|QUESTION)>(.*?)<\/(FIGURE|SUMMARY|QUESTION)>/g;
     let lastIndex = 0;
     let match;
     
@@ -373,8 +177,8 @@ export const splitTextByTags = (text: string): { text: string; figureId: string 
         
         // Add the tag with its content
         segments.push({
-            type: tagType === 'FIGURE_GENERATION' ? 'figure' : 
-                  tagType === 'SUMMARY_GENERATION' ? 'summary' : 'question',
+            type: tagType === 'FIGURE' ? 'figure' : 
+                  tagType === 'SUMMARY' ? 'summary' : 'question',
             content: content.trim(),
             index: startIndex
         });
@@ -525,77 +329,15 @@ export const groupConsecutiveDocuments = (
 
 // Handle document click with support for different document types
 export const handleDocumentClick = (
-    contextType: 'lectures' | 'chapters' | 'homeworks' | 'files',
-    contextId: string,
+    fileId: string,
+    documentId: string,
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>,
-    documentId?: string,
-    textbookId?: string,
-    exerciseId?: string,
 ) => {
-    // For lectures
-    if (contextType === 'lectures' && documentId) {
-        setViewerMode(prev => ({
-            ...prev,
-            active: true,
-            open: true,
-            documentId: documentId,
-            lectureId: contextId,
-            chapterId: undefined,
-            textbookId: undefined,
-            exerciseId: undefined,
-            homeworkId: undefined,
-            fileId: undefined,
-        }));
-    }
-    // For chapters
-    else if (contextType === 'chapters' && documentId && textbookId) {
-        setViewerMode(prev => ({
-            ...prev,
-            active: true,
-            open: true,
-            documentId: documentId,
-            textbookId: textbookId,
-            chapterId: contextId,
-            lectureId: undefined,
-            exerciseId: undefined,
-            homeworkId: undefined,
-            fileId: undefined,
-        }));
-    } else if (contextType === 'chapters' && exerciseId && textbookId) {
-        setViewerMode(prev => ({
-            ...prev,
-            active: true,
-            open: true,
-            chapterId: contextId,
-            exerciseId: exerciseId,
-            textbookId: textbookId,
-            lectureId: undefined,
-            homeworkId: undefined,
-            documentId: undefined,
-            fileId: undefined,
-        }));
-    } else if (contextType === 'homeworks' && exerciseId) {
-        setViewerMode(prev => ({
-            ...prev,
-            active: true,
-            open: true,
-            homeworkId: contextId,
-            exerciseId: exerciseId,
-            lectureId: undefined,
-            fileId: undefined,
-        }));
-    } else if (contextType === 'files' && documentId) {
-        setViewerMode(prev => ({
-            ...prev,
-            active: true,
-            open: true,
-            fileId: contextId,
-            documentId: documentId,
-            lectureId: undefined,
-            chapterId: undefined,
-            textbookId: undefined,
-            exerciseId: undefined,
-            homeworkId: undefined,
-        }));
-    }
+    setViewerMode(prev => ({
+        ...prev,
+        active: true,
+        open: true,
+        fileId: fileId,
+        documentId: documentId,
+    }));
 };

@@ -9,16 +9,8 @@
 import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button, Box } from "@mantine/core";
 import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight, IconGripVertical } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
-import { getLectures } from "@/utils/queries/get-lectures";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
-import { getHomeworks } from "@/utils/queries/get-homeworks";
-import { getProblems } from "@/utils/queries/get-problems";
-import { getChapters } from "@/utils/queries/get-chapters";
-import { getExercises } from "@/utils/queries/get-exercises";
-import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, ViewerMode, Document, File } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useDrag } from 'react-dnd';
@@ -39,7 +31,7 @@ interface ContextPanelProps {
     classId: string;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
-    addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void;
+    addContextToChat: (contextId: string) => void;
     activeChat: ChatMessage;
     makeDraggable?: boolean;
     viewerMode: ViewerMode;
@@ -120,12 +112,7 @@ const ItemCard = ({
     isVisible,
     makeDraggable = false,
     setViewerMode,
-    lectureDocuments,
-    textbookDocuments,
     fileDocuments,
-    exercises,
-    chapters,
-    textbooks,
     onFileDelete
 }: {
     item: any,
@@ -133,16 +120,11 @@ const ItemCard = ({
     profileId: string,
     color: string,
     contextType: keyof ChatMessage['context'],
-    addContextToChat: (contextType: keyof ChatMessage['context'], contextId: string) => void,
+    addContextToChat: (contextId: string) => void,
     isVisible: boolean,
     makeDraggable?: boolean,
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
-    lectureDocuments?: Document[],
-    textbookDocuments?: Document[],
     fileDocuments?: Document[],
-    exercises?: Exercise[],
-    chapters?: Chapter[],
-    textbooks?: Textbook[],
     onFileDelete?: () => void
 }) => {
 
@@ -161,34 +143,11 @@ const ItemCard = ({
             onClick={(e) => {
                 e.stopPropagation();
                 if (!makeDraggable) {
-                    addContextToChat(contextType, item.id);
+                    addContextToChat(item.id);
                 } else if (setViewerMode) {
-                    if (contextType === 'lectures') {
-                        const document = lectureDocuments?.find(d => d.lecture === item.id) // first page of the lecture
-                        if (document) {
-                            handleDocumentClick('lectures', item.id, setViewerMode, document.id);
-                        }
-                    } else if (contextType === 'chapters') {
-                        const chapter = chapters?.find(c => c.id === item.id)
-                        if (chapter) {
-                            const textbook = textbooks?.find(t => t.id === chapter.textbook)
-                            if (textbook) {
-                                const document = textbookDocuments?.find(d => d.page >= chapter.start_page && d.page <= chapter.end_page && d.textbook === textbook.id) // first page of the chapter
-                                if (document) {
-                                    handleDocumentClick('chapters', item.id, setViewerMode, document.id, textbook.id);
-                                }
-                            }
-                        }
-                    } else if (contextType === 'homeworks') {
-                        const exercise = exercises?.filter(e => e.homework === item.id).sort((a, b) => a.problem_number - b.problem_number).sort((a, b) => a.problem_part_number - b.problem_part_number)[0] // find first exercise of the homework
-                        if (exercise) {
-                            handleDocumentClick('homeworks', item.id, setViewerMode, undefined, undefined, exercise.id);
-                        }
-                    } else if (contextType === 'files') {
-                        const document = fileDocuments?.find(d => d.file === item.id)
-                        if (document) {
-                            handleDocumentClick('files', item.id, setViewerMode, document.id);
-                        }
+                    const document = fileDocuments?.find(d => d.file === item.id)
+                    if (document) {
+                        handleDocumentClick(item.id, document.id, setViewerMode);
                     }
                 }
 
@@ -239,14 +198,15 @@ const ItemCard = ({
                             {item.newName}
                         </Text>
                         <Group gap={2}>
-                            {contextType === 'files' && <DeleteFileModal
+                            <DeleteFileModal
                                 fileId={item.id}
                                 classId={classId}
                                 fileName={item.newName}
                                 navigateHome={false}
                                 profileId={profileId}
                                 onDelete={onFileDelete}
-                            />}
+                                contentType="other"
+                            />
                             {makeDraggable && (
                                 <Tooltip label="Drag to chat">
                                     <ActionIcon variant="transparent" size="md" color="gray">
@@ -325,44 +285,6 @@ export function ContextPanel({
         enabled: !!classId
     })
 
-    const { data: lectures, isLoading: loadingLectures } = useQuery({
-        queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, [classId])
-    });
-
-    const { data: lectureDocuments } = useQuery({
-        queryKey: ["lectureDocuments", classId],
-        queryFn: () => getLectureDocuments(supabase, lectures!.map(l => l.id)),
-        enabled: !!lectures
-    });
-
-    const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
-        queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, [classId]),
-    });
-
-    const { data: textbookDocuments } = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks
-    });
-
-    const { data: chapters, isLoading: loadingChapters } = useQuery({
-        queryKey: ["chapters", classId],
-        queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks
-    });
-
-    const { data: homeworks, isLoading: loadingHomeworks } = useQuery({
-        queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, [classId]),
-    });
-
-    const { data: exercises, isLoading: loadingExercises } = useQuery({
-        queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, chapters!.map(c => c.id), homeworks!.map(h => h.id)),
-    });
-
     const { data: files, isLoading: loadingFiles } = useQuery({
         queryKey: ["files", classId],
         queryFn: () => getFiles(supabase, [classId]),
@@ -423,37 +345,6 @@ export function ContextPanel({
         };
     }, []);
 
-    const getLectureImageUrl = (item: Lecture, documentId: string) => {
-        if (documentId.length > 0) {
-            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${item.id}/${documentId}.png`;
-        }
-        return "/placeholder_image.svg";
-    }
-
-    const getChapterImage = (chapterId: string) => {
-        const chapter = chapters?.find(chapter => chapter.id === chapterId);
-        if (!chapter) return '/placeholder_image.svg';
-        const filteredDocuments = textbookDocuments?.filter(document => document.page >= chapter.start_page && document.page <= chapter.end_page);
-        if (!filteredDocuments) return '/placeholder_image.svg';
-        const document = filteredDocuments[0];
-        if (!document) return '/placeholder_image.svg';
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`
-    }
-
-    const getHomeworkImageUrl = (homeworkId: string) => {
-        if (!homeworkId) return '/placeholder_image.svg';
-        // find the first exercise in the homework
-        const exercise = exercises?.find(e => e.homework === homeworkId);
-        if (!exercise) return '/placeholder_image.svg';
-
-        // find the textbook document that has the same page number, but null for the chapter, homework and exercise
-        const textbookDocumentHomework = textbookDocuments?.find(d => d.homeworks.includes(homeworkId));
-        if (textbookDocumentHomework) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentHomework.textbook}/${textbookDocumentHomework.id}.png`;
-
-        // return the /classid/exerciseid.png
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`;
-    }
-
     const getFileImageUrl = (item: File, documentId: string) => {
         if (documentId.length > 0) {
             return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${item.id}/${documentId}.png`;
@@ -507,14 +398,11 @@ export function ContextPanel({
     const getAllContentItems = () => {
         const allItems = [];
         const filesEnabled = classData?.files_enabled;
-        const lectureEnabled = classData?.lecture_enabled;
-        const textbookEnabled = classData?.textbook_enabled;
-        const homeworkEnabled = classData?.homework_enabled;
 
         // Add files
         if (files && filesEnabled) {
             const filteredFiles = filterBySearch(files.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
-                .filter(f => !activeChat.context.files.includes(f.id))
+                .filter(f => !activeChat.context.includes(f.id))
                 .map(f => ({
                     ...f,
                     newName: f.title ?? "",
@@ -531,83 +419,7 @@ export function ContextPanel({
             allItems.push(...filteredFiles);
         }
 
-        // Add homeworks
-        if (homeworks && homeworkEnabled) {
-            const filteredHomeworks = filterBySearch(homeworks.sort((a, b) => b.homework_number - a.homework_number), textbookDocuments || [])
-                .filter(h => !activeChat.context.homeworks.includes(h.id))
-                .map(h => ({
-                    ...h,
-                    newName: h.title,
-                    imageUrl: getHomeworkImageUrl(h.id),
-                    type: 'homeworks' as keyof ChatMessage['context'],
-                    color: CONTENT_COLORS.homeworks
-                }));
-
-            // Store the first homework ID if available
-            if (filteredHomeworks.length > 0 && firstHomeworkRef.current === null) {
-                firstHomeworkRef.current = filteredHomeworks[0].id;
-            }
-
-            allItems.push(...filteredHomeworks);
-        }
-
-        // Add lectures
-        if (lectures && lectureEnabled) {
-            const filteredLectures = filterBySearch(lectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)), lectureDocuments || [])
-                .filter(l => !activeChat.context.lectures.includes(l.id))
-                .map(l => ({
-                    ...l,
-                    newName: l.name ?? "",
-                    imageUrl: getLectureImageUrl(l, lectureDocuments?.find(d => d.lecture === l.id)?.id ?? ""),
-                    type: 'lectures' as keyof ChatMessage['context'],
-                    color: CONTENT_COLORS.lectures
-                }));
-
-            // Store the first lecture ID if available
-            if (filteredLectures.length > 0 && firstLectureRef.current === null) {
-                firstLectureRef.current = filteredLectures[0].id;
-            }
-
-            allItems.push(...filteredLectures);
-        }
-
-        // Add chapters
-        if (chapters && textbookEnabled) {
-            const filteredChapters = filterBySearch(chapters.sort((a, b) => (a.chapter_number ?? 0) - (b.chapter_number ?? 0)), textbookDocuments || [])
-                .filter(c => !activeChat.context.chapters.includes(c.id))
-                .map(c => ({
-                    ...c,
-                    newName: `Chapter ${c.chapter_number}: ${c.title}`,
-                    imageUrl: getChapterImage(c.id),
-                    type: 'chapters' as keyof ChatMessage['context'],
-                    color: CONTENT_COLORS.chapters
-                }));
-
-            // Store the first chapter ID if available
-            if (filteredChapters.length > 0 && firstChapterRef.current === null) {
-                firstChapterRef.current = filteredChapters[0].id;
-            }
-
-            allItems.push(...filteredChapters);
-        }
-
-        // Sort by type and then by name
-        return allItems.sort((a, b) => {
-            // If searching, sort by relevance
-            if (localSearchQuery) {
-                const scoreA = calculateRelevance(a, [...(lectureDocuments || []), ...(textbookDocuments || [])], localSearchQuery.toLowerCase());
-                const scoreB = calculateRelevance(b, [...(lectureDocuments || []), ...(textbookDocuments || [])], localSearchQuery.toLowerCase());
-                return scoreB - scoreA;
-            }
-
-            // Otherwise sort by type first, then by name
-            if (a.type !== b.type) {
-                const typeOrder = { homeworks: 1, lectures: 2, chapters: 3 };
-                return typeOrder[a.type as keyof typeof typeOrder] - typeOrder[b.type as keyof typeof typeOrder];
-            }
-
-            return 0; // No additional sorting needed as we've already sorted within each type
-        });
+        return allItems;
     };
 
     // Calculate relevance score for search results
@@ -644,7 +456,7 @@ export function ContextPanel({
     };
 
     const allContentItems = getAllContentItems();
-    const isLoading = loadingLectures || loadingChapters || loadingFiles || loadingExercises || loadingHomeworks || loadingTextbooks || loadingClassData;
+    const isLoading = loadingFiles || loadingClassData;
 
     // Find first items of each type for scrolling
     const firstLectureItem = allContentItems.find(item => item.type === 'lectures');
@@ -779,12 +591,7 @@ export function ContextPanel({
                                                 isVisible={isItemVisible || localSearchQuery.length > 0}
                                                 makeDraggable={makeDraggable}
                                                 setViewerMode={setViewerMode}
-                                                lectureDocuments={lectureDocuments}
-                                                textbookDocuments={textbookDocuments}
                                                 fileDocuments={fileDocuments}
-                                                exercises={exercises}
-                                                chapters={chapters}
-                                                textbooks={textbooks}
                                                 onFileDelete={onFileDelete}
                                             />
                                         </div>

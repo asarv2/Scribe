@@ -61,13 +61,13 @@ export default function CallToAction() {
                         {user && profile ? (
                             <>
                                 {profile?.professor || profile?.admin ? (
-                                    <Link href={`/classes/c/${firstClass?.id}`}>
+                                    <Link href={`/class/${firstClass?.id}`}>
                                         <Button size="lg" radius="md" className={styles.ctaButton}>
                                             Get Started
                                         </Button>
                                     </Link>
                                 ) : (
-                                    <Link href={`/classes/c/${firstClass?.id}/chat/new`}>
+                                    <Link href={`/class/${firstClass?.id}/chat/new`}>
                                         <Button size="lg" radius="md" className={styles.ctaButton}>
                                             Get Started
                                         </Button>

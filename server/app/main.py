@@ -10,17 +10,10 @@ if not os.getenv('DOCKER_ENV'):
 else:
     BASE_DIR = '/app'
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, APIRouter
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
-from app.config import MODEL_REGISTRY
-
-# Check model availability during startup
-if MODEL_REGISTRY["whisper_initialized"]:
-    print(f"Whisper models loaded successfully: {len(MODEL_REGISTRY['whisper_models'])} instances")
-else:
-    print("Whisper models not available - initialization failed")
 
 # Create FastAPI app with lifespan
 app = FastAPI(title="Scribe API")
@@ -60,18 +53,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Import routers after app creation
+# Import latest version routers
 from app.routes.parse import router as parse_router
-from app.routes.evaluate import router as evaluate_router
 from app.routes.generate import router as generate_router
 from app.routes.upload import router as upload_router
 from app.routes.download import router as download_router
 from app.routes.grader import router as grader_router
 from app.routes.learning import router as learning_router  # Import the new learning router
 
-# Include routers
+# Include latest version routers directly on app
 app.include_router(parse_router, prefix="/parse")
-app.include_router(evaluate_router, prefix="/evaluate")
 app.include_router(generate_router, prefix="/generate")
 app.include_router(upload_router, prefix="/upload")
 app.include_router(download_router, prefix="/download")

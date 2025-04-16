@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from openai import AsyncOpenAI, OpenAI
 
 # Load environment variables from .env file
 load_dotenv()
@@ -13,6 +14,13 @@ if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_PRIVATE_KEY"):
     print("Supabase client initialized")
 else:
     print("Warning: Supabase credentials not found, running without database")
+
+# creating the gemini client
+gemini_client = None
+if os.getenv("GOOGLE_API_KEY"):
+    gemini_client = AsyncOpenAI(base_url="https://generativelanguage.googleapis.com/v1beta/openai/", api_key=os.getenv("GOOGLE_API_KEY"))
+else:
+    print("Warning: Google API key not found, running without Gemini client")
 
 # Set paths based on environment
 BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))

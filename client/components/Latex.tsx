@@ -17,20 +17,12 @@ import { getFiles } from '@/utils/queries/get-files';
 import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getFileDocuments } from '@/utils/queries/get-file-docs';
-import { getExercises } from '@/utils/queries/get-exercises';
-import { getChapterDocuments } from '@/utils/queries/get-chapter-docs';
-import { getTextbookDocuments } from '@/utils/queries/get-textbook-docs';
-import { getHomeworks } from '@/utils/queries/get-homeworks';
-import { getChapters } from '@/utils/queries/get-chapters';
-import { getLectures } from '@/utils/queries/get-lectures';
-import { getLectureDocuments } from '@/utils/queries/get-lecture-docs';
-import { getTextbooks } from '@/utils/queries/get-textbooks';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getUser } from '@/utils/queries/get-user';
 interface LatexProps {
     children: string;
     classId?: string;
-    handleEnhancedDocumentClick?: (contextType: 'lectures' | 'chapters' | 'homeworks' | 'files', contextId: string, documentId?: string, textbookId?: string, exerciseId?: string) => void;
+    handleEnhancedDocumentClick?: (contextType: 'files', contextId: string, documentId?: string) => void;
 }
 
 export default function Latex({ children, classId, handleEnhancedDocumentClick }: LatexProps) {
@@ -45,61 +37,6 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user?.id
-    });
-
-
-    const { data: lectures } = useQuery({
-        queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, classId ? [classId] : []),
-        enabled: !!classId
-    });
-
-    const { data: lectureDocuments } = useQuery({
-        queryKey: ["lectureDocuments", classId],
-        queryFn: () => getLectureDocuments(supabase, lectures!.map(l => l.id)),
-        enabled: !!lectures && !!classId
-    });
-
-    const { data: textbooks } = useQuery({
-        queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, classId ? [classId] : []),
-        enabled: !!classId
-    });
-
-    const { data: chapters } = useQuery({
-        queryKey: ["chapters", classId],
-        queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks && !!classId
-    });
-
-    const { data: chapterDocuments } = useQuery({
-        queryKey: ["chapterDocuments", classId],
-        queryFn: () => getChapterDocuments(supabase, chapters!.map(c => c.id)),
-        enabled: !!chapters && !!classId
-    });
-
-    const { data: textbookDocuments } = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks && !!classId
-    });
-
-    const { data: homeworks } = useQuery({
-        queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, classId ? [classId] : []),
-        enabled: !!classId
-    });
-
-    const { data: chapterExercises } = useQuery({
-        queryKey: ["chapterExercises", classId],
-        queryFn: () => getExercises(supabase, chapters!.map(c => c.id), []),
-        enabled: !!chapters && !!classId
-    });
-
-    const { data: homeworkExercises } = useQuery({
-        queryKey: ["homeworkExercises", classId],
-        queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
-        enabled: !!homeworks && !!classId
     });
 
     const { data: files, isLoading: loadingFiles } = useQuery({
@@ -195,209 +132,48 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
 
 
     const getDocumentLabel = (
-        type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise' | 'files',
         doc?: Document,
-        exercise?: Exercise,
         range?: string
     ): string => {
-        if (type === 'lecture' && doc) {
-            const lecture = lectures?.find(l => l.id === doc.lecture);
-            return `${lecture?.name ?? 'Lecture'} ${range ? `p.${range}` : `p.${doc.page}`}`;
-        } else if (type === 'chapter' && doc) {
-            const textbook = textbooks?.find(t => t.id === doc.textbook);
-            return `${textbook?.title ?? 'Textbook'} ${range ? `p.${range}` : `p.${doc.page}`}`;
-        } else if (type === 'chapter-exercise' && exercise) {
-            const chapter = chapters?.find(c => c.id === exercise.chapter);
-            return `Ch.${chapter?.chapter_number ?? '?'} Ex.${exercise.exercise_number} ${range ? `p.${range}` : ''}`;
-        } else if (type === 'homework-problem' && exercise) {
-            const homework = homeworks?.find(h => h.id === exercise.homework);
-            return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number} ${range ? `p.${range}` : ''}`;
-        } else if (type === 'files' && doc) {
-            const file = files?.find(f => f.id === doc.file);
-            return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc.page}`}`;
-        }
-        return 'Document Reference';
+        const file = files?.find(f => f.id === doc?.file);
+        return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
     };
 
-    const getTextbookForChapter = (chapterId: string) => {
-        const chapter = chapters?.find(c => c.id === chapterId);
-        return chapter?.textbook || null;
-    };
-
-    const renderBadges = (documents: Document[], exercises: Exercise[]) => {
+    const renderBadges = (documents: Document[]) => {
         // find all of the distinct lectures and chapters in the group
-        const groupLectures = Array.from(new Set(documents.filter(doc => doc && doc.lecture !== null).map(doc => doc.lecture).filter((lectureId) => lectureId !== null)))
-        const groupChapters = Array.from(new Set(documents.filter(doc => doc && doc.textbook !== null && doc.chapter !== null).map(doc => doc.chapter).filter((chapterId) => chapterId !== null)))
         const groupFiles = Array.from(new Set(documents.filter(doc => doc && doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
         // get the page ranges for each lecture and chapter
-        const lecturePageRanges = groupLectures.map(lecture => getPageRanges(documents.filter(doc => doc && doc.lecture === lecture), [])).flat()
-        const chapterPageRanges = groupChapters.map(chapter => getPageRanges(documents.filter(doc => doc && doc.chapter === chapter), [])).flat()
         const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc && doc.file === file), [])).flat()
         // combine the page ranges for each lecture and chapter
-        const allDocumentPageRanges = [...lecturePageRanges, ...chapterPageRanges, ...filePageRanges]
-
-        // find all of the distinct exercises and chapters in the group
-        const groupExercises = Array.from(new Set(exercises
-            .filter(exercise => exercise && exercise.homework !== null)
-            .map(exercise => exercise.homework)))
-
-        // get the page ranges for each lecture and chapter
-        const exercisePageRanges = groupExercises.map(homework => 
-            getPageRanges([], exercises.filter(exercise => exercise && exercise.homework === homework))
-        ).flat()
+        const allDocumentPageRanges = [...filePageRanges]
 
         return (
             <>
                 {handleEnhancedDocumentClick && allDocumentPageRanges.length > 0 && allDocumentPageRanges.map((pageRange, pageRangeIndex) => {
-                    const lectureDocument: boolean = pageRange.startDocument?.lecture !== null;
-                    const chapterDocument: boolean = pageRange.startDocument?.textbook !== null && pageRange.startDocument?.chapter !== null;
-                    const fileDocument: boolean = pageRange.startDocument?.file !== null;
-                    if (lectureDocument) {
-                        const label = getDocumentLabel(
-                            'lecture',
-                            pageRange.startDocument ?? undefined,
-                            undefined,
-                            pageRange.range
-                        );
-                        return (
-                            <Text
-                                key={pageRangeIndex}
-                                c="blue"
-                                span
-                                className="context-reference-link"
-                                style={{ 
-                                    display: 'inline', 
-                                    margin: '0 0.25rem', 
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    if (pageRange.startDocument?.lecture) {
-                                        handleEnhancedDocumentClick('lectures', pageRange.startDocument.lecture, pageRange.startDocument.id);
-                                    }
-                                }}
-                            >
-                                {`[${label}]`}
-                            </Text>
-                        );
-                    } else if (chapterDocument) {
-                        const label = getDocumentLabel(
-                            'chapter',
-                            pageRange.startDocument ?? undefined,
-                            undefined,
-                            pageRange.range
-                        );
-                        return (
-                            <Text
-                                key={pageRangeIndex}
-                                c="green"
-                                span
-                                className="context-reference-link"
-                                style={{ 
-                                    display: 'inline', 
-                                    margin: '0 0.25rem', 
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    if (pageRange.startDocument?.chapter) {
-                                        handleEnhancedDocumentClick('chapters', pageRange.startDocument.chapter, pageRange.startDocument.id, pageRange.startDocument.textbook || undefined);
-                                    }
-                                }}
-                            >
-                                {`[${label}]`}
-                            </Text>
-                        );
-                    } else if (fileDocument) {
-                        const label = getDocumentLabel(
-                            'files',
-                            pageRange.startDocument ?? undefined,
-                            undefined,
-                            pageRange.range
-                        );
-                        return (
-                            <Text
-                                key={pageRangeIndex}
-                                c="purple"
-                                span
-                                className="context-reference-link"
-                                style={{ 
-                                    display: 'inline', 
-                                    margin: '0 0.25rem', 
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    if (pageRange.startDocument?.file) {
-                                        handleEnhancedDocumentClick('files', pageRange.startDocument.file, pageRange.startDocument.id);
-                                    }
-                                }}
-                            >
-                                {`[${label}]`}
-                            </Text>
-                        );
-                    } else {
-                        return null;
-                    }
-                })}
-                {handleEnhancedDocumentClick && exercisePageRanges.length > 0 && exercisePageRanges.map((pageRange, pageRangeIndex) => {
-                    const chapterExercise: boolean = pageRange.startExercise?.chapter !== null;
-                    const homeworkExercise: boolean = pageRange.startExercise?.homework !== null;
-
-                    if (homeworkExercise) {
-                        const label = getDocumentLabel(
-                            'homework-problem',
-                            undefined,
-                            pageRange.startExercise ?? undefined
-                        );
-                        return (
-                            <Text
-                                key={pageRangeIndex}
-                                c="orange"
-                                span
-                                className="context-reference-link"
-                                style={{ 
-                                    display: 'inline', 
-                                    margin: '0 0.25rem', 
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    if (pageRange.startExercise?.homework) {
-                                        handleEnhancedDocumentClick('homeworks', pageRange.startExercise.homework, undefined, undefined, pageRange.startExercise.id);
-                                    }
-                                }}
-                            >
-                                {`[${label}]`}
-                            </Text>
-                        );
-                    } if (chapterExercise) {
-                        const label = getDocumentLabel(
-                            'chapter-exercise',
-                            undefined,
-                            pageRange.startExercise ?? undefined
-                        );
-                        return (
-                            <Text
-                                key={pageRangeIndex}
-                                c="teal"
-                                span
-                                className="context-reference-link"
-                                style={{ 
-                                    display: 'inline', 
-                                    margin: '0 0.25rem', 
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    if (pageRange.startExercise?.chapter) {
-                                        // Get the textbook ID for this chapter
-                                        const textbookId = getTextbookForChapter(pageRange.startExercise.chapter);
-                                        handleEnhancedDocumentClick('chapters', pageRange.startExercise.chapter, undefined, textbookId || undefined, pageRange.startExercise.id);
-                                    }
-                                }}
-                            >
-                                {`[${label}]`}
-                            </Text>
-                        );
-                    } else {
-                        return null;
-                    }
+                    const label = getDocumentLabel(
+                        pageRange.startDocument ?? undefined,
+                        pageRange.range
+                    );
+                    return (
+                        <Text
+                            key={pageRangeIndex}
+                            c="purple"
+                            span
+                            className="context-reference-link"
+                            style={{ 
+                                display: 'inline', 
+                                margin: '0 0.25rem', 
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => {
+                                if (pageRange.startDocument?.file) {
+                                    handleEnhancedDocumentClick('files', pageRange.startDocument.file, pageRange.startDocument.id);
+                                }
+                            }}
+                        >
+                            {`[${label}]`}
+                        </Text>
+                    );
                 })}
             </>
         )
@@ -446,24 +222,10 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
 
                             // find documents and exercises for each tag id
                             const documents = tagIds.map((id: string) => {
-                                if (tagType === 'lecture') {
-                                    return lectureDocuments?.find((lectureDocument: Document) => lectureDocument.id === id);
-                                } else if (tagType === 'chapter') {
-                                    return chapterDocuments?.find((chapterDocument: Document) => chapterDocument.id === id);
-                                } else if (tagType === 'file') {
-                                    return fileDocuments?.find((fileDocument: Document) => fileDocument.id === id);
-                                }
-                            });
-
-                            const exercises = tagIds.map((id: string) => {
-                                if (tagType === 'exercise') {
-                                    return chapterExercises?.find((chapterExercise: Exercise) => chapterExercise.id === id);
-                                } else if (tagType === 'problem') {
-                                    return homeworkExercises?.find((homeworkExercise: Exercise) => homeworkExercise.id === id);
-                                }
+                                return fileDocuments?.find((fileDocument: Document) => fileDocument.id === id);
                             });
                             
-                            return renderBadges(documents, exercises);
+                            return renderBadges(documents);
                         }
                         return <span {...props} />;
                     }

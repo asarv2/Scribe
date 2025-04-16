@@ -28,14 +28,6 @@ import { ClassLayout } from "@/components/Class/ClassLayout";
 import { ContextPanel } from "../ContextPanel";
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
-import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
-import { getChapters } from "@/utils/queries/get-chapters";
-import { getHomeworks } from "@/utils/queries/get-homeworks";
-import { getProblems } from "@/utils/queries/get-problems";
-import { getExercises } from "@/utils/queries/get-exercises";
-import { getLectures } from "@/utils/queries/get-lectures";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
 import ChatHistoryDropdown from "./ChatHistoryDropdown";
 import { getFiles } from "@/utils/queries/get-files";
 import { ViewerPanel } from "../ViewerPanel";
@@ -91,34 +83,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         enabled: !!user?.id
     });
 
-    // Queries for data
-    const { data: lectures } = useQuery({
-        queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, [classId])
-    });
-
-    const { data: textbooks } = useQuery({
-        queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, [classId]),
-    });
-
-    const { data: chapters } = useQuery({
-        queryKey: ["chapters", classId],
-        queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks
-    });
-
-    const { data: homeworkData } = useQuery({
-        queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, [classId]),
-    });
-
-    const { data: exercises } = useQuery({
-        queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, chapters!.map(c => c.id), homeworkData!.map(h => h.id)),
-        enabled: !!chapters && !!homeworkData
-    });
-
     const { data: files, isLoading: loadingFiles } = useQuery({
         queryKey: ["files", classId],
         queryFn: () => getFiles(supabase, [classId]),
@@ -129,112 +93,30 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         id: 1,
         title: "Chat",
         prompt: "",
-        context: {
-            lectures: [],
-            chapters: [],
-            homeworks: [],
-            exercises: [],
-            files: []
-        },
+        context: [],
         chatType: 'general-student',
         teacher: false,
         rating: null
     });
 
     // Combine all loading states
-    const isInitializing = !user || !profile || !lectures || !textbooks || !homeworkData || !exercises || !files;
+    const isInitializing = !user || !profile || !files;
 
     const [isWaitingForVideos, setIsWaitingForVideos] = useState(false);
 
     // Add this state to track when we receive a realtime update
     const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
 
-    // Add this state to track message submission
-    const getLectureContext = () => {
-        const previousMessagesLectures = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.lectures) ? message.lectures : []
-        ) ?? [];
-
-        const allLectures = Array.from(new Set([...(activeChat.context.lectures ?? []), ...previousMessagesLectures]));
-        return allLectures;
-    }
-
-    const getChapterContext = () => {
-        const previousMessagesChapters = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.chapters) ? message.chapters : []
-        ) ?? [];
-
-        const exerciseChapters = activeChat.context.exercises.map(e => exercises?.find(ex => ex.id === e)?.chapter).filter((chapter): chapter is string => chapter !== undefined);
-
-        const allChapters = Array.from(new Set([...(activeChat.context.chapters ?? []), ...exerciseChapters, ...previousMessagesChapters]));
-        return allChapters;
-    }
-
-    const getHomeworkContext = () => {
-        const previousMessagesHomeworks = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.homeworks) ? message.homeworks : []
-        ) ?? [];
-
-        const allHomeworks = Array.from(new Set([...(activeChat.context.homeworks ?? []), ...previousMessagesHomeworks]));
-        return allHomeworks;
-    }
-
-    const getFileContext = () => {
+    const getContext = () => {
         const previousMessagesFiles = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
             Array.isArray(message.files) ? message.files : []
         ) ?? [];
 
-        const allFiles = Array.from(new Set([...(activeChat.context.files ?? []), ...previousMessagesFiles]));
+        const allFiles = Array.from(new Set([...(activeChat.context ?? []), ...previousMessagesFiles]));
         return allFiles;
 
     }
-
-    const getAdditionalContextForBareQuestion = () => {
-        const contextParts: string[] = [];
-
-        // Add lecture context
-        activeChat.context.lectures.forEach(lectureId => {
-            const lecture = lectures?.find(l => l.id === lectureId);
-            if (lecture) {
-                contextParts.push(`Lecture ${lecture.note_number}: ${lecture.name}`);
-            }
-        });
-
-        // Add chapter context
-        activeChat.context.chapters.forEach(chapterId => {
-            const chapter = chapters?.find(c => c.id === chapterId);
-            if (chapter) {
-                contextParts.push(`Chapter ${chapter.chapter_number}: ${chapter.title}`);
-            }
-        });
-
-        // Add homework context
-        activeChat.context.homeworks.forEach(homeworkId => {
-            const homework = homeworkData?.find(h => h.id === homeworkId);
-            if (homework) {
-                contextParts.push(`Homework ${homework.homework_number}: ${homework.title}`);
-            }
-        });
-
-        // Add exercise context
-        activeChat.context.exercises.forEach(exerciseId => {
-            const exercise = exercises?.find(e => e.id === exerciseId);
-            if (exercise) {
-                contextParts.push(`Exercise ${exercise.exercise_number}: ${exercise.title}`);
-            }
-        });
-
-        // If there's any context, add a prefix
-        if (contextParts.length > 0) {
-            return `\n\nContext:\n\n${contextParts.join('\n')}\n`;
-        }
-
-        return '';
-    };
 
     // Define sendMessage with useCallback
     const sendMessage = useCallback(async () => {
@@ -242,8 +124,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         try {
             let profileId = profile?.id;
             let newChatId = chatId;
-
-            const responseUrl = `${process.env.NEXT_PUBLIC_API_URL}`
 
             if (chatId === "new") {
                 // Create new generation with type and metadata including teacherOption
@@ -253,24 +133,17 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     profileId,
                     activeChat.chatType,
                     activeChat.teacher,
-                    responseUrl
                 );
                 newChatId = chat.id;
             }
-
-            const additionalContextForBareQuestion = getAdditionalContextForBareQuestion();
 
             // Create the message
             const newMessage = {
                 chat: newChatId,
                 profile: profileId,
-                bare_question: activeChat.prompt + additionalContextForBareQuestion,
+                bare_question: activeChat.prompt,
                 question: activeChat.prompt,
-                response_url: responseUrl,
-                lectures: getLectureContext(),
-                chapters: getChapterContext(),
-                homeworks: getHomeworkContext(),
-                files: getFileContext(),
+                files: getContext(),
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -298,16 +171,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             setActiveChat({
                 ...activeChat,
                 prompt: "",
-                context: {
-                    lectures: [],
-                    chapters: [],
-                    homeworks: [],
-                    exercises: [],
-                    files: []
-                }
+                context: []
             });
 
-            router.push(`/classes/c/${classId}/chat/${newChatId}`);
+            router.push(`/class/${classId}/chat/${newChatId}`);
         } finally {
             setLoading(false);
         }
@@ -317,11 +184,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         classId,
         activeChat,
         router,
-        getAdditionalContextForBareQuestion,
-        getLectureContext,
-        getChapterContext,
-        getHomeworkContext,
-        getFileContext
+        getContext
     ]);
 
     const handleChat = async () => {
@@ -373,34 +236,17 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     };
 
     // Modify addContextToChat to remove drag-related state updates
-    const addContextToChat = (contextType: keyof ChatMessage['context'], contextId: string) => {
-        if (contextType === "exercises") {
-            const chapterExercises = exercises?.filter(e => e.chapter === contextId);
-            setActiveChat(prev => ({
-                ...prev,
-                context: {
-                    ...prev.context,
-                    exercises: [...prev.context.exercises, ...chapterExercises?.map(e => e.id) ?? []],
-                }
-            }));
-        } else {
-            setActiveChat(prev => ({
-                ...prev,
-                context: {
-                    ...prev.context,
-                    [contextType]: [...prev.context[contextType], contextId]
-                }
-            }));
-        }
-    };
-
-    const removeContextFromChat = (contextType: keyof ChatMessage['context'], contextId: string) => {
+    const addContextToChat = (contextId: string) => {
         setActiveChat(prev => ({
             ...prev,
-            context: {
-                ...prev.context,
-                [contextType]: prev.context[contextType].filter(id => id !== contextId)
-            }
+            context: [...prev.context, contextId]
+        }));
+    };
+
+    const removeContextFromChat = (contextId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            context: prev.context.filter((id: string) => id !== contextId)
         }));
     };
 
@@ -411,7 +257,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             active: false,
         }));
         // remove from context
-        removeContextFromChat("files", viewerMode.fileId ?? "");
+        removeContextFromChat(viewerMode.fileId ?? "");
     };
 
     const handleScrollToSection = useCallback((sectionId: string) => {
@@ -597,7 +443,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
     // Add this function to handle chat selection
     const handleChatSelect = (selectedChatId: string) => {
         if (selectedChatId !== chatId) {
-            router.push(`/classes/c/${classId}/chat/${selectedChatId}`);
+            router.push(`/class/${classId}/chat/${selectedChatId}`);
         }
     };
 
@@ -689,7 +535,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                             variant="subtle"
                                             size="lg"
                                             aria-label="Start a new chat"
-                                            onClick={() => router.push(`/classes/c/${classId}/chat/new`)}
+                                            onClick={() => router.push(`/class/${classId}/chat/new`)}
                                             mb={3}
                                         >
                                             <IconPlus size={20} />
