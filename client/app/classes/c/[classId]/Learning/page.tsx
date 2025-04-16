@@ -10,7 +10,8 @@ import { use, useState, useCallback, useEffect, useRef } from "react";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import { 
   Container, Title, Text, Paper, Stack, Group, Button, 
-  Modal, TextInput, ActionIcon, Badge, Slider 
+  Modal, TextInput, ActionIcon, Badge, Slider,
+  Tooltip
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import ReactFlow, { 
@@ -19,7 +20,24 @@ import ReactFlow, {
     Handle, Position, useReactFlow
 } from 'react-flow-renderer';
 import 'reactflow/dist/style.css';
-import { IconPlus, IconEdit } from '@tabler/icons-react';
+import { IconPlus, IconEdit, IconRefresh } from '@tabler/icons-react';
+import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
+import { 
+  getOutcomes, getObjectives, createOutcome, updateOutcome, deleteOutcome,
+  createObjective, updateObjective, deleteObjective, updateObjectiveConnection,
+  Outcome, Objective, getLectures, Lecture
+} from "@/utils/queries/get-connections";
+import { analyzeConnections, batchCreateConnections, getTaskConnections, ConnectionSuggestion } from "@/utils/services/learning-connections";
+
+// New interfaces for connection suggestions
+interface ConnectionSuggestion {
+  source_id: string;
+  target_id: string;
+  source_type: string;
+  target_type: string;
+  confidence: number;
+  explanation: string;
+}
 
 // Custom node components
 const OutcomeNode = ({ data, id }) => (
@@ -65,18 +83,6 @@ const OutcomeNode = ({ data, id }) => (
         </Text>
       )}
     </Stack>
-    <Handle 
-      type="source" 
-      position={Position.Right} 
-      style={{ background: '#4dabf7' }}
-      id={`${id}-right-source`}
-    />
-    <Handle 
-      type="target" 
-      position={Position.Left} 
-      style={{ background: '#4dabf7' }}
-      id={`${id}-left-target`}
-    />
     <Handle 
       type="source" 
       position={Position.Bottom} 
@@ -137,18 +143,6 @@ const ObjectiveNode = ({ data, id }) => (
     </Stack>
     <Handle 
       type="source" 
-      position={Position.Right} 
-      style={{ background: '#fd7e14' }}
-      id={`${id}-right-source`}
-    />
-    <Handle 
-      type="target" 
-      position={Position.Left} 
-      style={{ background: '#fd7e14' }}
-      id={`${id}-left-target`}
-    />
-    <Handle 
-      type="source" 
       position={Position.Bottom} 
       style={{ background: '#fd7e14' }}
       id={`${id}-bottom-source`}
@@ -162,10 +156,53 @@ const ObjectiveNode = ({ data, id }) => (
   </Paper>
 );
 
+const TaskNode = ({ data, id }) => (
+  <Paper 
+    p="md" 
+    radius="md" 
+    withBorder 
+    style={{ 
+      background: 'transparent', 
+      width: 250, 
+      border: '2px solid #40c057',
+      textAlign: 'center',
+      position: 'relative'
+    }}
+    onClick={(e) => {
+      e.stopPropagation();
+      if (typeof data.onNodeClick === 'function') {
+        data.onNodeClick(id);
+      }
+    }}
+  >
+    <Stack gap="xs" align="center">
+      <Badge color="green" size="sm" variant="transparent">{data.title}</Badge>
+      {data.description && data.description !== 'No description' && (
+        <Text size="sm" lineClamp={3} color="dimmed" ta="center">
+          {data.description}
+        </Text>
+      )}
+    </Stack>
+    <Handle 
+      type="source" 
+      position={Position.Bottom} 
+      style={{ background: '#40c057' }}
+      id={`${id}-bottom-source`}
+    />
+    <Handle 
+      type="target" 
+      position={Position.Top} 
+      style={{ background: '#40c057' }}
+      id={`${id}-top-target`}
+    />
+  </Paper>
+);
+
 // Node type to component mapping
 const nodeTypes = {
   outcome: OutcomeNode,
   objective: ObjectiveNode,
+  task: TaskNode,
 };
 
 // Updated zoom controls component with minus and plus indicators
@@ -225,17 +262,21 @@ const ZoomControls = () => {
     );
 };
 
-// Add the ViewportIndicator component
+// Update the ViewportIndicator component to only show when no nodes are in frame
 const ViewportIndicator = () => {
   const { getViewport, getNodes } = useReactFlow();
   const [angle, setAngle] = useState(0);
   const [showIndicator, setShowIndicator] = useState(false);
   
-  // Check if any nodes are outside the viewport and calculate direction
+  // Check if any nodes are visible in the viewport
   useEffect(() => {
-    const checkNodesOutsideViewport = () => {
+    const checkNodesInViewport = () => {
       const nodes = getNodes();
-      if (nodes.length === 0) return;
+      if (nodes.length === 0) {
+        // No nodes in diagram, no need for indicator
+        setShowIndicator(false);
+        return;
+      }
       
       const viewport = getViewport();
       const { x, y, zoom } = viewport;
@@ -258,38 +299,52 @@ const ViewportIndicator = () => {
       const centerX = leftBoundary + viewportWidth / 2;
       const centerY = topBoundary + viewportHeight / 2;
       
-      // Track nodes outside viewport and their positions
+      // Check if ANY node is visible in the viewport
+      let anyNodeVisible = false;
+      // Track all nodes for center of mass calculation
       let outsideNodes = [];
       
       for (const node of nodes) {
         const { position, width, height } = node;
-        const nodeX = position.x + (width ?? 250) / 2;
-        const nodeY = position.y + (height ?? 150) / 2;
+        const nodeWidth = width ?? 250;
+        const nodeHeight = height ?? 150;
         
-        // Check if node is outside viewport
-        if (
-          nodeX < leftBoundary || 
-          nodeX > rightBoundary || 
-          nodeY < topBoundary || 
-          nodeY > bottomBoundary
-        ) {
-          outsideNodes.push({ x: nodeX, y: nodeY });
+        // Check if node is at least partially visible in viewport
+        // A node is visible if any part of it intersects with the viewport
+        const nodeRight = position.x + nodeWidth;
+        const nodeBottom = position.y + nodeHeight;
+        
+        const isVisible = !(
+          nodeRight < leftBoundary || 
+          position.x > rightBoundary || 
+          nodeBottom < topBoundary || 
+          position.y > bottomBoundary
+        );
+        
+        if (isVisible) {
+          anyNodeVisible = true;
+        } else {
+          // If not visible, add to outside nodes for direction calculation
+          outsideNodes.push({ 
+            x: position.x + nodeWidth / 2, 
+            y: position.y + nodeHeight / 2 
+          });
         }
       }
       
-      // Calculate direction to the center of mass of outside nodes
-      if (outsideNodes.length > 0) {
+      // Only show indicator if there are nodes in the dataset but none are visible
+      if (!anyNodeVisible && outsideNodes.length > 0) {
         setShowIndicator(true);
         
         // Calculate the center of mass of outside nodes
         const comX = outsideNodes.reduce((sum, node) => sum + node.x, 0) / outsideNodes.length;
         const comY = outsideNodes.reduce((sum, node) => sum + node.y, 0) / outsideNodes.length;
         
-        // Calculate angle from viewport center to center of mass (in radians)
+        // Calculate angle from viewport center to center of mass
         const deltaX = comX - centerX;
         const deltaY = comY - centerY;
         
-        // Calculate angle in degrees (0 = right, 90 = down, 180 = left, 270 = up)
+        // Calculate angle in degrees
         const angleRadians = Math.atan2(deltaY, deltaX);
         const angleDegrees = (angleRadians * 180 / Math.PI);
         
@@ -300,13 +355,13 @@ const ViewportIndicator = () => {
     };
     
     // Run check initially and on viewport changes
-    checkNodesOutsideViewport();
+    checkNodesInViewport();
     
     // Add event listeners to detect viewport changes
     const viewportEl = document.querySelector('.react-flow__viewport');
     if (viewportEl) {
       // Use MutationObserver to detect style changes (pan/zoom)
-      const observer = new MutationObserver(checkNodesOutsideViewport);
+      const observer = new MutationObserver(checkNodesInViewport);
       observer.observe(viewportEl, { attributes: true });
       
       return () => observer.disconnect();
@@ -354,8 +409,91 @@ const ViewportIndicator = () => {
   );
 };
 
+// Add this new function for distributing nodes to avoid overlaps
+const distributeNodes = (originalNodes) => {
+  // Make a copy to avoid mutating the original
+  const nodes = [...originalNodes];
+  
+  // Define node dimensions and distance constraints
+  const nodeWidth = 250;  // Width of node
+  const nodeHeight = 150; // Approximate height of node
+  const minDistance = 5;  // Minimum distance in dots (5 dots minimum spacing)
+  const maxDistance = 2;  // Maximum distance for unconnected nodes (2 dots)
+  
+  // Get a map of connections to identify connected nodes
+  const nodeConnections = new Map();
+  nodes.forEach(node => {
+    nodeConnections.set(node.id, []);
+  });
+  
+  // Consider connection information (if available)
+  // In a real implementation, you'd use the connections data
+  
+  // Force-directed algorithm - only applied on initial load
+  const iterations = 30;  // Fewer iterations for faster positioning
+  
+  for (let i = 0; i < iterations; i++) {
+    let totalMovement = 0;
+    
+    // For each pair of nodes
+    for (let a = 0; a < nodes.length; a++) {
+      for (let b = a + 1; b < nodes.length; b++) {
+        const nodeA = nodes[a];
+        const nodeB = nodes[b];
+        
+        // Check if these nodes are connected (for real implementation)
+        const areConnected = false; // placeholder
+        
+        // Calculate centers of nodes
+        const centerA = {
+          x: nodeA.position.x + nodeWidth / 2,
+          y: nodeA.position.y + nodeHeight / 2
+        };
+        
+        const centerB = {
+          x: nodeB.position.x + nodeWidth / 2,
+          y: nodeB.position.y + nodeHeight / 2
+        };
+        
+        // Calculate distance between nodes
+        const dx = centerB.x - centerA.x;
+        const dy = centerB.y - centerA.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Calculate normalized direction vector
+        const nx = dx / (distance || 1);  // Avoid division by zero
+        const ny = dy / (distance || 1);
+        
+        // Minimum required distance (in pixels) to prevent overlaps
+        const minRequiredDistance = nodeWidth * minDistance / 100;
+        
+        // If nodes are overlapping or too close (below min distance)
+        if (distance < minRequiredDistance) {
+          // Apply more force for overlapping nodes
+          const force = (minRequiredDistance - distance) * 0.5;
+          
+          // Apply forces to both nodes in opposite directions
+          nodeA.position.x -= nx * force / 2;
+          nodeA.position.y -= ny * force / 2;
+          nodeB.position.x += nx * force / 2;
+          nodeB.position.y += ny * force / 2;
+          
+          totalMovement += force;
+        }
+      }
+    }
+    
+    // Break early if nodes have stabilized
+    if (totalMovement < 0.5) break;
+  }
+  
+  // Return the repositioned nodes
+  return nodes;
+};
+
 export default function LearningPage({ params }: { params: Promise<{ classId: string }> }) {
     const { classId } = use(params);
+    const supabase = useSupabaseBrowser(); // Get Supabase client
     const [opened, { open, close }] = useDisclosure(false);
     const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure(false);
     const [nodeForm, setNodeForm] = useState({
@@ -365,11 +503,14 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     });
     const [editingNode, setEditingNode] = useState<Node | null>(null);
     
-    // Local data storage instead of Supabase
+    // Local data storage with Supabase sync
     const [outcomes, setOutcomes] = useState<any[]>([]);
     const [objectives, setObjectives] = useState<any[]>([]);
     const [connections, setConnections] = useState<any[]>([]);
+    const [lectures, setLectures] = useState<Lecture[]>([]);
     const [isAdmin, setIsAdmin] = useState(true); // Set to true for simplicity
+    const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     
     // React Flow state
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -381,7 +522,13 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     // Add state variables to track adding state
     const [addingOutcome, setAddingOutcome] = useState(false);
     const [addingObjective, setAddingObjective] = useState(false);
+    const [addingTask, setAddingTask] = useState(false);
     const [newNodeTitle, setNewNodeTitle] = useState('');
+
+    // Add state for AI connections
+    const [analyzing, setAnalyzing] = useState(false);
+    const [suggestedConnections, setSuggestedConnections] = useState<ConnectionSuggestion[]>([]);
+    const [applyingConnections, setApplyingConnections] = useState(false);
 
     // Define isProfessorOrAdmin function - always returns true for simplicity
     const isProfessorOrAdmin = useCallback(() => {
@@ -391,6 +538,77 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     // Use refs to keep handler functions stable
     const handleNodeClickRef = useRef<((nodeId: string) => void) | null>(null);
     const handleEditNodeRef = useRef<((nodeId: string) => void) | null>(null);
+    const initialLayoutAppliedRef = useRef(false);
+
+    // Extract loadData function from useEffect to make it reusable
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        console.log(`Loading data for class ${classId}...`);
+        // Fetch outcomes and objectives from Supabase
+        const fetchedOutcomes = await getOutcomes(supabase, classId);
+        console.log(`Fetched ${fetchedOutcomes.length} outcomes`);
+        
+        // Use the utility function instead of direct Supabase query
+        const fetchedObjectives = await getObjectives(supabase, classId);
+        console.log(`Fetched ${fetchedObjectives.length} objectives`);
+        
+        // Fetch lectures for tasks
+        const fetchedLectures = await getLectures(supabase, classId);
+        console.log(`Fetched ${fetchedLectures.length} lectures`);
+        
+        setOutcomes(fetchedOutcomes);
+        setObjectives(fetchedObjectives);
+        setLectures(fetchedLectures);
+        
+        // Generate connections based on outcome_id relationships, now including handles if available
+        const derivedConnections = fetchedObjectives
+          .filter(obj => obj.outcome_id)
+          .map(obj => ({
+            id: `edge-${obj.id}-${obj.outcome_id}`,
+            source_id: obj.outcome_id,
+            source_type: 'outcome',
+            target_id: obj.id,
+            target_type: 'objective',
+            // Include handle information if available - with null fallbacks
+            source_handle: obj.connection_source_handle || null,
+            target_handle: obj.connection_target_handle || null,
+            class_id: classId
+          }));
+        
+        console.log(`Created ${derivedConnections.length} connections`);
+        setConnections(derivedConnections);
+        
+        // Log connection details for debugging
+        if (derivedConnections.length > 0) {
+          console.log("Connection examples:", 
+            derivedConnections.slice(0, 2).map(conn => ({
+              id: conn.id,
+              source: conn.source_id,
+              target: conn.target_id,
+              sourceHandle: conn.source_handle,
+              targetHandle: conn.target_handle
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    };
+
+    // Manual refresh function
+    const handleRefresh = () => {
+      setRefreshing(true);
+      loadData();
+    };
+
+    // Modify the useEffect to use this function but WITHOUT the interval
+    useEffect(() => {
+        loadData();
+    }, [classId, supabase]);
 
     // Wrap handleEditNode in useCallback with minimal dependencies
     const handleEditNode = useCallback((nodeId) => {
@@ -435,12 +653,52 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             const targetNode = nodes.find(n => n.id === nodeId);
             
             if (sourceNode && targetNode) {
-              const newConnectionId = `edge-${Date.now()}`;
-              
-              // We'll let React Flow handle the connection via onConnect instead
-              // which properly handles the source/target handles
-              setConnectingMode(false);
-              setConnectionSource(null);
+              if (sourceNode.type === 'outcome' && targetNode.type === 'objective') {
+                // Create default connection with bottom/top handles instead of right/left
+                const sourceHandle = `${sourceNode.id}-bottom-source`;
+                const targetHandle = `${targetNode.id}-top-target`;
+                
+                // Update objective to connect to outcome in Supabase with handle info
+                updateObjectiveConnection(
+                  supabase, 
+                  targetNode.id, 
+                  sourceNode.id,
+                  {
+                    source_handle: sourceHandle,
+                    target_handle: targetHandle
+                  }
+                );
+                
+                // Add to local connections state
+                const newConnectionId = `edge-${targetNode.id}-${sourceNode.id}`;
+                setConnections(prev => [
+                  ...prev,
+                  {
+                    id: newConnectionId,
+                    source_id: sourceNode.id,
+                    source_type: sourceNode.type,
+                    target_id: targetNode.id,
+                    target_type: targetNode.type,
+                    source_handle: sourceHandle,
+                    target_handle: targetHandle,
+                    class_id: classId
+                  }
+                ]);
+                
+                // Create edge in the graph
+                setEdges(eds => [
+                  ...eds,
+                  {
+                    id: newConnectionId,
+                    source: sourceNode.id,
+                    target: targetNode.id,
+                    sourceHandle: sourceHandle,
+                    targetHandle: targetHandle,
+                    animated: true,
+                    style: { stroke: '#999' }
+                  }
+                ]);
+              }
             }
             
             // Reset connection source and remove highlight
@@ -453,6 +711,9 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
               }
               return node;
             }));
+            
+            setConnectingMode(false);
+            setConnectionSource(null);
           }
         } else {
           // Normal node selection
@@ -464,40 +725,67 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
       };
       
       handleNodeClickRef.current = handleNodeClick;
-    }, [nodes, connectingMode, connectionSource, setNodes, setConnections, classId]);
+    }, [nodes, connectingMode, connectionSource, setNodes, setConnections, setEdges, classId, supabase]);
 
     // Function for handling node position changes
     const onNodesChangeWithSave = useCallback((changes) => {
-        // Apply the changes locally
+        // Apply the changes locally ONLY - don't trigger any redistribution
         onNodesChange(changes);
         
-        // Then for each position change, update our local state
+        // Then for each position change, update our local state and Supabase
         for (const change of changes) {
             if (change.type === 'position' && change.position) {
                 // Find the node
                 const node = nodes.find(n => n.id === change.id);
                 if (!node) continue;
                 
-                // Update position in local state
-                if (node.type === 'outcome') {
-                    setOutcomes(prev => prev.map(outcome => 
-                        outcome.id === node.id 
-                            ? {...outcome, position_x: change.position.x, position_y: change.position.y} 
-                            : outcome
-                    ));
-                } else if (node.type === 'objective') {
-                    setObjectives(prev => prev.map(objective => 
-                        objective.id === node.id 
-                            ? {...objective, position_x: change.position.x, position_y: change.position.y} 
-                            : objective
-                    ));
-                }
+                // Save debounced to prevent excessive Supabase calls
+                const updatePosition = async () => {
+                    // Update position in Supabase
+                    if (node.type === 'outcome') {
+                        await updateOutcome(supabase, node.id, {
+                            position_x: change.position.x,
+                            position_y: change.position.y
+                        });
+                        
+                        // Update position in local state
+                        setOutcomes(prev => prev.map(outcome => 
+                            outcome.id === node.id 
+                                ? {...outcome, position_x: change.position.x, position_y: change.position.y} 
+                                : outcome
+                        ));
+                    } else if (node.type === 'objective') {
+                        await updateObjective(supabase, node.id, {
+                            position_x: change.position.x,
+                            position_y: change.position.y
+                        });
+                        
+                        // Update position in local state
+                        setObjectives(prev => prev.map(objective => 
+                            objective.id === node.id 
+                                ? {...objective, position_x: change.position.x, position_y: change.position.y} 
+                                : objective
+                        ));
+                    }
+                };
+                
+                // Debounce position updates to reduce DB calls
+                clearTimeout(node.data?.positionUpdateTimer);
+                
+                const timer = setTimeout(updatePosition, 500);
+                
+                // Store timer in node data for cleanup
+                setNodes(nodes => nodes.map(n => 
+                    n.id === node.id 
+                        ? {...n, data: {...n.data, positionUpdateTimer: timer}} 
+                        : n
+                ));
             }
         }
-    }, [nodes, onNodesChange, setOutcomes, setObjectives]);
+    }, [nodes, onNodesChange, setNodes, setOutcomes, setObjectives, supabase]);
 
-    // Update onConnect to work with local state and preserve handle IDs
-    const onConnect = useCallback((params) => {
+    // Update onConnect to work with Supabase
+    const onConnect = useCallback(async (params) => {
         try {
             // Find source and target nodes to determine their types
             const sourceNode = nodes.find(n => n.id === params.source);
@@ -505,7 +793,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             
             if (!sourceNode || !targetNode) return;
             
-            const newConnectionId = `edge-${Date.now()}`;
+            const newConnectionId = `edge-${targetNode.id}-${sourceNode.id}`;
             
             // Add edge directly, preserving source and target handles
             setEdges((eds) => addEdge({ 
@@ -518,30 +806,43 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                 targetHandle: params.targetHandle
             }, eds));
             
-            // Add to local connections state
-            setConnections(prev => [...prev, {
-                id: newConnectionId,
-                source_id: params.source,
-                source_type: sourceNode.type,
-                target_id: params.target,
-                target_type: targetNode.type,
-                source_handle: params.sourceHandle,
-                target_handle: params.targetHandle,
-                class_id: classId
-            }]);
+            // Only update in Supabase when connecting an outcome to an objective
+            if (sourceNode.type === 'outcome' && targetNode.type === 'objective') {
+                // Update objective to link to the outcome in Supabase
+                // Now pass the handle information
+                await updateObjectiveConnection(
+                  supabase, 
+                  targetNode.id, 
+                  sourceNode.id, 
+                  {
+                    source_handle: params.sourceHandle,
+                    target_handle: params.targetHandle
+                  }
+                );
+                
+                // Add to local connections state with handle information
+                setConnections(prev => [...prev, {
+                    id: newConnectionId,
+                    source_id: sourceNode.id,
+                    source_type: sourceNode.type,
+                    target_id: targetNode.id,
+                    target_type: targetNode.type,
+                    source_handle: params.sourceHandle,
+                    target_handle: params.targetHandle,
+                    class_id: classId
+                }]);
+            }
             
             setConnectingMode(false);
             setConnectionSource(null);
         } catch (error) {
             console.error("Error in onConnect:", error);
         }
-    }, [nodes, setEdges, setConnections, classId, setConnectingMode, setConnectionSource]);
+    }, [nodes, setEdges, setConnections, classId, setConnectingMode, setConnectionSource, supabase]);
 
-
-    
-    // Convert local data to nodes and edges
+    // Modify the useEffect that converts data to nodes to apply the distribution algorithm
     useEffect(() => {
-        if (outcomes.length > 0 || objectives.length > 0 || connections.length > 0) {
+        if (outcomes.length > 0 || objectives.length > 0 || lectures.length > 0 || connections.length > 0) {
             // Convert outcomes to nodes
             const outcomeNodes = outcomes.map(outcome => ({
                 id: outcome.id,
@@ -570,40 +871,162 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                 }
             }));
             
-            // Combine nodes
-            setNodes([...outcomeNodes, ...objectiveNodes]);
-            
-            // Convert connections to edges - with handle information
-            const connectionEdges = connections.map(connection => ({
-                id: connection.id,
-                source: connection.source_id,
-                target: connection.target_id,
-                sourceHandle: connection.source_handle,
-                targetHandle: connection.target_handle,
-                animated: true,
-                style: { stroke: '#999' }
+            // Convert lectures to task nodes
+            const taskNodes = lectures.map((lecture, index) => ({
+                id: lecture.id,
+                type: 'task',
+                position: { 
+                    x: lecture.position_x || (Math.random() * 300) + 300, 
+                    y: lecture.position_y || (Math.random() * 300) + 300 
+                },
+                data: { 
+                    title: lecture.name, 
+                    description: lecture.description || '',
+                    onNodeClick: handleNodeClickRef.current
+                }
             }));
+            
+            // Combine all node types
+            const allNodes = [...outcomeNodes, ...objectiveNodes, ...taskNodes];
+            
+            // Critical change: Only apply distribution on FIRST load, when positions are missing or zero
+            const needsPositioning = !initialLayoutAppliedRef.current && 
+                allNodes.some(node => 
+                    (node.position.x === 0 && node.position.y === 0) || 
+                    !node.position.x || 
+                    !node.position.y
+                );
+            
+            let finalNodes = allNodes;
+            
+            // ONLY apply distribution algorithm on first load
+            if (needsPositioning && allNodes.length > 0) {
+                console.log("Applying initial node distribution");
+                finalNodes = distributeNodes(allNodes);
+                initialLayoutAppliedRef.current = true; // Set this to true to prevent future redistributions
+                
+                // Save new positions to database on initial load
+                const savePositions = async () => {
+                    for (const node of finalNodes) {
+                        if (node.type === 'outcome') {
+                            await updateOutcome(supabase, node.id, {
+                                position_x: node.position.x,
+                                position_y: node.position.y
+                            });
+                        } else if (node.type === 'objective') {
+                            await updateObjective(supabase, node.id, {
+                                position_x: node.position.x,
+                                position_y: node.position.y
+                            });
+                        }
+                    }
+                };
+                savePositions();
+            }
+            
+            // Set nodes with distributed positions
+            setNodes(finalNodes);
+            
+            // Convert connections to edges - make sure we're properly creating edges with valid handles
+            const connectionEdges = connections.map(connection => {
+                // Define default source and target handles based on node types
+                const defaultSourceHandle = `${connection.source_id}-bottom-source`;
+                const defaultTargetHandle = `${connection.target_id}-top-target`;
+                
+                // Create the edge with appropriate handles
+                const edge = {
+                    id: connection.id,
+                    source: connection.source_id,
+                    target: connection.target_id,
+                    animated: true,
+                    style: { stroke: '#999' },
+                    // Use connection handles if available, otherwise use defaults
+                    sourceHandle: connection.source_handle || defaultSourceHandle, 
+                    targetHandle: connection.target_handle || defaultTargetHandle
+                };
+                
+                return edge;
+            });
+            
+            console.log(`Created ${connectionEdges.length} edges from connections`);
+            if (connectionEdges.length > 0) {
+                console.log("Example edge:", connectionEdges[0]);
+            }
             
             setEdges(connectionEdges);
         }
-    }, [outcomes, objectives, connections, isProfessorOrAdmin]);
+    }, [outcomes, objectives, lectures, connections, isProfessorOrAdmin, setNodes, setEdges, supabase]);
 
-    // Update updateNode to work with local state
+    // Function to remove a node
+    const removeNode = async (nodeId) => {
+      try {
+        // Find the node to determine its type
+        const node = nodes.find(n => n.id === nodeId);
+        if (!node) return;
+        
+        console.log(`Removing ${node.type} with ID ${nodeId}`);
+        
+        // Delete from Supabase based on node type
+        let success = false;
+        
+        if (node.type === 'outcome') {
+          success = await deleteOutcome(supabase, nodeId);
+          if (success) {
+            setOutcomes(prev => prev.filter(outcome => outcome.id !== nodeId));
+          }
+        } else if (node.type === 'objective') {
+          success = await deleteObjective(supabase, nodeId);
+          if (success) {
+            setObjectives(prev => prev.filter(objective => objective.id !== nodeId));
+          }
+        }
+        
+        if (!success) {
+          console.error(`Failed to delete ${node.type} ${nodeId}`);
+          return;
+        }
+        
+        // Remove from connections and UI regardless of success
+        setConnections(prev => prev.filter(conn => 
+          conn.source_id !== nodeId && conn.target_id !== nodeId
+        ));
+        setNodes(nds => nds.filter(n => n.id !== nodeId));
+        setEdges(eds => eds.filter(edge => edge.source !== nodeId && edge.target !== nodeId));
+        
+        console.log(`Successfully deleted ${node.type} ${nodeId}`);
+      } catch (error) {
+        console.error(`Unexpected error when removing node ${nodeId}:`, error);
+        alert(`Unexpected error during deletion. The UI will refresh to ensure consistency.`);
+        loadData();
+      }
+    };
+
     const updateNode = async () => {
       if (!nodeForm.title || !editingNode) return;
       
       try {
-        // Update in local state first
+        const updates = {
+          title: nodeForm.title,
+          description: nodeForm.description || ''
+        };
+        
+        // Update in Supabase
         if (editingNode.type === 'outcome') {
+          await updateOutcome(supabase, editingNode.id, updates);
+          
+          // Update in local state
           setOutcomes(prev => prev.map(outcome => 
             outcome.id === editingNode.id
-                ? {...outcome, title: nodeForm.title, description: nodeForm.description || ''}
+                ? {...outcome, ...updates}
                 : outcome
           ));
         } else {
+          await updateObjective(supabase, editingNode.id, updates);
+          
+          // Update in local state
           setObjectives(prev => prev.map(objective => 
             objective.id === editingNode.id
-                ? {...objective, title: nodeForm.title, description: nodeForm.description || ''}
+                ? {...objective, ...updates}
                 : objective
           ));
         }
@@ -632,348 +1055,649 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
       }
     };
 
-    // Update removeNode to work with local state
-    const removeNode = async (nodeId) => {
-      try {
-        // Find the node to determine its type
-        const node = nodes.find(n => n.id === nodeId);
-        if (!node) return;
-        
-        // Delete from local state first
-        if (node.type === 'outcome') {
-          setOutcomes(prev => prev.filter(outcome => outcome.id !== nodeId));
-        } else {
-          setObjectives(prev => prev.filter(objective => objective.id !== nodeId));
-        }
-        
-        // Also delete any connections that use this node
-        const relatedConnections = connections.filter(
-          conn => conn.source_id === nodeId || conn.target_id === nodeId
-        );
-        
-        setConnections(prev => prev.filter(
-          conn => conn.source_id !== nodeId && conn.target_id !== nodeId
-        ));
-        
-        // Then update display state
-        setNodes((nds) => nds.filter(node => node.id !== nodeId));
-        setEdges((eds) => eds.filter(edge => 
-          edge.source !== nodeId && edge.target !== nodeId
-        ));
-      } catch (error) {
-        console.error("Error removing node:", error);
-      }
-    };
-
-    // Function to start the adding process
     const startAddingNode = (type) => {
       if (type === 'outcome') {
         setAddingOutcome(true);
         setAddingObjective(false);
-      } else {
+        setAddingTask(false);
+      } else if (type === 'objective') {
         setAddingOutcome(false);
         setAddingObjective(true);
+        setAddingTask(false);
+      } else {
+        setAddingOutcome(false);
+        setAddingObjective(false);
+        setAddingTask(true);
       }
       setNewNodeTitle('');
     };
 
-    // Update confirmAddNode to work with local state
     const confirmAddNode = async (type) => {
       if (!newNodeTitle.trim()) return;
-      
-      try {
-        const position = {
-          x: Math.random() * 300,
-          y: Math.random() * 300
-        };
 
-        // Create a new node ID
-        const newId = `${type}-${Date.now()}`;
+      try {
+        // Calculate a better initial position by looking at existing nodes
+        const calculateNewPosition = () => {
+            if (nodes.length === 0) {
+                return { x: 100, y: 100 };
+            }
+            
+            // Find the rightmost and bottommost positions of existing nodes
+            let maxX = -Infinity, maxY = -Infinity;
+            nodes.forEach(node => {
+                maxX = Math.max(maxX, node.position.x);
+                maxY = Math.max(maxY, node.position.y);
+            });
+            
+            // Create a new position that's offset from existing nodes
+            // Try to form a grid-like pattern
+            if (maxX > 800) {
+                // Start a new row
+                return { 
+                    x: 100, 
+                    y: maxY + 300
+                };
+            } else {
+                // Continue the current row
+                return { 
+                    x: maxX + 300, 
+                    y: maxY
+                };
+            }
+        };
         
-        // Add to local state first
+        const position = calculateNewPosition();
+
         const newNodeData = {
-          id: newId,
           title: newNodeTitle.trim(),
           description: '',
           position_x: position.x,
           position_y: position.y,
           class: classId
         };
-        
-        if (type === 'outcome') {
-          setOutcomes(prev => [...prev, newNodeData]);
-        } else {
-          setObjectives(prev => [...prev, newNodeData]);
-        }
 
-        // Then add to display state
-        const newNode = {
-          id: newId,
-          type: type,
-          position,
-          data: { 
-            title: newNodeTitle.trim(), 
-            description: '', 
-            isEditable: isProfessorOrAdmin(),
-            onEdit: handleEditNodeRef.current,
-            onNodeClick: handleNodeClickRef.current
-          }
-        };
+        let newNode;
+
+        if (type === 'outcome') {
+          const createdOutcome = await createOutcome(supabase, newNodeData);
+          if (!createdOutcome) throw new Error('Failed to create outcome');
+
+          setOutcomes(prev => [...prev, createdOutcome]);
+
+          newNode = {
+            id: createdOutcome.id,
+            type: 'outcome',
+            position,
+            data: { 
+              title: createdOutcome.title, 
+              description: createdOutcome.description || '', 
+              isEditable: isProfessorOrAdmin(),
+              onEdit: handleEditNodeRef.current,
+              onNodeClick: handleNodeClickRef.current
+            }
+          };
+        } else if (type === 'objective') {
+          const createdObjective = await createObjective(supabase, {
+            ...newNodeData,
+            outcome_id: null
+          });
+          if (!createdObjective) throw new Error('Failed to create objective');
+
+          setObjectives(prev => [...prev, createdObjective]);
+
+          newNode = {
+            id: createdObjective.id,
+            type: 'objective',
+            position,
+            data: { 
+              title: createdObjective.title, 
+              description: createdObjective.description || '', 
+              isEditable: isProfessorOrAdmin(),
+              onEdit: handleEditNodeRef.current,
+              onNodeClick: handleNodeClickRef.current
+            }
+          };
+        } else {
+          // Placeholder for task creation logic
+          console.log("Task creation is not implemented yet.");
+        }
 
         setNodes((nds) => [...nds, newNode]);
         setAddingOutcome(false);
         setAddingObjective(false);
+        setAddingTask(false);
         setNewNodeTitle('');
       } catch (error) {
         console.error("Error creating node:", error);
       }
     };
 
-    // Function to cancel adding a node
     const cancelAddNode = () => {
       setAddingOutcome(false);
       setAddingObjective(false);
+      setAddingTask(false);
       setNewNodeTitle('');
     };
 
-    // Filter nodes by type
+    const handleAnalyzeConnections = async () => {
+      setAnalyzing(true);
+      try {
+        console.log("Starting connection analysis for class:", classId);
+        console.log("Outcomes:", outcomes.length, "Objectives:", objectives.length, "Lectures:", lectures.length);
+        
+        // Call the API to analyze connections
+        const result = await analyzeConnections(
+          classId,
+          outcomes,
+          objectives,
+          lectures
+        );
+        
+        if (result.success) {
+          console.log("Analysis successful!", {
+            objective_connections: result.objective_connections.length,
+            task_connections: result.task_connections.length
+          });
+          
+          // Log each connection for debugging
+          result.objective_connections.forEach((conn, i) => {
+            console.log(`Objective Connection ${i+1}:`, {
+              source: conn.source_id,
+              target: conn.target_id,
+              confidence: conn.confidence
+            });
+          });
+          
+          // Store the suggested connections
+          setSuggestedConnections([
+            ...result.objective_connections,
+            ...result.task_connections
+          ]);
+          
+          // Show a preview of the connections as temporary edges
+          const tempEdges = result.objective_connections.map(conn => {
+            // Make sure the outcome is the source and objective is the target
+            const edge = {
+              id: `temp-edge-${conn.source_id}-${conn.target_id}`,
+              source: conn.source_id,
+              target: conn.target_id,
+              animated: true,
+              style: { stroke: '#4dabf7', strokeWidth: 2, strokeDasharray: '5,5' }, // Make more visible
+              label: `${Math.round(conn.confidence * 100)}%`, // Add confidence as label
+              // Use specific handle IDs that match our node components
+              sourceHandle: `${conn.source_id}-bottom-source`,
+              targetHandle: `${conn.target_id}-top-target`
+            };
+            console.log("Created temp edge:", edge);
+            return edge;
+          });
+          
+          // Add task connections to the preview
+          const taskTempEdges = result.task_connections.map(conn => {
+            const edge = {
+              id: `temp-edge-${conn.source_id}-${conn.target_id}`,
+              source: conn.source_id,
+              target: conn.target_id,
+              animated: true,
+              style: { stroke: '#40c057', strokeWidth: 2, strokeDasharray: '5,5' }, // Green for task connections
+              label: `${Math.round(conn.confidence * 100)}%`,
+              sourceHandle: `${conn.source_id}-bottom-source`,
+              targetHandle: `${conn.target_id}-top-target`
+            };
+            console.log("Created temp task edge:", edge);
+            return edge;
+          });
+          
+          console.log(`Adding ${tempEdges.length + taskTempEdges.length} temporary edges to graph`);
+          
+          // Make sure to preserve existing edges too
+          setEdges(currentEdges => {
+            console.log("Current edges:", currentEdges.length);
+            return [...currentEdges, ...tempEdges, ...taskTempEdges];
+          });
+        } else {
+          console.error("Analysis failed:", result.error);
+        }
+      } catch (error) {
+        console.error("Error analyzing connections:", error);
+      } finally {
+        setAnalyzing(false);
+      }
+    };
+
+    const handleApplyConnections = async () => {
+      setApplyingConnections(true);
+      try {
+        console.log("Applying connections, count:", suggestedConnections.length);
+        
+        // Prepare connection data with handle information
+        const connectionsWithHandles = suggestedConnections.map(conn => ({
+          ...conn,
+          // Add handle information for the connection
+          source_handle: `${conn.source_id}-bottom-source`,
+          target_handle: `${conn.target_id}-top-target`
+        }));
+        
+        // Call the API to apply connections
+        const result = await batchCreateConnections(
+          classId,
+          connectionsWithHandles
+        );
+        
+        if (result.success) {
+          console.log("Connections applied successfully:", result.updated_count);
+          
+          // Remove temporary edges first
+          setEdges(currentEdges => {
+            const remainingEdges = currentEdges.filter(edge => !edge.id.startsWith('temp-edge-'));
+            console.log(`Removed ${currentEdges.length - remainingEdges.length} temporary edges`);
+            return remainingEdges;
+          });
+          
+          // Clear suggested connections
+          setSuggestedConnections([]);
+          
+          // Reload data to get the updated connections
+          console.log("Reloading data to get updated connections");
+          await loadData();
+        } else {
+          console.error("Failed to apply connections:", result.error);
+          // Continue anyway and still try to reload data
+          setEdges(edges.filter(edge => !edge.id.startsWith('temp-edge-')));
+          setSuggestedConnections([]);
+          await loadData();
+        }
+      } catch (error) {
+        console.error("Error applying connections:", error);
+        // Still try to recover by reloading data
+        setEdges(edges.filter(edge => !edge.id.startsWith('temp-edge-')));
+        setSuggestedConnections([]);
+        await loadData();
+      } finally {
+        setApplyingConnections(false);
+      }
+    };
+
+    const handleCancelConnections = () => {
+      // Remove temporary edges
+      setEdges(edges.filter(edge => !edge.id.startsWith('temp-edge-')));
+      
+      // Clear suggested connections
+      setSuggestedConnections([]);
+    };
+
     const outcomeNodes = nodes.filter(node => node.type === 'outcome');
     const objectiveNodes = nodes.filter(node => node.type === 'objective');
+    const taskNodes = nodes.filter(node => node.type === 'task');
 
     return (
         <ClassLayout classId={classId}>
             <Container fluid h="calc(100vh - 120px)">
-                <Title order={2} mb="md">Learning Outcomes & Objectives</Title>
-                
-                <div style={{ display: 'flex', height: 'calc(100vh - 180px)' }}>
-                    {/* Left side - React Flow Canvas (75% width) */}
-                    <div style={{ flex: '3', position: 'relative', marginRight: '16px' }}>
-                        <Paper 
-                            withBorder 
-                            h="100%" 
-                            style={{ position: 'relative' }}
-                            bg="transparent"
-                        >
-                            <ReactFlowProvider>
-                                <div style={{ height: '100%' }}>
-                                    <ReactFlow
-                                        nodes={nodes}
-                                        edges={edges}
-                                        onNodesChange={onNodesChangeWithSave}
-                                        onEdgesChange={onEdgesChange}
-                                        onConnect={onConnect}
-                                        nodeTypes={nodeTypes}
-                                        fitView
-                                        connectionMode="strict"
-                                        connectionLineType="bezier"
-                                        style={{ background: 'transparent' }}
-                                        proOptions={{ hideAttribution: true }}
-                                        minZoom={0.1}
-                                        maxZoom={2}
-                                        defaultZoom={1}
-                                        zoomOnScroll={true}
-                                        panOnScroll={true}
-                                        zoomOnDoubleClick={true}
-                                    >
-                                        <Background color="#e5e5e5" />
-                                        <ZoomControls />
-                                        <ViewportIndicator />
-                                    </ReactFlow>
-                                    <style jsx global>{`
-                                        .react-flow__controls-button,
-                                        .react-flow__attribution {
-                                            display: none !important;
-                                        }
-                                    `}</style>
+                <Group justify="space-between" mb="md">
+                    <Title order={2}>Learning Outcomes & Objectives</Title>
+                    <Group>
+                        {suggestedConnections.length > 0 ? (
+                          <>
+                            <Button 
+                              color="green" 
+                              onClick={handleApplyConnections}
+                              loading={applyingConnections}
+                              leftSection={<IconEdit size={20} />}
+                            >
+                              Apply Connections
+                            </Button>
+                            <Button 
+                              color="red" 
+                              onClick={handleCancelConnections}
+                              variant="outline"
+                            >
+                              Cancel
+                            </Button>
+                          </>
+                        ) : (
+                          <Button 
+                            color="blue" 
+                            onClick={handleAnalyzeConnections}
+                            loading={analyzing}
+                            leftSection={<IconRefresh size={20} />}
+                          >
+                            Auto-Connect Nodes
+                          </Button>
+                        )}
+                        <Tooltip label="Refresh data">
+                            <ActionIcon 
+                                variant="light" 
+                                color="blue" 
+                                onClick={handleRefresh}
+                                loading={refreshing}
+                                size="lg"
+                            >
+                                <IconRefresh size={20} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Group>
+                </Group>
+                {loading ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+                        <Text>Loading learning data...</Text>
+                    </div>
+                ) : (
+                    <div style={{ display: 'flex', height: 'calc(100vh - 180px)' }}>
+                        <div style={{ flex: '3', position: 'relative', marginRight: '16px' }}>
+                            <Paper 
+                                withBorder 
+                                h="100%" 
+                                style={{ position: 'relative' }}
+                                bg="transparent"
+                            >
+                                <ReactFlowProvider>
+                                    <div style={{ height: '100%' }}>
+                                        <ReactFlow
+                                            nodes={nodes}
+                                            edges={edges}
+                                            onNodesChange={onNodesChangeWithSave}
+                                            onEdgesChange={onEdgesChange}
+                                            onConnect={onConnect}
+                                            nodeTypes={nodeTypes}
+                                            fitView
+                                            connectionMode="strict"
+                                            connectionLineType="bezier"
+                                            style={{ background: 'transparent' }}
+                                            proOptions={{ hideAttribution: true }}
+                                            minZoom={0.1}
+                                            maxZoom={2}
+                                            defaultZoom={1}
+                                            zoomOnScroll={true}
+                                            panOnScroll={true}
+                                            zoomOnDoubleClick={true}
+                                        >
+                                            <Background color="#e5e5e5" />
+                                            <ZoomControls />
+                                            <ViewportIndicator />
+                                        </ReactFlow>
+                                        <style jsx global>{`
+                                            .react-flow__controls-button,
+                                            .react-flow__attribution {
+                                                display: none !important;
+                                            }
+                                        `}</style>
+                                    </div>
+                                </ReactFlowProvider>
+                            </Paper>
+                        </div>
+                        <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
+                            <Paper 
+                                withBorder 
+                                style={{ flex: '1', marginBottom: '8px', overflow: 'auto', display: 'flex', flexDirection: 'column' }}
+                                p="md"
+                            >
+                                <Group gap="apart" mb="xs">
+                                    <Title order={4} style={{ color: '#4dabf7' }}>Outcomes</Title>
+                                    {isProfessorOrAdmin() && (
+                                        <ActionIcon 
+                                            color="blue" 
+                                            variant="light" 
+                                            onClick={() => startAddingNode('outcome')}
+                                            disabled={addingOutcome || addingObjective || addingTask}
+                                        >
+                                            <IconPlus size={16} />
+                                        </ActionIcon>
+                                    )}
+                                </Group>
+                                <div style={{ overflow: 'auto', flex: '1' }}>
+                                    {addingOutcome && (
+                                        <Paper 
+                                            p="sm" 
+                                            withBorder 
+                                            style={{ 
+                                                borderLeft: '3px solid #4dabf7',
+                                                marginBottom: '8px'
+                                            }}
+                                        >
+                                            <TextInput
+                                                placeholder="Enter outcome name..."
+                                                value={newNodeTitle}
+                                                onChange={(e) => setNewNodeTitle(e.target.value)}
+                                                autoFocus
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && newNodeTitle.trim()) confirmAddNode('outcome');
+                                                    if (e.key === 'Escape') cancelAddNode();
+                                                }}
+                                            />
+                                        </Paper>
+                                    )}
+                                    {outcomeNodes.length === 0 && !addingOutcome ? (
+                                        <Text size="sm" color="dimmed" ta="center" mt="md">
+                                            No outcomes yet. {isProfessorOrAdmin() ? '' : ''}
+                                        </Text>
+                                    ) : (
+                                        <Stack gap="xs">
+                                            {outcomeNodes.map(node => (
+                                                <Paper 
+                                                    key={node.id}
+                                                    p="sm" 
+                                                    withBorder 
+                                                    style={{ 
+                                                        borderLeft: node.id === selectedNode?.id ? 
+                                                            '5px solid #4dabf7' : 
+                                                            '3px solid #4dabf7',
+                                                        cursor: 'pointer',
+                                                        background: 'transparent'
+                                                    }}
+                                                    onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
+                                                >
+                                                    <Group justify="apart" wrap={false}>
+                                                        <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
+                                                        {isProfessorOrAdmin() && (
+                                                            <Text 
+                                                                c="red" 
+                                                                fw={700} 
+                                                                size="md" 
+                                                                style={{ cursor: 'pointer', marginLeft: '8px' }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    removeNode(node.id);
+                                                                }}
+                                                            >
+                                                                -
+                                                            </Text> 
+                                                        )}
+                                                    </Group>
+                                                </Paper>
+                                            ))}
+                                        </Stack>
+                                    )}
                                 </div>
-                            </ReactFlowProvider>
-                        </Paper>
-                    </div>
-                    
-                    {/* Right side - Lists (25% width) */}
-                    <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
-                        {/* Outcomes section (1/4 height) */}
-                        <Paper 
-                            withBorder 
-                            style={{ flex: '1', marginBottom: '8px', overflow: 'auto', display: 'flex', flexDirection: 'column' }}
-                            p="md"
-                        >
-                            <Group gap="apart" mb="xs">
-                                <Title order={4} style={{ color: '#4dabf7' }}>Outcomes</Title>
-                                {isProfessorOrAdmin() && (
-                                    <ActionIcon 
-                                        color="blue" 
-                                        variant="light" 
-                                        onClick={() => startAddingNode('outcome')}
-                                        disabled={addingOutcome || addingObjective}
-                                    >
-                                        <IconPlus size={16} />
-                                    </ActionIcon>
-                                )}
-                            </Group>
-                            
-                            <div style={{ overflow: 'auto', flex: '1' }}>
-                                {addingOutcome && (
-                                    <Paper 
-                                        p="sm" 
-                                        withBorder 
-                                        style={{ 
-                                            borderLeft: '3px solid #4dabf7',
-                                            marginBottom: '8px'
-                                        }}
-                                    >
-                                        <TextInput
-                                            placeholder="Enter outcome name..."
-                                            value={newNodeTitle}
-                                            onChange={(e) => setNewNodeTitle(e.target.value)}
-                                            autoFocus
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && newNodeTitle.trim()) confirmAddNode('outcome');
-                                                if (e.key === 'Escape') cancelAddNode();
+                            </Paper>
+                            <Paper 
+                                withBorder 
+                                style={{ flex: '1', marginBottom: '8px', overflow: 'auto', display: 'flex', flexDirection: 'column' }}
+                                p="md"
+                            >
+                                <Group gap="apart" mb="xs">
+                                    <Title order={4} style={{ color: '#fd7e14' }}>Objectives</Title>
+                                    {isProfessorOrAdmin() && (
+                                        <ActionIcon 
+                                            color="orange" 
+                                            variant="light" 
+                                            onClick={() => startAddingNode('objective')}
+                                            disabled={addingOutcome || addingObjective || addingTask}
+                                        >
+                                            <IconPlus size={16} />
+                                        </ActionIcon>
+                                    )}
+                                </Group>
+                                <div style={{ overflow: 'auto', flex: '1' }}>
+                                    {addingObjective && (
+                                        <Paper 
+                                            p="sm" 
+                                            withBorder 
+                                            style={{ 
+                                                borderLeft: '3px solid #fd7e14',
+                                                marginBottom: '8px'
                                             }}
-                                        />
-                                    </Paper>
-                                )}
-                                {outcomeNodes.length === 0 && !addingOutcome ? (
-                                    <Text size="sm" color="dimmed" ta="center" mt="md">
-                                        No outcomes yet. {isProfessorOrAdmin() ? '' : ''}
-                                    </Text>
-                                ) : (
-                                    <Stack gap="xs">
-                                        {outcomeNodes.map(node => (
-                                            <Paper 
-                                                key={node.id} 
-                                                p="sm" 
-                                                withBorder 
-                                                style={{ 
-                                                    borderLeft: node.id === selectedNode?.id ? 
-                                                        '5px solid #4dabf7' : 
-                                                        '3px solid #4dabf7',
-                                                    cursor: 'pointer',
-                                                    background: 'transparent'
+                                        >
+                                            <TextInput
+                                                placeholder="Enter objective name..."
+                                                value={newNodeTitle}
+                                                onChange={(e) => setNewNodeTitle(e.target.value)}
+                                                autoFocus
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && newNodeTitle.trim()) confirmAddNode('objective');
+                                                    if (e.key === 'Escape') cancelAddNode();
                                                 }}
-                                                onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
-                                            >
-                                                <Group justify="apart" wrap={false}>
-                                                    <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
-                                                    {isProfessorOrAdmin() && (
-                                                        <Text 
-                                                            c="red" 
-                                                            fw={700} 
-                                                            size="md" 
-                                                            style={{ cursor: 'pointer', marginLeft: '8px' }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                removeNode(node.id);
-                                                            }}
-                                                        >
-                                                            -
-                                                        </Text>
-                                                    )}
-                                                </Group>
-                                            </Paper>
-                                        ))}
-                                    </Stack>
-                                )}
-                            </div>
-                        </Paper>
-                        
-                        {/* Objectives section (3/4 height) */}
-                        <Paper 
-                            withBorder 
-                            style={{ flex: '3', overflow: 'auto', display: 'flex', flexDirection: 'column' }}
-                            p="md"
-                        >
-                            <Group gap="apart" mb="xs">
-                                <Title order={4} style={{ color: '#fd7e14' }}>Objectives</Title>
-                                {isProfessorOrAdmin() && (
-                                    <ActionIcon 
-                                        color="orange" 
-                                        variant="light" 
-                                        onClick={() => startAddingNode('objective')}
-                                        disabled={addingOutcome || addingObjective}
-                                    >
-                                        <IconPlus size={16} />
-                                    </ActionIcon>
-                                )}
-                            </Group>
-                            
-                            <div style={{ overflow: 'auto', flex: '1' }}>
-                                {addingObjective && (
-                                    <Paper 
-                                        p="sm" 
-                                        withBorder 
-                                        style={{ 
-                                            borderLeft: '3px solid #fd7e14',
-                                            marginBottom: '8px'
-                                        }}
-                                    >
-                                        <TextInput
-                                            placeholder="Enter objective name..."
-                                            value={newNodeTitle}
-                                            onChange={(e) => setNewNodeTitle(e.target.value)}
-                                            autoFocus
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && newNodeTitle.trim()) confirmAddNode('objective');
-                                                if (e.key === 'Escape') cancelAddNode();
+                                            />
+                                        </Paper>
+                                    )}
+                                    {objectiveNodes.length === 0 && !addingObjective ? (
+                                        <Text size="sm" color="dimmed" ta="center" mt="md">
+                                            No objectives yet. {isProfessorOrAdmin() ? '' : ''}
+                                        </Text>
+                                    ) : (
+                                        <Stack gap="xs">
+                                            {objectiveNodes.map(node => (
+                                                <Paper 
+                                                    key={node.id}
+                                                    p="sm" 
+                                                    withBorder 
+                                                    style={{ 
+                                                        borderLeft: node.id === selectedNode?.id ? 
+                                                            '5px solid #fd7e14' : 
+                                                            '3px solid #fd7e14',
+                                                        cursor: 'pointer',
+                                                        background: 'transparent'
+                                                    }}
+                                                    onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
+                                                >
+                                                    <Group position="apart" wrap={false}>
+                                                        <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
+                                                        {isProfessorOrAdmin() && (
+                                                            <Text 
+                                                                c="red" 
+                                                                fw={700} 
+                                                                size="md" 
+                                                                style={{ cursor: 'pointer', marginLeft: '8px' }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    removeNode(node.id);
+                                                                }}
+                                                            >
+                                                                -
+                                                            </Text>
+                                                        )}
+                                                    </Group>
+                                                </Paper>
+                                            ))}
+                                        </Stack>
+                                    )}
+                                </div>
+                            </Paper>
+                            <Paper 
+                                withBorder 
+                                style={{ flex: '1', overflow: 'auto', display: 'flex', flexDirection: 'column' }}
+                                p="md"
+                            >
+                                <Group gap="apart" mb="xs">
+                                    <Title order={4} style={{ color: '#40c057' }}>Tasks</Title>
+                                    {isProfessorOrAdmin() && (
+                                        <ActionIcon 
+                                            color="green" 
+                                            variant="light" 
+                                            onClick={() => {
+                                                setAddingTask(true);
+                                                setAddingOutcome(false);
+                                                setAddingObjective(false);
+                                                setNewNodeTitle('');
                                             }}
-                                        />
-                                    </Paper>
-                                )}
-                                {objectiveNodes.length === 0 && !addingObjective ? (
-                                    <Text size="sm" color="dimmed" ta="center" mt="md">
-                                        No objectives yet. {isProfessorOrAdmin() ? '' : ''}
-                                    </Text>
-                                ) : (
-                                    <Stack gap="xs">
-                                        {objectiveNodes.map(node => (
-                                            <Paper 
-                                                key={node.id} 
-                                                p="sm" 
-                                                withBorder 
-                                                style={{ 
-                                                    borderLeft: node.id === selectedNode?.id ? 
-                                                        '5px solid #fd7e14' : 
-                                                        '3px solid #fd7e14',
-                                                    cursor: 'pointer',
-                                                    background: 'transparent'
+                                            disabled={addingOutcome || addingObjective || addingTask}
+                                        >
+                                            <IconPlus size={16} />
+                                        </ActionIcon>
+                                    )}
+                                </Group>
+                                <div style={{ overflow: 'auto', flex: '1' }}>
+                                    {addingTask && (
+                                        <Paper 
+                                            p="sm" 
+                                            withBorder 
+                                            style={{ 
+                                                borderLeft: '3px solid #40c057',
+                                                marginBottom: '8px'
+                                            }}
+                                        >
+                                            <TextInput
+                                                placeholder="Enter task name..."
+                                                value={newNodeTitle}
+                                                onChange={(e) => setNewNodeTitle(e.target.value)}
+                                                autoFocus
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && newNodeTitle.trim()) {
+                                                        setAddingTask(false);
+                                                        setNewNodeTitle('');
+                                                    }
+                                                    if (e.key === 'Escape') {
+                                                        setAddingTask(false);
+                                                        setNewNodeTitle('');
+                                                    }
                                                 }}
-                                                onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
-                                            >
-                                                <Group position="apart" wrap={false}>
-                                                    <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
-                                                    {isProfessorOrAdmin() && (
-                                                        <Text 
-                                                            c="red" 
-                                                            fw={700} 
-                                                            size="md" 
-                                                            style={{ cursor: 'pointer', marginLeft: '8px' }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                removeNode(node.id);
-                                                            }}
-                                                        >
-                                                            -
-                                                        </Text>
-                                                    )}
-                                                </Group>
-                                            </Paper>
-                                        ))}
-                                    </Stack>
-                                )}
-                            </div>
-                        </Paper>
+                                            />
+                                        </Paper>
+                                    )}
+                                    {taskNodes.length === 0 && !addingTask ? (
+                                        <Text size="sm" color="dimmed" ta="center" mt="md">
+                                            No tasks yet.
+                                        </Text>
+                                    ) : (
+                                        <Stack gap="xs">
+                                            {taskNodes.map(node => (
+                                                <Paper 
+                                                    key={node.id}
+                                                    p="sm" 
+                                                    withBorder 
+                                                    style={{ 
+                                                        borderLeft: node.id === selectedNode?.id ? 
+                                                            '5px solid #40c057' : 
+                                                            '3px solid #40c057',
+                                                        cursor: 'pointer',
+                                                        background: 'transparent'
+                                                    }}
+                                                    onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
+                                                >
+                                                    <Group justify="apart" wrap={false}>
+                                                        <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
+                                                        {isProfessorOrAdmin() && (
+                                                            <Text 
+                                                                c="red" 
+                                                                fw={700} 
+                                                                size="md" 
+                                                                style={{ cursor: 'pointer', marginLeft: '8px' }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    // For now, we'll just remove from display
+                                                                    // Can be enhanced to truly delete tasks later
+                                                                    setNodes(nds => nds.filter(n => n.id !== node.id));
+                                                                }}
+                                                            >
+                                                                -
+                                                            </Text>
+                                                        )}
+                                                    </Group>
+                                                </Paper>
+                                            ))}
+                                        </Stack>
+                                    )}
+                                </div>
+                            </Paper>
+                        </div>
                     </div>
-                </div>
+                )}
             </Container>
-
-            {/* Modal for editing nodes */}
-            <Modal 
-              opened={editOpened} 
+            <Modal
+              opened={editOpened}
               onClose={closeEdit}
               centered
               padding="md"
-              title=""
+              title="Edit Node"
               withCloseButton={true}
               styles={{
                 header: { 
@@ -981,17 +1705,16 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                   marginBottom: 0,
                   minHeight: '20px'
                 },
-
               }}
             >
               <Stack gap="md">
-                <TextInput
+                <TextInput 
                   label="Title"
                   placeholder="Enter a title"
                   value={nodeForm.title}
                   onChange={(e) => setNodeForm({...nodeForm, title: e.target.value})}
                 />
-                <TextInput
+                <TextInput 
                   label="Description"
                   placeholder="Enter a description (optional)"
                   value={nodeForm.description}
