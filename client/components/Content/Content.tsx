@@ -4,7 +4,7 @@
  * @AshokSaravanan222
  * 27.03.2025
  */
-import { useEffect, useRef, useState, useMemo, use } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip, RingProgress, ActionIcon } from "@mantine/core";
 import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch, IconSend, IconFileAnalytics } from "@tabler/icons-react";
@@ -15,23 +15,13 @@ import Link from "next/link";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClass } from "@/utils/queries/get-class";
-import { getLectures } from "@/utils/queries/get-lectures";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
-import { getHomeworks } from "@/utils/queries/get-homeworks";
-import { getDocumentsLecture } from "@/utils/queries/get-documents-lecture";
-import { getDocumentsTextbook } from "@/utils/queries/get-documents-textbook";
-import { getExercises } from "@/utils/queries/get-exercises";
-import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
-import { Lecture, Textbook, Homework, Chapter } from "@/types";
-import { getChapters } from "@/utils/queries/get-chapters";
 import { notifications } from "@mantine/notifications";
-import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
-import UploadLectureButton from "@/components/Buttons/UploadLectureButton";
-import UploadHomeworkButton from "@/components/Buttons/UploadHomeworkButton";
-import UploadTextbookButton from "@/components/Buttons/UploadTextbookButton";
-import DeleteLectureModal from "@/components/Delete/DeleteLectureModal";
-import DeleteTextbookModal from "@/components/Delete/DeleteTextbookModal";
-import DeleteHomeworkModal from "@/components/Delete/DeleteHomeworkModal";
+import { getFiles } from "@/utils/queries/get-files";
+import { getDocuments } from "@/utils/queries/get-documents";
+import DeleteFileModal from "../Delete/DeleteFileModal";
+import UploadFileButton from "../Buttons/UploadFileButton";
+import { File } from "@/types";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 export default function Content({ classId, showDeleteButton = false, navigateHomeAfterDelete = true }: { classId: string, showDeleteButton?: boolean, navigateHomeAfterDelete?: boolean }) {
     const queryClient = useQueryClient();
@@ -65,48 +55,71 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
         queryFn: () => getClass(supabase, classId)
     });
 
-    // Lectures data
-    const { data: lectures, isLoading: loadingLectures } = useQuery({
-        queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, [classId], false)
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, [classId])
     });
 
-    const { data: lectureDocuments, isLoading: loadingLectureDocuments } = useQuery({
-        queryKey: ["lectureDocuments", classId],
-        queryFn: () => getDocumentsLecture(supabase, lectures?.map(lecture => lecture.id) ?? []),
-        enabled: !!lectures
+    const {data: documents, isLoading: loadingDocuments} = useQuery({
+        queryKey: ["fileDocuments", files],
+        queryFn: () => getFileDocuments(supabase, files?.map(file => file.id) ?? []),
+        enabled: !!files
     });
 
-    // Textbooks data
-    const { data: textbooks, isLoading: loadingTextbooks } = useQuery({
-        queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, [classId])
-    });
+    // Set up realtime subscription for files and documents
+    useEffect(() => {
+        const filesChannel = supabase
+            .channel('files-changes')
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'prod',
+                table: 'files',
+                filter: `class=eq.${classId}`
+            }, () => {
+                queryClient.invalidateQueries({ queryKey: ["files", classId] });
+            })
+            .subscribe();
 
-    const { data: textbookDocuments, isLoading: loadingTextbookDocuments } = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getDocumentsTextbook(supabase, textbooks?.map(textbook => textbook.id) ?? []),
-        enabled: !!textbooks
-    });
+        const documentsChannel = supabase
+            .channel('documents-changes')
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'prod',
+                table: 'documents',
+                filter: `class=eq.${classId}`
+            }, () => {
+                queryClient.invalidateQueries({ queryKey: ["documents", classId] });
+            })
+            .subscribe();
 
-    // Homework data
-    const { data: homeworks, isLoading: loadingHomeworks } = useQuery({
-        queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, [classId])
-    });
+        return () => {
+            supabase.removeChannel(filesChannel);
+            supabase.removeChannel(documentsChannel);
+        };
+    }, [supabase, classId, queryClient]);
 
-    const { data: exercises, isLoading: loadingExercises } = useQuery({
-        queryKey: ["exercises", classId],
-        queryFn: () => getExercises(supabase, [], homeworks?.map(h => h.id) ?? []),
-        enabled: !!homeworks
-    });
+    // Group files by content type
+    const lectures = useMemo(() => {
+        if (!files) return [];
+        return files.filter(file => file.content_type === 'lecture');
+    }, [files]);
+
+    const textbooks = useMemo(() => {
+        if (!files) return [];
+        return files.filter(file => file.content_type === 'textbook');
+    }, [files]);
+
+    const homeworks = useMemo(() => {
+        if (!files) return [];
+        return files.filter(file => file.content_type === 'homework');
+    }, [files]);
 
     // Filtered data
     const filteredLectures = useMemo(() => {
         if (!lectures) return [];
         return lectures
             .filter(lecture =>
-                lecture.name?.toLowerCase().includes(lectureSearch.toLowerCase()) ?? false
+                lecture.title?.toLowerCase().includes(lectureSearch.toLowerCase()) ?? false
             )
             .sort((a, b) => {
                 if (lectureSortOrder === 'newest') {
@@ -114,7 +127,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 } else if (lectureSortOrder === 'oldest') {
                     return new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime();
                 } else {
-                    return (a.name ?? '').localeCompare(b.name ?? '');
+                    return (a.title ?? '').localeCompare(b.title ?? '');
                 }
             });
     }, [lectures, lectureSearch, lectureSortOrder]);
@@ -123,7 +136,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
         if (!textbooks) return [];
         return textbooks
             .filter(textbook =>
-                textbook.title.toLowerCase().includes(textbookSearch.toLowerCase())
+                textbook.title?.toLowerCase().includes(textbookSearch.toLowerCase()) ?? false
             )
             .sort((a, b) => {
                 if (textbookSortOrder === 'newest') {
@@ -131,7 +144,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 } else if (textbookSortOrder === 'oldest') {
                     return new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime();
                 } else {
-                    return a.title.localeCompare(b.title);
+                    return (a.title ?? '').localeCompare(b.title ?? '');
                 }
             });
     }, [textbooks, textbookSearch, textbookSortOrder]);
@@ -140,7 +153,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
         if (!homeworks) return [];
         return homeworks
             .filter(homework =>
-                homework.title.toLowerCase().includes(homeworkSearch.toLowerCase())
+                homework.title?.toLowerCase().includes(homeworkSearch.toLowerCase()) ?? false
             )
             .sort((a, b) => {
                 if (homeworkSortOrder === 'newest') {
@@ -148,112 +161,63 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 } else if (homeworkSortOrder === 'oldest') {
                     return new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime();
                 } else {
-                    return a.title.localeCompare(b.title);
+                    return (a.title ?? '').localeCompare(b.title ?? '');
                 }
             });
     }, [homeworks, homeworkSearch, homeworkSortOrder]);
 
-    const handleRetryLecture = async (classId: string, lecture: Lecture) => {
+    // Retry processing functions
+    const handleRetryProcessing = async (fileId: string) => {
         try {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/lecture`, {
+            const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/parse/file`;
+            
+            await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    lecture_id: lecture.id,
+                    file_id: fileId,
                 })
             });
+            
+            queryClient.invalidateQueries({ queryKey: ["files", classId] });
         } catch (error) {
-            console.error('Error retrying lecture:', error);
+            console.error(`Error retrying file:`, error);
         }
     };
 
-    const handleRetryTextbook = async (classId: string, textbook: Textbook) => {
-        try {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/textbook`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    textbook_id: textbook.id,
-                })
-            });
-            queryClient.invalidateQueries({ queryKey: ["textbooks", classId] });
-        } catch (error) {
-            console.error('Error retrying textbook:', error);
-        }
-    };
+    // Progress calculation functions
+    const getFileProgress = useMemo(() => {
+        return (fileId: string, uploading: boolean = false) => {
+            if (!documents || !files) return 0;
+            const file = files.find(f => f.id === fileId);
+            if (!file || file.length === 0) return 0;
 
-    const getTextbookImage = (textbookId: string) => {
-        if (!textbookId) return '/placeholder_image.svg';
-        const document = textbookDocuments?.find(document => document.textbook === textbookId);
-        if (!document) return '/placeholder_image.svg';
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${document.textbook}/${document.id}.png`
-    };
-
-    // Homework functions
-    const handleRetryHomework = async (classId: string, homework: Homework) => {
-        try {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/homework`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    homework_id: homework.id,
-                })
-            });
-            queryClient.invalidateQueries({ queryKey: ["homeworks", classId] });
-        } catch (error) {
-            console.error('Error retrying homework:', error);
-        }
-    };
-
-    // Add these functions to your ContentPage component
-    const getLectureProgress = useMemo(() => {
-        return (lectureId: string, uploading: boolean = false) => {
-            if (!lectureDocuments || !lectures) return 0;
-            const filteredDocs = lectureDocuments.filter(document =>
-                document.lecture === lectureId && (uploading || document.processed)
+            
+            const fileDocuments = documents.filter(doc => 
+                doc.file === fileId && (uploading || doc.processed)
             );
-            const lecture = lectures.find(lecture => lecture.id === lectureId);
-            if (!lecture || lecture.pages === 0) return 0;
-            if (lecture.upload_progress !== 1) return lecture.upload_progress * 100;
-            return (filteredDocs.length / lecture.pages) * 100;
+            
+            return (fileDocuments.length / file.length) * 100;
         };
-    }, [lectureDocuments, lectures]);
+    }, [documents, files]);
 
-    const getLectureImage = (lectureId: string) => {
-        if (!lectureId) return '/placeholder_image.svg';
-        const filteredDocuments = lectureDocuments?.filter(document => document?.lecture === lectureId);
-        if (!filteredDocuments || filteredDocuments.length === 0) return '/placeholder_image.svg';
-        const document = (filteredDocuments.length > 1 && classId === "ae333215-2914-4026-8aae-418f1255cdd0") ? filteredDocuments[1] : filteredDocuments[0];
+    // Image retrieval functions
+    const getFileImage = (fileId: string) => {
+        if (!fileId || !documents) return '/placeholder_image.svg';
+        
+        const fileDocuments = documents.filter(doc => doc.file === fileId);
+        if (!fileDocuments || fileDocuments.length === 0) return '/placeholder_image.svg';
+        
+        const document = fileDocuments[0];
         if (!document) return '/placeholder_image.svg';
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${document.lecture}/${document.id}.png`
+        
+        const file = files?.find(f => f.id === fileId);
+        if (!file) return '/placeholder_image.svg';
+        
+        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${document.id}.png`;
     };
 
-    // Textbook functions
-    const getTextbookProgress = useMemo(() => {
-        return (textbookId: string, uploading: boolean = false) => {
-            if (!textbookDocuments || !textbooks) return 0;
-            const filteredDocs = textbookDocuments.filter(document =>
-                document.textbook === textbookId && (uploading || document.processed)
-            );
-            const textbook = textbooks.find(textbook => textbook.id === textbookId);
-            if (!textbook || textbook.pages === 0) return 0;
-            return (filteredDocs.length / textbook.pages) * 100;
-        };
-    }, [textbookDocuments, textbooks]);
-
-    const getHomeworkProgress = useMemo(() => {
-        return (homeworkId: string, uploading: boolean = false) => {
-            if (!exercises || !homeworks) return 0;
-            const filteredDocs = exercises.filter(exercise =>
-                exercise.homework === homeworkId && (uploading || exercise.description !== "")
-            ) || 0;
-            const homework = homeworks.find(homework => homework.id === homeworkId);
-            if (!homework) return 0;
-            return (filteredDocs.length / (exercises.filter(e => e.homework === homeworkId).length)) * 100;
-        };
-    }, [exercises, homeworks]);
-
-    // Update the ContentSkeleton function
+    // Content skeleton for loading state
     function ContentSkeleton() {
         return (
             <Card withBorder style={{
@@ -279,663 +243,318 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
         );
     }
 
-    const getHomeworkImageUrl = (homeworkId: string) => {
-        if (!homeworkId) return '/placeholder_image.svg';
-        const exercise = exercises?.find(e => e.homework === homeworkId);
-        if (!exercise) return '/placeholder_image.svg';
+    // Helper function to get appropriate delete modal
+    const getDeleteModal = (file: File) => {
+        const contentType = file.content_type;
+        
+        return <DeleteFileModal 
+            classId={classId}
+            fileId={file.id}
+            contentType={contentType}
+            profileId={profile?.id ?? ''}
+            fileName={file.title ?? ''}
+            navigateHome={navigateHomeAfterDelete}
+        />;
+    };
 
-        const textbookDocumentHomework = textbookDocuments?.find(d => d.homeworks?.includes(homeworkId));
-        if (textbookDocumentHomework) return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentHomework.textbook}/${textbookDocumentHomework.id}.png`;
+    // Helper function to get content status text
+    const getContentStatusText = (file: any) => {
+        if (file.parse_error) {
+            return `Error: ${file.parse_error}`;
+        }
+        
+        switch (file.parse_status) {
+            case 'parsing':
+                return `Parsing ${file.content_type} content...`;
+            case 'error':
+                return 'Processing failed';
+            case 'idle':
+                return 'Waiting to process';
+            case 'extracting':
+                return 'Extracting content...';
+            case 'uploading':
+                return getFileProgress(file.id, true) >= 100 ? 'Uploaded Content' : 'Uploading content...';
+            default:
+                return 'Processing content...';
+        }
+    };
 
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`;
+    // Helper function to render file card
+    const renderFileCard = (file: File, isProcessing: boolean) => {
+        const contentType = file.content_type;
+        
+        if (isProcessing) {
+            return (
+                <Card
+                    withBorder
+                    key={file.id}
+                    style={{
+                        width: '350px',
+                        height: '320px',
+                        flexShrink: 0,
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
+                >
+                    <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
+                        {getDeleteModal(file)}
+                    </div>
+                    <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
+                        <Tooltip label="Retry Processing">
+                            <ActionIcon 
+                                variant="transparent" 
+                                onClick={() => handleRetryProcessing(file.id)}
+                                color={file.parse_status === 'error' ? 'red' : 'dark'}
+                            >
+                                <IconRefresh size={24} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </div>
+                    <Stack style={{ width: '100%', height: '100%' }}>
+                        <Image
+                            src={getFileImage(file.id)}
+                            alt={`First page of ${file.title}`}
+                            width={320}
+                            height={200}
+                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                        />
+                        <Group align="flex-start" justify="space-between">
+                            <Stack gap="xs" style={{ flex: 1 }}>
+                                <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
+                                <Text size="sm" c={file.parse_error ? "red" : "dimmed"} lineClamp={2}>
+                                    {getContentStatusText(file)}
+                                </Text>
+                            </Stack>
+                            {file.parse_status === 'error' ? (
+                                <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryProcessing(file.id)}>
+                                    <IconRefresh size={20} />
+                                </ActionIcon>
+                            ) : file.parse_status === 'uploading' && getFileProgress(file.id, true) >= 100 ? (
+                                <Tooltip label={`Parse ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}>
+                                    <ActionIcon variant="light" color="green" size="lg" onClick={() => handleRetryProcessing(file.id)}>
+                                        <IconFileAnalytics size={20} />
+                                    </ActionIcon>
+                                </Tooltip>
+                            ) : (
+                                <RingProgress
+                                    size={60}
+                                    thickness={4}
+                                    sections={[{ value: getFileProgress(file.id, file.parse_status !== 'parsing'), color: "blue" }]}
+                                    label={
+                                        <Text size="xs" ta="center">
+                                            {Math.round(getFileProgress(file.id, file.parse_status !== 'parsing'))}%
+                                        </Text>
+                                    }
+                                />
+                            )}
+                        </Group>
+                    </Stack>
+                </Card>
+            );
+        }
+        
+        // Completed file card
+        if (showDeleteButton) {
+            return (
+                <Card
+                    withBorder
+                    key={file.id}
+                    style={{
+                        width: '350px',
+                        height: '320px',
+                        flexShrink: 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative'
+                    }}
+                >
+                    <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
+                        {getDeleteModal(file)}
+                    </div>
+                    <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
+                        <Tooltip label="Retry Processing">
+                            <ActionIcon 
+                                variant="transparent" 
+                                onClick={() => handleRetryProcessing(file.id)}
+                            >
+                                <IconRefresh size={24} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </div>
+                    <Stack style={{ height: '100%' }}>
+                        <Image
+                            src={getFileImage(file.id)}
+                            alt={`First page of ${file.title}`}
+                            width={320}
+                            height={200}
+                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                        />
+                        <Stack gap="xs" mt="auto">
+                            <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
+                            <Text size="sm" c="dimmed">
+                                {contentType === 'homework' && documents ? 
+                                    `${documents.filter(d => d.file === file.id).length} exercises • ` : 
+                                    ''}
+                                Uploaded {new Date(file.created_at ?? "").toLocaleDateString()}
+                            </Text>
+                        </Stack>
+                    </Stack>
+                </Card>
+            );
+        }
+        
+        return (
+            <Link
+                href={`/class/${classId}/content/${file.id}`}
+                key={file.id}
+                style={{ textDecoration: 'none' }}
+            >
+                <Card
+                    withBorder
+                    style={{
+                        width: '350px',
+                        height: '320px',
+                        flexShrink: 0,
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
+                >
+                    <Stack style={{ height: '100%' }}>
+                        <Image
+                            src={getFileImage(file.id)}
+                            alt={`First page of ${file.title}`}
+                            width={320}
+                            height={200}
+                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                        />
+                        <Stack gap="xs" mt="auto">
+                            <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
+                            <Text size="sm" c="dimmed">
+                                {contentType === 'homework' && documents ? 
+                                    `${documents.filter(d => d.file === file.id).length} exercises • ` : 
+                                    ''}
+                                Uploaded {new Date(file.created_at ?? "").toLocaleDateString()}
+                            </Text>
+                        </Stack>
+                    </Stack>
+                </Card>
+            </Link>
+        );
+    };
+
+    // Render content section
+    const renderContentSection = (contentType: string, files: any[], filteredFiles: any[], search: string, setSearch: (value: string) => void, sortOrder: string, setSortOrder: (value: string) => void, uploadButton: JSX.Element) => {
+        const isLoading = loadingFiles || loadingDocuments;
+        const capitalizedType = contentType.charAt(0).toUpperCase() + contentType.slice(1) + (contentType === 'homework' ? '' : 's');
+        
+        return (
+            <Stack>
+                <Group justify="space-between" align="center">
+                    <Text size="xl" fw={700}>{capitalizedType}</Text>
+                    {uploadButton}
+                </Group>
+
+                <Group align="center" mb="md">
+                    <TextInput
+                        placeholder={`Search ${contentType}s...`}
+                        leftSection={<IconSearch size={14} />}
+                        style={{ flexGrow: 1 }}
+                        value={search}
+                        onChange={(e) => setSearch(e.currentTarget.value)}
+                    />
+                    <Select
+                        data={[
+                            { value: 'newest', label: 'Newest First' },
+                            { value: 'oldest', label: 'Oldest First' },
+                            { value: 'name', label: 'Name' },
+                        ]}
+                        value={sortOrder}
+                        onChange={(value) => setSortOrder(value || 'newest')}
+                    />
+                </Group>
+
+                <ScrollArea scrollbarSize={0}>
+                    <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
+                        {isLoading ? (
+                            <>
+                                <ContentSkeleton />
+                                <ContentSkeleton />
+                                <ContentSkeleton />
+                                {contentType === 'lecture' && (
+                                    <>
+                                        <ContentSkeleton />
+                                        <ContentSkeleton />
+                                        <ContentSkeleton />
+                                        <ContentSkeleton />
+                                    </>
+                                )}
+                            </>
+                        ) : !filteredFiles || filteredFiles.length === 0 ? (
+                            <Text c="dimmed" ta="center">No {contentType}s found</Text>
+                        ) : (
+                            filteredFiles.map((file) => {
+                                const isProcessing = file.parse_status !== "complete";
+                                return renderFileCard(file, isProcessing);
+                            })
+                        )}
+                    </Group>
+                </ScrollArea>
+            </Stack>
+        );
     };
 
     return (
         <Stack gap="xl">
             {/* Lectures Section */}
-            {classData?.lecture_enabled &&
-                <Stack>
-                    <Group justify="space-between" align="center">
-                        <Text size="xl" fw={700}>Lectures</Text>
-                        <UploadLectureButton classId={classId} startParse={true} lectureNumber={lectures?.length ? lectures.length + 1 : 1} />
-                    </Group>
-
-                    <Group align="center" mb="md">
-                        <TextInput
-                            placeholder="Search lectures..."
-                            leftSection={<IconSearch size={14} />}
-                            style={{ flexGrow: 1 }}
-                            value={lectureSearch}
-                            onChange={(e) => setLectureSearch(e.currentTarget.value)}
-                        />
-                        <Select
-                            data={[
-                                { value: 'newest', label: 'Newest First' },
-                                { value: 'oldest', label: 'Oldest First' },
-                                { value: 'name', label: 'Name' },
-                            ]}
-                            value={lectureSortOrder}
-                            onChange={(value) => setLectureSortOrder(value || 'newest')}
-                        />
-                    </Group>
-
-                    <ScrollArea scrollbarSize={0}>
-                        <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
-                            {loadingLectures || loadingLectureDocuments ? (
-                                <>
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                </>
-                            ) : !filteredLectures || filteredLectures.length === 0 ? (
-                                <Text c="dimmed" ta="center">No lectures found</Text>
-                            ) : (
-                                filteredLectures.sort((a, b) => (b.note_number ?? 0) - (a.note_number ?? 0)).map((lecture) => {
-                                    if (lecture.parse_status !== "complete") {
-                                        return (
-                                            <Card
-                                                withBorder
-                                                key={lecture.id}
-                                                style={{
-                                                    width: '350px',
-                                                    height: '320px',
-                                                    flexShrink: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column'
-                                                }}
-                                            >
-                                                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                                                    <DeleteLectureModal
-                                                        classId={classId}
-                                                        lectureId={lecture.id}
-                                                        lectureTitle={lecture.name || ''}
-                                                        profile={profile}
-                                                        navigateHome={navigateHomeAfterDelete}
-                                                    />
-                                                </div>
-                                                <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                                                    <Tooltip label="Retry Processing">
-                                                        <ActionIcon 
-                                                            variant="transparent" 
-                                                            onClick={() => handleRetryLecture(classId, lecture)}
-                                                            color={lecture.parse_status === 'error' ? 'red' : 'dark'}
-                                                        >
-                                                            <IconRefresh size={24} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </div>
-                                                <Stack style={{ width: '100%', height: '100%' }}>
-                                                    <Image
-                                                        src={getLectureImage(lecture.id)}
-                                                        alt={`First page of ${lecture.name}`}
-                                                        width={320}
-                                                        height={200}
-                                                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                    />
-                                                    <Group align="flex-start" justify="space-between">
-                                                        <Stack gap="xs" style={{ flex: 1 }}>
-                                                            <Text size="lg" fw={500} lineClamp={1}>{lecture.name}</Text>
-                                                            <Text size="sm" c={lecture.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                                                {lecture.parse_error ?
-                                                                    `Error: ${lecture.parse_error}` :
-                                                                    lecture.parse_status === 'parsing' ? 'Parsing lecture content...' :
-                                                                        lecture.parse_status === 'error' ? 'Processing failed' :
-                                                                            lecture.parse_status === 'idle' ? 'Waiting to process' :
-                                                                                lecture.parse_status === 'extracting' ? 'Extracting content...' :
-                                                                                    lecture.parse_status === 'uploading' ? (getLectureProgress(lecture.id, true) == 100 ? 'Uploaded Content' : 'Uploading content...') :
-                                                                                        'Processing content...'}
-                                                            </Text>
-                                                        </Stack>
-                                                        {lecture.parse_status === 'error' ? (
-                                                            <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryLecture(classId, lecture)}>
-                                                                <IconRefresh size={20} />
-                                                            </ActionIcon>
-                                                        ) : lecture.parse_status === 'uploading' && getLectureProgress(lecture.id, true) >= 100 ? (
-                                                            <Tooltip label="Parse Lecture">
-                                                                <ActionIcon variant="light" color="green" size="lg" onClick={() => handleRetryLecture(classId, lecture)}>
-                                                                    <IconFileAnalytics size={20} />
-                                                                </ActionIcon>
-                                                            </Tooltip>
-                                                        ) : (
-                                                            <RingProgress
-                                                                size={60}
-                                                                thickness={4}
-                                                                sections={[{ value: getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'), color: "blue" }]}
-                                                                label={
-                                                                    <Text size="xs" ta="center">
-                                                                        {Math.round(getLectureProgress(lecture.id, lecture.parse_status !== 'parsing'))}%
-                                                                    </Text>
-                                                                }
-                                                            />
-                                                        )}
-                                                    </Group>
-                                                </Stack>
-                                            </Card>
-                                        );
-                                    }
-                                    return (
-                                        showDeleteButton ? (
-                                            <Card
-                                                withBorder
-                                                key={lecture.id}
-                                                style={{
-                                                    width: '350px',
-                                                    height: '320px',
-                                                    flexShrink: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                                                    <DeleteLectureModal
-                                                        classId={classId}
-                                                        lectureId={lecture.id}
-                                                        lectureTitle={lecture.name || ''}
-                                                        profile={profile}
-                                                        navigateHome={navigateHomeAfterDelete}
-                                                    />
-                                                </div>
-                                                <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                                                    <Tooltip label="Retry Processing">
-                                                        <ActionIcon 
-                                                            variant="transparent" 
-                                                            onClick={() => handleRetryLecture(classId, lecture)}
-                                                        >
-                                                            <IconRefresh size={24} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </div>
-                                                <Stack style={{ height: '100%' }}>
-                                                    <Image
-                                                        src={getLectureImage(lecture.id)}
-                                                        alt={`First page of ${lecture.name}`}
-                                                        width={320}
-                                                        height={200}
-                                                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                    />
-                                                    <Stack gap="xs" mt="auto">
-                                                        <Text size="lg" fw={500} lineClamp={1}>{lecture.name}</Text>
-                                                        <Text size="sm" c="dimmed">
-                                                            Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
-                                                        </Text>
-                                                    </Stack>
-                                                </Stack>
-                                            </Card>
-                                        ) : (
-                                            <Link
-                                                href={`/classes/c/${classId}/content/lecture/${lecture.id}`}
-                                                key={lecture.id}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <Card
-                                                    withBorder
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                >
-                                                    <Stack style={{ height: '100%' }}>
-                                                        <Image
-                                                            src={getLectureImage(lecture.id)}
-                                                            alt={`First page of ${lecture.name}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Stack gap="xs" mt="auto">
-                                                            <Text size="lg" fw={500} lineClamp={1}>{lecture.name}</Text>
-                                                            <Text size="sm" c="dimmed">
-                                                                Uploaded {new Date(lecture.created_at ?? "").toLocaleDateString()}
-                                                            </Text>
-                                                        </Stack>
-                                                    </Stack>
-                                                </Card>
-                                            </Link>
-                                        )
-                                    );
-                                })
-                            )}
-                        </Group>
-                    </ScrollArea>
-                </Stack>
-            }
+            {classData?.lecture_enabled && renderContentSection(
+                'lecture',
+                lectures,
+                filteredLectures,
+                lectureSearch,
+                setLectureSearch,
+                lectureSortOrder,
+                setLectureSortOrder,
+                <UploadFileButton 
+                    classId={classId} 
+                    contentType="lecture"
+                    startParse={true} 
+                    fileNumber={lectures?.length ? lectures.length + 1 : 1} 
+                />
+            )}
 
             {/* Textbooks Section */}
-            {classData?.textbook_enabled &&
-                <Stack>
-                    <Group justify="space-between" align="center">
-                        <Text size="xl" fw={700}>Textbooks</Text>
-                        <UploadTextbookButton classId={classId} startParse={true} textbookNumber={textbooks?.length ? textbooks.length + 1 : 1} />
-                    </Group>
-
-                    <Group align="center" mb="md">
-                        <TextInput
-                            placeholder="Search textbooks..."
-                            leftSection={<IconSearch size={14} />}
-                            style={{ flexGrow: 1 }}
-                            value={textbookSearch}
-                            onChange={(e) => setTextbookSearch(e.currentTarget.value)}
-                        />
-                        <Select
-                            data={[
-                                { value: 'newest', label: 'Newest First' },
-                                { value: 'oldest', label: 'Oldest First' },
-                                { value: 'name', label: 'Name' },
-                            ]}
-                            value={textbookSortOrder}
-                            onChange={(value) => setTextbookSortOrder(value || 'newest')}
-                        />
-                    </Group>
-
-                    <ScrollArea>
-                        <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
-                            {loadingTextbooks || loadingTextbookDocuments ? (
-                                <>
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                </>
-                            ) : !filteredTextbooks || filteredTextbooks.length === 0 ? (
-                                <Text c="dimmed" ta="center">No textbooks found</Text>
-                            ) : (
-                                filteredTextbooks.map((textbook) => {
-                                    if (textbook.parse_status !== "complete") {
-                                        return (
-                                            <Card
-                                                withBorder
-                                                key={textbook.id}
-                                                style={{
-                                                    width: '350px',
-                                                    height: '320px',
-                                                    flexShrink: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column'
-                                                }}
-                                            >
-                                                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                                                    <DeleteTextbookModal
-                                                        classId={classId}
-                                                        textbookId={textbook.id}
-                                                        textbookTitle={textbook.title}
-                                                        profile={profile}
-                                                        navigateHome={navigateHomeAfterDelete}
-                                                    />
-                                                </div>
-                                                <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                                                    <Tooltip label="Retry Processing">
-                                                        <ActionIcon 
-                                                            variant="transparent" 
-                                                            onClick={() => handleRetryTextbook(classId, textbook)}
-                                                            color={textbook.parse_status === 'error' ? 'red' : 'dark'}
-                                                        >
-                                                            <IconRefresh size={24} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </div>
-                                                <Stack style={{ width: '100%', height: '100%' }}>
-                                                    <Image
-                                                        src={getTextbookImage(textbook.id)}
-                                                        alt={`First page of ${textbook.title}`}
-                                                        width={320}
-                                                        height={200}
-                                                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                    />
-                                                    <Group align="flex-start" justify="space-between">
-                                                        <Stack gap="xs" style={{ flex: 1 }}>
-                                                            <Text size="lg" fw={500} lineClamp={1}>{textbook.title}</Text>
-                                                            <Text size="sm" c={textbook.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                                                {textbook.parse_error ?
-                                                                    `Error: ${textbook.parse_error}` :
-                                                                    textbook.parse_status === 'parsing' ? 'Parsing textbook content...' :
-                                                                        textbook.parse_status === 'error' ? 'Processing failed' :
-                                                                            textbook.parse_status === 'idle' ? 'Waiting to process' :
-                                                                                textbook.parse_status === 'extracting' ? 'Extracting content...' :
-                                                                                    textbook.parse_status === 'uploading' ? (getTextbookProgress(textbook.id, true) == 100 ? 'Uploaded Content' : 'Uploading content...') :
-                                                                                        'Processing content...'}
-                                                            </Text>
-                                                        </Stack>
-                                                        {textbook.parse_status === 'error' ? (
-                                                            <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryTextbook(classId, textbook)}>
-                                                                <IconRefresh size={20} />
-                                                            </ActionIcon>
-                                                        ) : textbook.parse_status === 'uploading' && getTextbookProgress(textbook.id, true) >= 100 ? (
-                                                            <Tooltip label="Parse Textbook">
-                                                                <ActionIcon variant="light" color="green" size="lg" onClick={() => handleRetryTextbook(classId, textbook)}>
-                                                                    <IconFileAnalytics size={20} />
-                                                                </ActionIcon>
-                                                            </Tooltip>
-                                                        ) : (
-                                                            <RingProgress
-                                                                size={60}
-                                                                thickness={4}
-                                                                sections={[{ value: getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'), color: "blue" }]}
-                                                                label={
-                                                                    <Text size="xs" ta="center">
-                                                                        {Math.round(getTextbookProgress(textbook.id, textbook.parse_status !== 'parsing'))}%
-                                                                    </Text>
-                                                                }
-                                                            />
-                                                        )}
-                                                    </Group>
-                                                </Stack>
-                                            </Card>
-                                        );
-                                    }
-                                    return (
-                                        showDeleteButton ? (
-                                            <Card
-                                                withBorder
-                                                key={textbook.id}
-                                                style={{
-                                                    width: '350px',
-                                                    height: '320px',
-                                                    flexShrink: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                                                    <DeleteTextbookModal
-                                                        classId={classId}
-                                                        textbookId={textbook.id}
-                                                        textbookTitle={textbook.title}
-                                                        profile={profile}
-                                                        navigateHome={navigateHomeAfterDelete}
-                                                    />
-                                                </div>
-                                                <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                                                    <Tooltip label="Retry Processing">
-                                                        <ActionIcon 
-                                                            variant="transparent" 
-                                                            onClick={() => handleRetryTextbook(classId, textbook)}
-                                                        >
-                                                            <IconRefresh size={24} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </div>
-                                                <Stack style={{ height: '100%' }}>
-                                                    <Image
-                                                        src={getTextbookImage(textbook.id)}
-                                                        alt={`First page of ${textbook.title}`}
-                                                        width={320}
-                                                        height={200}
-                                                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                    />
-                                                    <Stack gap="xs" mt="auto">
-                                                        <Text size="lg" fw={500} lineClamp={1}>{textbook.title}</Text>
-                                                        <Text size="sm" c="dimmed">
-                                                            Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
-                                                        </Text>
-                                                    </Stack>
-                                                </Stack>
-                                            </Card>
-                                        ) : (
-                                            <Link
-                                                href={`/classes/c/${classId}/content/textbook/${textbook.id}`}
-                                                key={textbook.id}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <Card
-                                                    withBorder
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                >
-                                                    <Stack style={{ height: '100%' }}>
-                                                        <Image
-                                                            src={getTextbookImage(textbook.id)}
-                                                            alt={`First page of ${textbook.title}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Stack gap="xs" mt="auto">
-                                                            <Text size="lg" fw={500} lineClamp={1}>{textbook.title}</Text>
-                                                            <Text size="sm" c="dimmed">
-                                                                Uploaded {new Date(textbook.created_at ?? "").toLocaleDateString()}
-                                                            </Text>
-                                                        </Stack>
-                                                    </Stack>
-                                                </Card>
-                                            </Link>
-                                        )
-                                    );
-                                })
-                            )}
-                        </Group>
-                    </ScrollArea>
-                </Stack>
-            }
+            {classData?.textbook_enabled && renderContentSection(
+                'textbook',
+                textbooks,
+                filteredTextbooks,
+                textbookSearch,
+                setTextbookSearch,
+                textbookSortOrder,
+                setTextbookSortOrder,
+                <UploadFileButton 
+                    classId={classId} 
+                    contentType="textbook"
+                    startParse={true} 
+                    fileNumber={textbooks?.length ? textbooks.length + 1 : 1} 
+                />
+            )}
 
             {/* Homeworks Section */}
-            {classData?.homework_enabled &&
-                <Stack>
-                    <Group justify="space-between" align="center">
-                        <Text size="xl" fw={700}>Homework</Text>
-                        <UploadHomeworkButton classId={classId} startParse={true} homeworkNumber={homeworks?.length ? homeworks.length + 1 : 1} />
-                    </Group>
-
-                    <Group align="center" mb="md">
-                        <TextInput
-                            placeholder="Search homework..."
-                            leftSection={<IconSearch size={14} />}
-                            style={{ flexGrow: 1 }}
-                            value={homeworkSearch}
-                            onChange={(e) => setHomeworkSearch(e.currentTarget.value)}
-                        />
-                        <Select
-                            data={[
-                                { value: 'newest', label: 'Newest First' },
-                                { value: 'oldest', label: 'Oldest First' },
-                                { value: 'name', label: 'Name' },
-                            ]}
-                            value={homeworkSortOrder}
-                            onChange={(value) => setHomeworkSortOrder(value || 'newest')}
-                        />
-                    </Group>
-
-                    <ScrollArea>
-                        <Group wrap="nowrap" style={{ paddingBottom: 5 }}>
-                            {loadingHomeworks || loadingExercises ? (
-                                <>
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                    <ContentSkeleton />
-                                </>
-                            ) : !filteredHomeworks || filteredHomeworks.length === 0 ? (
-                                <Text c="dimmed" ta="center">No homework assignments found</Text>
-                            ) : (
-                                filteredHomeworks.map((homework) => {
-                                    const homeworkExercises = exercises?.filter(e => e.homework === homework.id) ?? [];
-
-                                    if (homework.parse_status !== "complete") {
-                                        return (
-                                            <Card
-                                                withBorder
-                                                key={homework.id}
-                                                style={{
-                                                    width: '350px',
-                                                    height: '320px',
-                                                    flexShrink: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column'
-                                                }}
-                                            >
-                                                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                                                    <DeleteHomeworkModal
-                                                        classId={classId}
-                                                        homeworkId={homework.id}
-                                                        homeworkTitle={homework.title}
-                                                        profile={profile}
-                                                        navigateHome={navigateHomeAfterDelete}
-                                                    />
-                                                </div>
-                                                <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                                                    <Tooltip label="Retry Processing">
-                                                        <ActionIcon 
-                                                            variant="transparent" 
-                                                            onClick={() => handleRetryHomework(classId, homework)}
-                                                            color={homework.parse_status === 'error' ? 'red' : 'dark'}
-                                                        >
-                                                            <IconRefresh size={24} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </div>
-                                                <Stack style={{ width: '100%', height: '100%' }}>
-                                                    <Image
-                                                        src={getHomeworkImageUrl(homework.id)}
-                                                        alt={`First page of ${homework.title}`}
-                                                        width={320}
-                                                        height={200}
-                                                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                    />
-                                                    <Group align="flex-start" justify="space-between">
-                                                        <Stack gap="xs" style={{ flex: 1 }}>
-                                                            <Text size="lg" fw={500} lineClamp={1}>{homework.title}</Text>
-                                                            <Text size="sm" c={homework.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                                                {homework.parse_error ?
-                                                                    `Error: ${homework.parse_error}` :
-                                                                    homework.parse_status === 'parsing' ? 'Processing exercises...' :
-                                                                        homework.parse_status === 'error' ? 'Processing failed' :
-                                                                            homework.parse_status === 'idle' ? 'Waiting to process' :
-                                                                                homework.parse_status === 'extracting' ? 'Extracting content...' :
-                                                                                    homework.parse_status === 'uploading' ? (getHomeworkProgress(homework.id, true) == 100 ? 'Uploaded Content' : 'Uploading content...') :
-                                                                                        'Processing content...'}
-                                                            </Text>
-                                                        </Stack>
-                                                        {homework.parse_status === 'error' ? (
-                                                            <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryHomework(classId, homework)}>
-                                                                <IconRefresh size={20} />
-                                                            </ActionIcon>
-                                                        ) : homework.parse_status === 'uploading' && getHomeworkProgress(homework.id, true) >= 100 ? (
-                                                            <Tooltip label="Parse Homework">
-                                                                <ActionIcon variant="light" color="green" size="lg" onClick={() => handleRetryHomework(classId, homework)}>
-                                                                    <IconFileAnalytics size={20} />
-                                                                </ActionIcon>
-                                                            </Tooltip>
-                                                        ) : (
-                                                            <RingProgress
-                                                                size={60}
-                                                                thickness={4}
-                                                                sections={[{ value: homework.parse_status === 'parsing' ? getHomeworkProgress(homework.id, homework.parse_status !== 'parsing') : 0, color: "blue" }]}
-                                                                label={
-                                                                    <Text size="xs" ta="center">
-                                                                        {Math.round(getHomeworkProgress(homework.id, homework.parse_status !== 'parsing'))}%
-                                                                    </Text>
-                                                                }
-                                                            />
-                                                        )}
-                                                    </Group>
-                                                </Stack>
-                                            </Card>
-                                        );
-                                    }
-                                    return (
-                                        showDeleteButton ? (
-                                            <Card
-                                                withBorder
-                                                key={homework.id}
-                                                style={{
-                                                    width: '350px',
-                                                    height: '320px',
-                                                    flexShrink: 0,
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                                                    <DeleteHomeworkModal
-                                                        classId={classId}
-                                                        homeworkId={homework.id}
-                                                        homeworkTitle={homework.title}
-                                                        profile={profile}
-                                                        navigateHome={navigateHomeAfterDelete}
-                                                    />
-                                                </div>
-                                                <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                                                    <Tooltip label="Retry Processing">
-                                                        <ActionIcon 
-                                                            variant="transparent" 
-                                                            onClick={() => handleRetryHomework(classId, homework)}
-                                                        >
-                                                            <IconRefresh size={24} />
-                                                        </ActionIcon>
-                                                    </Tooltip>
-                                                </div>
-                                                <Stack style={{ height: '100%' }}>
-                                                    <Image
-                                                        src={getHomeworkImageUrl(homework.id)}
-                                                        alt={`First page of ${homework.title}`}
-                                                        width={320}
-                                                        height={200}
-                                                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                    />
-                                                    <Stack gap="xs" mt="auto">
-                                                        <Text size="lg" fw={500} lineClamp={1}>{homework.title}</Text>
-                                                        <Text size="sm" c="dimmed">
-                                                            {homeworkExercises.length} exercises • Uploaded {new Date(homework.created_at ?? "").toLocaleDateString()}
-                                                        </Text>
-                                                    </Stack>
-                                                </Stack>
-                                            </Card>
-                                        ) : (
-                                            <Link
-                                                href={`/classes/c/${classId}/content/homework/${homework.id}`}
-                                                key={homework.id}
-                                                style={{ textDecoration: 'none' }}
-                                            >
-                                                <Card
-                                                    withBorder
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '320px',
-                                                        flexShrink: 0,
-                                                        display: 'flex',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                >
-                                                    <Stack style={{ height: '100%' }}>
-                                                        <Image
-                                                            src={getHomeworkImageUrl(homework.id)}
-                                                            alt={`First page of ${homework.title}`}
-                                                            width={320}
-                                                            height={200}
-                                                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                                                        />
-                                                        <Stack gap="xs" mt="auto">
-                                                            <Text size="lg" fw={500} lineClamp={1}>{homework.title}</Text>
-                                                            <Text size="sm" c="dimmed">
-                                                                {homeworkExercises.length} exercises • Uploaded {new Date(homework.created_at ?? "").toLocaleDateString()}
-                                                            </Text>
-                                                        </Stack>
-                                                    </Stack>
-                                                </Card>
-                                            </Link>
-                                        )
-                                    );
-                                })
-                            )}
-                        </Group>
-                    </ScrollArea>
-                </Stack>
-            }
+            {classData?.homework_enabled && renderContentSection(
+                'homework',
+                homeworks,
+                filteredHomeworks,
+                homeworkSearch,
+                setHomeworkSearch,
+                homeworkSortOrder,
+                setHomeworkSortOrder,
+                <UploadFileButton 
+                    classId={classId} 
+                    contentType="homework"
+                    startParse={true} 
+                    fileNumber={homeworks?.length ? homeworks.length + 1 : 1} 
+                />
+            )}
         </Stack>
     );
 }

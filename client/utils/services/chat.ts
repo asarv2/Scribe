@@ -14,7 +14,6 @@ export const createChat = async (
     userId: string | null = null, 
     chatType: ChatType,
     teacher: boolean = false,
-    response_url: string | null = null,
 ) => {
     const supabase = await useSupabaseServer(cookies());
     
@@ -25,7 +24,6 @@ export const createChat = async (
         name: name,
         type: chatType,
         teacher: teacher,
-        response_url: response_url,
     } as any;
     
     if (userId) {

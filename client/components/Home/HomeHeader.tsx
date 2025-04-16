@@ -16,6 +16,7 @@ import { IconMoon } from "@tabler/icons-react";
 import { IconSun } from "@tabler/icons-react";
 import cx from 'clsx';
 import classes from "./HomeHeader.module.css";
+import { getClasses } from "@/utils/queries/get-classes";
 export function HomeHeader() {
     const { setColorScheme } = useMantineColorScheme();
     const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
@@ -31,6 +32,18 @@ export function HomeHeader() {
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
     });
+
+    const { data: classData } = useQuery({
+        queryKey: ["classes"],
+        queryFn: () => getClasses(supabase),
+    });
+
+    const getFilteredClasses = () => {
+        if (!profile || !classData) return [];
+        return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
+    };
+
+    const firstClass = getFilteredClasses()?.[0];
 
 
     const toggleColorScheme = () => {
@@ -75,7 +88,7 @@ export function HomeHeader() {
                     </ActionIcon>
                 </Tooltip> */}
                 {user && profile ? (
-                    <Link href={`/classes`}>
+                    <Link href={`/class/${firstClass?.id}`}>
                         <Button size="sm">
                             Get Started
                         </Button>

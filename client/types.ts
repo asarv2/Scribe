@@ -34,6 +34,7 @@ export type File = Database[SchemaName]["Tables"]["files"]["Row"];
 export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"];
 
 export type FileType = Database[SchemaName]["Enums"]["file_type"];
+export type ContentType = Database[SchemaName]["Enums"]["content_type"];
 
 export type OneDrive = Database[SchemaName]["Tables"]["onedrive"]["Row"];
 
@@ -43,13 +44,7 @@ export interface ChatMessage {
     id: number;
     title: string;
     prompt: string;
-    context: {
-        lectures: string[]; // lecture IDs
-        chapters: string[]; // chapter IDs
-        homeworks: string[]; // homework IDs
-        exercises: string[]; // exercise IDs
-        files: string[]; // file IDs
-    };
+    context: string[]; // file ids
     chatType: ChatType;
     teacher: boolean; // whether the chat is a teacher chat
     rating: number | null;
@@ -58,12 +53,7 @@ export interface ChatMessage {
 export interface ViewerMode {
     active: boolean; // whether we are on a document
     open: boolean; // whether the viewer is open
-    documentId?: string; // this goes with either lecture or chapter
-    lectureId?: string; // source of truth for lecture
-    textbookId?: string; // used soley for chapter convienence
-    chapterId?: string; // source of truth for chapter
-    exerciseId?: string; // this goes with either chapter or homework
-    homeworkId?: string; // source of truth for homework
+    documentId?: string; // source of truth for document
     fileId?: string; // source of truth for file
 }
 

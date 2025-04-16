@@ -64,9 +64,9 @@ export default function Login() {
                 const firstClass = filteredClasses?.[0]
                 if (firstClass) {
                     if (profile.admin || profile.professor) {
-                        router.push(`/classes/c/${firstClass.id}`)
+                        router.push(`/class/${firstClass.id}`)
                     } else {
-                        router.push(`/classes/c/${firstClass.id}/chat/new`)
+                        router.push(`/class/${firstClass.id}/chat/new`)
                     }
                 } else {
                     if (profile.admin || profile.professor) {

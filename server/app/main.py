@@ -14,13 +14,6 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks, APIRouter
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.extensions import UPLOAD_FOLDER
-from app.config import MODEL_REGISTRY
-
-# Check model availability during startup
-if MODEL_REGISTRY["whisper_initialized"]:
-    print(f"Whisper models loaded successfully: {len(MODEL_REGISTRY['whisper_models'])} instances")
-else:
-    print("Whisper models not available - initialization failed")
 
 # Create FastAPI app with lifespan
 app = FastAPI(title="Scribe API")
@@ -60,39 +53,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create v1 router
-v1_router = APIRouter(prefix="/v1")
-
-# Import routers after app creation
-from app.routes.v1.parse import router as parse_router_v1
-from app.routes.v1.evaluate import router as evaluate_router_v1
-from app.routes.v1.generate import router as generate_router_v1
-from app.routes.v1.upload import router as upload_router_v1
-from app.routes.v1.download import router as download_router_v1
-
 # Import latest version routers
 from app.routes.parse import router as parse_router
-from app.routes.evaluate import router as evaluate_router
 from app.routes.generate import router as generate_router
 from app.routes.upload import router as upload_router
 from app.routes.download import router as download_router
 
-# Include v1 routers
-v1_router.include_router(parse_router_v1, prefix="/parse")
-v1_router.include_router(evaluate_router_v1, prefix="/evaluate")
-v1_router.include_router(generate_router_v1, prefix="/generate")
-v1_router.include_router(upload_router_v1, prefix="/upload")
-v1_router.include_router(download_router_v1, prefix="/download")
-
 # Include latest version routers directly on app
 app.include_router(parse_router, prefix="/parse")
-app.include_router(evaluate_router, prefix="/evaluate")
 app.include_router(generate_router, prefix="/generate")
 app.include_router(upload_router, prefix="/upload")
 app.include_router(download_router, prefix="/download")
-
-# Include the v1 router in the main app
-app.include_router(v1_router)
 
 @app.get("/", response_class=HTMLResponse)
 async def index():

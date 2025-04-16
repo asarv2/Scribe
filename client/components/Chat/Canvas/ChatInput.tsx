@@ -25,7 +25,7 @@ interface ChatInputProps {
   chatId: string;
   classId: string;
   onSend: () => void;
-  onRemoveContext: (contextType: keyof ChatMessage['context'], contextId: string) => void;
+  onRemoveContext: (contextId: string) => void;
   onScrollToSection: (sectionId: string) => void;
   viewerMode: ViewerMode;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
@@ -162,7 +162,6 @@ export const ChatInput = memo(({
               classId: classId,
               profileId: profile.id,
               fileId: fileId,
-              responseUrl: `${baseUrl}`,
               startParse: 'true',
               baseUrl: baseUrl,
               fingerprint: fileFingerprint // Add fingerprint for better resumability
@@ -260,10 +259,7 @@ export const ChatInput = memo(({
                 // Update chat context with the new file
                 setActiveChat(prev => ({
                   ...prev,
-                  context: {
-                    ...prev.context,
-                    files: [...prev.context.files, fileData.file_id]
-                  }
+                  context: [...prev.context, fileData.file_id]
                 }));
               } catch (error) {
                 console.error('Error finalizing file:', error);
@@ -386,7 +382,7 @@ export const ChatInput = memo(({
                   ...prev,
                   context: {
                     ...prev.context,
-                    files: Array.from(new Set([...prev.context.files, fileId]))
+                    files: Array.from(new Set([...prev.context, fileId]))
                   }
                 }));
 
@@ -808,7 +804,6 @@ export const ChatInput = memo(({
             classId: classId,
             profileId: profile.id,
             fileId: videoId,
-            responseUrl: `${baseUrl}`,
             baseUrl: baseUrl,
             startParse: 'true'
           },
@@ -945,7 +940,7 @@ export const ChatInput = memo(({
         ...prev,
         context: {
           ...prev.context,
-          files: Array.from(new Set([...prev.context.files, fileData.file_id]))
+          files: Array.from(new Set([...prev.context, fileData.file_id]))
         }
       }));
 
@@ -1250,11 +1245,7 @@ export const ChatInput = memo(({
   // Check if any context is added
   const hasContext = React.useMemo(() => {
     return (
-      (activeChat.context.lectures && activeChat.context.lectures.length > 0) ||
-      (activeChat.context.chapters && activeChat.context.chapters.length > 0) ||
-      (activeChat.context.homeworks && activeChat.context.homeworks.length > 0) ||
-      (activeChat.context.exercises && activeChat.context.exercises.length > 0) ||
-      (activeChat.context.files && activeChat.context.files.length > 0)
+      (activeChat.context.length > 0)
     );
   }, [activeChat.context]);
 

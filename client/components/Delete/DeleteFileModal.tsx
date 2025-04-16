@@ -11,7 +11,7 @@ import { useState } from "react"
 import { notifications } from "@mantine/notifications"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { Profile } from "@/types"
+import { ContentType, Profile } from "@/types"
 import { deleteFile } from "@/utils/services/file"
 import { getFile } from "@/utils/queries/get-file"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
@@ -20,12 +20,13 @@ type DeleteFileModalProps = {
     classId: string
     fileId: string
     fileName: string
+    contentType: ContentType
     navigateHome?: boolean
     profileId: string
     onDelete?: () => void
 }
 
-export default function DeleteFileModal({ fileId, fileName, classId, navigateHome = true, onDelete, profileId }: DeleteFileModalProps) {
+export default function DeleteFileModal({ fileId, fileName, classId, navigateHome = true, onDelete, profileId, contentType }: DeleteFileModalProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
@@ -56,7 +57,7 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
                     onDelete();
                 }
                 if (navigateHome) {
-                    router.push(`/classes/c/${classId}`);
+                    router.push(`/class/${classId}`);
                 }
             }
             notifications.show({

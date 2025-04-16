@@ -6,6 +6,10 @@ import { getClasses } from "@/utils/queries/get-classes";
 import { upsertOneDrive } from "@/utils/services/microsoft";
 import { getOneDrive } from "@/utils/queries/get-onedrive";
 
+/* TODO:
+    - remove the check-alias function, just go by domain. Maybe not even need email.
+*/
+
 type DirectoryUser = {
     name: string;
     alias: string | null;

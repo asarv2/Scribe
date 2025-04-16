@@ -13,7 +13,6 @@ import { getSummaryDownloadUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
 import { ViewerMode } from '../../types';
 import { groupConsecutiveDocuments } from '@/utils/chat/chat-helpers';
-import { filterCodeBlocks } from '@/utils/chat/chat-helpers';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getUser } from '@/utils/queries/get-user';
@@ -25,15 +24,11 @@ interface SummaryViewerProps {
     chatId: string;
     summary: Summary;
     viewerMode: ViewerMode;
-    lectureDocuments: Document[],
-    chapterDocuments: Document[],
     fileDocuments: Document[],
-    chapterExercises: Exercise[],
-    homeworkExercises: Exercise[]
-    handleEnhancedDocumentClick: (contextType: 'lectures' | 'chapters' | 'homeworks' | 'files', contextId: string, documentId?: string, textbookId?: string, exerciseId?: string) => void;
+    handleEnhancedDocumentClick: (contextType: 'files', contextId: string, documentId?: string) => void;
 }
 
-const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary, viewerMode, handleEnhancedDocumentClick, lectureDocuments, chapterDocuments, fileDocuments, chapterExercises, homeworkExercises }) => {
+const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
 
     const supabase = useSupabaseBrowser();
 
@@ -174,12 +169,8 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                         <Box>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.preamble}</Latex>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                filterCodeBlocks(summary.body),
-                                lectureDocuments ?? [],
-                                chapterDocuments ?? [],
+                                summary.body,
                                 fileDocuments ?? [],
-                                chapterExercises ?? [],
-                                homeworkExercises ?? []
                             )}</Latex>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.conclusion}</Latex>
                         </Box>

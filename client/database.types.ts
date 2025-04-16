@@ -255,6 +255,7 @@ export type Database = {
         Row: {
           chapter: string | null
           chapter_number: number | null
+          class: string
           created_at: string
           description: string
           end_time: number | null
@@ -279,6 +280,7 @@ export type Database = {
         Insert: {
           chapter?: string | null
           chapter_number?: number | null
+          class?: string
           created_at?: string
           description?: string
           end_time?: number | null
@@ -303,6 +305,7 @@ export type Database = {
         Update: {
           chapter?: string | null
           chapter_number?: number | null
+          class?: string
           created_at?: string
           description?: string
           end_time?: number | null
@@ -330,6 +333,13 @@ export type Database = {
             columns: ["chapter"]
             isOneToOne: false
             referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
           {
@@ -717,6 +727,7 @@ export type Database = {
           message: string | null
           prompt: string
           question: string | null
+          references: string[]
           response_url: string
           summary: string | null
         }
@@ -735,6 +746,7 @@ export type Database = {
           message?: string | null
           prompt?: string
           question?: string | null
+          references?: string[]
           response_url?: string
           summary?: string | null
         }
@@ -753,6 +765,7 @@ export type Database = {
           message?: string | null
           prompt?: string
           question?: string | null
+          references?: string[]
           response_url?: string
           summary?: string | null
         }
@@ -769,10 +782,13 @@ export type Database = {
       files: {
         Row: {
           active: boolean
+          additional_info: string
           class: string
+          content_type: Database["prod"]["Enums"]["content_type"]
           created_at: string
           deleted: boolean
           expires: string
+          file_date: string
           file_names: string[]
           file_number: number
           file_size: number
@@ -788,10 +804,13 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          additional_info?: string
           class?: string
+          content_type?: Database["prod"]["Enums"]["content_type"]
           created_at?: string
           deleted?: boolean
           expires?: string
+          file_date?: string
           file_names?: string[]
           file_number?: number
           file_size?: number
@@ -807,10 +826,13 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          additional_info?: string
           class?: string
+          content_type?: Database["prod"]["Enums"]["content_type"]
           created_at?: string
           deleted?: boolean
           expires?: string
+          file_date?: string
           file_names?: string[]
           file_number?: number
           file_size?: number
@@ -1384,6 +1406,7 @@ export type Database = {
           options: string[]
           problem: string
           prompt: string
+          references: string[]
           response_url: string
           solution: string
         }
@@ -1408,6 +1431,7 @@ export type Database = {
           options?: string[]
           problem?: string
           prompt?: string
+          references?: string[]
           response_url?: string
           solution?: string
         }
@@ -1432,6 +1456,7 @@ export type Database = {
           options?: string[]
           problem?: string
           prompt?: string
+          references?: string[]
           response_url?: string
           solution?: string
         }
@@ -1548,6 +1573,7 @@ export type Database = {
           message: string | null
           preamble: string
           prompt: string
+          references: string[]
           response_url: string
         }
         Insert: {
@@ -1567,6 +1593,7 @@ export type Database = {
           message?: string | null
           preamble?: string
           prompt?: string
+          references?: string[]
           response_url?: string
         }
         Update: {
@@ -1586,6 +1613,7 @@ export type Database = {
           message?: string | null
           preamble?: string
           prompt?: string
+          references?: string[]
           response_url?: string
         }
         Relationships: [
@@ -1688,6 +1716,7 @@ export type Database = {
         | "review"
         | "other"
         | "present"
+      content_type: "lecture" | "textbook" | "homework" | "other"
       file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
@@ -1827,6 +1856,7 @@ export const Constants = {
         "other",
         "present",
       ],
+      content_type: ["lecture", "textbook", "homework", "other"],
       file_type: ["audio", "video", "other", "image", "pdf"],
       generation_status: ["idle", "error", "complete", "generating"],
       generation_type: ["problem", "summary", "chat"],

@@ -98,7 +98,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                         <AppShell.Navbar>
                             <ClassNavbar
                                 classId={classId}
-                                basePath={`/classes/c/${classId}`}
+                                basePath={`/class/${classId}`}
                                 isExpanded={isExpanded}
                                 onExpandedChange={setIsExpanded}
                             />

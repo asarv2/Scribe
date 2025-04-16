@@ -11,7 +11,6 @@ import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
 import {
-  filterCodeBlocks,
   splitTextByDocuments,
   groupConsecutiveDocuments,
   splitTextByTags,
@@ -21,15 +20,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getProfessor } from "@/utils/queries/get-professor";
-import { getLectures } from "@/utils/queries/get-lectures";
-import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
-import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
-import { getChapters } from "@/utils/queries/get-chapters";
-import { getHomeworks } from "@/utils/queries/get-homeworks";
 import { getMessages } from "@/utils/queries/get-messages";
-import { getExercises } from "@/utils/queries/get-exercises";
-import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
 import { Checkbox } from "@mantine/core";
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { useHotkeys } from '@mantine/hooks';
@@ -38,7 +29,6 @@ import { getSummaries } from "@/utils/queries/get-summaries";
 import { getQuestions } from "@/utils/queries/get-questions";
 import SummaryViewer from "@/components/Viewer/SummaryViewer";
 import QuestionViewer from "@/components/Viewer/QuestionViewer";
-import FadeList from "./FadeList";
 import MessageViewer from "@/components/Viewer/MessageViewer";
 import { getFigures } from "@/utils/queries/get-figures";
 import FigureViewer from "@/components/Viewer/FigureViewer";
@@ -95,58 +85,6 @@ export const MessageList = memo(({
   const { data: professor } = useQuery({
     queryKey: ["professor", classId],
     queryFn: () => getProfessor(supabase, classId),
-  });
-
-  // Queries for data
-  const { data: lectures } = useQuery({
-    queryKey: ["lectures", classId],
-    queryFn: () => getLectures(supabase, [classId])
-  });
-
-  const { data: lectureDocuments } = useQuery({
-    queryKey: ["lectureDocuments", classId],
-    queryFn: () => getLectureDocuments(supabase, lectures!.map(l => l.id)),
-    enabled: !!lectures
-  });
-
-  const { data: textbooks } = useQuery({
-    queryKey: ["textbooks", classId],
-    queryFn: () => getTextbooks(supabase, [classId]),
-  });
-
-  const { data: chapters } = useQuery({
-    queryKey: ["chapters", classId],
-    queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
-    enabled: !!textbooks
-  });
-
-  const { data: chapterDocuments } = useQuery({
-    queryKey: ["chapterDocuments", classId],
-    queryFn: () => getChapterDocuments(supabase, chapters!.map(c => c.id)),
-    enabled: !!chapters
-  });
-
-  const { data: textbookDocuments } = useQuery({
-    queryKey: ["textbookDocuments", classId],
-    queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
-    enabled: !!textbooks
-  });
-
-  const { data: homeworks } = useQuery({
-    queryKey: ["homeworks", classId],
-    queryFn: () => getHomeworks(supabase, [classId]),
-  });
-
-  const { data: chapterExercises } = useQuery({
-    queryKey: ["chapterExercises", classId],
-    queryFn: () => getExercises(supabase, chapters!.map(c => c.id), []),
-    enabled: !!chapters
-  });
-
-  const { data: homeworkExercises } = useQuery({
-    queryKey: ["homeworkExercises", classId],
-    queryFn: () => getExercises(supabase, [], homeworks!.map(h => h.id)),
-    enabled: !!homeworks
   });
 
   const { data: files, isLoading: loadingFiles } = useQuery({
@@ -213,106 +151,6 @@ export const MessageList = memo(({
     const totalUniqueWords = Array.from(uniqueWords1).concat(Array.from(uniqueWords2)).length;
     return totalUniqueWords > 0 ? matchCount / totalUniqueWords : 0;
   };
-
-  // Function to find relevant context based on user's question
-  const findRelevantContext = (question: string) => {
-    if (!question || question.length < 5) return null;
-
-    const relevantContext = {
-      lectures: [] as string[],
-      chapters: [] as string[],
-      homeworks: [] as string[]
-    };
-
-    // Match with lectures
-    if (lectures) {
-      const lectureMatches = lectures
-        .map(lecture => ({
-          id: lecture.id,
-          similarity: calculateTextSimilarity(question, lecture.name || ''),
-          name: lecture.name || ''
-        }))
-        .filter(match => match.similarity > 0.15) // Set minimum similarity threshold
-        .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 2); // Get top 2 matches
-
-      relevantContext.lectures = lectureMatches.map(match => match.id);
-      console.log('Lecture matches:', lectureMatches.map(m => `${m.name} (${(m.similarity * 100).toFixed(1)}%)`));
-    }
-
-    // Match with chapters
-    if (chapters) {
-      const chapterMatches = chapters
-        .map(chapter => ({
-          id: chapter.id,
-          similarity: calculateTextSimilarity(question, chapter.title || ''),
-          title: chapter.title || ''
-        }))
-        .filter(match => match.similarity > 0.15)
-        .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 2);
-
-      relevantContext.chapters = chapterMatches.map(match => match.id);
-      console.log('Chapter matches:', chapterMatches.map(m => `${m.title} (${(m.similarity * 100).toFixed(1)}%)`));
-    }
-
-    // Match with homeworks
-    if (homeworks) {
-      const homeworkMatches = homeworks
-        .map(homework => ({
-          id: homework.id,
-          similarity: calculateTextSimilarity(question, homework.title || ''),
-          title: homework.title || ''
-        }))
-        .filter(match => match.similarity > 0.15)
-        .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 2);
-
-      relevantContext.homeworks = homeworkMatches.map(match => match.id);
-      console.log('Homework matches:', homeworkMatches.map(m => `${m.title} (${(m.similarity * 100).toFixed(1)}%)`));
-    }
-
-    // Only return context if we found any matches
-    const hasMatches =
-      relevantContext.lectures.length > 0 ||
-      relevantContext.chapters.length > 0 ||
-      relevantContext.homeworks.length > 0;
-
-    return hasMatches ? relevantContext : null;
-  };
-
-  // Auto-add context when a new message is displayed without context
-  useEffect(() => {
-    if (!messages || messages.length === 0 || !activeChat) return;
-
-    // Only check the first message
-    const firstMessage = messages[0];
-
-    // Skip if message already has context or if we've already added context
-    if ((firstMessage.lectures?.length || firstMessage.chapters?.length || firstMessage.homeworks?.length) ||
-      (autoAddedContext.lectures.length || autoAddedContext.chapters.length || autoAddedContext.homeworks.length)) {
-      return;
-    }
-
-    // Find relevant context
-    const relevantContext = findRelevantContext(firstMessage.question);
-    if (relevantContext) {
-      console.log('Auto-adding context based on question similarity:', relevantContext);
-      setAutoAddedContext(relevantContext);
-
-      // Update active chat context - this will be used for future messages
-      setActiveChat(prev => ({
-        ...prev,
-        context: {
-          ...prev.context,
-          lectures: [...(prev.context.lectures || []), ...relevantContext.lectures],
-          chapters: [...(prev.context.chapters || []), ...relevantContext.chapters],
-          homeworks: [...(prev.context.homeworks || []), ...relevantContext.homeworks]
-        }
-      }));
-    }
-  }, [messages]);
-
 
   // Check scroll position to show/hide scroll button
   const handleScroll = () => {
@@ -521,23 +359,8 @@ export const MessageList = memo(({
     exercise?: Exercise,
     range?: string
   ): string => {
-    if (type === 'lecture' && doc) {
-      const lecture = lectures?.find(l => l.id === doc.lecture);
-      return `${lecture?.name ?? 'Lecture'} ${range ? `p.${range}` : `p.${doc.page}`}`;
-    } else if (type === 'chapter' && doc) {
-      const textbook = textbooks?.find(t => t.id === doc.textbook);
-      return `${textbook?.title ?? 'Textbook'} ${range ? `p.${range}` : `p.${doc.page}`}`;
-    } else if (type === 'chapter-exercise' && exercise) {
-      const chapter = chapters?.find(c => c.id === exercise.chapter);
-      return `Ch.${chapter?.chapter_number ?? '?'} Ex.${exercise.exercise_number} ${range ? `p.${range}` : ''}`;
-    } else if (type === 'homework-problem' && exercise) {
-      const homework = homeworks?.find(h => h.id === exercise.homework);
-      return `HW ${homework?.homework_number ?? '?'} Problem ${exercise.problem_number} ${range ? `p.${range}` : ''}`;
-    } else if (type === 'files' && doc) {
-      const file = files?.find(f => f.id === doc.file);
-      return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc.page}`}`;
-    }
-    return 'Document Reference';
+    const file = files?.find(f => f.id === doc?.file);
+    return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
   };
 
   const renderLoadingState = () => (
@@ -587,10 +410,7 @@ export const MessageList = memo(({
       // Update the active chat context, similar to addContextToChat in ChatCanvas
       setActiveChat(prev => ({
         ...prev,
-        context: {
-          ...prev.context,
-          [item.type]: [...prev.context[item.type as keyof typeof prev.context] || [], item.id]
-        }
+        context: [...prev.context, item.id]
       }));
 
       console.log(`Added context: ${item.type} - ${item.id}`);
@@ -702,12 +522,6 @@ export const MessageList = memo(({
     }
   };
 
-  // Get the appropriate textbook ID for a chapter
-  const getTextbookForChapter = (chapterId: string) => {
-    const chapter = chapters?.find(c => c.id === chapterId);
-    return chapter?.textbook || null;
-  };
-
   // Function to render context badges for user messages
   const renderMessageContext = (message: Message) => {
     // Check if this message has any context attached
@@ -742,112 +556,6 @@ export const MessageList = memo(({
 
     return (
       <Group gap="xs" style={{ justifyContent: 'flex-end' }}>
-        {/* Render lecture references (only if not in previous messages) */}
-        {hasLectures && message.lectures.map((lectureId: string) => {
-          // Skip if this was already shown in a previous message's context
-          if (isPreviousContext('lecture', lectureId, messageIndex)) return null;
-          
-          const lecture = lectures?.find(l => l.id === lectureId);
-          if (!lecture) return null;
-
-          return (
-            <Text 
-              key={`lecture-${lectureId}`}
-              size="sm"
-              c="blue"
-              className="inline-reference lecture-reference"
-              style={{ 
-                cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease',
-                '&:hover': {
-                  textDecoration: 'underline',
-                }
-              }}
-              onClick={() => {
-                const document = lectureDocuments?.find(d => d.lecture === lectureId);
-                if (document) {
-                  handleEnhancedDocumentClick('lectures', lectureId, document.id);
-                }
-              }}
-            >
-              ({lecture.name})
-            </Text>
-          );
-        })}
-
-        {/* Render chapter references (only if not in previous messages) */}
-        {hasChapters && message.chapters.map((chapterId: string) => {
-          // Skip if this was already shown in a previous message's context
-          if (isPreviousContext('chapter', chapterId, messageIndex)) return null;
-          
-          const chapter = chapters?.find(c => c.id === chapterId);
-          if (!chapter) return null;
-
-          return (
-            <Text
-              key={`chapter-${chapterId}`}
-              size="sm"
-              c="green"
-              className="inline-reference chapter-reference"
-              style={{ 
-                cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease', 
-                '&:hover': {
-                  textDecoration: 'underline',
-                }
-
-              }}
-              onClick={() => {
-                if (chapter.textbook) {
-                  const document = textbookDocuments?.find(d =>
-                    d.chapter === chapterId &&
-                    d.page >= chapter.start_page &&
-                    d.page <= chapter.end_page
-                  );
-                  if (document) {
-                    handleEnhancedDocumentClick('chapters', chapterId, document.id, chapter.textbook);
-                  }
-                }
-              }}
-            >
-              ({chapter.chapter_number ? `Ch. ${chapter.chapter_number}` : chapter.title})
-            </Text>
-          );
-        })}
-
-        {/* Render homework references (only if not in previous messages) */}
-        {hasHomeworks && message.homeworks.map((homeworkId: string) => {
-          // Skip if this was already shown in a previous message's context
-          if (isPreviousContext('homework', homeworkId, messageIndex)) return null;
-          
-          const homework = homeworks?.find(h => h.id === homeworkId);
-          if (!homework) return null;
-
-          return (
-            <Text
-              key={`homework-${homeworkId}`}
-              size="sm"
-              c="orange"
-              className="inline-reference homework-reference"
-              style={{ 
-                cursor: 'pointer',
-                transition: 'text-decoration 0.2s ease',
-                '&:hover': {
-                  textDecoration: 'underline',
-                }
-              }}
-              onClick={() => {
-                const exercise = homeworkExercises?.find(e => e.homework === homeworkId);
-                if (exercise) {
-                  handleEnhancedDocumentClick('homeworks', homeworkId, undefined, undefined, exercise.id);
-                }
-              }}
-            >
-              ({homework.homework_number ? `HW ${homework.homework_number}` : homework.title})
-            </Text>
-          );
-        })}
-
         {/* Render file references (only if not in previous messages) */}
         {hasFiles && message.files.map((fileId: string) => {
           // Skip if this was already shown in a previous message's context
@@ -1030,7 +738,7 @@ export const MessageList = memo(({
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
         // cannot get fade list to work with immersive mode
-        <FadeList enabled={false}>
+        <>
           {renderWelcomeMessages()}
           {/* Deduplicate messages before rendering them */}
           {(() => {
@@ -1112,21 +820,6 @@ export const MessageList = memo(({
                     <Text size="sm" c="dimmed">
                       {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
                     </Text>
-
-                    {/* Admin-only file link icon. Temporary disabled. */}
-                    {profile?.admin && (
-                      <ActionIcon
-                        component="a"
-                        href={`${process.env.NEXT_PUBLIC_API_URL}/files/messages/${message.id}.txt`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="View message file"
-                        variant="subtle"
-                        size="sm"
-                      >
-                        <IconFileText size={16} />
-                      </ActionIcon>
-                    )}
                   </Group>
 
                   {/* Message container */}
@@ -1139,12 +832,8 @@ export const MessageList = memo(({
                       <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
                         <Stack>
                           {splitTextByTags(splitTextByDocuments(
-                            filterCodeBlocks(message.response),
-                            lectureDocuments ?? [],
-                            chapterDocuments ?? [],
+                            message.response,
                             fileDocuments ?? [],
-                            chapterExercises ?? [],
-                            homeworkExercises ?? []
                           )).map((segment, figIndex) => {
                             if (segment.text && segment.text.trim() !== '') {
                               return (
@@ -1164,13 +853,13 @@ export const MessageList = memo(({
                             } else if (segment.summaryId && summaries) {
                               return (
                                 summaries.find(s => s.id === segment.summaryId) && (
-                                  <SummaryViewer classId={classId} chatId={chatId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
+                                  <SummaryViewer classId={classId} chatId={chatId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
                               )
                             } else if (segment.questionIds && questions) {
                               return (
                                 questions.filter(q => segment.questionIds.includes(q.id)) && (
-                                  <QuestionViewer classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} lectureDocuments={lectureDocuments ?? []} chapterDocuments={chapterDocuments ?? []} fileDocuments={fileDocuments ?? []} chapterExercises={chapterExercises ?? []} homeworkExercises={homeworkExercises ?? []} />
+                                  <QuestionViewer classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
                               )
                             }
@@ -1183,7 +872,7 @@ export const MessageList = memo(({
               </Flex>
             </Stack>
           ))}
-        </FadeList>
+        </>
       )}
 
       <div ref={messagesEndRef} />

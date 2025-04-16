@@ -8,14 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { getMessages } from "@/utils/queries/get-messages";
 import { format } from "date-fns";
-import { getLectureDocuments } from "@/utils/queries/get-lecture-docs";
-import { getLectures } from "@/utils/queries/get-lectures";
-import { getChapters } from "@/utils/queries/get-chapters";
-import { getHomeworks } from "@/utils/queries/get-homeworks";
-import { getTextbooks } from "@/utils/queries/get-textbooks";
-import { getChapterDocuments } from "@/utils/queries/get-chapter-docs";
-import { getHomeworkDocuments } from "@/utils/queries/get-homework-docs";
-import { getTextbookDocuments } from "@/utils/queries/get-textbook-docs";
+import { getFiles } from "@/utils/queries/get-files";
+import { getDocuments } from "@/utils/queries/get-documents";
 
 interface ChatHistoryDropdownProps {
     currentChatId: string;
@@ -53,71 +47,57 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
         enabled: !!userChats && userChats.length > 0
     })
 
-    const {data: lectures} = useQuery({
-        queryKey: ["lectures", classId],
-        queryFn: () => getLectures(supabase, [classId]),
-        enabled: !!classId
+    // Get files and documents for image references
+    const { data: files } = useQuery({
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, [classId]),
+        enabled: !!messages && messages.length > 0
     })
 
-    const {data: textbooks} = useQuery({
-        queryKey: ["textbooks", classId],
-        queryFn: () => getTextbooks(supabase, [classId]),
-        enabled: !!classId
-    })
-
-    const {data: chapters} = useQuery({
-        queryKey: ["chapters", classId],
-        queryFn: () => getChapters(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks
-    })
-
-    const {data: homeworks} = useQuery({
-        queryKey: ["homeworks", classId],
-        queryFn: () => getHomeworks(supabase, [classId]),
-        enabled: !!classId
-    })
-
-    const {data: lectureDocuments} = useQuery({
-        queryKey: ["lectureDocuments", classId],
-        queryFn: () => getLectureDocuments(supabase, lectures!.map(l => l.id)),
-        enabled: !!lectures
-    })
-
-    const {data: textbookDocuments} = useQuery({
-        queryKey: ["textbookDocuments", classId],
-        queryFn: () => getTextbookDocuments(supabase, textbooks!.map(t => t.id)),
-        enabled: !!textbooks
-    })
-
-    const {data: chapterDocuments} = useQuery({
-        queryKey: ["chapterDocuments", classId],
-        queryFn: () => getChapterDocuments(supabase, chapters!.map(c => c.id)),
-        enabled: !!chapters
-    })
-
-    const {data: homeworkDocuments} = useQuery({
-        queryKey: ["homeworkDocuments", classId],
-        queryFn: () => getHomeworkDocuments(supabase, homeworks!.map(h => h.id)),
-        enabled: !!homeworks
+    const { data: documents } = useQuery({
+        queryKey: ["documents", classId],
+        queryFn: () => getDocuments(supabase, [classId]),
+        enabled: !!files && files.length > 0
     })
 
     // Helper function to get image URL for a chat
     const getChatImageUrl = (chatId: string): string => {
-        if (!messages) return '/placeholder_image.svg';
+        if (!messages || !files || !documents) return '/placeholder_image.svg';
         
         // Get all messages for this chat
         const chatMessages = messages.filter(m => m.chat === chatId);
         if (chatMessages.length === 0) return '/placeholder_image.svg';
 
-        // Try to find a lecture image
-        for (const message of chatMessages) {
-            if (message.lectures && message.lectures.length > 0) {
-                const lectureId = message.lectures[0];
-                const lecture = lectures?.find(l => l.id === lectureId);
-                if (lecture && lectureDocuments) {
-                    const document = lectureDocuments.find(d => d.lecture === lectureId);
+        // Extract all referenced file IDs from messages
+        const extractFileIds = (messages: any[], property: string) => {
+            const ids: string[] = [];
+            for (const message of messages) {
+                if (message[property] && message[property].length > 0) {
+                    ids.push(...message[property]);
+                }
+            }
+            return ids;
+        };
+
+        // Try to find any file referenced in the messages
+        const fileTypes = [
+            { type: 'files', property: 'files' },
+            { type: 'lectures', property: 'lectures' },
+            { type: 'textbooks', property: 'textbooks' },
+            { type: 'homeworks', property: 'homeworks' }
+        ];
+
+        for (const { type, property } of fileTypes) {
+            const fileIds = extractFileIds(chatMessages, property);
+            
+            for (const fileId of fileIds) {
+                // Find the file in our files data
+                const file = files.find(f => f.id === fileId);
+                if (file) {
+                    // Find a document for this file
+                    const document = documents.find(d => d.file === fileId);
                     if (document) {
-                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/lectures/${classId}/${lectureId}/${document.id}.png`;
+                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${document.id}.png`;
                     }
                 }
             }
@@ -127,35 +107,17 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
         for (const message of chatMessages) {
             if (message.chapters && message.chapters.length > 0) {
                 const chapterId = message.chapters[0];
-                const chapter = chapters?.find(c => c.id === chapterId);
-                if (chapter && textbookDocuments) {
-                    const filteredDocuments = textbookDocuments.filter(
-                        document => document.page >= chapter.start_page && document.page <= chapter.end_page && document.chapter === chapterId
-                    );
-                    if (filteredDocuments.length > 0) {
-                        const document = filteredDocuments[0];
-                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${chapter.textbook}/${document.id}.png`;
+                // Find documents related to this chapter
+                const chapterDocuments = documents.filter(doc => 
+                    doc.chapter === chapterId
+                );
+                
+                if (chapterDocuments.length > 0) {
+                    const document = chapterDocuments[0];
+                    const file = files.find(f => f.id === document.file);
+                    if (file) {
+                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${file.id}/${document.id}.png`;
                     }
-                }
-            }
-        }
-        
-        // Try to find a homework image
-        for (const message of chatMessages) {
-            if (message.homeworks && message.homeworks.length > 0) {
-                const homeworkId = message.homeworks[0];
-                // Find the first exercise in the homework
-                const exercise = homeworkDocuments?.find(e => e.homework === homeworkId);
-                if (exercise) {
-                    // Find textbook document that references this homework
-                    const textbookDocumentHomework = textbookDocuments?.find(d => 
-                        d.homeworks && d.homeworks.includes(homeworkId)
-                    );
-                    if (textbookDocumentHomework) {
-                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/textbooks/${classId}/${textbookDocumentHomework.textbook}/${textbookDocumentHomework.id}.png`;
-                    }
-                    // Return the exercise image
-                    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/exercises/${classId}/${exercise.id}.png`;
                 }
             }
         }

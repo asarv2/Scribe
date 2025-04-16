@@ -16,7 +16,6 @@ import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getQuestionDownloadUrl } from '@/utils/services/images';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
-import { filterCodeBlocks } from '@/utils/chat/chat-helpers';
 
 
 interface QuestionViewerProps {
@@ -24,15 +23,11 @@ interface QuestionViewerProps {
     chatId: string;
     questions: Question[];
     viewerMode: ViewerMode;
-    lectureDocuments: Document[];
-    chapterDocuments: Document[];
     fileDocuments: Document[];
-    chapterExercises: Exercise[];
-    homeworkExercises: Exercise[];
-    handleEnhancedDocumentClick: (contextType: 'lectures' | 'chapters' | 'homeworks' | 'files', contextId: string, documentId?: string, textbookId?: string, exerciseId?: string) => void;
+    handleEnhancedDocumentClick: (contextType: 'files', contextId: string, documentId?: string) => void;
 }
 
-const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questions, viewerMode, lectureDocuments, chapterDocuments, fileDocuments, chapterExercises, homeworkExercises, handleEnhancedDocumentClick }) => {
+const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questions, viewerMode, fileDocuments, handleEnhancedDocumentClick }) => {
     const [loading, setLoading] = useState(false);
     const [showSolution, setShowSolution] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -176,12 +171,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                             key={index}
                             value={String(index)}
                             label={<Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                filterCodeBlocks(option),
-                                lectureDocuments ?? [],
-                                chapterDocuments ?? [],
-                                fileDocuments ?? [],
-                                chapterExercises ?? [],
-                                homeworkExercises ?? []
+                                option,
+                                fileDocuments ?? []
                             )}</Latex>}
                             mb="sm"
                             readOnly
@@ -206,12 +197,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                         <Stack>
                             {question.explanations.map((explanation, index) => (
                                 <Latex key={index} handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                    filterCodeBlocks(explanation),
-                                    lectureDocuments ?? [],
-                                    chapterDocuments ?? [],
-                                    fileDocuments ?? [],
-                                    chapterExercises ?? [],
-                                    homeworkExercises ?? []
+                                    explanation,
+                                    fileDocuments ?? []
                                 )}</Latex>
                             ))}
                         </Stack>
@@ -228,12 +215,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
                         <Text fw={700} mb="xs">Solution:</Text>
                         <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                            filterCodeBlocks(question.solution),
-                            lectureDocuments ?? [],
-                            chapterDocuments ?? [],
-                            fileDocuments ?? [],
-                            chapterExercises ?? [],
-                            homeworkExercises ?? []
+                            question.solution,
+                            fileDocuments ?? []
                         )}</Latex>
                     </Box>
                 )}
@@ -275,12 +258,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 return (
                     <>
                         <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                            filterCodeBlocks(question.problem),
-                            lectureDocuments ?? [],
-                            chapterDocuments ?? [],
-                            fileDocuments ?? [],
-                            chapterExercises ?? [],
-                            homeworkExercises ?? []
+                            question.problem,
+                            fileDocuments ?? []
                         )}</Latex>
                         {question.frq ? renderFRQ() : renderMultipleChoice()}
                     </>
@@ -424,12 +403,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     {question.generation_status === 'complete' && (
                         <>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                filterCodeBlocks(question.problem),
-                                lectureDocuments ?? [],
-                                chapterDocuments ?? [],
-                                fileDocuments ?? [],
-                                chapterExercises ?? [],
-                                homeworkExercises ?? []
+                                question.problem,
+                                fileDocuments ?? []
                             )}</Latex>
                             
                             {/* Use modalShowSolution instead of showSolution for the modal */}
@@ -439,12 +414,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                         <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
                                             <Text fw={700} mb="xs">Solution:</Text>
                                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                                filterCodeBlocks(question.solution),
-                                                lectureDocuments ?? [],
-                                                chapterDocuments ?? [],
-                                                fileDocuments ?? [],
-                                                chapterExercises ?? [],
-                                                homeworkExercises ?? []
+                                                question.solution,
+                                                fileDocuments ?? []
                                             )}</Latex>
                                         </Box>
                                     )}
@@ -456,12 +427,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                                 key={index}
                                                 value={String(index)}
                                                 label={<Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                                    filterCodeBlocks(option),
-                                                    lectureDocuments ?? [],
-                                                    chapterDocuments ?? [],
-                                                    fileDocuments ?? [],
-                                                    chapterExercises ?? [],
-                                                    homeworkExercises ?? []
+                                                    option,
+                                                    fileDocuments ?? []
                                                 )}</Latex>}
                                                 mb="sm"
                                                 readOnly
@@ -486,12 +453,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                             <Stack>
                                                 {question.explanations.map((explanation, index) => (
                                                     <Latex key={index} handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                                        filterCodeBlocks(explanation),
-                                                        lectureDocuments ?? [],
-                                                        chapterDocuments ?? [],
-                                                        fileDocuments ?? [],
-                                                        chapterExercises ?? [],
-                                                        homeworkExercises ?? []
+                                                        explanation,
+                                                        fileDocuments ?? []
                                                     )}</Latex>
                                                 ))}
                                             </Stack>
