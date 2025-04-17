@@ -70,6 +70,7 @@
     "react-pdf": "^9.1.1",
     "react-to-pdf": "^1.0.1",
     "react-type-animation": "^3.2.0",
+    "reactflow": "^11.11.4",
     "recharts": "2",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-highlight": "^7.0.2",

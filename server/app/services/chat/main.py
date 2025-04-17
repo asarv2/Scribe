@@ -13,7 +13,7 @@ import google.generativeai as genai
 from google.generativeai.types import File
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent
 from agents.items import MessageOutputItem
-from app.services.chat.tools import create_figure, create_summary, create_question, update_chat_title
+from app.services.chat.tools import create_figure, create_summary, create_mcq_question, create_frq_question, update_chat_title
 from app.services.chat.models import Documents
 from agents.items import TResponseInputItem
 
@@ -76,7 +76,7 @@ class ChatProcessor(RunHooks):
 
         The defintion of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
         
-        Use the create_figure, create_summary, and create_question tools to generate figures, summaries, and questions if applicable to the conversation, or if asked for. You should handoff the task to the figure_agent, summary_agent, and question_agent to generate figures, summaries, and questions."""
+        Use the create_figure, create_summary, and create_mcq_question, create_frq_question tools to generate figures, summaries, and questions if applicable to the conversation, or if asked for. You should handoff the task to the figure_agent, summary_agent, and question_agent to generate figures, summaries, and questions."""
 
         self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
 
@@ -92,10 +92,11 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                temperature=0.0
             ),
             tools=[create_figure],
-            handoff_description="Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch.",
+            handoff_description="Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch.",
         )
 
         self.summary_agent = Agent[Documents](
@@ -106,7 +107,8 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                temperature=0.0
             ),
             tools=[create_figure, create_summary],
             handoff_description="Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch."
@@ -120,9 +122,10 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                temperature=0.0
             ),
-            tools=[create_figure, create_question],
+            tools=[create_figure, create_mcq_question, create_frq_question],
             handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch."
         )
 
@@ -139,7 +142,8 @@ class ChatProcessor(RunHooks):
             tools=[
                 create_figure,
                 create_summary,
-                create_question,
+                create_mcq_question,
+                create_frq_question,
             ],
             handoffs=[
                 self.figure_agent,
@@ -160,7 +164,8 @@ class ChatProcessor(RunHooks):
             model_settings=ModelSettings(
                 tool_choice="required"
             ),
-            tools=[update_chat_title]
+            tools=[update_chat_title],
+            tool_use_behavior="stop_on_first_tool"
         )
 
     def get_file_from_gemini(self, file_name: str) -> File | None:
@@ -212,8 +217,8 @@ class ChatProcessor(RunHooks):
         # add one more prompt to the context 
         # context_summary.append({"role": "system", "content": self.full_system_prompt})
         for i in range(0, len(self.chat_history)-1, 2):
-            context_summary.append({"role": "user", "content": self.chat_history[i]})
-            context_summary.append({"role": "assistant", "content": self.chat_history[i+1]})
+            context_summary.append({"role": "user", "content": self.chat_history[i] if self.chat_history[i] != "" else "No user message"})
+            context_summary.append({"role": "assistant", "content": self.chat_history[i+1] if self.chat_history[i+1] != "" else "No assistant message"})
         
         if add_current:
             # getting current message ready.
@@ -244,8 +249,11 @@ class ChatProcessor(RunHooks):
                 "last_generation_attempt": datetime.now().isoformat()
             }).execute()
             figure_id = figure_response.data[0]['id']
-            # we will add this to the response text for now
-            await self.stream_callback(f"<FIGURE>{figure_id}</FIGURE>")
+
+            # only add the figure to text if the agent is the figure agent
+            if agent.name == "Figure Agent":
+                await self.stream_callback(f"<FIGURE>{figure_id}</FIGURE>")
+            
             # adding the figure id to the context
             wrapper.context.figures.append(figure_id)
         elif tool.name == "create_summary":
@@ -259,7 +267,7 @@ class ChatProcessor(RunHooks):
             await self.stream_callback(f"<SUMMARY>{summary_id}</SUMMARY>")
             # adding the summary id to the context
             wrapper.context.summaries.append(summary_id)
-        elif tool.name == "create_question":
+        elif tool.name == "create_mcq_question" or tool.name == "create_frq_question":
             question_response = supabase.table("questions").insert({
                 "generation_status": "generating",
                 "message": message_id,

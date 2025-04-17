@@ -16,6 +16,8 @@ import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getQuestionDownloadUrl } from '@/utils/services/images';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
+import FigureViewer from './FigureViewer';
+import { getFigures } from '@/utils/queries/get-figures';
 
 
 interface QuestionViewerProps {
@@ -29,14 +31,16 @@ interface QuestionViewerProps {
 
 const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questions, viewerMode, fileDocuments, handleEnhancedDocumentClick }) => {
     const [loading, setLoading] = useState(false);
-    const [showSolution, setShowSolution] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalShowSolution, setModalShowSolution] = useState(false);
     const supabase = useSupabaseBrowser();
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const cardRef = useRef<HTMLDivElement>(null);
     const modalContentRef = useRef<HTMLDivElement>(null);
+    const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string[]>>({});
+    const [frqAnswers, setFrqAnswers] = useState<Record<string, string>>({});
+    const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({});
+
 
     // Store the question IDs in a ref to detect when the actual questions change
     const questionIdsRef = useRef<string[]>(questions.map(q => q.id));
@@ -50,6 +54,11 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user?.id
+    });
+
+    const { data: figures, isLoading: figuresLoading } = useQuery({
+        queryKey: ["figures"],
+        queryFn: () => getFigures(supabase, questions.map(q => q.message).filter(Boolean) as string[])
     });
 
     const isStudent = profile && !profile.professor && !profile.admin;
@@ -162,67 +171,142 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         }
     }
 
-    const renderMultipleChoice = () => {
+    // Handle answer selection for multiple choice
+    const handleAnswerSelect = (questionId: string, value: string) => {
+        setSelectedAnswers(prev => {
+            return { ...prev, [questionId]: [value] };
+        });
+    };
+
+    // Handle FRQ answer input
+    const handleFrqAnswerChange = (questionId: string, value: string) => {
+        setFrqAnswers(prev => ({ ...prev, [questionId]: value }));
+        // Reset checked status when answer changes
+        setCheckedAnswers(prev => ({ ...prev, [questionId]: false }));
+    };
+
+    const renderFigure = (figureId: string) => {
+        const figure = figures?.find(f => f.id === figureId);
+        if (!figure) return null;
         return (
-            <Box mt="md">
-                <RadioGroup>
-                    {question.options && question.options.map((option, index) => (
-                        <Radio
-                            key={index}
-                            value={String(index)}
-                            label={<Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                option,
-                                fileDocuments ?? []
-                            )}</Latex>}
-                            mb="sm"
-                            readOnly
-                            styles={{
-                                body: { alignItems: 'flex-start' },
-                                inner: { alignSelf: 'flex-start', marginTop: '4px' },
-                            }}
-                        />
-                    ))}
-                </RadioGroup>
+            <FigureViewer
+                key={figureId}
+                figure={figure}
+                classId={classId}
+                viewerMode={viewerMode}
+            />
+        );
+    }
 
-                {showSolution && question.answers && question.answers.length > 0 && (
-                    <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                        <Text fw={700} mb="xs">Correct Answer:</Text>
-                        <Text>{question.answers.map((ans, i) => String.fromCharCode(65 + parseInt(ans))).join(', ')}</Text>
-                    </Box>
-                )}
-
-                {showSolution && question.explanations && question.explanations.length > 0 && (
-                    <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                        <Text fw={700} mb="xs">Explanation:</Text>
-                        <Stack>
-                            {question.explanations.map((explanation, index) => (
-                                <Latex key={index} handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                    explanation,
-                                    fileDocuments ?? []
-                                )}</Latex>
+    const renderQuestion = () => {
+        return (
+            <>
+                {/* Display figures in modal if they exist */}
+                {question.figures && question.figures.length > 0 && (
+                    <Box mb="md">
+                        <Group justify="flex-start" pl="sm">
+                            {question.figures.map((figureId) => (
+                                renderFigure(figureId)
                             ))}
-                        </Stack>
+                        </Group>
                     </Box>
                 )}
-            </Box>
-        );
-    };
+                <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
+                    question.problem,
+                    fileDocuments ?? []
+                )}</Latex>
 
-    const renderFRQ = () => {
-        return (
-            <Box mt="md">
-                {showSolution && (
-                    <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                        <Text fw={700} mb="xs">Solution:</Text>
-                        <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                            question.solution,
-                            fileDocuments ?? []
-                        )}</Latex>
+                {question.frq ?
+                    <Box mt="md">
+                        <Box mb="md">
+                            <Text fw={500} mb="xs">Your Answer:</Text>
+                            <textarea
+                                value={frqAnswers[question.id] || ''}
+                                onChange={(e) => handleFrqAnswerChange(question.id, e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    minHeight: '120px',
+                                    padding: '10px',
+                                    borderRadius: '4px',
+                                    border: '1px solid #ddd',
+                                    fontFamily: 'inherit'
+                                }}
+                                placeholder="Enter your answer here..."
+                            />
+                        </Box>
+
+                        {checkedAnswers[question.id] && (
+                            <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
+                                <Text fw={700} mb="xs">Answer Submitted</Text>
+                                <Text size="sm">Your answer has been recorded. Check the solution to see the correct answer.</Text>
+                            </Box>
+                        )}
+
+                    </Box> :
+                    <Box mt="md">
+                        <RadioGroup
+                            value={selectedAnswers[question.id]?.[0] || ''}
+                            onChange={(value) => handleAnswerSelect(question.id, value)}
+                        >
+                            {question.options && question.options.map((option, index) => {
+                                const isCorrectAnswer = question.answers?.includes(option);
+                                const showFeedback = checkedAnswers[question.id];
+
+                                // Determine the style for the option based on whether it's checked and correct
+                                let optionStyle = {};
+                                if (showFeedback) {
+                                    if (isCorrectAnswer) {
+                                        optionStyle = { backgroundColor: 'rgba(0,200,0,0.1)', padding: '8px', borderRadius: '4px' };
+                                    } else {
+                                        optionStyle = { backgroundColor: 'rgba(255,0,0,0.1)', padding: '8px', borderRadius: '4px' };
+                                    }
+                                }
+
+                                return (
+                                    <Box key={index} mb="sm" style={optionStyle}>
+                                        <Radio
+                                            value={String(index)}
+                                            label={<Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
+                                                option,
+                                                fileDocuments ?? []
+                                            )}</Latex>}
+                                            styles={{
+                                                body: { alignItems: 'flex-start' },
+                                                inner: { alignSelf: 'flex-start', marginTop: '4px' },
+                                            }}
+                                        />
+
+                                        {showFeedback && (
+                                            <Text size="sm" mt="xs" ml="2rem" c={isCorrectAnswer ? "green.7" : "red.7"}>
+                                                {question.explanations?.[index]}
+                                            </Text>
+                                        )}
+
+
+                                    </Box>
+                                );
+                            })}
+                        </RadioGroup>
+
+
                     </Box>
-                )}
-            </Box>
-        );
-    };
+                }
+
+                {/* Check/Reset Answer Button */}
+                <Group justify="flex-end" mt="md">
+                    <Button
+                        onClick={() => setCheckedAnswers(prev => ({ ...prev, [question.id]: !prev[question.id] }))}
+                        disabled={
+                            (question.frq && !frqAnswers[question.id]) ||
+                            (!question.frq && !selectedAnswers[question.id])
+                        }
+                    >
+                        {checkedAnswers[question.id] ? "Hide Feedback" : "Check Answer"}
+                    </Button>
+                </Group>
+            </>
+        )
+    }
 
     const renderContent = () => {
         switch (question.generation_status) {
@@ -255,15 +339,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     </Center>
                 );
             case 'complete':
-                return (
-                    <>
-                        <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                            question.problem,
-                            fileDocuments ?? []
-                        )}</Latex>
-                        {question.frq ? renderFRQ() : renderMultipleChoice()}
-                    </>
-                );
+                return renderQuestion();
             default:
                 return (
                     <Center style={{ height: '100%' }}>
@@ -272,16 +348,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 );
         }
     };
-
-    // Reset modal solution state when modal is closed
-    useEffect(() => {
-        if (!modalOpen) {
-            setModalShowSolution(false);
-        } else {
-            // Sync with main view's solution state when opening
-            setModalShowSolution(showSolution);
-        }
-    }, [modalOpen, showSolution]);
 
     return (question.generation_status === 'idle' || question.generation_status === 'generating' || question.generation_status === 'error' || question.generation_status === 'complete') && (
         <>
@@ -316,11 +382,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                         </Group>
                     ) : <div />}
                     <Group gap="xs">
-                        <Tooltip label={showSolution ? "Hide Solution" : "View Solution"}>
-                            <ActionIcon variant="subtle" size="md" onClick={() => setShowSolution(!showSolution)}>
-                                {showSolution ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-                            </ActionIcon>
-                        </Tooltip>
                         {(profile?.admin || profile?.professor) ? <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
                                 <Tooltip label="Download Questions">
@@ -394,90 +455,26 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     blur: 3,
                 }}
             >
-                <Box 
-                    p="md" 
+                <Box
+                    p="md"
                     ref={modalContentRef}
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
                 >
-                    {question.generation_status === 'complete' && (
-                        <>
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                question.problem,
-                                fileDocuments ?? []
-                            )}</Latex>
-                            
-                            {/* Use modalShowSolution instead of showSolution for the modal */}
-                            {question.frq ? 
-                                <Box mt="md">
-                                    {modalShowSolution && (
-                                        <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                                            <Text fw={700} mb="xs">Solution:</Text>
-                                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                                question.solution,
-                                                fileDocuments ?? []
-                                            )}</Latex>
-                                        </Box>
-                                    )}
-                                </Box> : 
-                                <Box mt="md">
-                                    <RadioGroup>
-                                        {question.options && question.options.map((option, index) => (
-                                            <Radio
-                                                key={index}
-                                                value={String(index)}
-                                                label={<Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                                    option,
-                                                    fileDocuments ?? []
-                                                )}</Latex>}
-                                                mb="sm"
-                                                readOnly
-                                                styles={{
-                                                    body: { alignItems: 'flex-start' },
-                                                    inner: { alignSelf: 'flex-start', marginTop: '4px' },
-                                                }}
-                                            />
-                                        ))}
-                                    </RadioGroup>
-
-                                    {modalShowSolution && question.answers && question.answers.length > 0 && (
-                                        <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                                            <Text fw={700} mb="xs">Correct Answer:</Text>
-                                            <Text>{question.answers.map((ans, i) => String.fromCharCode(65 + parseInt(ans))).join(', ')}</Text>
-                                        </Box>
-                                    )}
-
-                                    {modalShowSolution && question.explanations && question.explanations.length > 0 && (
-                                        <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                                            <Text fw={700} mb="xs">Explanation:</Text>
-                                            <Stack>
-                                                {question.explanations.map((explanation, index) => (
-                                                    <Latex key={index} handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
-                                                        explanation,
-                                                        fileDocuments ?? []
-                                                    )}</Latex>
-                                                ))}
-                                            </Stack>
-                                        </Box>
-                                    )}
-                                </Box>
-                            }
-                        </>
-                    )}
-                    
+                    {question.generation_status === 'complete' && renderQuestion()}
                     {/* Navigation buttons in modal */}
                     {questions.length > 1 && (
                         <Group justify="space-between" mt="xl">
-                            <Button 
-                                variant="subtle" 
+                            <Button
+                                variant="subtle"
                                 leftSection={<IconChevronLeft size={16} />}
                                 onClick={handlePrevious}
                                 disabled={currentIndex === 0}
                             >
                                 Previous
                             </Button>
-                            <Button 
-                                variant="subtle" 
+                            <Button
+                                variant="subtle"
                                 rightSection={<IconChevronRight size={16} />}
                                 onClick={handleNext}
                                 disabled={currentIndex === questions.length - 1}

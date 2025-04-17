@@ -22,7 +22,7 @@ interface FigureViewerProps {
 export default function FigureViewer({
   figure,
   classId,
-  viewerMode
+  viewerMode,
 }: FigureViewerProps) {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -110,12 +110,12 @@ export default function FigureViewer({
             <Tooltip label="Download Figure">
               <ActionIcon
                 component="a"
-                href={getFigureUrl(figure.id)}
+                href={getFigureUrl(classId, figure.id)}
                 download
                 pos="absolute"
                 top={10}
                 right={10}
-                variant="filled"
+                variant="subtle"
                 style={{ zIndex: 10 }}
                 onClick={(e) => e.stopPropagation()} // Prevent modal from opening when clicking download
               >
@@ -127,7 +127,7 @@ export default function FigureViewer({
               <Skeleton
                 visible={true}
                 height={"100%"}
-                radius="md"
+                radius={0}
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -138,18 +138,17 @@ export default function FigureViewer({
                 }}
               />
               <Image
-                src={getFigureUrl(figure.id)}
+                src={getFigureUrl(classId, figure.id)}
                 alt="Figure"
                 width={800}
                 height={600}
                 style={{
                   maxWidth: '100%',
                   height: 'auto',
-                  borderRadius: '24px',
                   objectFit: 'contain',
                   opacity: 0,
+                  borderRadius: '12px',
                   transition: 'opacity 0.2s',
-                  padding: '1rem'
                 }}
                 onLoad={(e) => {
                   const img = e.target as HTMLImageElement;
@@ -179,7 +178,7 @@ export default function FigureViewer({
 
   return (figure.generation_status === 'idle' || figure.generation_status === 'generating' || figure.generation_status === 'error' || figure.generation_status === 'complete') && (
     <>
-      <Card withBorder p="md" w={"100%"} key={"figure-" + figure.id}>
+      <Card p={0} w={viewerMode.open ? "70%" : "50%"} key={"figure-" + figure.id} shadow={"none"}>
         {renderContent()}
       </Card>
 
@@ -189,7 +188,7 @@ export default function FigureViewer({
         onClose={() => setModalOpen(false)}
         size="xl"
         padding="md"
-        title="Figure"
+        title={figure.title}
         styles={{
           content: {
             display: 'flex',
@@ -226,19 +225,19 @@ export default function FigureViewer({
               <Tooltip label="Download Figure">
                 <ActionIcon
                   component="a"
-                  href={getFigureUrl(figure.id)}
+                  href={getFigureUrl(classId, figure.id)}
                   download
                   pos="absolute"
                   top={10}
                   right={10}
-                  variant="filled"
+                  variant="subtle"
                   style={{ zIndex: 10 }}
                 >
                   <IconDownload size={18} />
                 </ActionIcon>
               </Tooltip>
               <Image
-                src={getFigureUrl(figure.id)}
+                src={getFigureUrl(classId, figure.id)}
                 alt="Figure"
                 width={1200}
                 height={900}

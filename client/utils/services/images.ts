@@ -13,8 +13,8 @@ export const getCourseImageUrl = (classId: string) => {
     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/classes/home/${classId}.jpg`
 }
 
-export const getFigureUrl = (figureId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${figureId}.png`
+export const getFigureUrl = (classId: string, figureId: string) => {
+    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${classId}/${figureId}.png`
 }
 
 export const getSummaryDownloadUrl = (chatId: string, summaryId: string, format: 'pdf' | 'latex' | 'text') => {

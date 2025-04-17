@@ -730,6 +730,7 @@ export type Database = {
           references: string[]
           response_url: string
           summary: string | null
+          title: string
         }
         Insert: {
           chapter_exercise_references?: string[]
@@ -749,6 +750,7 @@ export type Database = {
           references?: string[]
           response_url?: string
           summary?: string | null
+          title?: string
         }
         Update: {
           chapter_exercise_references?: string[]
@@ -768,6 +770,7 @@ export type Database = {
           references?: string[]
           response_url?: string
           summary?: string | null
+          title?: string
         }
         Relationships: [
           {
