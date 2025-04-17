@@ -76,7 +76,7 @@ class ChatProcessor(RunHooks):
 
         The defintion of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
         
-        Use the create_figure, create_summary, and create_question tools to generate figures, summaries, and questions if needed. You can also handoff the task to the figure_agent, summary_agent, and question_agent to generate figures, summaries, and questions if needed."""
+        Use the create_figure, create_summary, and create_question tools to generate figures, summaries, and questions if applicable to the conversation, or if asked for. You should handoff the task to the figure_agent, summary_agent, and question_agent to generate figures, summaries, and questions."""
 
         full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
 
@@ -95,7 +95,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure],
-            handoff_description="Used when the user asks to generate a figure. This can be used in the general case, where the user will not give you any specific information. Can come up with complex figures from scratch.",
+            handoff_description="Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch.",
         )
 
         self.summary_agent = Agent[Documents](

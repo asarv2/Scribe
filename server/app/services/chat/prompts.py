@@ -361,6 +361,9 @@ def get_figure_prompt(course_title: str) -> str:
         f"You are an expert figure generation assistant tasked with creating a comprehensive and cohesive figure, "
         f"in the context of the class {course_title}. You will be given documents from lectures and be asked "
         f"to generate a complete figure, using Python code."
+
+        f"You are an expert at generating different types of visualizations, for all sorts of use cases and classed.\n"
+        f""
     )
 
     quality_prompt = (
@@ -457,7 +460,7 @@ def get_summary_prompt(course_title: str) -> str:
     return base_summary_prompt + "\n\n" + quality_prompt + "\n\n" + summary_requirements_prompt + "\n\n" + summary_formatting_prompt + "\n\n" + example
 
 
-def get_question_prompt(course_title: str) -> str:
+def get_question_prompt(course_title: str) -> str:      ##Ensure that the questions generated are diverse and not similar to each other.
     base_question_prompt = f"You are a professor for the class {course_title}. You will be given documents from lectures and be asked to generate either multiple choice questions or free response questions for the students to answer. You will use the create_question tool to generate the questions, providing the question, options, explanations, and answer for the MCQ, while just providing the question and answer for the FRQ. For both cases, you should include file references and use the create_figure tool to generate a figure to help explain the question if you think it's necessary. You should use inline LaTeX formatting for equations, diagrams, and other related things to help the professor."
 
     quality_prompt = f"""To generate questions of the highest quality, here are some guidelines you should follow.
