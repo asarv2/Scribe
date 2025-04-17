@@ -7,7 +7,17 @@
 
 "use client"
 import Login from "@/components/Login/Login";
+import { Suspense } from "react";
+import { Center, Loader } from "@mantine/core";
 
 export default function LoginPage() {
-    return <Login />
+    return (
+        <Suspense fallback={
+            <Center style={{ height: '100vh' }}>
+                <Loader size="lg" />
+            </Center>
+        }>
+            <Login />
+        </Suspense>
+    )
 }
