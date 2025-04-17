@@ -919,44 +919,6 @@ export type Database = {
           },
         ]
       }
-      learning_connections: {
-        Row: {
-          class_id: string
-          created_at: string
-          id: string
-          source_id: string
-          source_type: string
-          target_id: string
-          target_type: string
-        }
-        Insert: {
-          class_id?: string
-          created_at?: string
-          id?: string
-          source_id?: string
-          source_type: string
-          target_id?: string
-          target_type: string
-        }
-        Update: {
-          class_id?: string
-          created_at?: string
-          id?: string
-          source_id?: string
-          source_type?: string
-          target_id?: string
-          target_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "learning_connections_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       lectures: {
         Row: {
           active: boolean
@@ -1122,7 +1084,9 @@ export type Database = {
           class: string | null
           created_at: string
           description: string | null
+          files: string[]
           id: string
+          outcome_id: string | null
           position_x: number | null
           position_y: number | null
           title: string | null
@@ -1131,7 +1095,9 @@ export type Database = {
           class?: string | null
           created_at?: string
           description?: string | null
+          files?: string[]
           id?: string
+          outcome_id?: string | null
           position_x?: number | null
           position_y?: number | null
           title?: string | null
@@ -1140,7 +1106,9 @@ export type Database = {
           class?: string | null
           created_at?: string
           description?: string | null
+          files?: string[]
           id?: string
+          outcome_id?: string | null
           position_x?: number | null
           position_y?: number | null
           title?: string | null
@@ -1151,6 +1119,13 @@ export type Database = {
             columns: ["class"]
             isOneToOne: false
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "objectives_outcome_id_fkey"
+            columns: ["outcome_id"]
+            isOneToOne: false
+            referencedRelation: "outcomes"
             referencedColumns: ["id"]
           },
         ]

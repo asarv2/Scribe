@@ -17,7 +17,10 @@ import { useDisclosure } from "@mantine/hooks";
 import ReactFlow, { 
     Background, Node, Edge, Connection,
     addEdge, useNodesState, useEdgesState, ReactFlowProvider, 
-    Handle, Position, useReactFlow
+    Handle, Position, useReactFlow,
+    NodeChange,
+    ConnectionLineType,
+    ConnectionMode
 } from 'react-flow-renderer';
 import 'reactflow/dist/style.css';
 import { IconPlus, IconEdit, IconRefresh } from '@tabler/icons-react';
@@ -25,9 +28,10 @@ import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { 
   getOutcomes, getObjectives, createOutcome, updateOutcome, deleteOutcome,
   createObjective, updateObjective, deleteObjective, updateObjectiveConnection,
-  Outcome, Objective, getLectures, Lecture
+  getLectures
 } from "@/utils/queries/get-connections";
-import { analyzeConnections, batchCreateConnections, getTaskConnections, ConnectionSuggestion } from "@/utils/services/learning-connections";
+import { analyzeConnections, batchCreateConnections, getTaskConnections } from "@/utils/services/learning-connections";
+import { Lecture, Objective, Outcome } from "@/types";
 
 // New interfaces for connection suggestions
 interface ConnectionSuggestion {
@@ -39,8 +43,16 @@ interface ConnectionSuggestion {
   explanation: string;
 }
 
+interface NodeData {
+  title: string;
+  description: string;
+  onNodeClick: (id: string) => void;
+  onEdit: (id: string) => void;
+  isEditable: boolean;
+}
+
 // Custom node components
-const OutcomeNode = ({ data, id }) => (
+const OutcomeNode = ({ data, id }: { data: NodeData, id: string }) => (
   <Paper 
     p="md" 
     radius="md" 
@@ -98,7 +110,7 @@ const OutcomeNode = ({ data, id }) => (
   </Paper>
 );
 
-const ObjectiveNode = ({ data, id }) => (
+const ObjectiveNode = ({ data, id }: { data: NodeData, id: string }) => (
   <Paper 
     p="md" 
     radius="md" 
@@ -156,7 +168,7 @@ const ObjectiveNode = ({ data, id }) => (
   </Paper>
 );
 
-const TaskNode = ({ data, id }) => (
+const TaskNode = ({ data, id }: { data: NodeData, id: string }) => (
   <Paper 
     p="md" 
     radius="md" 
@@ -178,7 +190,7 @@ const TaskNode = ({ data, id }) => (
     <Stack gap="xs" align="center">
       <Badge color="green" size="sm" variant="transparent">{data.title}</Badge>
       {data.description && data.description !== 'No description' && (
-        <Text size="sm" lineClamp={3} color="dimmed" ta="center">
+        <Text size="sm" lineClamp={3} c="dimmed" ta="center">
           {data.description}
         </Text>
       )}
@@ -410,7 +422,7 @@ const ViewportIndicator = () => {
 };
 
 // Add this new function for distributing nodes to avoid overlaps
-const distributeNodes = (originalNodes) => {
+const distributeNodes = (originalNodes: Node[]) => {
   // Make a copy to avoid mutating the original
   const nodes = [...originalNodes];
   
@@ -517,7 +529,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [selectedNode, setSelectedNode] = useState<Node | null>(null);
     const [connectingMode, setConnectingMode] = useState(false);
-    const [connectionSource, setConnectionSource] = useState(null);
+    const [connectionSource, setConnectionSource] = useState<string | null>(null);
     
     // Add state variables to track adding state
     const [addingOutcome, setAddingOutcome] = useState(false);
@@ -571,8 +583,8 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             target_id: obj.id,
             target_type: 'objective',
             // Include handle information if available - with null fallbacks
-            source_handle: obj.connection_source_handle || null,
-            target_handle: obj.connection_target_handle || null,
+            source_handle: null,
+            target_handle: null,
             class_id: classId
           }));
         
@@ -611,7 +623,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     }, [classId, supabase]);
 
     // Wrap handleEditNode in useCallback with minimal dependencies
-    const handleEditNode = useCallback((nodeId) => {
+    const handleEditNode = useCallback((nodeId: string) => {
       const node = nodes.find(n => n.id === nodeId);
       if (node) {
         setEditingNode(node);
@@ -631,7 +643,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
 
     // Function to initialize node click handler
     useEffect(() => {
-      const handleNodeClick = (nodeId) => {
+      const handleNodeClick = (nodeId: string ) => {
         if (connectingMode) {
           if (connectionSource === null) {
             // First node clicked, set as source
@@ -728,7 +740,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     }, [nodes, connectingMode, connectionSource, setNodes, setConnections, setEdges, classId, supabase]);
 
     // Function for handling node position changes
-    const onNodesChangeWithSave = useCallback((changes) => {
+    const onNodesChangeWithSave = useCallback((changes: NodeChange[]) => {
         // Apply the changes locally ONLY - don't trigger any redistribution
         onNodesChange(changes);
         
@@ -744,26 +756,26 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                     // Update position in Supabase
                     if (node.type === 'outcome') {
                         await updateOutcome(supabase, node.id, {
-                            position_x: change.position.x,
-                            position_y: change.position.y
+                            position_x: change.position?.x || 0,
+                            position_y: change.position?.y || 0
                         });
                         
                         // Update position in local state
                         setOutcomes(prev => prev.map(outcome => 
                             outcome.id === node.id 
-                                ? {...outcome, position_x: change.position.x, position_y: change.position.y} 
+                                ? {...outcome, position_x: change.position?.x || 0, position_y: change.position?.y || 0} 
                                 : outcome
                         ));
                     } else if (node.type === 'objective') {
                         await updateObjective(supabase, node.id, {
-                            position_x: change.position.x,
-                            position_y: change.position.y
+                            position_x: change.position?.x || 0,
+                            position_y: change.position?.y || 0
                         });
                         
                         // Update position in local state
                         setObjectives(prev => prev.map(objective => 
                             objective.id === node.id 
-                                ? {...objective, position_x: change.position.x, position_y: change.position.y} 
+                                ? {...objective, position_x: change.position?.x || 0, position_y: change.position?.y || 0} 
                                 : objective
                         ));
                     }
@@ -785,7 +797,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     }, [nodes, onNodesChange, setNodes, setOutcomes, setObjectives, supabase]);
 
     // Update onConnect to work with Supabase
-    const onConnect = useCallback(async (params) => {
+    const onConnect = useCallback(async (params: Connection) => {
         try {
             // Find source and target nodes to determine their types
             const sourceNode = nodes.find(n => n.id === params.source);
@@ -815,8 +827,8 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                   targetNode.id, 
                   sourceNode.id, 
                   {
-                    source_handle: params.sourceHandle,
-                    target_handle: params.targetHandle
+                    source_handle: params.sourceHandle === null ? undefined : params.sourceHandle,
+                    target_handle: params.targetHandle === null ? undefined : params.targetHandle
                   }
                 );
                 
@@ -844,7 +856,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     useEffect(() => {
         if (outcomes.length > 0 || objectives.length > 0 || lectures.length > 0 || connections.length > 0) {
             // Convert outcomes to nodes
-            const outcomeNodes = outcomes.map(outcome => ({
+            const outcomeNodes = outcomes.map((outcome: Outcome) => ({
                 id: outcome.id,
                 type: 'outcome',
                 position: { x: outcome.position_x || 0, y: outcome.position_y || 0 },
@@ -858,7 +870,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             }));
             
             // Convert objectives to nodes
-            const objectiveNodes = objectives.map(objective => ({
+            const objectiveNodes = objectives.map((objective: Objective) => ({
                 id: objective.id,
                 type: 'objective',
                 position: { x: objective.position_x || 0, y: objective.position_y || 0 },
@@ -875,13 +887,13 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             const taskNodes = lectures.map((lecture, index) => ({
                 id: lecture.id,
                 type: 'task',
-                position: { 
-                    x: lecture.position_x || (Math.random() * 300) + 300, 
-                    y: lecture.position_y || (Math.random() * 300) + 300 
+                position: {
+                    x: (Math.random() * 300) + 300, 
+                    y: (Math.random() * 300) + 300 
                 },
                 data: { 
                     title: lecture.name, 
-                    description: lecture.description || '',
+                    description: lecture.additional_info || '',
                     onNodeClick: handleNodeClickRef.current
                 }
             }));
@@ -897,7 +909,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                     !node.position.y
                 );
             
-            let finalNodes = allNodes;
+            let finalNodes: Node[] = allNodes;
             
             // ONLY apply distribution algorithm on first load
             if (needsPositioning && allNodes.length > 0) {
@@ -958,7 +970,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     }, [outcomes, objectives, lectures, connections, isProfessorOrAdmin, setNodes, setEdges, supabase]);
 
     // Function to remove a node
-    const removeNode = async (nodeId) => {
+    const removeNode = async (nodeId: string) => {
       try {
         // Find the node to determine its type
         const node = nodes.find(n => n.id === nodeId);
@@ -1055,7 +1067,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
       }
     };
 
-    const startAddingNode = (type) => {
+    const startAddingNode = (type: string) => {
       if (type === 'outcome') {
         setAddingOutcome(true);
         setAddingObjective(false);
@@ -1072,7 +1084,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
       setNewNodeTitle('');
     };
 
-    const confirmAddNode = async (type) => {
+    const confirmAddNode = async (type: string) => {
       if (!newNodeTitle.trim()) return;
 
       try {
@@ -1116,7 +1128,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
           class: classId
         };
 
-        let newNode;
+        let newNode: Node;
 
         if (type === 'outcome') {
           const createdOutcome = await createOutcome(supabase, newNodeData);
@@ -1139,7 +1151,8 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
         } else if (type === 'objective') {
           const createdObjective = await createObjective(supabase, {
             ...newNodeData,
-            outcome_id: null
+            outcome_id: null,
+            files: []
           });
           if (!createdObjective) throw new Error('Failed to create objective');
 
@@ -1400,10 +1413,10 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                                             onConnect={onConnect}
                                             nodeTypes={nodeTypes}
                                             fitView
-                                            connectionMode="strict"
-                                            connectionLineType="bezier"
+                                            connectionMode={ConnectionMode.Strict}
+                                            connectionLineType={ConnectionLineType.Bezier}
                                             style={{ background: 'transparent' }}
-                                            proOptions={{ hideAttribution: true }}
+                                            proOptions={{ hideAttribution: true, account: 'free' }}
                                             minZoom={0.1}
                                             maxZoom={2}
                                             defaultZoom={1}
@@ -1486,7 +1499,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                                                     }}
                                                     onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
                                                 >
-                                                    <Group justify="apart" wrap={false}>
+                                                    <Group justify="apart" wrap={undefined}>
                                                         <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
                                                         {isProfessorOrAdmin() && (
                                                             <Text 
@@ -1569,7 +1582,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                                                     }}
                                                     onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
                                                 >
-                                                    <Group position="apart" wrap={false}>
+                                                    <Group justify="apart" wrap={undefined}>
                                                         <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
                                                         {isProfessorOrAdmin() && (
                                                             <Text 
@@ -1644,7 +1657,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                                         </Paper>
                                     )}
                                     {taskNodes.length === 0 && !addingTask ? (
-                                        <Text size="sm" color="dimmed" ta="center" mt="md">
+                                        <Text size="sm" c="dimmed" ta="center" mt="md">
                                             No tasks yet.
                                         </Text>
                                     ) : (
@@ -1663,7 +1676,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
                                                     }}
                                                     onClick={() => handleNodeClickRef.current && handleNodeClickRef.current(node.id)}
                                                 >
-                                                    <Group justify="apart" wrap={false}>
+                                                    <Group justify="apart" wrap={undefined}>
                                                         <Text size="sm" lineClamp={1} fw={500} style={{ flex: 1 }}>{node.data.title}</Text>
                                                         {isProfessorOrAdmin() && (
                                                             <Text 

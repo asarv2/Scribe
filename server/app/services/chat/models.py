@@ -34,6 +34,9 @@ async def fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id
     all_files = []
     all_documents = []
     all_google_file_ids = []
+    references = {}  # Initialize references dictionary outside the if block
+    references_reverse = {}  # Initialize references_reverse dictionary outside the if block
+    
     if file_ids:
         # Fetch files
         files_response = supabase.table("files").select("*").in_("id", file_ids).order("title", desc=False).execute()
@@ -53,7 +56,7 @@ async def fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id
             file_content = f"LECTURE {f.get('file_number')}: {f.get('title')}\n"
             
             for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
-                file_content += f"\SLIDE {doc.get('page')} (REFERENCE {references_reverse[doc.get('id')]})\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
+                file_content += f"\\SLIDE {doc.get('page')} (REFERENCE {references_reverse[doc.get('id')]})\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
             
             content.append(file_content)
         elif content_type == "textbook":

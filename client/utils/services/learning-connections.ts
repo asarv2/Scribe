@@ -1,5 +1,4 @@
-import { TypedSupabaseClient } from "../../types";
-import { Outcome, Objective, Lecture } from "../queries/get-connections";
+import { Lecture, Objective, Outcome, TypedSupabaseClient } from "../../types";
 
 // Interface for a connection suggestion
 export interface ConnectionSuggestion {
