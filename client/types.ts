@@ -40,6 +40,9 @@ export type OneDrive = Database[SchemaName]["Tables"]["onedrive"]["Row"];
 
 export type OneDriveFile = Database[SchemaName]["Tables"]["onedrive_files"]["Row"];
 
+export type Outcome = Database[SchemaName]["Tables"]["outcomes"]["Row"];
+export type Objective = Database[SchemaName]["Tables"]["objectives"]["Row"];
+
 export interface ChatMessage {
     id: number;
     title: string;

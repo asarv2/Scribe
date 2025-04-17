@@ -1,40 +1,4 @@
-import { TypedSupabaseClient } from "../../types";
-
-// Types for the outcomes and objectives
-export interface Outcome {
-  id: string;
-  class: string;
-  title: string;
-  description: string;
-  position_x: number;
-  position_y: number;
-  created_at?: string;
-}
-
-// Updated Objective interface to include connection handle information
-export interface Objective {
-  id: string;
-  class: string;
-  title: string;
-  description: string;
-  position_x: number;
-  position_y: number;
-  outcome_id: string | null;
-  connection_source_handle?: string | null;
-  connection_target_handle?: string | null;
-  created_at?: string;
-}
-
-// Lecture interface for task nodes
-export interface Lecture {
-  id: string;
-  class: string;
-  name: string;
-  description?: string;
-  position_x?: number;
-  position_y?: number;
-  created_at?: string;
-}
+import { Lecture, Objective, Outcome, TypedSupabaseClient } from "../../types";
 
 // Get all outcomes for a class
 export async function getOutcomes(client: TypedSupabaseClient, classId: string): Promise<Outcome[]> {
@@ -67,12 +31,7 @@ export async function getObjectives(client: TypedSupabaseClient, classId: string
     }
 
     // Map the data to ensure it has the expected properties even if columns don't exist yet
-    return (data || []).map(obj => ({
-      ...obj,
-      // Ensure these properties exist even if the columns don't
-      connection_source_handle: obj.connection_source_handle || null,
-      connection_target_handle: obj.connection_target_handle || null
-    }));
+    return data || [];
   } catch (err) {
     console.error("Exception fetching objectives:", err);
     return [];

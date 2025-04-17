@@ -78,15 +78,15 @@ class ChatProcessor(RunHooks):
         
         Use the create_figure, create_summary, and create_question tools to generate figures, summaries, and questions if needed. You can also handoff the task to the figure_agent, summary_agent, and question_agent to generate figures, summaries, and questions if needed."""
 
-        full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
+        self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
 
-        figure_system_prompt = get_figure_prompt(self.course_title)
-        question_system_prompt = get_question_prompt(self.course_title)
-        summary_system_prompt = get_summary_prompt(self.course_title)
+        self.figure_system_prompt = get_figure_prompt(self.course_title)
+        self.question_system_prompt = get_question_prompt(self.course_title)
+        self.summary_system_prompt = get_summary_prompt(self.course_title)
 
         self.figure_agent = Agent[Documents](
             name="Figure Agent",
-            instructions=figure_system_prompt,
+            instructions=self.figure_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -100,7 +100,7 @@ class ChatProcessor(RunHooks):
 
         self.summary_agent = Agent[Documents](
             name="Summary Agent",
-            instructions=summary_system_prompt,
+            instructions=self.summary_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -114,7 +114,7 @@ class ChatProcessor(RunHooks):
 
         self.question_agent = Agent[Documents](
             name="Question Agent",
-            instructions=question_system_prompt,
+            instructions=self.question_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -128,7 +128,7 @@ class ChatProcessor(RunHooks):
 
         self.chat_agent = Agent[Documents](
             name="Chat Agent",
-            instructions=full_system_prompt,
+            instructions=self.full_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -149,10 +149,10 @@ class ChatProcessor(RunHooks):
         )
 
         # defining the chat title agent
-        chat_title_system_prompt = get_chat_title_prompt(self.course_title)
+        self.chat_title_system_prompt = get_chat_title_prompt(self.course_title)
         self.chat_title_agent = Agent[Documents](
             name="Chat Title Agent",
-            instructions=chat_title_system_prompt,
+            instructions=self.chat_title_system_prompt,
             model=OpenAIChatCompletionsModel(
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -209,6 +209,8 @@ class ChatProcessor(RunHooks):
         """Format the conversation history into context"""
 
         context_summary = [{"role": "system", "content": f"Use the following context to guide your responses: {complete_context}"}] if add_current else [] # for title processing
+        # add one more prompt to the context 
+        # context_summary.append({"role": "system", "content": self.full_system_prompt})
         for i in range(0, len(self.chat_history)-1, 2):
             context_summary.append({"role": "user", "content": self.chat_history[i]})
             context_summary.append({"role": "assistant", "content": self.chat_history[i+1]})
@@ -282,7 +284,7 @@ class ChatProcessor(RunHooks):
 
             with trace("Chat", group_id=chat_id):
                 # need to add gemini files to context?
-                result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self)
+                result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self, max_turns=15)
 
                 async for event in result.stream_events():
                     if event.type == "raw_response_event" and isinstance(event.data, RawResponsesStreamEvent):
