@@ -17,12 +17,14 @@ interface FigureViewerProps {
   figure: Figure;
   classId: string;
   viewerMode: ViewerMode;
+  full?: boolean;
 }
 
 export default function FigureViewer({
   figure,
   classId,
   viewerMode,
+  full = false
 }: FigureViewerProps) {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -176,9 +178,9 @@ export default function FigureViewer({
     }
   };
 
-  return (figure.generation_status === 'idle' || figure.generation_status === 'generating' || figure.generation_status === 'error' || figure.generation_status === 'complete') && (
+  return (figure.generation_status === 'idle' || figure.generation_status === 'generating' || figure.generation_status === 'complete') && (
     <>
-      <Card p={0} w={viewerMode.open ? "70%" : "50%"} key={"figure-" + figure.id} shadow={"none"}>
+      <Card p={0} w={full ? "100%" : viewerMode.open ? "70%" : "50%"} key={"figure-" + figure.id} shadow={"none"}>
         {renderContent()}
       </Card>
 

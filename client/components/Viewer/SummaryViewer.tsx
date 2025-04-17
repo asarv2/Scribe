@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react';
 import { Document, Exercise, Summary } from '../../types';
-import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip } from '@mantine/core';
+import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip, SimpleGrid } from '@mantine/core';
 import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile } from '@tabler/icons-react';
 import Latex from '../Latex';
 import { getSummaryDownloadUrl } from '../../utils/services/images';
@@ -86,6 +86,20 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         } finally {
             setLoading(false);
         }
+    }
+
+    const renderFigure = (figureId: string) => {
+        const figure = figures?.find(f => f.id === figureId);
+        if (!figure) return null;
+        return (
+            <FigureViewer
+                key={figureId}
+                figure={figure}
+                classId={classId}
+                viewerMode={viewerMode}
+                full={true}
+            />
+        );
     }
 
     const renderContent = () => {
@@ -175,27 +189,21 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                         </Group>
 
                         <Box style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.preamble}</Latex>
-                            {splitTextByTags(splitTextByDocuments(
-                                summary.body,
-                                fileDocuments ?? [],
-                            )).map((segment, figIndex) => {
-                                if (segment.text && segment.text.trim() !== '') {
-                                    return (
-                                        <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{segment.text}</Latex>
-                                    )
-                                } else if (segment.figureId && figures) {
-                                    return (
-                                        figures.find(f => f.id === segment.figureId) && (
-                                            <Box key={segment.figureId} w={viewerMode.open ? "80%" : "100%"}>
-                                                <FigureViewer figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
-                                            </Box>
-                                        )
-                                    )
-                                }
-                            })}
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.conclusion}</Latex>
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(summary.preamble, fileDocuments ?? [])}</Latex>
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(summary.body, fileDocuments ?? [])}</Latex>
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(summary.conclusion, fileDocuments ?? [])}</Latex>
                         </Box>
+                        
+                        {summary.figures && summary.figures.length > 0 && (
+                            <Box mt="md">
+                                <Text fw={700}>Figures:</Text>
+                                <SimpleGrid cols={3}>
+                                    {summary.figures.map((figureId) => (
+                                        renderFigure(figureId)
+                                    ))}
+                                </SimpleGrid>
+                            </Box>
+                        )}
                     </>
                 );
             default:
