@@ -205,27 +205,35 @@ export type Database = {
       }
       codes: {
         Row: {
-          classes: string[]
+          class: string
           code: string
           created_at: string
           deleted: boolean
           id: string
         }
         Insert: {
-          classes?: string[]
+          class: string
           code: string
           created_at?: string
           deleted?: boolean
           id?: string
         }
         Update: {
-          classes?: string[]
+          class?: string
           code?: string
           created_at?: string
           deleted?: boolean
           id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "codes_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contact: {
         Row: {
@@ -790,7 +798,7 @@ export type Database = {
           content_type: Database["prod"]["Enums"]["content_type"]
           created_at: string
           deleted: boolean
-          expires: string
+          expires: string | null
           file_date: string
           file_names: string[]
           file_number: number
@@ -812,7 +820,7 @@ export type Database = {
           content_type?: Database["prod"]["Enums"]["content_type"]
           created_at?: string
           deleted?: boolean
-          expires?: string
+          expires?: string | null
           file_date?: string
           file_names?: string[]
           file_number?: number
@@ -834,7 +842,7 @@ export type Database = {
           content_type?: Database["prod"]["Enums"]["content_type"]
           created_at?: string
           deleted?: boolean
-          expires?: string
+          expires?: string | null
           file_date?: string
           file_names?: string[]
           file_number?: number
@@ -1387,6 +1395,7 @@ export type Database = {
           references: string[]
           response_url: string
           solution: string
+          title: string
         }
         Insert: {
           answers?: string[]
@@ -1412,6 +1421,7 @@ export type Database = {
           references?: string[]
           response_url?: string
           solution?: string
+          title?: string
         }
         Update: {
           answers?: string[]
@@ -1437,6 +1447,7 @@ export type Database = {
           references?: string[]
           response_url?: string
           solution?: string
+          title?: string
         }
         Relationships: [
           {
@@ -1553,6 +1564,7 @@ export type Database = {
           prompt: string
           references: string[]
           response_url: string
+          title: string
         }
         Insert: {
           body?: string
@@ -1573,6 +1585,7 @@ export type Database = {
           prompt?: string
           references?: string[]
           response_url?: string
+          title?: string
         }
         Update: {
           body?: string
@@ -1593,6 +1606,7 @@ export type Database = {
           prompt?: string
           references?: string[]
           response_url?: string
+          title?: string
         }
         Relationships: [
           {

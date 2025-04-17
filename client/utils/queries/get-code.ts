@@ -1,14 +1,15 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getCodes(client: TypedSupabaseClient) {
+export async function getCode(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
         .from("codes")
         .select("*")
+        .eq("class", classId)
         .eq("deleted", false)
         .order("created_at", {ascending: true})
     
-    if (error) {
-        throw new Error(error.message);
+    if (error || !data || data.length === 0) {
+        return null;
     }
-    return data;
+    return data[0];
 } 

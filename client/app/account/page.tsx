@@ -29,7 +29,8 @@ import {
     Textarea,
     Modal,
     Box,
-    Badge
+    Badge,
+    Tooltip
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import { IconMoon, IconSun, IconUpload, IconUser, IconX, IconCopy, IconTrash, IconRefresh, IconDotsVertical } from "@tabler/icons-react";
@@ -41,7 +42,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getAvatarUrl } from "@/utils/services/images";
-import { getCodes } from "@/utils/queries/get-codes";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getClasses } from "@/utils/queries/get-classes";
 import { createCode, deleteCode } from "@/utils/services/code";
@@ -93,11 +93,6 @@ export default function AccountPage() {
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
-    })
-
-    const { data: codes, isLoading: codesLoading } = useQuery({
-        queryKey: ["codes"],
-        queryFn: () => getCodes(supabase)
     })
 
     const { data: classes, isLoading: classesLoading } = useQuery({
@@ -198,51 +193,6 @@ export default function AccountPage() {
             setLoading(false);
         }
     }
-
-    const handleGenerateCode = async (classIds: string[]) => {
-        try {
-            if (!user) {
-                throw new Error("User not found");
-            }
-            const { success, error } = await createCode(user.id, classIds);
-            if (!success) {
-                throw new Error(error);
-            }
-            queryClient.invalidateQueries({ queryKey: ["codes"] });
-            notifications.show({
-                title: 'Success',
-                message: 'Code generated successfully',
-                color: 'green'
-            });
-        } catch (error: any) {
-            notifications.show({
-                title: 'Error',
-                message: error.message,
-                color: 'red'
-            });
-        }
-    };
-
-    const handleDeleteCode = async (codeId: string) => {
-        try {
-            const { success, error } = await deleteCode(codeId);
-            if (!success) {
-                throw new Error(error);
-            }
-            queryClient.invalidateQueries({ queryKey: ["codes"] });
-            notifications.show({
-                title: 'Success',
-                message: 'Code deleted successfully',
-                color: 'green'
-            });
-        } catch (error: any) {
-            notifications.show({
-                title: 'Error',
-                message: error.message,
-                color: 'red'
-            });
-        }
-    };
 
     const handlePrivacyUpdate = async (classId: string, privacyStatus: boolean) => {
         try {
@@ -374,13 +324,15 @@ export default function AccountPage() {
                                     </Stack>
                                 </Stack>
                                 <Box style={{ position: 'absolute', top: 0, right: 0 }} p="md">
-                                    <ActionIcon
-                                        variant="subtle"
-                                        color="red"
-                                        onClick={() => setDeleteModalOpened(true)}
+                                    <Tooltip label="Delete Account">
+                                        <ActionIcon
+                                            variant="subtle"
+                                            color="red"
+                                            onClick={() => setDeleteModalOpened(true)}
                                     >
-                                        <IconTrash size={18} />
-                                    </ActionIcon>
+                                            <IconTrash size={18} />
+                                        </ActionIcon>
+                                    </Tooltip>
                                 </Box>
                                 <Box style={{ position: 'absolute', top: 0, left: 0 }} p="md">
                                     {loadingProfile ? (

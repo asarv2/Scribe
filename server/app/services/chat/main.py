@@ -16,6 +16,7 @@ from agents.items import MessageOutputItem
 from app.services.chat.tools import create_figure, create_summary, create_mcq_question, create_frq_question, update_chat_title
 from app.services.chat.models import Documents
 from agents.items import TResponseInputItem
+from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
 
 # will have the model embed things like <FIGURE> or <REFERENCE> for all of the figures and references in the order that it is given in the list. 
 
@@ -86,7 +87,7 @@ class ChatProcessor(RunHooks):
 
         self.figure_agent = Agent[Documents](
             name="Figure Agent",
-            instructions=self.figure_system_prompt,
+            instructions=f"{RECOMMENDED_PROMPT_PREFIX} {self.figure_system_prompt}",
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -101,7 +102,7 @@ class ChatProcessor(RunHooks):
 
         self.summary_agent = Agent[Documents](
             name="Summary Agent",
-            instructions=self.summary_system_prompt,
+            instructions=f"{RECOMMENDED_PROMPT_PREFIX} {self.summary_system_prompt}",
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
@@ -116,7 +117,7 @@ class ChatProcessor(RunHooks):
 
         self.question_agent = Agent[Documents](
             name="Question Agent",
-            instructions=self.question_system_prompt,
+            instructions=f"{RECOMMENDED_PROMPT_PREFIX} {self.question_system_prompt}",
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,

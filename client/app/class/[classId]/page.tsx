@@ -1,5 +1,5 @@
 /**
- * app/classes/[classId].tsx
+ * app/class/[classId].tsx
  * Page for each of the classes
  * @AshokSaravanan222
  * 09.01.2024
@@ -388,41 +388,6 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
         return { value: todayMessages, diff };
     };
 
-    const calculateAverageRating = () => {
-        if (!chats) return { value: "0", diff: 0 };
-
-        // Get this month's ratings
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-
-        const thisMonthChats = chats.filter(chat =>
-            new Date(chat.created_at) >= monthStart && chat.rating
-        );
-
-        const thisMonthAvg = thisMonthChats.reduce((sum, chat) =>
-            sum + (chat.rating || 0), 0) / (thisMonthChats.length || 1);
-
-        // Get last month's ratings for comparison
-        const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const lastMonthChats = chats.filter(chat =>
-            new Date(chat.created_at) >= lastMonthStart &&
-            new Date(chat.created_at) < monthStart &&
-            chat.rating
-        );
-
-        const lastMonthAvg = lastMonthChats.reduce((sum, chat) =>
-            sum + (chat.rating || 0), 0) / (lastMonthChats.length || 1);
-
-        const diff = lastMonthAvg ?
-            Math.round(((thisMonthAvg - lastMonthAvg) / lastMonthAvg) * 100) :
-            0;
-
-        return {
-            value: thisMonthAvg.toFixed(1),
-            diff
-        };
-    };
-
     const calculateAverageTimeSpent = () => {
         if (!messages || !chats) return { value: "0m", diff: 100 };
 
@@ -493,12 +458,6 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
             icon: IconMessage,
             ...calculateMessagesToday(),
             diffLabel: 'Compared to yesterday'
-        },
-        {
-            title: 'Chat Rating',
-            icon: IconStar,
-            ...calculateAverageRating(),
-            diffLabel: 'Compared to last month'
         },
         {
             title: 'Average Time Spent',
@@ -676,28 +635,6 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                                     />
                                 </Stack>
                             )
-                        ) : (
-                            <Skeleton height={300} radius="md" />
-                        )}
-                    </Card>
-
-                    {/* Add a fourth card here if needed */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
-                        <Group justify="space-between" mb="md">
-                            <Text size="lg" fw={500}>Student Engagement</Text>
-                        </Group>
-                        {!isLoading ? (
-                            <BarChart
-                                h={300}
-                                data={studentMessagesData.slice(0, 10)}
-                                dataKey="student"
-                                series={[{ name: 'messages', color: 'green.6' }]}
-                                tickLine="y"
-                                gridAxis="xy"
-                                withLegend
-                                withTooltip
-                                barProps={{ radius: 4 }}
-                            />
                         ) : (
                             <Skeleton height={300} radius="md" />
                         )}

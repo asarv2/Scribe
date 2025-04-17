@@ -25,6 +25,14 @@ interface LatexProps {
     handleEnhancedDocumentClick?: (contextType: 'files', contextId: string, documentId?: string) => void;
 }
 
+// Define consistent colors for different content types
+const CONTENT_COLORS = {
+    lecture: 'blue',    // matches badge color
+    textbook: 'green',   // matches badge color
+    homework: 'orange', // matches badge color
+    other: 'violet',     // now matches badge color in ContextBadges
+} as const;
+
 export default function Latex({ children, classId, handleEnhancedDocumentClick }: LatexProps) {
     const supabase = useSupabaseBrowser();
 
@@ -154,10 +162,11 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                         pageRange.startDocument ?? undefined,
                         pageRange.range
                     );
+                    const file_type = files?.find(f => f.id === pageRange.startDocument?.file)?.content_type;
                     return (
                         <Text
                             key={pageRangeIndex}
-                            c="purple"
+                            c={CONTENT_COLORS[file_type ?? 'other']}
                             span
                             className="context-reference-link"
                             style={{ 

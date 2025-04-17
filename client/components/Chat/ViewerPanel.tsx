@@ -11,7 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import FileViewer from "@/components/Viewer/FileViewer";
 import { getFiles } from "@/utils/queries/get-files";
-import DeleteFileModal from "@/components/Delete/DeleteFileModal";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 
@@ -21,6 +20,13 @@ interface ViewerPanelProps {
     activeChat: ChatMessage;
     addContextToChat: (contextId: string) => void;
     classId: string;
+}
+
+const CONTENT_TYPES = {
+    lecture: 'Lecture',
+    textbook: 'Textbook',
+    homework: 'Homework',
+    other: 'File'
 }
 
 export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, classId, activeChat }: ViewerPanelProps) => {
@@ -60,6 +66,15 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
         }
     };
 
+    const renderExpiresAt = (fileId: string) => {
+        const file = files?.find(f => f.id === fileId);
+        return file && file.expires ? (
+            <Text size="xs" fw={500} c="red" truncate="end">
+                Expires at {new Date(file.expires).toLocaleString()}
+            </Text>
+        ) : null;
+    }
+
     return (
         <Card
             shadow="sm"
@@ -79,13 +94,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                         >
                             {getViewerTitle()}
                         </Text>
-                        {viewerMode.fileId && <Text
-                            size="xs"
-                            fw={500}
-                            c="red"
-                            truncate="end"
-                        > Expires at {files?.find(f => f.id === viewerMode.fileId)?.expires ? new Date(files?.find(f => f.id === viewerMode.fileId)?.expires ?? "").toLocaleString() : "No expiration date"}
-                        </Text>}
+                        {viewerMode.fileId && renderExpiresAt(viewerMode.fileId)}
                     </Stack>
                     <Tooltip label={`Close viewer`} openDelay={500} offset={8}>
                         <ActionIcon
@@ -111,7 +120,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                     {activeChat.context.includes(viewerMode.fileId ?? "") ? null : <Button
                         leftSection={<IconPlus size={16} />}
                         onClick={() => addContextToChat(viewerMode.fileId ?? "")}
-                    >Add File to Chat</Button>}
+                    >Add {CONTENT_TYPES[files?.find(f => f.id === viewerMode.fileId)?.content_type as keyof typeof CONTENT_TYPES]} to Chat</Button>}
                 </>
 
             </Stack>

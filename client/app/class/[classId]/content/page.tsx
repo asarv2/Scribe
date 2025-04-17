@@ -1,5 +1,5 @@
 /**
- * app/classes/c/[classId]/content/page.tsx
+ * app/class/[classId]/content/page.tsx
  * This page will be an interactive page allowing the professor to view the content for the class, which includes lectures, textbooks (and their chapters in particular), and homework assignments.
  * @AshokSaravanan222
  * 03/06/2025

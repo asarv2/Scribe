@@ -6,7 +6,6 @@ export async function getFiles(client: TypedSupabaseClient, classIds: string[]) 
         .select("*")
         .in("class", classIds)
         .eq("deleted", false)
-        .gte("expires", new Date().toISOString())
         .order("created_at", {ascending: false})
     
     if (error) {

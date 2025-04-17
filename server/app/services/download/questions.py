@@ -15,22 +15,8 @@ class QuestionsDownloader:
 
     def _clean_content(self, content):
         """Remove document tags from content"""
-        # List of tag patterns to remove
-        tag_patterns = [
-            r'<DOCUMENT_LECTURE>.*?</DOCUMENT_LECTURE>',
-            r'<DOCUMENT_CHAPTER>.*?</DOCUMENT_CHAPTER>',
-            r'<EXERCISE_CHAPTER>.*?</EXERCISE_CHAPTER>',
-            r'<PROBLEM_HOMEWORK>.*?</PROBLEM_HOMEWORK>',
-            r'<DOCUMENT_FILE>.*?</DOCUMENT_FILE>'
-        ]
-        
-        # Remove each pattern
-        cleaned_content = content
-        for pattern in tag_patterns:
-            cleaned_content = re.sub(pattern, '', cleaned_content, flags=re.DOTALL)
-
         # 1) Convert **bold** to \textbf{...}
-        cleaned_content = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", cleaned_content)
+        cleaned_content = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", content)
 
         # 2) Convert bullet lines (* something) into \item lines,
         #    wrapped by itemize environments. We'll do a simple pass:

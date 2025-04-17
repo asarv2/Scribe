@@ -147,6 +147,8 @@ async def create_summary(wrapper: RunContextWrapper[Documents], preamble: str, b
         The id of the summary.
     """
     try:
+        import re
+        
         # get the message id
         message_id = wrapper.context.message_id
         
@@ -160,6 +162,62 @@ async def create_summary(wrapper: RunContextWrapper[Documents], preamble: str, b
 
         # convert figure numbers to ids
         figure_ids = [wrapper.context.figures[figure_number - 1] for figure_number in figures]
+        
+        # Create figure number to figure ID mapping
+        figure_map = {str(figure_number): figure_ids[i] for i, figure_number in enumerate(figures)}
+        
+        # Create reference number to document ID mapping
+        reference_map = {str(i+1): ref for i, ref in enumerate(references) if ref is not None}
+        
+        # Function to replace figure references with proper tags
+        def replace_figures(text):
+            # Find all figure references like {1} or {1, 2, 3}
+            figure_patterns = re.findall(r'\{([0-9\s,]+)\}', text)
+            
+            for pattern in figure_patterns:
+                original = f"{{{pattern}}}"
+                # Split by comma and strip whitespace for each number
+                figure_nums = [num.strip() for num in pattern.split(',')]
+                
+                # Replace with appropriate tags
+                replacement = ""
+                for num in figure_nums:
+                    if num in figure_map:
+                        replacement += f"<FIGURE>{figure_map[num]}</FIGURE>"
+                
+                text = text.replace(original, replacement)
+            
+            return text
+        
+        # Function to replace document references with proper tags
+        def replace_references(text):
+            # Find all reference patterns like [1] or [1, 2, 3]
+            ref_patterns = re.findall(r'\[([0-9\s,]+)\]', text)
+            
+            for pattern in ref_patterns:
+                original = f"[{pattern}]"
+                # Split by comma and strip whitespace for each number
+                ref_nums = [num.strip() for num in pattern.split(',')]
+                
+                # Replace with appropriate tags
+                replacement = ""
+                for num in ref_nums:
+                    if num in reference_map:
+                        replacement += f"<DOCUMENT>{reference_map[num]}</DOCUMENT>"
+                
+                text = text.replace(original, replacement)
+            
+            return text
+        
+        # Apply replacements to all text sections
+        preamble = replace_figures(preamble)
+        preamble = replace_references(preamble)
+        
+        body = replace_figures(body)
+        body = replace_references(body)
+        
+        conclusion = replace_figures(conclusion)
+        conclusion = replace_references(conclusion)
         
         # Update the summary into the database
         summary_update_response = supabase.table('summaries').update({

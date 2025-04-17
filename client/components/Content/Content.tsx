@@ -7,7 +7,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Container, Flex, Group, Stack, Text, Progress, Tabs, Skeleton, TextInput, Select, ScrollArea, Tooltip, RingProgress, ActionIcon } from "@mantine/core";
-import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch, IconSend, IconFileAnalytics } from "@tabler/icons-react";
+import { IconUpload, IconRefresh, IconBook, IconNotebook, IconClipboard, IconSearch, IconSend, IconFileAnalytics, IconTrash } from "@tabler/icons-react";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { ClassLayout } from "@/components/Class/ClassLayout";
 import Image from "next/image";
@@ -23,7 +23,7 @@ import UploadFileButton from "../Buttons/UploadFileButton";
 import { File } from "@/types";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
-export default function Content({ classId, showDeleteButton = false, navigateHomeAfterDelete = true }: { classId: string, showDeleteButton?: boolean, navigateHomeAfterDelete?: boolean }) {
+export default function Content({ classId, navigateHomeAfterDelete = true }: { classId: string, navigateHomeAfterDelete?: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
 
@@ -60,8 +60,8 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
         queryFn: () => getFiles(supabase, [classId])
     });
 
-    const {data: documents, isLoading: loadingDocuments} = useQuery({
-        queryKey: ["fileDocuments", files],
+    const { data: documents, isLoading: loadingDocuments } = useQuery({
+        queryKey: ["fileDocuments", classId],
         queryFn: () => getFileDocuments(supabase, files?.map(file => file.id) ?? []),
         enabled: !!files
     });
@@ -88,7 +88,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 table: 'documents',
                 filter: `class=eq.${classId}`
             }, () => {
-                queryClient.invalidateQueries({ queryKey: ["documents", classId] });
+                queryClient.invalidateQueries({ queryKey: ["fileDocuments", classId] });
             })
             .subscribe();
 
@@ -170,7 +170,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
     const handleRetryProcessing = async (fileId: string) => {
         try {
             const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/parse/file`;
-            
+
             await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -178,7 +178,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                     file_id: fileId,
                 })
             });
-            
+
             queryClient.invalidateQueries({ queryKey: ["files", classId] });
         } catch (error) {
             console.error(`Error retrying file:`, error);
@@ -192,11 +192,11 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
             const file = files.find(f => f.id === fileId);
             if (!file || file.length === 0) return 0;
 
-            
-            const fileDocuments = documents.filter(doc => 
+
+            const fileDocuments = documents.filter(doc =>
                 doc.file === fileId && (uploading || doc.processed)
             );
-            
+
             return (fileDocuments.length / file.length) * 100;
         };
     }, [documents, files]);
@@ -204,16 +204,16 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
     // Image retrieval functions
     const getFileImage = (fileId: string) => {
         if (!fileId || !documents) return '/placeholder_image.svg';
-        
+
         const fileDocuments = documents.filter(doc => doc.file === fileId);
         if (!fileDocuments || fileDocuments.length === 0) return '/placeholder_image.svg';
-        
+
         const document = fileDocuments[0];
         if (!document) return '/placeholder_image.svg';
-        
+
         const file = files?.find(f => f.id === fileId);
         if (!file) return '/placeholder_image.svg';
-        
+
         return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${document.id}.png`;
     };
 
@@ -246,8 +246,8 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
     // Helper function to get appropriate delete modal
     const getDeleteModal = (file: File) => {
         const contentType = file.content_type;
-        
-        return <DeleteFileModal 
+
+        return <DeleteFileModal
             classId={classId}
             fileId={file.id}
             contentType={contentType}
@@ -262,7 +262,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
         if (file.parse_error) {
             return `Error: ${file.parse_error}`;
         }
-        
+
         switch (file.parse_status) {
             case 'parsing':
                 return `Parsing ${file.content_type} content...`;
@@ -274,171 +274,80 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 return 'Extracting content...';
             case 'uploading':
                 return getFileProgress(file.id, true) >= 100 ? 'Uploaded Content' : 'Uploading content...';
+            case 'complete':
+                return `Uploaded ${new Date(file.created_at ?? "").toLocaleDateString()}`;
             default:
                 return 'Processing content...';
         }
     };
 
     // Helper function to render file card
-    const renderFileCard = (file: File, isProcessing: boolean) => {
+    const renderFileCard = (file: File) => {
         const contentType = file.content_type;
-        
-        if (isProcessing) {
-            return (
-                <Card
-                    withBorder
-                    key={file.id}
-                    style={{
-                        width: '350px',
-                        height: '320px',
-                        flexShrink: 0,
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}
-                >
-                    <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                        {getDeleteModal(file)}
-                    </div>
-                    <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                        <Tooltip label="Retry Processing">
-                            <ActionIcon 
-                                variant="transparent" 
-                                onClick={() => handleRetryProcessing(file.id)}
-                                color={file.parse_status === 'error' ? 'red' : 'dark'}
-                            >
-                                <IconRefresh size={24} />
-                            </ActionIcon>
-                        </Tooltip>
-                    </div>
-                    <Stack style={{ width: '100%', height: '100%' }}>
-                        <Image
-                            src={getFileImage(file.id)}
-                            alt={`First page of ${file.title}`}
-                            width={320}
-                            height={200}
-                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                        />
-                        <Group align="flex-start" justify="space-between">
-                            <Stack gap="xs" style={{ flex: 1 }}>
-                                <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
-                                <Text size="sm" c={file.parse_error ? "red" : "dimmed"} lineClamp={2}>
-                                    {getContentStatusText(file)}
-                                </Text>
-                            </Stack>
+        return (
+            <Card
+                withBorder
+                key={file.id}
+                style={{
+                    width: '350px',
+                    height: '320px',
+                    flexShrink: 0,
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}
+            >
+                <Stack style={{ width: '100%', height: '100%' }}>
+                    <Image
+                        src={getFileImage(file.id)}
+                        alt={`First page of ${file.title}`}
+                        width={320}
+                        height={200}
+                        style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
+                    />
+                    <Group align="flex-start" justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                        <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
+                            <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
+                            <Text size="sm" c={file.parse_error ? "red" : "dimmed"} lineClamp={2} style={{ wordBreak: "break-word" }}>
+                                {getContentStatusText(file)}
+                            </Text>
+                        </Stack>
+                        <div style={{ flexShrink: 0 }}>
                             {file.parse_status === 'error' ? (
-                                <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryProcessing(file.id)}>
-                                    <IconRefresh size={20} />
-                                </ActionIcon>
+                                <Tooltip label="Retry Processing">
+                                    <ActionIcon variant="light" color="blue" size="lg" onClick={() => handleRetryProcessing(file.id)}>
+                                        <IconRefresh size={20} />
+                                    </ActionIcon>
+                                </Tooltip>
                             ) : file.parse_status === 'uploading' && getFileProgress(file.id, true) >= 100 ? (
                                 <Tooltip label={`Parse ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}>
                                     <ActionIcon variant="light" color="green" size="lg" onClick={() => handleRetryProcessing(file.id)}>
                                         <IconFileAnalytics size={20} />
                                     </ActionIcon>
                                 </Tooltip>
+                            ) : file.parse_status === 'uploading' || file.parse_status === 'parsing' ? (
+                                <Tooltip label={`Retry Processing`}>
+                                    <RingProgress
+                                        size={60}
+                                        thickness={4}
+                                        sections={[{ value: getFileProgress(file.id, file.parse_status !== 'parsing'), color: "blue" }]}
+                                        label={
+                                            <Text size="xs" ta="center">
+                                                {Math.round(getFileProgress(file.id, file.parse_status !== 'parsing'))}%
+                                            </Text>
+                                        }
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => handleRetryProcessing(file.id)}
+                                    />
+                                </Tooltip>
                             ) : (
-                                <RingProgress
-                                    size={60}
-                                    thickness={4}
-                                    sections={[{ value: getFileProgress(file.id, file.parse_status !== 'parsing'), color: "blue" }]}
-                                    label={
-                                        <Text size="xs" ta="center">
-                                            {Math.round(getFileProgress(file.id, file.parse_status !== 'parsing'))}%
-                                        </Text>
-                                    }
-                                />
+                                <Tooltip label={`Delete ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}>
+                                    {getDeleteModal(file)}
+                                </Tooltip>
                             )}
-                        </Group>
-                    </Stack>
-                </Card>
-            );
-        }
-        
-        // Completed file card
-        if (showDeleteButton) {
-            return (
-                <Card
-                    withBorder
-                    key={file.id}
-                    style={{
-                        width: '350px',
-                        height: '320px',
-                        flexShrink: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        position: 'relative'
-                    }}
-                >
-                    <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-                        {getDeleteModal(file)}
-                    </div>
-                    <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10 }}>
-                        <Tooltip label="Retry Processing">
-                            <ActionIcon 
-                                variant="transparent" 
-                                onClick={() => handleRetryProcessing(file.id)}
-                            >
-                                <IconRefresh size={24} />
-                            </ActionIcon>
-                        </Tooltip>
-                    </div>
-                    <Stack style={{ height: '100%' }}>
-                        <Image
-                            src={getFileImage(file.id)}
-                            alt={`First page of ${file.title}`}
-                            width={320}
-                            height={200}
-                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                        />
-                        <Stack gap="xs" mt="auto">
-                            <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
-                            <Text size="sm" c="dimmed">
-                                {contentType === 'homework' && documents ? 
-                                    `${documents.filter(d => d.file === file.id).length} exercises • ` : 
-                                    ''}
-                                Uploaded {new Date(file.created_at ?? "").toLocaleDateString()}
-                            </Text>
-                        </Stack>
-                    </Stack>
-                </Card>
-            );
-        }
-        
-        return (
-            <Link
-                href={`/class/${classId}/content/${file.id}`}
-                key={file.id}
-                style={{ textDecoration: 'none' }}
-            >
-                <Card
-                    withBorder
-                    style={{
-                        width: '350px',
-                        height: '320px',
-                        flexShrink: 0,
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}
-                >
-                    <Stack style={{ height: '100%' }}>
-                        <Image
-                            src={getFileImage(file.id)}
-                            alt={`First page of ${file.title}`}
-                            width={320}
-                            height={200}
-                            style={{ objectFit: "contain", borderRadius: "8px", margin: "0 auto" }}
-                        />
-                        <Stack gap="xs" mt="auto">
-                            <Text size="lg" fw={500} lineClamp={1}>{file.title}</Text>
-                            <Text size="sm" c="dimmed">
-                                {contentType === 'homework' && documents ? 
-                                    `${documents.filter(d => d.file === file.id).length} exercises • ` : 
-                                    ''}
-                                Uploaded {new Date(file.created_at ?? "").toLocaleDateString()}
-                            </Text>
-                        </Stack>
-                    </Stack>
-                </Card>
-            </Link>
+                        </div>
+                    </Group>
+                </Stack>
+            </Card>
         );
     };
 
@@ -446,7 +355,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
     const renderContentSection = (contentType: string, files: any[], filteredFiles: any[], search: string, setSearch: (value: string) => void, sortOrder: string, setSortOrder: (value: string) => void, uploadButton: JSX.Element) => {
         const isLoading = loadingFiles || loadingDocuments;
         const capitalizedType = contentType.charAt(0).toUpperCase() + contentType.slice(1) + (contentType === 'homework' ? '' : 's');
-        
+
         return (
             <Stack>
                 <Group justify="space-between" align="center">
@@ -493,8 +402,7 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                             <Text c="dimmed" ta="center">No {contentType}s found</Text>
                         ) : (
                             filteredFiles.map((file) => {
-                                const isProcessing = file.parse_status !== "complete";
-                                return renderFileCard(file, isProcessing);
+                                return renderFileCard(file);
                             })
                         )}
                     </Group>
@@ -514,11 +422,11 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 setLectureSearch,
                 lectureSortOrder,
                 setLectureSortOrder,
-                <UploadFileButton 
-                    classId={classId} 
+                <UploadFileButton
+                    classId={classId}
                     contentType="lecture"
-                    startParse={true} 
-                    fileNumber={lectures?.length ? lectures.length + 1 : 1} 
+                    startParse={true}
+                    fileNumber={lectures?.length ? lectures.length + 1 : 1}
                 />
             )}
 
@@ -531,11 +439,11 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 setTextbookSearch,
                 textbookSortOrder,
                 setTextbookSortOrder,
-                <UploadFileButton 
-                    classId={classId} 
+                <UploadFileButton
+                    classId={classId}
                     contentType="textbook"
-                    startParse={true} 
-                    fileNumber={textbooks?.length ? textbooks.length + 1 : 1} 
+                    startParse={true}
+                    fileNumber={textbooks?.length ? textbooks.length + 1 : 1}
                 />
             )}
 
@@ -548,11 +456,11 @@ export default function Content({ classId, showDeleteButton = false, navigateHom
                 setHomeworkSearch,
                 homeworkSortOrder,
                 setHomeworkSortOrder,
-                <UploadFileButton 
-                    classId={classId} 
+                <UploadFileButton
+                    classId={classId}
                     contentType="homework"
-                    startParse={true} 
-                    fileNumber={homeworks?.length ? homeworks.length + 1 : 1} 
+                    startParse={true}
+                    fileNumber={homeworks?.length ? homeworks.length + 1 : 1}
                 />
             )}
         </Stack>

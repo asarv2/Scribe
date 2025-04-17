@@ -1,6 +1,6 @@
 import React, { memo, useRef, useState, useEffect } from "react";
 import { ChatMessage, Document, File, ViewerMode } from "@/types";
-import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea } from "@mantine/core";
+import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
 import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash } from "@tabler/icons-react";
 import classes from './ChatInput.module.css';
@@ -22,6 +22,7 @@ import { getFileDocuments } from "@/utils/queries/get-file-docs";
 interface ChatInputProps {
   activeChat: ChatMessage;
   loading: boolean;
+  isInitializing?: boolean;
   chatId: string;
   classId: string;
   onSend: () => void;
@@ -52,6 +53,7 @@ export const ChatInput = memo(({
   setActiveChat,
   recordedVideos,
   setRecordedVideos,
+  isInitializing = false
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
@@ -1007,6 +1009,10 @@ export const ChatInput = memo(({
 
 
   const renderFileUpload = () => {
+    if (isInitializing) {
+      return <Skeleton height={36} width={36} radius="md" />;
+    }
+
     if (classData?.files_enabled) {
       return (
         <>
@@ -1029,6 +1035,17 @@ export const ChatInput = memo(({
 
   const renderLeftChatIcons = () => {
     const newChat = chatId === "new"
+
+    if (isInitializing || classDataLoading) {
+      return (
+        <>
+          <Skeleton height={36} width={80} radius="xl" />
+          <Skeleton height={36} width={80} radius="xl" />
+          <Skeleton height={36} width={80} radius="xl" />
+        </>
+      );
+    }
+
     return (
       <>
         {newChat && classData?.learn_mode_enabled && (isMobile ?
@@ -1121,6 +1138,16 @@ export const ChatInput = memo(({
   }
 
   const renderRightChatIcons = () => {
+    if (isInitializing) {
+      return (
+        <>
+          <Skeleton height={36} width={36} radius="md" />
+          <Skeleton height={36} width={36} radius="md" />
+          <Skeleton height={36} width={36} radius="md" />
+        </>
+      );
+    }
+
     return (
       <>
         {classData?.video_enabled && (
@@ -1130,8 +1157,8 @@ export const ChatInput = memo(({
               size="lg"
               color={isRecording && videoStream ? "red" : "blue"}
               variant="subtle"
-          >
-            <IconVideo size={20} />
+            >
+              <IconVideo size={20} />
             </ActionIcon>
           </Tooltip>
         )}
@@ -1274,13 +1301,13 @@ export const ChatInput = memo(({
         />
       </Box>}
 
-      {/* Show context hint only when no context is added */}
-      {!hasContext && (
-        <Text 
-          size="xs" 
-          c="dimmed" 
-          ta="center" 
-          style={{ 
+      {/* Show context hint only when no context is added and not initializing */}
+      {!hasContext && !isInitializing && (
+        <Text
+          size="xs"
+          c="dimmed"
+          ta="center"
+          style={{
             animation: 'fadeIn 0.5s ease-in-out',
             marginBottom: -5
           }}
@@ -1377,7 +1404,11 @@ export const ChatInput = memo(({
         )}
 
         <Box className={classes.inputBox}>
-          {!recordingMode ? (
+          {isInitializing ? (
+            <Box p={"xs"}>
+              <Skeleton height={80} />
+            </Box>
+          ) : !recordingMode ? (
             <Textarea
               ref={textareaRef}
               value={activeChat.prompt}
@@ -1393,6 +1424,7 @@ export const ChatInput = memo(({
                 input: classes.textareaInput,
                 wrapper: classes.textareaWrapper
               }}
+              disabled={isInitializing}
             />
           ) : (
             <Box

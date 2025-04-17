@@ -44,11 +44,8 @@ export function HomeHeader() {
     };
 
     const firstClass = getFilteredClasses()?.[0];
-
-
-    const toggleColorScheme = () => {
-        setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
-    };
+    const firstClassId = firstClass?.id;
+    const firstClassSuffix = (profile?.professor || profile?.admin) ? firstClassId : `${firstClassId}/chat/new`;
 
 
     return (
@@ -88,7 +85,7 @@ export function HomeHeader() {
                     </ActionIcon>
                 </Tooltip> */}
                 {user && profile ? (
-                    <Link href={`/class/${firstClass?.id}`}>
+                    <Link href={`/class/${firstClassSuffix}`}>
                         <Button size="sm">
                             Get Started
                         </Button>

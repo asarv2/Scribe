@@ -1,5 +1,5 @@
 /**
- * app/classes/c/[classId]/Learning/page.tsx
+ * app/class/[classId]/Learning/page.tsx
  * Page for professors to manage learning outcomes and objects and link them together
  * @AshokSaravanan222
  * 05.01.2025

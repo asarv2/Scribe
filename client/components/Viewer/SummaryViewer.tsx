@@ -12,12 +12,14 @@ import Latex from '../Latex';
 import { getSummaryDownloadUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
 import { ViewerMode } from '../../types';
-import { groupConsecutiveDocuments } from '@/utils/chat/chat-helpers';
+import { groupConsecutiveDocuments, splitTextByTags } from '@/utils/chat/chat-helpers';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getUser } from '@/utils/queries/get-user';
 import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
+import FigureViewer from './FigureViewer';
+import { getFigures } from '@/utils/queries/get-figures';
 
 interface SummaryViewerProps {
     classId: string;
@@ -41,6 +43,12 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user?.id
+    });
+
+    const { data: figures, isLoading: figuresLoading } = useQuery({
+        queryKey: ["summaryFigures", summary.id],
+        queryFn: () => getFigures(supabase, [summary.message].filter(Boolean) as string[]),
+        enabled: !!summary.message
     });
 
     const [loading, setLoading] = useState(false);
@@ -114,7 +122,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                 return (
                     <>
                         <Group justify="space-between">
-                            <Text c="dimmed">Generated at {new Date(summary.created_at).toLocaleString()}</Text>
+                            <Text c="dimmed">{summary.title}</Text>
                             {(profile?.admin || profile?.professor) ? <Menu position="bottom-end" shadow="md">
                                 <Menu.Target>
                                     <Tooltip label="Download Summary">
@@ -160,18 +168,32 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                                     size="md"
                                     href={getSummaryDownloadUrl(chatId, summary.id, 'pdf')}
                                     download
-                                >   
+                                >
                                     <IconDownload size={18} />
                                 </ActionIcon>
                             </Tooltip>}
                         </Group>
 
-                        <Box>
+                        <Box style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.preamble}</Latex>
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
+                            {splitTextByTags(splitTextByDocuments(
                                 summary.body,
                                 fileDocuments ?? [],
-                            )}</Latex>
+                            )).map((segment, figIndex) => {
+                                if (segment.text && segment.text.trim() !== '') {
+                                    return (
+                                        <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{segment.text}</Latex>
+                                    )
+                                } else if (segment.figureId && figures) {
+                                    return (
+                                        figures.find(f => f.id === segment.figureId) && (
+                                            <Box key={segment.figureId} w={viewerMode.open ? "80%" : "100%"}>
+                                                <FigureViewer figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
+                                            </Box>
+                                        )
+                                    )
+                                }
+                            })}
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{summary.conclusion}</Latex>
                         </Box>
                     </>
@@ -185,7 +207,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         }
     };
 
-    return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'error' || summary.generation_status === 'complete') && (
+    return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete') && (
         <Card withBorder p="md" w={"100%"}>
             {renderContent()}
         </Card>

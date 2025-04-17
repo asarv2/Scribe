@@ -1,5 +1,5 @@
 /**
- * app/classes/c/[classId]/grader/page.tsx
+ * app/class/[classId]/grader/page.tsx
  * Page for uploading assignments and grading them with AI.
  * @AshokSaravanan222
  * 05.01.2025

@@ -9,7 +9,7 @@ import useSupabaseServer from "../supabase/supabase-server";
 import crypto from "crypto";
 import { Code } from "@/types";
 
-export const createCode = async (userId: string, classIds: string[]) => {
+export const createCode = async (userId: string, classId: string) => {
     const supabase = await useSupabaseServer(cookies());
 
     try {
@@ -19,7 +19,7 @@ export const createCode = async (userId: string, classIds: string[]) => {
         // Generate a 10-character code
         let code = "";
         const timestamp = Date.now().toString();
-        const dataToHash = userId + timestamp + classIds.join(",");
+        const dataToHash = userId + timestamp + classId;
 
         // Create a seed based on user data
         const hash = crypto.createHash("sha256").update(dataToHash).digest();
@@ -37,7 +37,7 @@ export const createCode = async (userId: string, classIds: string[]) => {
             .from("codes")
             .insert({
                 code: formattedCode,
-                classes: classIds,
+                class: classId,
             })
             .select("*")
             .single();
@@ -65,12 +65,17 @@ export const deleteCode = async (codeId: string) => {
 
 export const checkCode = async (code: string): Promise<{ success: boolean, error: string, code: Code | null }> => {
     const supabase = await useSupabaseServer(cookies());
-    const { data, error } = await supabase.from("codes").select("*").eq("code", code).eq("deleted", false).single();
+    const { data, error } = await supabase.from("codes").select("*").eq("code", code);
     if (error) {
-        return { success: false, error: "Invalid code", code: null };
+        return { success: false, error: "Error checking code: " + error.message, code: null };
     } else {
-        if (data) {
-            return { success: true, error: "", code: data };
+        if (data && data.length == 1) {
+            const code = data[0];
+            if (code.deleted === false) {
+                return { success: true, error: "", code: code };
+            } else {
+                return { success: false, error: "Code has been deleted", code: null };
+            }
         } else {
             return { success: false, error: "Invalid code", code: null };
         }

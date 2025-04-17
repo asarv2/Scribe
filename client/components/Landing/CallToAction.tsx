@@ -42,9 +42,11 @@ export default function CallToAction() {
     };
 
     const firstClass = getFilteredClasses()?.[0];
+    const firstClassId = firstClass?.id;
+    const firstClassSuffix = (profile?.professor || profile?.admin) ? firstClassId : `${firstClassId}/chat/new`;
 
     return (
-        <Box 
+        <Box
             className={styles.container}
             style={{
                 padding: isMobile ? "60px 20px" : "100px 40px",
@@ -59,21 +61,11 @@ export default function CallToAction() {
                     <div className={styles.leftSection}>
                         <h2 className={styles.title}>Learn with Scribe Now</h2>
                         {user && profile ? (
-                            <>
-                                {profile?.professor || profile?.admin ? (
-                                    <Link href={`/class/${firstClass?.id}`}>
-                                        <Button size="lg" radius="md" className={styles.ctaButton}>
-                                            Get Started
-                                        </Button>
-                                    </Link>
-                                ) : (
-                                    <Link href={`/class/${firstClass?.id}/chat/new`}>
-                                        <Button size="lg" radius="md" className={styles.ctaButton}>
-                                            Get Started
-                                        </Button>
-                                    </Link>
-                                )}
-                            </>
+                            <Link href={`/class/${firstClassSuffix}`}>
+                                <Button size="lg" radius="md" className={styles.ctaButton}>
+                                    Get Started
+                                </Button>
+                            </Link>
                         ) : (
                             <Link href="/login">
                                 <Button size="lg" radius="md" className={styles.ctaButton}>
@@ -83,9 +75,9 @@ export default function CallToAction() {
                         )}
                     </div>
                     <div className={styles.rightSection}>
-                        <Image 
-                            src="/icon.png" 
-                            alt="Scribe Logo" 
+                        <Image
+                            src="/icon.png"
+                            alt="Scribe Logo"
                             className={styles.logo}
                         />
                     </div>

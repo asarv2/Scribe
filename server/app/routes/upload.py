@@ -275,6 +275,20 @@ async def process_file(
                 except Exception as e:
                     logger.warning(f"Could not determine media length: {str(e)}")
                     file_length = 1
+            else:
+                # Find how many pages the pdf is
+                if file_type_category == "pdf":
+                    try:
+                        import fitz  # PyMuPDF
+                        
+                        # Open the PDF and get page count
+                        with fitz.open(final_file_path) as pdf_document:
+                            file_length = len(pdf_document)
+                            logger.info(f"PDF has {file_length} pages")
+                    except Exception as e:
+                        logger.warning(f"Could not determine PDF page count: {str(e)}")
+                        file_length = 1
+                # For other file types, keep default length of 1
             
             # Update file status to extracting and set correct length
             supabase.table("files").update({
@@ -670,11 +684,11 @@ async def finalize_upload(request: Request):
         filename = metadata.get("filename", f"file-{file_id}")
         file_type = metadata.get("filetype", "application/octet-stream")
         class_id = metadata.get("classId")
-        profile_id = metadata.get("profileId")
+        profile_id = metadata.get("profileId", None)
         start_parse = metadata.get("startParse", "false").lower() == "true"
         content_type = metadata.get("contentType", "other")
         
-        if not class_id or not profile_id:
+        if not class_id:
             return JSONResponse(
                 status_code=400,
                 content={"status": "error", "message": "Missing required metadata (classId or profileId)"}
@@ -712,7 +726,8 @@ async def finalize_upload(request: Request):
             "length": 1,  # Will update this later for audio/video
             "parse_status": "uploading",
             "file_number": file_number,
-            "content_type": content_type
+            "content_type": content_type,
+            "expires": None
         }).execute()
 
         # set the new file id from supabase

@@ -21,11 +21,12 @@ import {
     TextInput,
     Textarea,
     Title,
-    useMantineTheme
+    useMantineTheme,
+    Tooltip
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconPlus, IconTrash, IconCheck } from "@tabler/icons-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -34,10 +35,12 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import { createClass, updateClassPrivacy, updateClassPrompts, deleteClass } from "@/utils/services/class";
 import { TimeInput } from "@mantine/dates";
-import { Class } from "@/types";
+import { Class, Code } from "@/types";
 import Link from "next/link";
 import { updateProfile } from "@/utils/services/profile";
 import { getClass } from "@/utils/queries/get-class";
+import { createCode, deleteCode } from "@/utils/services/code";
+import { getCode } from "@/utils/queries/get-code";
 
 interface ManagementProps {
     classId: string;
@@ -47,18 +50,9 @@ interface ManagementProps {
     showInitialClassInfo?: boolean;
 }
 
-export default function Management({ classId, showCreateClass = true, showExistingClasses = true, showOuterAccordion = true, showInitialClassInfo = true }: ManagementProps) {
-    const theme = useMantineTheme();
+export default function Management({ classId, showInitialClassInfo = true }: ManagementProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
-    const [opened, { open, close }] = useDisclosure(false);
-
-    // Form states for creating a new class
-    const [newClassName, setNewClassName] = useState("");
-    const [newClassCode, setNewClassCode] = useState("");
-    const [newClassDescription, setNewClassDescription] = useState("");
-    const [newClassTime, setNewClassTime] = useState("");
-    const [createLoading, setCreateLoading] = useState(false);
 
     // States for managing class prompts
     const [classPrompts, setClassPrompts] = useState<Record<string, {
@@ -94,8 +88,9 @@ export default function Management({ classId, showCreateClass = true, showExisti
         privateMode: boolean;
     }>>({});
 
-    const [deleteModalOpen, setDeleteModalOpen] = useState<string | null>(null);
-    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [copySuccess, setCopySuccess] = useState<boolean>(false);
+    const [generateLoading, setGenerateLoading] = useState<boolean>(false);
+    const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -112,6 +107,11 @@ export default function Management({ classId, showCreateClass = true, showExisti
         queryKey: ["class", classId],
         queryFn: () => getClass(supabase, classId),
         enabled: !!classId
+    });
+
+    const { data: code, isLoading: loadingCode } = useQuery({
+        queryKey: ["code", classId],
+        queryFn: () => getCode(supabase, classId),
     });
 
     // Initialize prompts and features when class data is loaded
@@ -238,52 +238,17 @@ export default function Management({ classId, showCreateClass = true, showExisti
         }
     };
 
-    const handleCreateClass = async () => {
-
-        if (!profile) {
-            throw new Error("Profile not found");
-        }
-
-        if (!newClassName || !newClassCode) {
-            throw new Error("Class name and code are required");
-        }
-
-        setCreateLoading(true);
+    const handleGenerateCode = async (classId: string) => {
+        setGenerateLoading(true);
         try {
-            const classId = await createClass(
-                newClassName,
-                newClassCode,
-                newClassDescription
-            );
-
-            if (!classId) {
-                throw new Error("Failed to create class");
-            } else {
-                // add class to profile if not admin
-                if (!profile.admin) {
-                    const { success: profileSuccess, error: profileError } = await updateProfile(profile.id, {
-                        classes: Array.from(new Set([...profile.classes, classId]))
-                    });
-
-                    if (!profileSuccess) {
-                        throw new Error(profileError);
-                    }
-                }
+            if (!user) {
+                throw new Error("User not found");
             }
-
-            queryClient.invalidateQueries({ queryKey: ["classes"] });
-            queryClient.invalidateQueries({ queryKey: ["profile"] });
-            notifications.show({
-                title: 'Success',
-                message: 'Class created successfully',
-                color: 'green'
-            });
-
-            // Reset form
-            setNewClassName("");
-            setNewClassCode("");
-            setNewClassDescription("");
-            close();
+            const { success, error } = await createCode(user.id, classId);
+            if (!success) {
+                throw new Error(error);
+            }
+            queryClient.invalidateQueries({ queryKey: ["code", classId] });
         } catch (error: any) {
             notifications.show({
                 title: 'Error',
@@ -291,8 +256,33 @@ export default function Management({ classId, showCreateClass = true, showExisti
                 color: 'red'
             });
         } finally {
-            setCreateLoading(false);
+            setGenerateLoading(false);
         }
+    };
+
+    const handleDeleteCode = async (codeId: string) => {
+        setDeleteLoading(true);
+        try {
+            const { success, error } = await deleteCode(codeId);
+            if (!success) {
+                throw new Error(error);
+            }
+            queryClient.invalidateQueries({ queryKey: ["code", classId] });
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
+
+    const handleCopyCode = () => {
+        navigator.clipboard.writeText(code?.code || '');
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000); // Reset after 2 seconds
     };
 
     const handleEditableChange = (classId: string, field: string, value: string) => {
@@ -305,7 +295,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
         }));
     };
 
-    const renderClassInfo = (classItem: Class, hasChanges: boolean) => {
+    const renderClassInfo = (classItem: Class, hasChanges: boolean, joinCode: Code | undefined | null) => {
         return (
             <Stack gap="xl">
                 {/* Class Details Section */}
@@ -331,6 +321,52 @@ export default function Management({ classId, showCreateClass = true, showExisti
                     />
 
                 </Stack>}
+
+                {/* Join Code Section */}
+                <Group gap="md" align="center">
+                    <TextInput
+                        label="Join Code"
+                        value={joinCode?.code || ''}
+                        placeholder="Click to generate code"
+                        readOnly
+                    />
+                    {joinCode ?
+                        <Group gap="xs" pt={24}>
+                            <Tooltip label={copySuccess ? "Copied!" : "Copy to clipboard"}>
+                                <ActionIcon 
+                                    onClick={handleCopyCode} 
+                                    variant="subtle" 
+                                    color={copySuccess ? "green" : "blue"}
+                                >
+                                    {copySuccess ? <IconCheck size={18} /> : <IconCopy size={18} />}
+                                </ActionIcon>
+                            </Tooltip>
+                            <Tooltip label="Delete Code">
+                                <ActionIcon 
+                                    onClick={() => handleDeleteCode(joinCode?.id || '')} 
+                                    variant="subtle" 
+                                    color="red"
+                                    loading={deleteLoading}
+                                    disabled={deleteLoading}
+                                >
+                                    <IconTrash size={18} />
+                                </ActionIcon>
+                            </Tooltip>
+                        </Group> :
+                        <Group gap="xs" pt={24}>
+                            <Tooltip label="Generate Code">
+                                <ActionIcon 
+                                    onClick={() => handleGenerateCode(classItem.id)} 
+                                    variant="subtle" 
+                                    color="green"
+                                    loading={generateLoading}
+                                    disabled={generateLoading}
+                                >
+                                    <IconPlus size={18} />
+                                </ActionIcon>
+                            </Tooltip>
+                        </Group>}
+                </Group>
 
                 {/* Chat Types Section */}
                 <Stack gap="md">
@@ -388,7 +424,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
                     </Group>
                 </Stack>
 
-                <Stack gap="md">
+                {/* <Stack gap="md">
                     <Text fw={500} size="sm">Enabled Chat Types</Text>
                     <Group>
                         <Switch
@@ -404,7 +440,7 @@ export default function Management({ classId, showCreateClass = true, showExisti
                             labelPosition="right"
                         />
                     </Group>
-                </Stack>
+                </Stack> */}
 
                 {/* Custom Prompts Section */}
                 <Stack gap="md">
@@ -454,47 +490,6 @@ export default function Management({ classId, showCreateClass = true, showExisti
             </Stack>
         );
     };
-
-    const renderCreateClass = () => {
-        return (
-            <Stack>
-                <Stack gap="md">
-                    <Group grow>
-                        <TextInput
-                            label="Class Name"
-                            placeholder="Introduction to Computer Science"
-                            value={newClassName}
-                            onChange={(e) => setNewClassName(e.currentTarget.value)}
-                            required
-                        />
-                        <TextInput
-                            label="Class Code"
-                            placeholder="CS101"
-                            value={newClassCode}
-                            onChange={(e) => setNewClassCode(e.currentTarget.value)}
-                            required
-                        />
-                    </Group>
-                    <Textarea
-                        label="Description"
-                        placeholder="A brief description of the class"
-                        value={newClassDescription}
-                        onChange={(e) => setNewClassDescription(e.currentTarget.value)}
-                        autosize
-                        minRows={3}
-                    />
-                </Stack>
-                <Group justify="flex-end">
-                    <Button
-                        onClick={handleCreateClass}
-                        loading={createLoading}
-                    >
-                        Create Class
-                    </Button>
-                </Group>
-            </Stack>
-        )
-    }
 
     // Check if user is professor or admin
     const canManageClasses = profile?.professor || profile?.admin;
@@ -549,5 +544,5 @@ export default function Management({ classId, showCreateClass = true, showExisti
 
     const hasChanges = promptsChanged || featuresChanged || chatTypesChanged;
 
-    return renderClassInfo(classData, hasChanges);
+    return renderClassInfo(classData, hasChanges, code);
 }

@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Document, Exercise, Question, ViewerMode } from '../../types';
-import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Stack, Radio, RadioGroup, Switch, Pagination, Tooltip, Modal } from '@mantine/core';
+import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Stack, Radio, RadioGroup, Switch, Pagination, Tooltip, Modal, Textarea } from '@mantine/core';
 import { IconDownload, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconEye, IconMaximize, IconEyeOff } from '@tabler/icons-react';
 import Latex from '../Latex';
 import { notifications } from '@mantine/notifications';
@@ -57,7 +57,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     });
 
     const { data: figures, isLoading: figuresLoading } = useQuery({
-        queryKey: ["figures"],
+        queryKey: ["questionFigures", ...questions.map(q => q.id)],
         queryFn: () => getFigures(supabase, questions.map(q => q.message).filter(Boolean) as string[])
     });
 
@@ -219,26 +219,29 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 {question.frq ?
                     <Box mt="md">
                         <Box mb="md">
-                            <Text fw={500} mb="xs">Your Answer:</Text>
-                            <textarea
+                            <Textarea
                                 value={frqAnswers[question.id] || ''}
                                 onChange={(e) => handleFrqAnswerChange(question.id, e.target.value)}
                                 style={{
                                     width: '100%',
-                                    minHeight: '120px',
-                                    padding: '10px',
                                     borderRadius: '4px',
                                     border: '1px solid #ddd',
-                                    fontFamily: 'inherit'
                                 }}
+                                minRows={4}
+                                size="md"
+                                autosize
                                 placeholder="Enter your answer here..."
                             />
                         </Box>
 
                         {checkedAnswers[question.id] && (
-                            <Box mt="lg" p="md" bg="rgba(0,0,0,0.03)" style={{ borderRadius: '8px' }}>
-                                <Text fw={700} mb="xs">Answer Submitted</Text>
-                                <Text size="sm">Your answer has been recorded. Check the solution to see the correct answer.</Text>
+                            <Box mt="lg" p="md" bg="rgba(0,200,0,0.1)" style={{ borderRadius: '8px' }}>
+                                <Text size="sm" mt="xs" ml="2rem" c={"green.7"}>
+                                    <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
+                                        question.solution,
+                                        fileDocuments ?? []
+                                    )}</Latex>
+                                </Text>
                             </Box>
                         )}
 
@@ -278,7 +281,10 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
                                         {showFeedback && (
                                             <Text size="sm" mt="xs" ml="2rem" c={isCorrectAnswer ? "green.7" : "red.7"}>
-                                                {question.explanations?.[index]}
+                                                <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
+                                                    question.explanations?.[index],
+                                                    fileDocuments ?? []
+                                                )}</Latex>
                                             </Text>
                                         )}
 

@@ -35,6 +35,13 @@ import FigureViewer from "@/components/Viewer/FigureViewer";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
+const CONTENT_COLORS = {
+  lecture: 'blue',    // matches badge color
+  textbook: 'green',   // matches badge color
+  homework: 'orange', // matches badge color
+  other: 'violet',     // now matches badge color in ContextBadges
+} as const;
+
 interface MessageListProps {
   chatId: string;
   classId: string;
@@ -206,6 +213,12 @@ export const MessageList = memo(({
         () => {
           queryClient.invalidateQueries({
             queryKey: ["figures"]
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["summaryFigures"]
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["questionFigures"]
           });
         }
       )
@@ -568,7 +581,7 @@ export const MessageList = memo(({
             <Text
               key={`file-${fileId}`}
               size="sm"
-              c="violet"
+              c={CONTENT_COLORS[file.content_type ?? 'other']}
               className="inline-reference file-reference"
               style={{ 
                 cursor: 'pointer',

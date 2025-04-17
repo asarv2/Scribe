@@ -8,11 +8,11 @@ export const splitTextByDocuments = (text: string, fileDocuments: Document[]): s
 
     // Extract all document tags and store them with their types
     const documentPatterns = [
-        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>/g, tagFormat: 'file' }
+        { regex: /<DOCUMENT>([^<]+)<\/DOCUMENT>/g, tagFormat: 'file' }
     ];
 
     // Find consecutive document tags followed by a period
-    const consecutiveDocTagsWithPeriod = /((?:<DOCUMENT_[A-Z]+>[^<]+<\/DOCUMENT_[A-Z]+>\s*)+)\./g;
+    const consecutiveDocTagsWithPeriod = /((?:<DOCUMENT>[^<]+<\/DOCUMENT>\s*)+)\./g;
     let match;
     while ((match = consecutiveDocTagsWithPeriod.exec(text)) !== null) {
         const tagGroup = match[1];
@@ -65,7 +65,7 @@ export const splitTextByDocuments = (text: string, fileDocuments: Document[]): s
 
     // Handle document tags followed by periods (non-consecutive case)
     const docPeriodPatterns = [
-        { regex: /<DOCUMENT_FILE>([^<]+)<\/DOCUMENT_FILE>\s*\./g, tagFormat: 'file' }
+        { regex: /<DOCUMENT>([^<]+)<\/DOCUMENT>\s*\./g, tagFormat: 'file' }
     ];
 
     // Process remaining single tags with periods
@@ -86,7 +86,7 @@ export const splitTextByDocuments = (text: string, fileDocuments: Document[]): s
 
     // Then process regular tags without periods
     // Group consecutive tags of the same type
-    const consecutiveDocTags = /((?:<DOCUMENT_([A-Z]+)>[^<]+<\/DOCUMENT_\2>\s*)+)/g;
+    const consecutiveDocTags = /((?:<DOCUMENT>[^<]+<\/DOCUMENT>\s*)+)/g;
     while ((match = consecutiveDocTags.exec(text)) !== null) {
         const tagGroup = match[1];
         const fullMatch = match[0];
