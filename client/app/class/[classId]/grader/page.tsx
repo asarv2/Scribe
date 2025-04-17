@@ -38,9 +38,8 @@ type UploadedFile = {
   gradingResult?: GradingResult;
 };
 
-export default function GraderPage({ params }: { params: { classId: string } }) {
-  // Access classId directly from params
-  const { classId } = params;
+export default function GraderPage({ params }: { params: Promise<{ classId: string }> }) {
+  const { classId } = use(params);
 
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
