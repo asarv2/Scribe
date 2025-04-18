@@ -69,14 +69,15 @@ export async function GET(request: Request) {
                     console.log(codeCheckError) // no need to log error, since we just won't add the class to the user's classes
                 }
             }
-            if (!firstClassId) {
-                const firstClass = filteredClasses[0];
-                firstClassId = firstClass?.id;
-            }
 
             const profile = await getProfile(supabase, user.id);
 
             const allClasses = Array.from(new Set([firstClassId, ...filteredClasses.map((c) => c.id), ...profile.classes])).filter((c) => c !== null);
+
+            if (!firstClassId) {
+                const firstClass = allClasses[0];
+                firstClassId = firstClass;
+            }
 
             const { success, error } = await updateProfile(user.id, {
                 professor: isProfessor || profile.professor,
