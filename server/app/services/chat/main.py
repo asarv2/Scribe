@@ -13,7 +13,7 @@ import google.generativeai as genai
 from google.generativeai.types import File
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent
 from agents.items import MessageOutputItem
-from app.services.chat.tools import create_figure, create_summary, create_question, update_chat_title
+from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question
 from app.services.chat.models import Documents
 from agents.items import TResponseInputItem
 
@@ -130,7 +130,7 @@ class ChatProcessor(RunHooks):
             model_settings=ModelSettings(
                 tool_choice="required"
             ),
-            tools=[create_figure, create_question],
+            tools=[create_figure, create_mcq_question, create_frq_question],
             handoff_description="For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
         )
 
@@ -147,7 +147,8 @@ class ChatProcessor(RunHooks):
             tools=[
                 create_figure,
                 create_summary,
-                create_question,
+                create_mcq_question,
+                create_frq_question,
             ],
             handoffs=[
                 self.figure_agent,
