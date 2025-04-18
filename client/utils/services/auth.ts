@@ -83,8 +83,7 @@ export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success
             scopes: 'profile email',
             queryParams: {
                 domain_hint: 'purdue.edu'
-            },
-            redirectTo: `${redirectTo}`
+            }
         },
     });
     if (error) {
