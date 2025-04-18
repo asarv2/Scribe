@@ -70,6 +70,18 @@ async def handle_chat(
             }).eq("id", message_id).execute()
             
             return chunk
+        
+        async def remove_callback(chunk: str):
+            total_response = total_response.replace(chunk, '')
+
+            # Update Supabase with the sanitized version
+            supabase.table("messages").update({
+                "bare_response": total_response,
+                "response": total_response,
+                "generation_status": "generating"
+            }).eq("id", message_id).execute()
+
+            return chunk
 
         # Initialize processor and response
         processor = ChatProcessor(
@@ -78,7 +90,8 @@ async def handle_chat(
             question=current_message['bare_question'],
             past_messages=past_messages,
             google_file_ids=google_file_ids,
-            stream_callback=update_callback
+            stream_callback=update_callback,
+            remove_callback=remove_callback
         )
 
         try:
