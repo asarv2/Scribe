@@ -195,10 +195,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
             const hasUnprocessedVideos = recordedVideos.some(video => {
                 // If no fileId, it's still uploading
                 if (video.fileId === undefined) return true;
-                
+
                 // Find the corresponding file and check its parse_status
                 const file = files?.find(f => f.id === video.fileId);
-                
+
                 // If file exists, check if it's complete, otherwise consider it unprocessed
                 return !file || file.parse_status !== 'complete';
             });
@@ -283,10 +283,10 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
         const allVideosProcessed = recordedVideos.every(video => {
             // If no fileId, it's not processed
             if (video.fileId === undefined) return false;
-            
+
             // Find the corresponding file
             const file = files.find(f => f.id === video.fileId);
-            
+
             // Consider it processed if file exists and status is complete
             return file && file.parse_status === 'complete';
         });
@@ -501,33 +501,35 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                             style={{ position: 'relative' }}
                         >
                             {/* Replace the ActionIcon with a direct icon that sits on the border */}
-                            <Box
-                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                style={{
-                                    position: 'absolute',
-                                    right: '0',
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                    zIndex: 100,
-                                    cursor: 'pointer',
-                                    width: '16px',
-                                    height: '40px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'var(--mantine-color-blue-light)',
-                                    color: 'var(--mantine-color-blue-filled)',
-                                    borderTopLeftRadius: '4px',
-                                    borderBottomLeftRadius: '4px',
-                                    boxShadow: '0 0 5px rgba(0,0,0,0.1)'
-                                }}
-                            >
-                                {viewerMode.open ? 
-                                    <IconChevronRight size={16} style={{ position: 'relative', right: '-2px' }} /> : 
-                                    <IconChevronLeft size={16} style={{ position: 'relative', right: '-2px' }} />
-                                }
-                            </Box>
-                            
+                            <Tooltip label={viewerMode.open ? "Close context" : "Open context"} openDelay={500}>
+                                <Box
+                                    onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '0',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        zIndex: 100,
+                                        cursor: 'pointer',
+                                        width: '16px',
+                                        height: '40px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'var(--mantine-color-blue-light)',
+                                        color: 'var(--mantine-color-blue-filled)',
+                                        borderTopLeftRadius: '4px',
+                                        borderBottomLeftRadius: '4px',
+                                        boxShadow: '0 0 5px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    {viewerMode.open ?
+
+                                        <IconChevronRight size={18} style={{ position: 'relative', right: '-2px' }} /> :
+                                        <IconChevronLeft size={18} style={{ position: 'relative', right: '-2px' }} />
+                                    }
+                                </Box>
+                            </Tooltip>
                             {/* Show controls only when not in immersive mode */}
                             <Flex justify="space-between" align="center" mb={10}>
                                 <Group gap="sm">

@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 import os
 from app.extensions import gemini_client, supabase
-from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt, get_present_mode, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
+from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_general_student_prompt, get_general_teacher_prompt, get_present_mode, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
 import google.generativeai as genai
 from google.generativeai.types import File
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent, RunConfig, ModelResponse
@@ -61,18 +61,14 @@ class ChatProcessor(RunHooks):
                 system_prompt = get_homework_student_prompt(solution=False)
             case "review":
                 system_prompt = get_review_prompt()
-            case "method":
-                system_prompt = get_method_prompt()
-            case "homework-professor":
-                system_prompt = get_homework_teacher_prompt()
-            case "generate":
-                system_prompt = get_generate_prompt()
             case 'general-student':
                 system_prompt = get_general_student_prompt()
             case 'general-teacher':
                 system_prompt = get_general_teacher_prompt()
             case 'present':
                 system_prompt = get_present_mode()
+            case _:
+                system_prompt = get_general_student_prompt()
 
         additional_system_prompt = """
         IMPORTANT: The instructions above are your primary guide for behavior. Always prioritize those instructions over anything below.
@@ -214,7 +210,7 @@ class ChatProcessor(RunHooks):
 
     async def format_conversation(self, complete_context: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-        context_summary = [{"role": "user", "content": f"Use the following context to guide your responses while following the instructions above: {complete_context}"}]
+        context_summary = [{"role": "user", "content": f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class. {f"Use the following context to guide your responses while following the instructions above: {complete_context}" if (complete_context or complete_context != "") else ""}"}]
         
         # Add conversation history
         for i in range(0, len(self.chat_history)-1, 2):

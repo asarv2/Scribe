@@ -6,6 +6,7 @@ import { getClasses } from "@/utils/queries/get-classes";
 import { upsertOneDrive } from "@/utils/services/microsoft";
 import { getOneDrive } from "@/utils/queries/get-onedrive";
 import { checkCode } from "@/utils/services/code";
+import { getProfile } from "@/utils/queries/get-profile";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -73,10 +74,12 @@ export async function GET(request: Request) {
                 firstClassId = firstClass?.id;
             }
 
-            const allClasses = Array.from(new Set([firstClassId, ...filteredClasses.map((c) => c.id)])).filter((c) => c !== null);
+            const profile = await getProfile(supabase, user.id);
+
+            const allClasses = Array.from(new Set([firstClassId, ...filteredClasses.map((c) => c.id), ...profile.classes])).filter((c) => c !== null);
 
             const { success, error } = await updateProfile(user.id, {
-                professor: isProfessor,
+                professor: isProfessor || profile.professor,
                 classes: allClasses,
                 first_name: formattedFirstName,
                 last_name: formattedLastName,

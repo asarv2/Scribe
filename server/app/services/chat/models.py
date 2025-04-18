@@ -163,12 +163,15 @@ async def fetch_figure_resources(supabase_client, figure_id):
     Returns:
         str: Formatted figure text
     """
+    figure_text = "<FIGURE_GENERATION>\n"
     figure_response = supabase_client.table("figures").select("*").eq("id", figure_id).execute()
     if not figure_response.data:
         return {"error": "Figure not found"}
     
     figure = figure_response.data[0]
-    return "Figure: " + figure.get("title", "") + "\n\nCode: " + figure.get("code", "")
+    figure_text += "Figure: " + figure.get("title", "") + "\n\nCode: " + figure.get("code", "")
+    figure_text += "</FIGURE_GENERATION>"
+    return figure_text
 
 async def fetch_summary_text(supabase_client, summary_id):
     """
@@ -181,12 +184,15 @@ async def fetch_summary_text(supabase_client, summary_id):
     Returns:
         str: Formatted summary text
     """
+    summary_text = "<SUMMARY_GENERATION>\n"
     summary_response = supabase_client.table("summaries").select("*").eq("id", summary_id).execute()
     if not summary_response.data:
         return {"error": "Summary not found"}
     
     summary = summary_response.data[0]
-    return "Summary: " + summary.get("title", "") + "\n\n" + summary.get("preamble", "") + "\n\n" + summary.get("body", "") + "\n\n" + summary.get("conclusion", "")
+    summary_text += "Summary: " + summary.get("title", "") + "\n\n" + summary.get("preamble", "") + "\n\n" + summary.get("body", "") + "\n\n" + summary.get("conclusion", "")
+    summary_text += "</SUMMARY_GENERATION>"
+    return summary_text
 
 async def fetch_question_text(supabase_client, question_id):
     """
@@ -204,7 +210,8 @@ async def fetch_question_text(supabase_client, question_id):
         return {"error": "Question not found"}
     
     question = question_response.data[0]
-    question_text = f"Question: {question.get('problem', 'No problem statement')}\n\n"
+    question_text = "<QUESTION_GENERATION>\n"
+    question_text += f"Question: {question.get('problem', 'No problem statement')}\n\n"
 
     # Handle MCQ questions
     if not question.get('frq', False):
@@ -232,7 +239,7 @@ async def fetch_question_text(supabase_client, question_id):
         if question.get('solution'):
             question_text += f"Solution:\n{question['solution']}\n\n"
     
-    return question_text
+    return question_text + "</QUESTION_GENERATION>"
 
 async def get_image_content(supabase_client, figure_id, class_id):
     """
