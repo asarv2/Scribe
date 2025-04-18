@@ -210,7 +210,12 @@ class ChatProcessor(RunHooks):
 
     async def format_conversation(self, complete_context: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-        context_summary = [{"role": "user", "content": f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class. {f"Use the following context to guide your responses while following the instructions above: {complete_context}" if (complete_context or complete_context != "") else ""}"}]
+        context_text = f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class."
+        
+        if complete_context and complete_context != "":
+            context_text += f" Use the following context to guide your responses while following the instructions above: {complete_context}"
+            
+        context_summary = [{"role": "user", "content": context_text}]
         
         # Add conversation history
         for i in range(0, len(self.chat_history)-1, 2):
