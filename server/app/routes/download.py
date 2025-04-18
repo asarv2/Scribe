@@ -46,37 +46,17 @@ async def download_summary_get(
             raise HTTPException(status_code=404, detail="Summary not found")
         
         summary_data = summary_response.data[0]
-        
-        # Get all summaries for this chat to determine position/number
-        all_summaries_response = supabase.table("summaries").select("*").in_("message", [message.get('id') for message in messages_response.data]).execute()
-        all_summaries = all_summaries_response.data
-        
-        # Sort all summaries by created_at to determine their position/number
-        all_summaries.sort(key=lambda s: s.get('created_at', ''))
-        
-        # Find the position of this summary
-        summary_position = None
-        for idx, s in enumerate(all_summaries):
-            if s.get('id') == summary_id:
-                summary_position = idx + 1
-                break
-        
-        # Create a suffix based on the summary position
-        suffix = f"Summary{summary_position}" if summary_position else "Summary"
-        
-        # Create document title
-        document_title = f"{chat_title} {suffix}"
+
+        title = summary_data.get('title', 'Summary')
         
         # Create Summary object
         summary = {
             "id": summary_id,
+            "title": title,
             "preamble": summary_data.get('preamble', ''),
             "content": summary_data.get('body', ''),  # Note: 'body' in DB, 'content' in Summary type
             "conclusion": summary_data.get('conclusion', ''),
-            "lecture_references": summary_data.get('lecture_references', []),
-            "chapter_references": summary_data.get('chapter_references', []),
-            "chapter_exercise_references": summary_data.get('chapter_exercise_references', []),
-            "homework_exercise_references": summary_data.get('homework_exercise_references', []),
+            "references": summary_data.get('references', []),
             "figures": summary_data.get('figures', [])
         }
         
@@ -87,20 +67,24 @@ async def download_summary_get(
         if format == 'pdf':
             filepath = downloader.download_pdf()
             media_type = 'application/pdf'
-            filename = f"{document_title}.pdf"
+            filename = f"{title}.pdf"
         elif format == 'latex':
             filepath = downloader.download_latex()
             media_type = 'application/x-tex'
-            filename = f"{document_title}.tex"
+            filename = f"{title}.tex"
         elif format == 'text':
             filepath = downloader.download_text()
             media_type = 'text/plain'
-            filename = f"{document_title}.txt"
+            filename = f"{title}.txt"
         else:
             raise HTTPException(status_code=400, detail="Invalid format")
         
+        # Add debug logging
+        print(f"Generated filepath: {filepath}")
+        print(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
+        
         if not filepath or not os.path.exists(filepath):
-            raise HTTPException(status_code=500, detail="Failed to generate file")
+            raise HTTPException(status_code=500, detail=f"Failed to generate file at {filepath}")
         
         # Clean filename for safe download
         filename = re.sub(r'[^\w\s.-]', '', filename).replace(' ', '_')
@@ -112,20 +96,10 @@ async def download_summary_get(
         )
 
     except Exception as e:
-        print("Error in download-summary-get function:", {
-            "name": type(e).__name__,
-            "message": str(e),
-            "stack": traceback.format_exc()
-        })
-
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": str(e),
-                "stack": traceback.format_exc(),
-                "name": type(e).__name__
-            }
-        )
+        # Add better error logging
+        print(f"Error in download-summary-get function: {str(e)}")
+        print(f"Traceback: {traceback.format_exc()}")
+        raise
 
 @router.get('/questions')
 async def download_questions_get(
@@ -183,16 +157,13 @@ async def download_questions_get(
                 # MCQ question
                 mcq_question = {
                     "id": question.get('id'),
+                    "title": question.get('title', ''),
                     "question_type": "mcq",  # Add explicit question_type field
                     "question": question.get('problem', ''),
                     "options": question.get('options', []),
                     "answers": question.get('answers', []),
                     "explanations": question.get('explanations', []),
-                    "tags": question.get('tags', []),
-                    "lecture_references": question.get('lecture_references', []),
-                    "chapter_references": question.get('chapter_references', []),
-                    "chapter_exercise_references": question.get('chapter_exercise_references', []),
-                    "homework_exercise_references": question.get('homework_exercise_references', []),
+                    "references": question.get('references', []),
                     "figures": question.get('figures', [])
                 }
                 questions_data.append([mcq_question])
@@ -200,14 +171,11 @@ async def download_questions_get(
                 # FRQ question
                 frq_question = {
                     "id": question.get('id'),
+                    "title": question.get('title', ''),
                     "question_type": "frq",  # Add explicit question_type field
                     "question": question.get('problem', ''),
                     "solution": question.get('solution', ''),
-                    "tags": question.get('tags', []),
-                    "lecture_references": question.get('lecture_references', []),
-                    "chapter_references": question.get('chapter_references', []),
-                    "chapter_exercise_references": question.get('chapter_exercise_references', []),
-                    "homework_exercise_references": question.get('homework_exercise_references', []),
+                    "references": question.get('references', []),
                     "figures": question.get('figures', [])
                 }
                 questions_data.append([frq_question])
@@ -216,20 +184,34 @@ async def download_questions_get(
         selected_question_numbers = [question_numbers.get(qid) for qid in question_ids if qid in question_numbers]
         selected_question_numbers.sort()
         
-        if len(selected_question_numbers) == 1:
-            # Single question
-            suffix = f"Q{selected_question_numbers[0]}"
-        elif len(selected_question_numbers) > 1:
-            # Multiple questions
-            suffix = f"Q{selected_question_numbers[0]}-Q{selected_question_numbers[-1]}"
+        # Get titles for the selected questions
+        question_titles = []
+        for question in questions_response.data:
+            # Use the title attribute instead of the problem text
+            title = question.get('title', '')
+            if not title:
+                # Fall back to problem text if title is empty
+                problem_text = question.get('problem', '')
+                title = problem_text[:30].strip()
+                if len(problem_text) > 30:
+                    title += "..."
+            question_titles.append(title)
+        
+        # Create a combined title
+        if len(question_titles) == 1:
+            combined_title = question_titles[0]
+        elif len(question_titles) == 2:
+            combined_title = f"{question_titles[0]} and {question_titles[1]}"
         else:
-            suffix = "Questions"
+            combined_title = f"{question_titles[0]}, {question_titles[1]} and more"
         
-        # Create document title
-        document_title = f"{chat_title} {suffix}"
+        # Create document title and directory ID
+        document_title = combined_title
+        # Use the first question ID as the directory ID if multiple questions
+        directory_id = question_ids[0] if question_ids else "unknown"
         
-        # Create downloader
-        downloader = QuestionsDownloader(questions_data, document_title)
+        # Create downloader with the directory ID
+        downloader = QuestionsDownloader(questions_data, document_title, directory_id)
         
         # Generate file based on format
         if format == 'pdf':
@@ -247,8 +229,12 @@ async def download_questions_get(
         else:
             raise HTTPException(status_code=400, detail="Invalid format")
         
+        # Add debug logging
+        print(f"Generated filepath: {filepath}")
+        print(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
+        
         if not filepath or not os.path.exists(filepath):
-            raise HTTPException(status_code=500, detail="Failed to generate file")
+            raise HTTPException(status_code=500, detail=f"Failed to generate file at {filepath}")
         
         # Clean filename for safe download
         filename = re.sub(r'[^\w\s.-]', '', filename).replace(' ', '_')

@@ -1,7 +1,7 @@
 # creating the tools
 from typing import List, Tuple, Union
 from agents import function_tool, RunContextWrapper
-from app.services.chat.models import MultipleChoiceQuestion, FreeResponseQuestion, Documents
+from app.services.chat.models import MultipleChoiceQuestion, FreeResponseQuestion, Documents, clean_references
 from app.extensions import supabase
 
 @function_tool  
@@ -180,35 +180,10 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
         # convert figure numbers to ids
         figure_ids = [wrapper.context.figures[figure_number - 1] for figure_number in figures]
         
-        # Create reference number to document ID mapping
-        reference_map = {str(i+1): ref for i, ref in enumerate(references) if ref is not None}
-        
-        # Function to replace document references with proper tags
-        def replace_references(text):
-            # Find all reference patterns like [1] or [1, 2, 3]
-            ref_patterns = re.findall(r'\[([0-9\s,]+)\]', text)
-            
-            for pattern in ref_patterns:
-                original = f"[{pattern}]"
-                # Split by comma and strip whitespace for each number
-                ref_nums = [num.strip() for num in pattern.split(',')]
-                
-                # Replace with appropriate tags
-                replacement = ""
-                for num in ref_nums:
-                    if num in reference_map:
-                        replacement += f"<DOCUMENT>{reference_map[num]}</DOCUMENT>"
-                
-                text = text.replace(original, replacement)
-            
-            return text
-        
         # Apply replacements to all text sections
-        preamble = replace_references(preamble)
-        
-        body = replace_references(body)
-        
-        conclusion = replace_references(conclusion)
+        preamble = clean_references(preamble, wrapper.context.references)
+        body = clean_references(body, wrapper.context.references)
+        conclusion = clean_references(conclusion, wrapper.context.references)
         
         # Update the summary into the database
         summary_update_response = supabase.table('summaries').update({
@@ -237,7 +212,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
         raise e
 
 @function_tool
-async def create_mcq_question(wrapper: RunContextWrapper[Documents], question: str, options: List[str], explanations: List[str], answer: str, references: List[int] = [], figures: List[int] = []) -> str:
+async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str, question: str, options: List[str], explanations: List[str], answer: str, references: List[int] = [], figures: List[int] = []) -> str:
     """Generates a question object given the MCQ question. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool. 
     
     This function will return the id of the question, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
@@ -245,6 +220,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], question: s
     Remember, do not repeat the question in a message after this tool is run, as this will be confusing to the user.
 
     Args:
+        title: The title of the question.
         question: The question.
         options: List of options for the question.
         explanations: List of explanations for the options.
@@ -272,6 +248,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], question: s
         figure_ids = [wrapper.context.figures[figure_number - 1] for figure_number in figures]
         
         question_data = {
+            "title": title,
             "problem": question,
             "options": options,
             "explanations": explanations,
@@ -301,16 +278,17 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], question: s
         raise e
 
 @function_tool
-async def create_frq_question(wrapper: RunContextWrapper[Documents], figures: List[int], question: str, answer: str, references: List[int]) -> str:
+async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str, question: str, answer: str, references: List[int], figures: List[int],) -> str:
     """Generates a question object given the FRQ question. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool. 
     
     This function will return the id of the question, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
 
     Args:
-        figures: List of figure numbers that were generated beforehand, that should be included for the given question.
+        title: The title of the question.
         question: The question.
         answer: The answer to the question.
         references: List of number references that were used.
+        figures: List of figure numbers that were generated beforehand, that should be included for the given question.
 
     Returns:
         The id of the question.
@@ -332,6 +310,7 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], figures: Li
         figure_ids = [wrapper.context.figures[figure_number - 1] for figure_number in figures]
 
         question_data = {
+                "title": title,
                 "problem": question,
                 "solution": answer,
                 "frq": True,
@@ -360,7 +339,7 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], figures: Li
 
 @function_tool
 async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -> str:
-    """Update the chat title. Will return a True as boolean if it was able to sucessfully update the chat title and the string will contain the id of the updated chat title. If uncesseccful, the boolean will be false adn the string will contain the error message.
+    """Update the chat title. Will return a True as boolean if it was able to sucessfully update the chat title and the string will contain the id of the updated chat title. If unsuccessful, the boolean will be false adn the string will contain the error message.
 
     Args:
         title: The title of the chat.
