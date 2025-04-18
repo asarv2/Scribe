@@ -11,11 +11,11 @@ from app.extensions import gemini_client, supabase
 from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_method_prompt, get_homework_teacher_prompt, get_generate_prompt, get_general_student_prompt, get_general_teacher_prompt, get_present_mode, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
 import google.generativeai as genai
 from google.generativeai.types import File
-from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent
-from agents.items import MessageOutputItem
+from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent, RunConfig, ModelResponse
 from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
+from openai.types.responses import ResponseTextDeltaEvent
 
 # will have the model embed things like <FIGURE> or <REFERENCE> for all of the figures and references in the order that it is given in the list. 
 
@@ -51,6 +51,7 @@ class ChatProcessor(RunHooks):
 
         # set the stream callback. Will be used to update the chat.
         self.stream_callback = stream_callback
+        self.remove_callback = remove_callback
 
         system_prompt = ""
         match self.prompt_type:
@@ -298,23 +299,21 @@ class ChatProcessor(RunHooks):
         """Process a single message with streaming"""
         try:
             conversation_context = await self.format_conversation(complete_context, documents=documents)
-            print("Conversation Context: ", conversation_context)
 
-            with trace("Chat", group_id=chat_id):
-                # need to add gemini files to context?
-                result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self, max_turns=15)
+            # need to add gemini files to context?
+            result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
+                workflow_name="Chat",
+                group_id=chat_id
+            ))
 
-                async for event in result.stream_events():
-                    if event.type == "raw_response_event" and isinstance(event.data, RawResponsesStreamEvent):
+            async for event in result.stream_events():
+                if event.type == "raw_response_event" and isinstance(event, RawResponsesStreamEvent):
+                    if isinstance(event.data, ResponseTextDeltaEvent):
                         chunk = event.data.delta
                         # we need to extract the references from the chunk
                         cleaned_chunk = clean_references(chunk, documents.references)
                         await self.stream_callback(cleaned_chunk)
-                
-                # add the final output to the stream
-                cleaned_output = clean_references(result.final_output, documents.references)
-                await self.stream_callback(cleaned_output)
-            
+
         except Exception as e:
             print(f"Error in process_message: {str(e)}")
             raise
