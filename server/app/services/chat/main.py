@@ -14,7 +14,7 @@ from google.generativeai.types import File
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent
 from agents.items import MessageOutputItem
 from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question
-from app.services.chat.models import Documents
+from app.services.chat.models import Documents, process_special_tags
 from agents.items import TResponseInputItem
 
 # will have the model embed things like <FIGURE> or <REFERENCE> for all of the figures and references in the order that it is given in the list. 
@@ -214,20 +214,21 @@ class ChatProcessor(RunHooks):
             print(f"Error retrieving file {file_name}: {str(e)}")
             return None
 
-    def format_conversation(self, complete_context: str, add_current=True) -> list[TResponseInputItem]:
+    async def format_conversation(self, complete_context: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-        
-        # ALWAYS start with the base system prompt as the very first message
-        context_summary = [{"role": "system", "content": self.full_system_prompt}]
-        
-        # Add context as secondary information AFTER the main system prompt
-        if complete_context and add_current:
-            context_summary.append({"role": "system", "content": f"Use the following context to guide your responses while following the instructions above: {complete_context}"})
+        context_summary = [{"role": "user", "content": f"Use the following context to guide your responses while following the instructions above: {complete_context}"}]
         
         # Add conversation history
         for i in range(0, len(self.chat_history)-1, 2):
-            context_summary.append({"role": "user", "content": self.chat_history[i]})
-            context_summary.append({"role": "assistant", "content": self.chat_history[i+1]})
+            user_message = "No user message"
+            if self.chat_history[i] != "":
+                user_message = self.chat_history[i]
+            context_summary.append({"role": "user", "content": user_message})
+
+            assistant_message = {"role": "assistant", "content": "No assistant message"}
+            if self.chat_history[i+1] != "":
+                assistant_message = await process_special_tags(self.chat_history[i+1], supabase, documents.class_id, documents.references)
+            context_summary.append(assistant_message)
         
         if add_current:
             # Getting current message ready
@@ -257,7 +258,8 @@ class ChatProcessor(RunHooks):
             }).execute()
             figure_id = figure_response.data[0]['id']
             # we will add this to the response text for now
-            await self.stream_callback(f"<FIGURE>{figure_id}</FIGURE>")
+            if agent.name == "Figure Agent" or agent.name == "Chat Agent":
+                await self.stream_callback(f"<FIGURE>{figure_id}</FIGURE>")
             # adding the figure id to the context
             wrapper.context.figures.append(figure_id)
         elif tool.name == "create_summary":
@@ -291,7 +293,7 @@ class ChatProcessor(RunHooks):
     ) -> None:
         """Process a single message with streaming"""
         try:
-            conversation_context = self.format_conversation(complete_context)
+            conversation_context = await self.format_conversation(complete_context, documents=documents)
             print("Conversation Context: ", conversation_context)
 
             with trace("Chat", group_id=chat_id):
@@ -319,10 +321,10 @@ class ChatProcessor(RunHooks):
         """Called when the agent produces a final output."""
         # updating the chat history
         self.chat_history.extend([self.current_question, output])
-        post_conversation_context = self.format_conversation("", add_current=False) # can add empty context since it will not be used
 
         # run the title agent on the output if it is the first message
         if len(self.chat_history) == 2:
+            post_conversation_context = await self.format_conversation("", wrapper.context, add_current=False) # can add empty context since it will not be used
             # adding the topic query to the context
             post_conversation_context.append({"role": "system", "content": "What is the topic of this chat?"})
             await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context)
