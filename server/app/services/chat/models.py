@@ -1,4 +1,5 @@
 # creating the output types
+import re
 from typing import List, Dict, Any
 from agents import AgentHooks, RunContextWrapper, Agent, Tool
 from agents.items import TResponseInputItem
@@ -26,6 +27,25 @@ class Documents(BaseModel):
     questions: List[str] = []
 
 
+
+def clean_references(text: str, references: Dict[int, str]) -> str:
+    # Find all reference patterns like [1] or [1, 2, 3]
+    ref_patterns = re.findall(r'\[([0-9\s,]+)\]', text)
+    
+    for pattern in ref_patterns:
+        original = f"[{pattern}]"
+        # Split by comma and strip whitespace for each number
+        ref_nums = [int(num.strip()) for num in pattern.split(',')]
+        
+        # Replace with appropriate tags
+        replacement = ""
+        for num in ref_nums:
+            if num in references:
+                replacement += f"<DOCUMENT>{references[num]}</DOCUMENT>"
+        
+        text = text.replace(original, replacement)
+    
+    return text
 
 async def fetch_chat_context(supabase, chat_id):
     # get all the messages in the chat

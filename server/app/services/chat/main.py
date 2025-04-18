@@ -14,7 +14,7 @@ from google.generativeai.types import File
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent
 from agents.items import MessageOutputItem
 from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question
-from app.services.chat.models import Documents, process_special_tags
+from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 
 # will have the model embed things like <FIGURE> or <REFERENCE> for all of the figures and references in the order that it is given in the list. 
@@ -28,7 +28,8 @@ class ChatProcessor(RunHooks):
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
         google_file_ids: List[str] = [],
-        stream_callback: Optional[Callable[[str], Awaitable[None]]] = None
+        stream_callback: Optional[Callable[[str], Awaitable[None]]] = None,
+        remove_callback: Optional[Callable[[str], Awaitable[None]]] = None
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -260,6 +261,7 @@ class ChatProcessor(RunHooks):
             # we will add this to the response text for now
             if agent.name == "Figure Agent" or agent.name == "Chat Agent":
                 await self.stream_callback(f"<FIGURE>{figure_id}</FIGURE>")
+            
             # adding the figure id to the context
             wrapper.context.figures.append(figure_id)
         elif tool.name == "create_summary":
@@ -303,10 +305,13 @@ class ChatProcessor(RunHooks):
                 async for event in result.stream_events():
                     if event.type == "raw_response_event" and isinstance(event.data, RawResponsesStreamEvent):
                         chunk = event.data.delta
-                        await self.stream_callback(chunk)
+                        # we need to extract the references from the chunk
+                        cleaned_chunk = clean_references(chunk, documents.references)
+                        await self.stream_callback(cleaned_chunk)
                 
                 # add the final output to the stream
-                await self.stream_callback(result.final_output)
+                cleaned_output = clean_references(result.final_output, documents.references)
+                await self.stream_callback(cleaned_output)
             
         except Exception as e:
             print(f"Error in process_message: {str(e)}")
@@ -326,5 +331,5 @@ class ChatProcessor(RunHooks):
         if len(self.chat_history) == 2:
             post_conversation_context = await self.format_conversation("", wrapper.context, add_current=False) # can add empty context since it will not be used
             # adding the topic query to the context
-            post_conversation_context.append({"role": "system", "content": "What is the topic of this chat?"})
+            post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})
             await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context)
