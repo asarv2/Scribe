@@ -576,6 +576,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                 activeChat={activeChat}
                                 setActiveChat={setActiveChat}
                                 loading={loading}
+                                isInitializing={isInitializing}
                                 classId={classId}
                                 chatId={chatId}
                                 onSend={handleChat}

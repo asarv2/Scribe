@@ -3,7 +3,7 @@ from datetime import datetime
 import traceback
 from app.extensions import supabase
 from app.services.chat.main import ChatProcessor
-from app.services.chat.models import Documents, fetch_file_resources
+from app.services.chat.models import Documents, fetch_file_resources, fetch_chat_context
 
 router = APIRouter()
 
@@ -44,8 +44,15 @@ async def handle_chat(
         # Get resource IDs from the message
         file_ids = current_message.get('files', []) or []
 
+        # Fetch chat context
+        chat_context = await fetch_chat_context(supabase, chat_id)
+        figures = chat_context.get('figures', [])
+        summaries = chat_context.get('summaries', [])
+        questions = chat_context.get('questions', [])
+        references = chat_context.get('references', [])
+
         # Fetch resources and their documents
-        file_resources = await fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id)
+        file_resources = await fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id, figures, summaries, questions, references)
         context = file_resources.get('context', '')
         documents = file_resources.get('documents', {})
         google_file_ids = file_resources.get('google_file_ids', [])

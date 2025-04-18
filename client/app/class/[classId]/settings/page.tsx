@@ -9,6 +9,7 @@ import { ClassLayout } from "@/components/Class/ClassLayout";
 import { Container, Group, Text, Paper } from "@mantine/core";
 import Management from "@/components/Account/Management";
 import { use } from "react";
+import DeleteClassModal from "@/components/Delete/DeleteClassModal";
 
 export default function SettingsPage({ params }: { params: Promise<{ classId: string }> }) {
   const { classId } = use(params);
@@ -17,6 +18,7 @@ export default function SettingsPage({ params }: { params: Promise<{ classId: st
     <Container fluid>
       <Group justify="space-between">
         <Text size="xl" fw={700}>Settings</Text>
+        <DeleteClassModal classId={classId} />
       </Group>
 
       <Paper p="md" withBorder mt="md">

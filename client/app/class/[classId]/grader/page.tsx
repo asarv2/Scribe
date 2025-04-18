@@ -1,5 +1,5 @@
 /**
- * app/classes/c/[classId]/grader/page.tsx
+ * app/class/[classId]/grader/page.tsx
  * Page for uploading assignments and grading them with AI.
  * @AshokSaravanan222
  * 05.01.2025
@@ -38,9 +38,8 @@ type UploadedFile = {
   gradingResult?: GradingResult;
 };
 
-export default function GraderPage({ params }: { params: { classId: string } }) {
-  // Access classId directly from params
-  const { classId } = params;
+export default function GraderPage({ params }: { params: Promise<{ classId: string }> }) {
+  const { classId } = use(params);
 
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

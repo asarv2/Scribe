@@ -29,7 +29,7 @@ class FileProcessor(object):
             name="Parse Agent",
             instructions=parse_system_prompt,
             model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
+                model="gemini-2.0-flash-lite",
                 openai_client=gemini_client,
             ),
             output_type=ParseOutput

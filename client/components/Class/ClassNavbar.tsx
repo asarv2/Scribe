@@ -70,30 +70,6 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
         }));
     };
 
-    // const generateClassData = (currentClassId: string | null) => {
-    //     const currentClass = getFilteredClasses().find(classItem => classItem.id === currentClassId);
-    //     return [{
-    //         label: currentClass?.class_code ?? 'Classes',
-    //         icon: IconBooks,
-    //         links: getFilteredClasses().map(classItem => ({
-    //             label: classItem.class_code ?? 'Select Class',
-    //             link: `/classes/c/${classItem.id}`,
-    //             isLink: true,
-    //         })).filter(link => link.label !== currentClass?.class_code),
-    //         opened: openSections['Classes'],
-    //         onToggle: () => toggleSection('Classes'),
-    //     }];
-    // };
-
-
-    // const links = classId ? [...generateClassData(classId).map((item) => (
-    //     <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
-    // )), <Divider m="sm" />, ...generateNavData().map((item) => (
-    //     <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
-    // ))] : generateClassData(classId).map((item) => (
-    //     <ClassNavbarLinksGroup {...item} key={item.label} isExpanded={isExpanded} />
-    // ));
-
     const links = generateNavData().map((item) => (
         <ClassNavbarLinksGroup 
             {...item} 

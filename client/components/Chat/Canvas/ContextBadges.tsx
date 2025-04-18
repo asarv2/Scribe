@@ -16,6 +16,14 @@ import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { RecordedVideo } from "./ChatCanvas";
 
+// Define consistent colors for different content types
+const CONTENT_COLORS = {
+    lecture: 'blue',    // matches badge color
+    textbook: 'green',   // matches badge color
+    homework: 'orange', // matches badge color
+    other: 'violet',     // now matches badge color in ContextBadges
+} as const;
+
 interface ContextBadgesProps {
     activeChat: ChatMessage;
     classId: string;
@@ -81,7 +89,7 @@ export const ContextBadges = memo(({
         return file && (
             <Badge
                 key={fileId}
-                color="violet"
+                color={CONTENT_COLORS[file.content_type]}
                 style={{ cursor: 'pointer' }}
                 leftSection={
                     showPreview ? <Avatar

@@ -8,16 +8,13 @@ import base64
 from typing import Optional, Dict, Any, Union
 import asyncio
 import concurrent.futures
+from app.agents.grader import get_grader_agent, GradingResult
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Add the agents directory to the path so we can import our grader agent
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
-
 try:
-    from server.agents.grader import get_grader_agent, GradingResult
     logger.info("Successfully imported grader agent")
 except ImportError as e:
     logger.error(f"Error importing grader agent: {str(e)}")

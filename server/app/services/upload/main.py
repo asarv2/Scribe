@@ -20,10 +20,9 @@ import threading
 from app.extensions import FILES_DIR, gemini_client
 import magic
 import shutil
-from agents import Agent, OpenAIChatCompletionsModel, Runner
-from app.services.upload.tools import create_exercise, create_homework, create_homework_problem, create_table_of_contents, create_lecture
-from app.services.upload.prompts import get_exercise_prompt, get_homework_problem_prompt, get_homework_prompt, get_table_of_contents_prompt, get_video_prompt, get_lecture_prompt, get_upload_prompt
+from agents import Runner, Agent, OpenAIChatCompletionsModel
 from app.config import model_manager
+from app.services.upload.prompts import get_video_prompt
 
 load_dotenv()
 
@@ -46,70 +45,7 @@ class FileExtractor:
         
         logger.info(f"Initialized FileExtractor for file: {file_path} (type: {self.file_type})")
 
-        # getting prompts
-        upload_system_prompt = get_upload_prompt()
         video_system_prompt = get_video_prompt()
-        homework_system_prompt = get_homework_prompt()
-        chapter_system_prompt = get_exercise_prompt()
-        textbook_system_prompt = get_table_of_contents_prompt()
-        lecture_system_prompt = get_lecture_prompt()
-
-        self.lecture_agent = Agent(
-            name="Lecture Agent",
-            instructions=lecture_system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            tools=[create_lecture]
-        )
-
-        # creating agents to upload the differnt types of files, like homeworks or textbooks
-        self.homework_problem_agent = Agent(
-            name="Homework Problem Agent",
-            instructions=homework_system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            tools=[create_homework_problem]
-        )
-
-        self.homework_agent = Agent(
-            name="Homework Agent",
-            instructions=homework_system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            tools=[create_homework, self.homework_problem_agent.as_tool(
-                tool_name="Delegated Homework Problem Parser",
-                tool_description="Parses the homework file and creates homework problems. Useful if your task load is too high to handle finding the homework problems yourself.",
-            ), create_homework_problem]
-        )
-
-        self.chapter_agent = Agent(
-            name="Chapter Agent",
-            instructions=chapter_system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            tools=[create_exercise]
-        )
-
-        self.textbook_agent = Agent(
-            name="Textbook Agent",
-            instructions=textbook_system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            tools=[create_table_of_contents, self.chapter_agent.as_tool(
-                tool_name="Delegated Chapter Parser",
-                tool_description="Parses the textbook file and creates chapters. Useful if your task load is too high to handle finding the chapters yourself.",
-            ), create_exercise]
-        )
 
         # creating video agent for title generation
         self.video_agent = Agent(
@@ -119,30 +55,6 @@ class FileExtractor:
                 model="gemini-2.0-flash",
                 openai_client=gemini_client,
             ),
-        )
-
-        # creating general upload agent
-        self.upload_agent = Agent(
-            name="Upload Agent",
-            instructions=upload_system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            handoffs=[
-                self.lecture_agent.as_tool(
-                    tool_name="Delegated Lecture Parser",
-                    tool_description="Parses the lecture file and creates lectures. Useful if your task load is too high to handle finding the lectures yourself.",
-                ),
-                self.textbook_agent.as_tool(
-                    tool_name="Delegated Textbook Parser",
-                    tool_description="Parses the textbook file and creates textbooks. Useful if your task load is too high to handle finding the textbooks yourself.",
-                ),
-                self.homework_agent.as_tool(
-                    tool_name="Delegated Homework Parser",
-                    tool_description="Parses the homework file and creates homework problems. Useful if your task load is too high to handle finding the homework problems yourself.",
-                ),
-            ]
         )
 
     def _determine_file_type(self) -> str:
@@ -562,6 +474,10 @@ class FileExtractor:
     def upload_to_supabase(self, item: Dict[str, Any], class_id: str, file_id: str, supabase: Client):
         """Upload extracted content to Supabase"""
         try:
+            # get file response from supabase
+            file_response = supabase.table("files").select("*").eq("id", file_id).execute()
+            file_data = file_response.data[0]
+
             # First, upload the whole file to Gemini if it's audio or video and we don't already have file names
             whole_file_name = None
             if self.file_type in ['audio', 'video']:
@@ -604,7 +520,7 @@ class FileExtractor:
                     'page': item['page'],
                     'file': file_id,
                     'text': item.get('text', ''),
-                    'processed': False
+                    'processed': file_data.get('content_type', 'other') == 'textbook' # we mark the textbook as processed
                 }
             elif item['type'] in ['audio_chunk', 'video_chunk']:
                 # For audio/video chunks, we don't need to upload individual chunks anymore
@@ -622,7 +538,7 @@ class FileExtractor:
                     'page': 1,
                     'file': file_id,
                     'text': '',
-                    'processed': False
+                    'processed': file_data.get('content_type', 'other') == 'textbook' # we mark the textbook as processed
                 }
             else:
                 logger.warning(f"Unsupported content type: {item['type']}")

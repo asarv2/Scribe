@@ -5,21 +5,12 @@ import { updateProfile } from "@/utils/services/profile";
 import { getClasses } from "@/utils/queries/get-classes";
 import { upsertOneDrive } from "@/utils/services/microsoft";
 import { getOneDrive } from "@/utils/queries/get-onedrive";
-
-/* TODO:
-    - remove the check-alias function, just go by domain. Maybe not even need email.
-*/
-
-type DirectoryUser = {
-    name: string;
-    alias: string | null;
-    campus: string | null;
-    title: string | null;
-};
+import { checkCode } from "@/utils/services/code";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
+    const classCode = searchParams.get("class_code");
 
     if (code) {
         const supabase = await useSupabaseServer(cookies());
@@ -29,12 +20,21 @@ export async function GET(request: Request) {
         );
         const session = data.session;
         if (
-            !error && session && session.provider_token &&
-            session.provider_refresh_token && session.expires_at
+            !error && session
         ) {
             // Retrieve the user information from the session
             const user = session.user;
+            const name = user.user_metadata.full_name ?? "Full Name";
             const email = user.email;
+
+            const splitNames = name.split(" ");
+            const firstName = splitNames[0].toLowerCase();
+            const formattedFirstName = firstName.charAt(0).toUpperCase() +
+                firstName.slice(1);
+            const lastName = splitNames[splitNames.length - 1]
+                .toLowerCase();
+            const formattedLastName = lastName.charAt(0).toUpperCase() +
+                lastName.slice(1);
 
             // Verify the email domain
             if (!email?.endsWith("@purdue.edu")) {
@@ -42,88 +42,68 @@ export async function GET(request: Request) {
                 return NextResponse.redirect(`${origin}/auth/unauthorized`);
             }
 
-            const privateKey = process.env.PRIVATE_KEY;
-            const { data, error } = await supabase.functions.invoke(
-                "check-alias",
-                {
-                    headers: {
-                        "x-private-key": privateKey ?? "",
-                    },
-                    body: { alias: email.split("@")[0] },
-                },
+            const classes = await getClasses(supabase);
+
+            // professor status update
+            const isProfessor = classes.some((c) =>
+                c.professors.includes(email)
             );
 
-            if (error) {
+            const filteredClasses = isProfessor
+                ? classes.filter((c) => c.professors.includes(email))
+                : classes.filter((c) => c.students.includes(email));
+
+            let firstClassId = null;
+            if (classCode) {
+                try {
+                    const { success, error: codeError, code: validatedCode } =
+                        await checkCode(classCode);
+
+                    if (success && validatedCode) {
+                        firstClassId = validatedCode.class;
+                    } else {
+                        console.log("Invalid code") // no need to log error, since we just won't add the class to the user's classes
+                    }
+                } catch (codeCheckError) {
+                    console.log(codeCheckError) // no need to log error, since we just won't add the class to the user's classes
+                }
+            }
+            if (!firstClassId) {
+                const firstClass = filteredClasses[0];
+                firstClassId = firstClass?.id;
+            }
+
+            const allClasses = Array.from(new Set([firstClassId, ...filteredClasses.map((c) => c.id)])).filter((c) => c !== null);
+
+            const { success, error } = await updateProfile(user.id, {
+                professor: isProfessor,
+                classes: allClasses,
+                first_name: formattedFirstName,
+                last_name: formattedLastName,
+            });
+            if (!success || error) {
                 console.error(error);
             }
 
-            const users = data as DirectoryUser[];
-            const directoryUser = users.find((u) =>
-                u.alias === email.split("@")[0]
-            );
-
-            const classes = await getClasses(supabase);
-
-            if (directoryUser) {
-                const splitNames = directoryUser.name.split(" ");
-                const firstName = splitNames[0].toLowerCase();
-                const formattedFirstName = firstName.charAt(0).toUpperCase() +
-                    firstName.slice(1);
-                const lastName = splitNames[splitNames.length - 1]
-                    .toLowerCase();
-                const formattedLastName = lastName.charAt(0).toUpperCase() +
-                    lastName.slice(1);
-                // professor status update
-                const isProfessor = (directoryUser.title !== null &&
-                    directoryUser.title.toLowerCase().includes(
-                        "professor",
-                    )) || classes.some((c) => c.professors.includes(email));
-
-                // we need to add onedrive data if they are a professor
-                if (isProfessor) {
-                    // check if they already have onedrive data
-                    const existingOneDrive = await getOneDrive(
-                        supabase,
-                        user.id,
-                    );
-                    const onedrive = await upsertOneDrive(
-                        user.id,
-                        session.provider_token,
-                        session.provider_refresh_token,
-                        new Date(session.expires_at).toISOString(),
-                        existingOneDrive?.id,
-                    );
-                    if (!onedrive) {
-                        console.error(onedrive);
-                    }
-                }
-
-                const filteredClasses = isProfessor
-                    ? classes.filter((c) => c.professors.includes(email))
-                    : classes.filter((c) => c.students.includes(email));
-
-                const { success, error } = await updateProfile(user.id, {
-                    first_name: formattedFirstName,
-                    last_name: formattedLastName,
-                    professor: isProfessor,
-                    classes: filteredClasses.map((c) => c.id),
-                });
-                if (!success || error) {
-                    console.error(error);
-                }
-            }
+            const firstClassSuffix = isProfessor
+                ? firstClassId
+                : `${firstClassId}/chat/new`;
 
             // Redirect the user based on environment and headers
             const forwardedHost = request.headers.get("x-forwarded-host"); // original host before load balancer
             const isLocalEnv = process.env.NODE_ENV === "development";
             if (isLocalEnv) {
-                return NextResponse.redirect(`${origin}/classes`);
+                return NextResponse.redirect(
+                    `${origin}/class/${firstClassSuffix}`,
+                );
             } else if (forwardedHost) {
                 return NextResponse.redirect(
-                    `https://${forwardedHost}/classes`,
+                    `https://${forwardedHost}/class/${firstClassSuffix}`,
                 );
             } else {
-                return NextResponse.redirect(`${origin}/classes`);
+                return NextResponse.redirect(
+                    `${origin}/class/${firstClassSuffix}`,
+                );
             }
         }
     }

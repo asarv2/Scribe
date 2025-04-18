@@ -44,6 +44,8 @@ export default function Hero() {
     };
 
     const firstClass = getFilteredClasses()?.[0];
+    const firstClassId = firstClass?.id;
+    const firstClassSuffix = (profile?.professor || profile?.admin) ? firstClassId : `${firstClassId}/chat/new`;
 
     return (
         <Box
@@ -75,29 +77,17 @@ export default function Hero() {
                     </Text>
                     <Group mt="md" justify="center" className={styles.ctaButtonContainer}>
                         {user && profile ? (
-                            <>
-                                {profile?.professor || profile?.admin ? (
-                                    <Link href={`/class/${firstClass?.id}`}>
-                                        <Button size="lg" radius="md" className={styles.ctaButton}>
-                                            Get Started
-                                        </Button>
-                                    </Link>
-                                ) : (
-                                    <Link href={`/class/${firstClass?.id}/chat/new`}>
-                                        <Button size="lg" radius="md" className={styles.ctaButton}>
-                                            Get Started
-                                        </Button>
-                                    </Link>
-                                )}
-                            </>
+                            <Link href={`/class/${firstClassSuffix}`}>
+                                <Button size="lg" radius="md" className={styles.ctaButton}>
+                                    Get Started
+                                </Button>
+                            </Link>
                         ) : (
-                            <>
-                                <Link href="/login">
-                                    <Button size="lg" radius="md" className={styles.ctaButton}>
-                                        Get Started
+                            <Link href="/login">
+                                <Button size="lg" radius="md" className={styles.ctaButton}>
+                                    Get Started
                                     </Button>
-                                </Link>
-                            </>
+                            </Link>
                         )}
                     </Group>
                 </Stack>

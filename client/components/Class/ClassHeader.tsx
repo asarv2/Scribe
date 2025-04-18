@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 
-import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text } from '@mantine/core';
+import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -25,8 +25,12 @@ import { AccountMenu } from '../AccountMenu';
 import { Profile } from '@/types';
 import { Class } from '@/types';
 import cx from 'clsx';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import FeedbackModal from '../FeedbackModal';
+import Management from '../Account/Management';
+import { createClass } from '@/utils/services/class';
+import { updateProfile } from '@/utils/services/profile';
+import { checkCode } from '@/utils/services/code';
 interface ClassHeaderProps {
     classId: string
     showClasses: boolean
@@ -35,8 +39,17 @@ interface ClassHeaderProps {
 
 export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassHeaderProps) {
     const supabase = useSupabaseBrowser();
+    const queryClient = useQueryClient();
     const { setColorScheme } = useMantineColorScheme();
     const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
+    const [isOpen, { open, close }] = useDisclosure(false);
+    const [classCode, setClassCode] = useState('');
+    const [newClassName, setNewClassName] = useState("");
+    const [newClassCode, setNewClassCode] = useState("");
+    const [newClassDescription, setNewClassDescription] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -63,12 +76,133 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
         setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
     };
 
+    const handleAddClass = async () => {
+
+        if (!profile) {
+            throw new Error("Profile not found");
+        }
+
+        if (!newClassName || !newClassCode) {
+            throw new Error("Class name and code are required");
+        }
+
+        setLoading(true);
+        try {
+            const classId = await createClass(
+                newClassName,
+                newClassCode,
+                newClassDescription
+            );
+
+            if (!classId) {
+                throw new Error("Failed to create class");
+            } else {
+                // add class to profile if not admin
+                if (!profile.admin) {
+                    const { success: profileSuccess, error: profileError } = await updateProfile(profile.id, {
+                        classes: Array.from(new Set([...profile.classes, classId]))
+                    });
+
+                    if (!profileSuccess) {
+                        throw new Error(profileError);
+                    }
+                }
+            }
+
+            queryClient.invalidateQueries({ queryKey: ["classes"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
+            notifications.show({
+                title: 'Success',
+                message: 'Class created successfully',
+                color: 'green'
+            });
+
+            // push to class page
+            router.push(`/class/${classId}`);
+
+            // Reset form
+            setNewClassName("");
+            setNewClassCode("");
+            setNewClassDescription("");
+
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        } finally {
+            setLoading(false);
+            close();
+        }
+    };
+
+    const handleJoinClass = async () => {
+        if (!profile) {
+            throw new Error("Profile not found");
+        }
+
+        if (!classCode) {
+            throw new Error("Class code is required");
+        }
+
+        setLoading(true);
+        try {
+            const { success, error, code } = await checkCode(classCode);
+
+            if (!success || !code) {
+                throw new Error(error);
+            } else {
+                // add class to profile if not admin
+                if (!profile.admin) {
+                    const { success: profileSuccess, error: profileError } = await updateProfile(profile.id, {
+                        classes: Array.from(new Set([...profile.classes, code.class]))
+                    });
+
+                    if (!profileSuccess) {
+                        throw new Error(profileError);
+                    }
+                }
+            }
+
+            queryClient.invalidateQueries({ queryKey: ["classes"] });
+            queryClient.invalidateQueries({ queryKey: ["profile"] });
+            notifications.show({
+                title: 'Success',
+                message: 'Class joined successfully',
+                color: 'green'
+            });
+
+            // push to class page
+            router.push(`/class/${code.class}/chat/new`);
+
+            // Reset form
+            setClassCode("");
+
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        } finally {
+            setLoading(false);
+            close();
+        }
+    };
+
     const isMobile = useMediaQuery('(max-width: 768px)');
 
     const renderClassSelector = () => {
+        const hasNoClasses = getFilteredClasses(profile, classData).length === 0;
         return showClasses && (
             <Group pt={4}>
-                <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+                {hasNoClasses ? <Button
+                    variant="light"
+                    onClick={open}
+                >
+                    {profile?.professor || profile?.admin ? "Add Class" : "Join Class"}
+                </Button> : <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
                     <Menu.Target>
                         <Button variant="subtle" className={classes.classSelector}>
                             <Center>
@@ -93,8 +227,83 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                                 {classItem.class_code}
                             </Menu.Item>
                         ))}
+                        <Menu.Divider />
+                        <Menu.Item
+                            onClick={open}
+                        >
+                            {profile?.professor || profile?.admin ? "Add Class" : "Join Class"}
+                        </Menu.Item>
                     </Menu.Dropdown>
-                </Menu>
+                </Menu>}
+
+                <Modal
+                    opened={isOpen}
+                    onClose={close}
+                    title={profile?.professor || profile?.admin ? "Add New Class" : "Join Class"}
+                    size="lg"
+                >
+                    <Stack gap="md">
+                        {profile?.professor || profile?.admin ? (
+                            <Stack gap="md">
+                                <Group grow>
+                                    <TextInput
+                                        label="Class Name"
+                                        placeholder="Introduction to Computer Science"
+                                        value={newClassName}
+                                        onChange={(e) => setNewClassName(e.currentTarget.value)}
+                                        required
+                                    />
+                                    <TextInput
+                                        label="Class Code"
+                                        placeholder="CS101"
+                                        value={newClassCode}
+                                        onChange={(e) => setNewClassCode(e.currentTarget.value)}
+                                        required
+                                    />
+                                </Group>
+                                <Textarea
+                                    label="Description"
+                                    placeholder="A brief description of the class"
+                                    value={newClassDescription}
+                                    onChange={(e) => setNewClassDescription(e.currentTarget.value)}
+                                    autosize
+                                    minRows={3}
+                                />
+                            </Stack>
+                        ) : (
+                            <TextInput
+                                label="Class Code"
+                                placeholder="XXXXX-XXXXX"
+                                value={classCode}
+                                onChange={(event) => {
+                                    let value = event.currentTarget.value.toUpperCase();
+
+                                    // Remove any non-alphanumeric characters except hyphen
+                                    value = value.replace(/[^A-Z0-9-]/g, '');
+
+                                    // Auto-insert hyphen after 5 characters if not present
+                                    if (value.length > 5 && value.charAt(5) !== '-') {
+                                        value = value.slice(0, 5) + '-' + value.slice(5);
+                                    }
+
+                                    // Limit to 11 characters (5 + hyphen + 5)
+                                    if (value.length > 11) {
+                                        value = value.slice(0, 11);
+                                    }
+
+                                    setClassCode(value);
+                                }}
+                            />
+                        )}
+                        <Group justify="flex-end">
+                            {profile?.professor || profile?.admin ? (
+                                <Button onClick={handleAddClass} loading={loading}>Add</Button>
+                            ) : (
+                                <Button onClick={handleJoinClass} loading={loading}>Join</Button>
+                            )}
+                        </Group>
+                    </Stack>
+                </Modal>
             </Group>
         )
     }

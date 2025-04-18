@@ -42,10 +42,9 @@ interface ContextPanelProps {
 // Define consistent colors for different content types
 const CONTENT_COLORS = {
     lectures: 'blue',    // matches badge color
-    chapters: 'green',   // matches badge color
-    exercises: 'cyan',   // matches badge color
+    textbooks: 'green',   // matches badge color
     homeworks: 'orange', // matches badge color
-    files: 'violet',     // now matches badge color in ContextBadges
+    other: 'violet',     // now matches badge color in ContextBadges
 } as const;
 
 // Define a wrapper component that makes an item draggable
@@ -57,7 +56,7 @@ function DraggableWrapper({
 }: {
     children: React.ReactNode;
     item: { id: string };
-    type: keyof ChatMessage['context'];
+    type: 'lectures' | 'textbooks' | 'homeworks' | 'other';
     makeDraggable?: boolean;
 }) {
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -119,7 +118,7 @@ const ItemCard = ({
     classId: string,
     profileId: string,
     color: string,
-    contextType: keyof ChatMessage['context'],
+    contextType: 'lectures' | 'textbooks' | 'homeworks' | 'other',
     addContextToChat: (contextId: string) => void,
     isVisible: boolean,
     makeDraggable?: boolean,
@@ -198,15 +197,17 @@ const ItemCard = ({
                             {item.newName}
                         </Text>
                         <Group gap={2}>
-                            <DeleteFileModal
-                                fileId={item.id}
-                                classId={classId}
-                                fileName={item.newName}
-                                navigateHome={false}
-                                profileId={profileId}
-                                onDelete={onFileDelete}
-                                contentType="other"
-                            />
+                            {contextType === 'other' && (item.profile && item.profile === profileId) && (
+                                <DeleteFileModal
+                                    fileId={item.id}
+                                    classId={classId}
+                                    fileName={item.newName}
+                                    navigateHome={false}
+                                    profileId={profileId}
+                                    onDelete={onFileDelete}
+                                    contentType="other"
+                                />
+                            )}
                             {makeDraggable && (
                                 <Tooltip label="Drag to chat">
                                     <ActionIcon variant="transparent" size="md" color="gray">
@@ -264,9 +265,9 @@ export function ContextPanel({
 
     // Add refs for the first items of each type
     const firstLectureRef = useRef<string | null>(null);
-    const firstChapterRef = useRef<string | null>(null);
+    const firstTextbookRef = useRef<string | null>(null);
     const firstHomeworkRef = useRef<string | null>(null);
-    const firstFileRef = useRef<string | null>(null);
+    const firstOtherRef = useRef<string | null>(null);
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -364,30 +365,7 @@ export function ContextPanel({
                 return true;
             }
 
-            // Check item numbers (note_number, homework_number, chapter_number)
-            if ((item.note_number !== undefined && item.note_number.toString().includes(query)) ||
-                (item.homework_number !== undefined && item.homework_number.toString().includes(query)) ||
-                (item.chapter_number !== undefined && item.chapter_number.toString().includes(query))) {
-                return true;
-            }
-
-            // Check for type keywords (lecture, chapter, homework)
-            if ((query.includes('lecture') && item.hasOwnProperty('note_number')) ||
-                (query.includes('chapter') && item.hasOwnProperty('chapter_number')) ||
-                (query.includes('homework') && item.hasOwnProperty('homework_number'))) {
-                return true;
-            }
-
-            // Check associated documents
-            const itemDocs = documents?.filter(doc =>
-                doc.lecture === item.id ||
-                doc.chapter === item.id ||
-                doc.homework === item.id ||
-                doc.exercise === item.id ||
-                doc.file === item.id
-            );
-
-            return itemDocs?.some(doc =>
+            return documents?.some(doc =>
                 doc.text?.toLowerCase().includes(query) ||
                 doc.description?.toLowerCase().includes(query)
             );
@@ -397,23 +375,89 @@ export function ContextPanel({
     // Get all content items combined
     const getAllContentItems = () => {
         const allItems = [];
-        const filesEnabled = classData?.files_enabled;
+
+        const lectureFiles = files?.filter(f => f.content_type === 'lecture');
+        const textbookFiles = files?.filter(f => f.content_type === 'textbook');
+        const homeworkFiles = files?.filter(f => f.content_type === 'homework');
+        const otherFiles = files?.filter(f => f.content_type === 'other');
+
+        const lectureEnabled = classData?.lecture_enabled;
+        const textbookEnabled = classData?.textbook_enabled;
+        const homeworkEnabled = classData?.homework_enabled;
+        const otherEnabled = classData?.files_enabled;
 
         // Add files
-        if (files && filesEnabled) {
-            const filteredFiles = filterBySearch(files.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
+        if (lectureFiles && lectureEnabled) {
+            const filteredFiles = filterBySearch(lectureFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
                 .filter(f => !activeChat.context.includes(f.id))
                 .map(f => ({
                     ...f,
                     newName: f.title ?? "",
                     imageUrl: getFileImageUrl(f, fileDocuments?.find(d => d.file === f.id)?.id ?? ""),
-                    type: 'files' as keyof ChatMessage['context'],
-                    color: CONTENT_COLORS.files
+                    type: 'lectures',
+                    color: CONTENT_COLORS.lectures,
                 }));
 
             // Store the first file ID if available
-            if (filteredFiles.length > 0 && firstFileRef.current === null) {
-                firstFileRef.current = filteredFiles[0].id;
+            if (filteredFiles.length > 0 && firstLectureRef.current === null) {
+                firstLectureRef.current = filteredFiles[0].id;
+            }
+
+            allItems.push(...filteredFiles);
+        }
+
+        if (textbookFiles && textbookEnabled) {
+            const filteredFiles = filterBySearch(textbookFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
+                .filter(f => !activeChat.context.includes(f.id))
+                .map(f => ({
+                    ...f,
+                    newName: f.title ?? "",
+                    imageUrl: getFileImageUrl(f, fileDocuments?.find(d => d.file === f.id)?.id ?? ""),
+                    type: 'textbooks',
+                    color: CONTENT_COLORS.textbooks,
+                }));
+
+            // Store the first file ID if available
+            if (filteredFiles.length > 0 && firstTextbookRef.current === null) {
+                firstTextbookRef.current = filteredFiles[0].id;
+            }
+
+            allItems.push(...filteredFiles);
+        }
+
+        if (homeworkFiles && homeworkEnabled) {
+            const filteredFiles = filterBySearch(homeworkFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
+                .filter(f => !activeChat.context.includes(f.id))
+                .map(f => ({
+                    ...f,
+                    newName: f.title ?? "",
+                    imageUrl: getFileImageUrl(f, fileDocuments?.find(d => d.file === f.id)?.id ?? ""),
+                    type: 'homeworks',
+                    color: CONTENT_COLORS.homeworks,
+                }));
+
+            // Store the first file ID if available
+            if (filteredFiles.length > 0 && firstHomeworkRef.current === null) {
+                firstHomeworkRef.current = filteredFiles[0].id;
+            }
+
+            allItems.push(...filteredFiles);
+        }
+
+        if (otherFiles && otherEnabled) {
+            const filteredFiles = filterBySearch(otherFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
+                .filter(f => !activeChat.context.includes(f.id))
+                .map(f => ({
+                    ...f,
+                    newName: f.title ?? "",
+                    imageUrl: getFileImageUrl(f, fileDocuments?.find(d => d.file === f.id)?.id ?? ""),
+                    type: 'other',
+                    color: CONTENT_COLORS.other,
+                }));
+
+            // Store the first file ID if available
+            if (filteredFiles.length > 0 && firstOtherRef.current === null) {
+                firstOtherRef.current = filteredFiles[0].id;
             }
 
             allItems.push(...filteredFiles);
@@ -422,47 +466,15 @@ export function ContextPanel({
         return allItems;
     };
 
-    // Calculate relevance score for search results
-    const calculateRelevance = (item: any, documents: any[], query: string): number => {
-        if (!query) return 0;
-
-        let score = 0;
-
-        // Title match has highest weight
-        if (item.newName.toLowerCase().includes(query)) {
-            score += 10;
-        }
-
-        // Check documents content
-        const itemDocs = documents?.filter(doc =>
-            doc.lecture === item.id ||
-            doc.chapter === item.id ||
-            doc.homework === item.id ||
-            doc.exercise === item.id
-        );
-
-        itemDocs?.forEach(doc => {
-            // Text content matches
-            if (doc.text?.toLowerCase().includes(query)) {
-                score += 5;
-            }
-            // Description matches
-            if (doc.description?.toLowerCase().includes(query)) {
-                score += 3;
-            }
-        });
-
-        return score;
-    };
 
     const allContentItems = getAllContentItems();
     const isLoading = loadingFiles || loadingClassData;
 
     // Find first items of each type for scrolling
     const firstLectureItem = allContentItems.find(item => item.type === 'lectures');
-    const firstChapterItem = allContentItems.find(item => item.type === 'chapters');
+    const firstChapterItem = allContentItems.find(item => item.type === 'textbooks');
     const firstHomeworkItem = allContentItems.find(item => item.type === 'homeworks');
-    const firstFileItem = allContentItems.find(item => item.type === 'files');
+    const firstOtherItem = allContentItems.find(item => item.type === 'other');
     // Virtualized list setup
     const rowVirtualizer = useVirtualizer({
         count: allContentItems.length,
@@ -543,9 +555,9 @@ export function ContextPanel({
                     >
                         {/* Add section marker divs for scrolling */}
                         <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                        <div id="chapters-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                        <div id="files-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
 
                         {allContentItems.length > 0 ? (
                             <div
@@ -563,9 +575,9 @@ export function ContextPanel({
                                     // Add section-specific IDs to the first item of each type
                                     const isFirstOfType =
                                         (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
-                                        (item.type === 'chapters' && item.id === firstChapterItem?.id) ||
+                                        (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
                                         (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
-                                        (item.type === 'files' && item.id === firstFileItem?.id);
+                                        (item.type === 'other' && item.id === firstOtherItem?.id);
 
                                     return (
                                         <div

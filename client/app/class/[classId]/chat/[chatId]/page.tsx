@@ -1,5 +1,5 @@
 /**
- * app/classes/[classId]/chat/[chatId]/page.tsx
+ * app/class/[classId]/chat/[chatId]/page.tsx
  * 
  * This page is used to chat with the AI, which looks similar to the GenerateCanvas page, but instead with a chat interface.
  * 

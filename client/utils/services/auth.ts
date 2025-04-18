@@ -76,12 +76,13 @@ export const deleteAccount = async (userId: string): Promise<{ success: boolean,
 
 export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success: boolean, error: string, url: string | null }> => {
     const supabase = await useSupabaseServer(cookies());
+
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'azure',
         options: {
-            scopes: 'email',
+            scopes: 'profile email',
             queryParams: {
-                domain_hint: 'purdue.edu',
+                domain_hint: 'purdue.edu'
             },
             redirectTo: `${redirectTo}`
         },

@@ -40,7 +40,7 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
 
     const handleDeleteClass = async (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
-        
+
         setLoading(true);
         try {
             const { success, error } = await deleteFile(fileId);
@@ -68,7 +68,7 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
         } catch (error: any) {
             console.error(error);
             notifications.show({
-                title: "Failed to delete file",
+                title: "Failed to delete " + fileName,
                 message: error.message,
                 color: "red",
             })
@@ -80,10 +80,10 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
 
     return (
         <>
-            {file && file.profile && file.profile === profileId && <Tooltip label="Delete File">
+            <Tooltip label={`Delete ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}>
                 <ActionIcon
-                    variant="subtle"
                     size="lg"
+                    variant="subtle"
                     color="red"
                     onClick={(e) => {
                         e.stopPropagation();
@@ -92,21 +92,21 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
                 >
                     <IconTrash size={20} />
                 </ActionIcon>
-            </Tooltip>}
-            <Modal 
-                opened={opened} 
+            </Tooltip>
+            <Modal
+                opened={opened}
                 onClose={() => {
                     close();
-                }} 
-                title="Delete File" 
+                }}
+                title="Delete File"
                 centered
                 onClick={(e) => e.stopPropagation()}
             >
                 <Stack>
                     <Text>Are you sure you want to remove {fileName}?</Text>
-                    <Button 
-                        onClick={(e) => handleDeleteClass(e)} 
-                        loading={loading} 
+                    <Button
+                        onClick={(e) => handleDeleteClass(e)}
+                        loading={loading}
                         color="red"
                     >
                         Delete

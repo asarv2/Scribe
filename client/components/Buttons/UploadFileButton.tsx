@@ -19,29 +19,12 @@ import { getProfile } from "@/utils/queries/get-profile";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 
 export default function UploadFileButton({ classId, icon = false, startParse = false, fileNumber, contentType }: { classId: string, icon?: boolean, startParse?: boolean, fileNumber?: number, contentType: ContentType }) {
-    const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
-
-    const { data: user, isLoading: loadingUser } = useQuery({
-        queryKey: ["user"],
-        queryFn: () => getUser(supabase)
-    });
-
-    const { data: profile, isLoading: loadingProfile } = useQuery({
-        queryKey: ["profile", user?.id],
-        queryFn: () => getProfile(supabase, user?.id ?? ""),
-        enabled: !!user
-    });
-
-
 
     const handleUploadFile = async (file: File) => {
         try {
             if (!fileNumber) {
                 throw new Error('File number is required');
-            }
-            if (!profile) {
-                throw new Error('Profile is required');
             }
 
             const uploadId = uuidv4();
@@ -72,7 +55,6 @@ export default function UploadFileButton({ classId, icon = false, startParse = f
                         filetype: file.type,
                         fileId: uploadId,
                         classId: classId,
-                        profileId: profile.id,
                         startParse: startParse ? 'true' : 'false',
                         baseUrl: baseUrl,
                         contentType: contentType
@@ -179,7 +161,7 @@ export default function UploadFileButton({ classId, icon = false, startParse = f
             return "Upload Textbooks";
         } else if (contentType === "homework") {
             return "Upload Homeworks";
-        }
+        } 
     }
 
     return (
