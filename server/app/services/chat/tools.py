@@ -212,7 +212,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
         raise e
 
 @function_tool
-async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str, question: str, options: List[str], explanations: List[str], answer: str, references: List[int] = [], figures: List[int] = []) -> str:
+async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str = "", question: str = "", options: List[str] = [], explanations: List[str] = [], answer: str = "", references: List[int] = [], figures: List[int] = []) -> str:
     """Generates a question object given the MCQ question. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool. 
     
     This function will return the id of the question, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
@@ -278,7 +278,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str,
         raise e
 
 @function_tool
-async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str, question: str, answer: str, references: List[int], figures: List[int],) -> str:
+async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str = "", question: str = "", answer: str = "", references: List[int] = [], figures: List[int] = []) -> str:
     """Generates a question object given the FRQ question. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool. 
     
     This function will return the id of the question, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.

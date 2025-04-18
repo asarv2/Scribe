@@ -101,7 +101,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure],
-            handoff_description="You are capable of creating visualizations, figures, graph, trees and similar types of images when needed. Always follow the exact behavior specified in the base system prompt."
+            handoff_description="Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch. Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.summary_agent = Agent[Documents](
@@ -115,7 +115,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure, create_summary],
-            handoff_description="You are capable of creating summaries to help students review. Always follow the exact behavior specified in the base system prompt."
+            handoff_description="Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch.For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.question_agent = Agent[Documents](
@@ -129,7 +129,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure, create_mcq_question, create_frq_question],
-            handoff_description="You are capable of creating practice questions, quizzes, mcq's, frq's, practice test or exams and similar types of questions when needed. Always follow the exact behavior specified in the base system prompt."
+            handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch. For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
         )
         
         self.chat_agent = Agent[Documents](
@@ -272,7 +272,7 @@ class ChatProcessor(RunHooks):
             await self.stream_callback(f"<SUMMARY>{summary_id}</SUMMARY>")
             # adding the summary id to the context
             wrapper.context.summaries.append(summary_id)
-        elif tool.name == "create_question":
+        elif tool.name == "create_mcq_question" or tool.name == "create_frq_question":
             question_response = supabase.table("questions").insert({
                 "generation_status": "generating",
                 "message": message_id,
