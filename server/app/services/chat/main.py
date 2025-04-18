@@ -72,11 +72,19 @@ class ChatProcessor(RunHooks):
             case 'present':
                 system_prompt = get_present_mode()
 
-        additional_system_prompt = """Use the necessary tools to answer the student's questions. When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might response like this: 
-
-        The defintion of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
+        additional_system_prompt = """
+        IMPORTANT: The instructions above are your primary guide for behavior. Always prioritize those instructions over anything below.
         
-        Use the create_figure, create_summary, and create_question tools to generate figures, summaries, and questions if applicable to the conversation, or if asked for. You should handoff the task to the figure_agent, summary_agent, and question_agent to generate figures, summaries, and questions."""
+        When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
+        The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
+
+        Tools are available to help you fulfill the instructions above. Use them appropriately:
+        - For the 'concept' mode: Use tools to create visualizations immediately without asking clarifying questions first.
+        - For the 'review' mode: Always start with a summary and visualization without waiting to be asked.
+        - For all modes: Follow the specific behavioral instructions in the base prompt exactly.
+        
+        Never contradict or ignore the instructions in the base prompt above. If there's any conflict, your base instructions take priority.
+        """
 
         self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
 
@@ -95,7 +103,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure],
-            handoff_description="Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch.",
+            handoff_description="Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.summary_agent = Agent[Documents](
@@ -109,7 +117,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure, create_summary],
-            handoff_description="Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch."
+            handoff_description="For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.question_agent = Agent[Documents](
@@ -123,7 +131,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure, create_question],
-            handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch."
+            handoff_description="For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.chat_agent = Agent[Documents](
@@ -207,24 +215,27 @@ class ChatProcessor(RunHooks):
 
     def format_conversation(self, complete_context: str, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-
-        context_summary = [{"role": "system", "content": f"Use the following context to guide your responses: {complete_context}"}] if add_current else [] # for title processing
-        # add one more prompt to the context 
-        # context_summary.append({"role": "system", "content": self.full_system_prompt})
+        
+        # ALWAYS start with the base system prompt as the very first message
+        context_summary = [{"role": "system", "content": self.full_system_prompt}]
+        
+        # Add context as secondary information AFTER the main system prompt
+        if complete_context and add_current:
+            context_summary.append({"role": "system", "content": f"Use the following context to guide your responses while following the instructions above: {complete_context}"})
+        
+        # Add conversation history
         for i in range(0, len(self.chat_history)-1, 2):
             context_summary.append({"role": "user", "content": self.chat_history[i]})
             context_summary.append({"role": "assistant", "content": self.chat_history[i+1]})
         
         if add_current:
-            # getting current message ready.
+            # Getting current message ready
             current_context = []
-            # if self.additional_files:
-            #     current_context.extend(self.additional_files) # list of file objects
-
             current_context.append({"type": "input_text", "text": self.current_question})
             
-            # add the current question
+            # Add the current question
             context_summary.append({"role": "user", "content": current_context})
+        
         return context_summary
     
 
