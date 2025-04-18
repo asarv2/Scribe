@@ -77,13 +77,9 @@ class ChatProcessor(RunHooks):
         
         When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
         The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
-
-        Tools are available to help you fulfill the instructions above. Use them appropriately:
-        - For the 'concept' mode: Use tools to create visualizations immediately without asking clarifying questions first.
-        - For the 'review' mode: Always start with a summary and visualization without waiting to be asked.
-        - For all modes: Follow the specific behavioral instructions in the base prompt exactly.
         
-        Never contradict or ignore the instructions in the base prompt above. If there's any conflict, your base instructions take priority.
+        Never contradict or ignore the instructions in the base prompt above. If there's any conflict, your base instructions take priority, unless material, like figures, summaries or problems are being generated,
+        at which point a handoff must occur.
         """
 
         self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"

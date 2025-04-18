@@ -1058,13 +1058,26 @@ export const ChatInput = memo(({
               size="lg"
               color={"green"}
               variant={activeChat.chatType === 'concept' ? "light" : "subtle"}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'concept' ? 'var(--mantine-color-green-filled)' : 'var(--mantine-color-green-outline)'}`
+              }}
             >
               <IconBook size={20} />
             </ActionIcon>
-          </Tooltip> : <Button color={"green"} variant={activeChat.chatType === 'concept' ? "light" : "subtle"} size="sm" leftSection={<IconBook size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-            ...prev,
-            chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
-          }))}>Learn</Button>)
+          </Tooltip> : <Button 
+            color={"green"} 
+            variant={activeChat.chatType === 'concept' ? "light" : "subtle"} 
+            size="sm" 
+            leftSection={<IconBook size={16} />} 
+            radius="xl" 
+            onClick={() => setActiveChat((prev) => ({
+              ...prev,
+              chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+            }))}
+            style={{
+              border: `1px solid ${activeChat.chatType === 'concept' ? 'var(--mantine-color-green-filled)' : 'var(--mantine-color-green-outline)'}`
+            }}
+          >Learn</Button>)
         }
 
         {
@@ -1078,13 +1091,26 @@ export const ChatInput = memo(({
                 size="lg"
                 color={"indigo"}
                 variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'homework-student' ? 'var(--mantine-color-indigo-filled)' : 'var(--mantine-color-indigo-outline)'}`
+                }}
               >
                 <IconFile size={20} />
               </ActionIcon>
-            </Tooltip> : <Button color={"indigo"} variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"} size="sm" leftSection={<IconFile size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-              ...prev,
-              chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
-            }))}>Homework</Button>)
+            </Tooltip> : <Button 
+              color={"indigo"} 
+              variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"} 
+              size="sm" 
+              leftSection={<IconFile size={16} />} 
+              radius="xl" 
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
+              }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'homework-student' ? 'var(--mantine-color-indigo-filled)' : 'var(--mantine-color-indigo-outline)'}`
+              }}
+            >Homework</Button>)
         }
 
         {
@@ -1098,13 +1124,26 @@ export const ChatInput = memo(({
                 size="lg"
                 color={"cyan"}
                 variant={activeChat.chatType === 'review' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'review' ? 'var(--mantine-color-cyan-filled)' : 'var(--mantine-color-cyan-outline)'}`
+                }}
               >
                 <IconPencil size={20} />
               </ActionIcon>
-            </Tooltip> : <Button color={"cyan"} variant={activeChat.chatType === 'review' ? "light" : "subtle"} size="sm" leftSection={<IconPencil size={16} />} radius="xl" onClick={() => setActiveChat((prev) => ({
-              ...prev,
-              chatType: prev.chatType === 'review' ? 'general-student' : 'review'
-            }))}>Test-Prep</Button>)
+            </Tooltip> : <Button 
+              color={"cyan"} 
+              variant={activeChat.chatType === 'review' ? "light" : "subtle"} 
+              size="sm" 
+              leftSection={<IconPencil size={16} />} 
+              radius="xl" 
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'review' ? 'general-student' : 'review'
+              }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'review' ? 'var(--mantine-color-cyan-filled)' : 'var(--mantine-color-cyan-outline)'}`
+              }}
+            >Test-Prep</Button>)
         }
 
         {/* {
@@ -1179,8 +1218,16 @@ export const ChatInput = memo(({
             size="lg"
             loading={loading}
             disabled={!activeChat.prompt.trim() && recordedVideos.length === 0}
-            variant="subtle"
+            variant="transparent"
             color="blue"
+            style={{
+              border: 'none',
+              background: 'transparent',
+              opacity: (!activeChat.prompt.trim() && recordedVideos.length === 0) ? 0.5 : 1
+            }}
+            classNames={{
+              root: classes.sendButton
+            }}
           >
             <IconSend size={20} />
           </ActionIcon>
@@ -1301,21 +1348,6 @@ export const ChatInput = memo(({
         />
       </Box>}
 
-      {/* Show context hint only when no context is added and not initializing */}
-      {!hasContext && !isInitializing && (
-        <Text
-          size="xs"
-          c="dimmed"
-          ta="center"
-          style={{
-            animation: 'fadeIn 0.5s ease-in-out',
-            marginBottom: -5
-          }}
-        >
-          Click or drag to add context
-        </Text>
-      )}
-
       <Box className={isRecording ? classes.inputContainer : ''}>
         {(videoStream || (videoRef.current && (videoRef.current.srcObject || (videoRef.current.src && videoRef.current.src !== '')) || recordedVideos.length > 0)) && (
           <Box
@@ -1414,7 +1446,7 @@ export const ChatInput = memo(({
               value={activeChat.prompt}
               onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
               onKeyDown={handleKeyDown}
-              placeholder={"Type your message here..."}
+              placeholder={"Add context and start learning..."}
               autosize
               minRows={1}
               maxRows={4}

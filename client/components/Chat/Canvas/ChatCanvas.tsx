@@ -3,10 +3,10 @@
  * This component is for chatting with the AI.
  */
 
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip } from "@mantine/core";
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip, Box } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff, IconMaximize, IconMaximizeOff, IconColumnsOff, IconArrowRight, IconClearAll, IconCategoryPlus, IconCategoryMinus, IconVolumeOff, IconVolume, IconFilePlus, IconFileMinus, IconMicrophone, IconCamera, IconMicrophoneOff, IconCameraOff, IconPlayerPlay, IconPlayerStop, IconPlayerPause } from "@tabler/icons-react";
+import { IconArrowLeft, IconRefresh, IconX, IconSchool, IconCaretLeftRight, IconChalkboard, IconCheck, IconHistory, IconChevronDown, IconPlus, IconMenu2, IconEye, IconEyeOff, IconMaximize, IconMaximizeOff, IconColumnsOff, IconArrowRight, IconClearAll, IconChevronLeft, IconChevronRight, IconVolumeOff, IconVolume, IconFilePlus, IconFileMinus, IconMicrophone, IconCamera, IconMicrophoneOff, IconCameraOff, IconPlayerPlay, IconPlayerStop, IconPlayerPause } from "@tabler/icons-react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFullscreen, useMediaQuery, useHotkeys } from "@mantine/hooks";
@@ -489,7 +489,7 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                     <Grid.Col
                         span={isMobile ? 12 : 8 + (!viewerMode.open ? 4 : 0)}
                         style={{
-                            transition: 'width 300ms ease-in-out, flex 300ms ease-in-out'
+                            transition: 'width 300ms ease-in-out, flex 300ms ease-in-out',
                         }}
                     >
                         <Card
@@ -498,7 +498,36 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                             padding={"lg"}
                             radius={"md"}
                             h="calc(100vh - 100px)"
+                            style={{ position: 'relative' }}
                         >
+                            {/* Replace the ActionIcon with a direct icon that sits on the border */}
+                            <Box
+                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
+                                style={{
+                                    position: 'absolute',
+                                    right: '0',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    zIndex: 100,
+                                    cursor: 'pointer',
+                                    width: '16px',
+                                    height: '40px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'var(--mantine-color-blue-light)',
+                                    color: 'var(--mantine-color-blue-filled)',
+                                    borderTopLeftRadius: '4px',
+                                    borderBottomLeftRadius: '4px',
+                                    boxShadow: '0 0 5px rgba(0,0,0,0.1)'
+                                }}
+                            >
+                                {viewerMode.open ? 
+                                    <IconChevronRight size={16} style={{ position: 'relative', right: '-2px' }} /> : 
+                                    <IconChevronLeft size={16} style={{ position: 'relative', right: '-2px' }} />
+                                }
+                            </Box>
+                            
                             {/* Show controls only when not in immersive mode */}
                             <Flex justify="space-between" align="center" mb={10}>
                                 <Group gap="sm">
@@ -546,16 +575,6 @@ export default function ChatCanvas({ classId, chatId, toggle, fullscreen }: { cl
                                         onChatSelect={handleChatSelect}
                                         classId={classId}
                                     />
-                                    <Tooltip label={viewerMode.open ? "Hide context" : "Add context"}>
-                                        <ActionIcon
-                                            variant="subtle"
-                                            size="lg"
-                                            onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                            aria-label="Toggle context panel"
-                                        >
-                                            {viewerMode.open ? <IconCategoryMinus size={20} /> : <IconCategoryPlus size={20} />}
-                                        </ActionIcon>
-                                    </Tooltip>
                                 </Group>
                             </Flex>
 

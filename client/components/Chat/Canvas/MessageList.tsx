@@ -127,7 +127,6 @@ export const MessageList = memo(({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Add state to track if context was automatically added
   const [autoAddedContext, setAutoAddedContext] = useState<{
@@ -159,29 +158,10 @@ export const MessageList = memo(({
     return totalUniqueWords > 0 ? matchCount / totalUniqueWords : 0;
   };
 
-  // Check scroll position to show/hide scroll button
-  const handleScroll = () => {
-    if (!containerRef.current) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-    // Show button if we're more than 400px from bottom
-    const isNearBottom = scrollHeight - scrollTop - clientHeight < 400;
-    setShowScrollButton(!isNearBottom);
-  };
-
   // Scroll to bottom handler
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
-  // Add scroll listener
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
 
   // Scroll to bottom on new messages only if already at bottom
   useEffect(() => {
@@ -889,27 +869,6 @@ export const MessageList = memo(({
       )}
 
       <div ref={messagesEndRef} />
-
-      {/* Scroll to bottom button - only show in normal mode */}
-      {showScrollButton && (
-        <ActionIcon
-          variant="filled"
-          color="blue"
-          radius="xl"
-          size="lg"
-          onClick={scrollToBottom}
-          style={{
-            position: "sticky",
-            bottom: 16,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10,
-            boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
-          }}
-        >
-          <IconArrowDown size={20} />
-        </ActionIcon>
-      )}
     </Stack>
   );
 });
