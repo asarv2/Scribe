@@ -75,6 +75,7 @@ export const deleteAccount = async (userId: string): Promise<{ success: boolean,
 }
 
 export const signInWithMicrosoft = async (redirectTo: string): Promise<{ success: boolean, error: string, url: string | null }> => {
+    console.log("redirectTo: ", redirectTo);
     const supabase = await useSupabaseServer(cookies());
 
     const { data, error } = await supabase.auth.signInWithOAuth({
