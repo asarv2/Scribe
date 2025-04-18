@@ -103,7 +103,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure],
-            handoff_description="Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
+            handoff_description="You are capable of creating visualizations, figures, graph, trees and similar types of images when needed. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.summary_agent = Agent[Documents](
@@ -117,7 +117,7 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure, create_summary],
-            handoff_description="For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt."
+            handoff_description="You are capable of creating summaries to help students review. Always follow the exact behavior specified in the base system prompt."
         )
 
         self.question_agent = Agent[Documents](
@@ -131,9 +131,9 @@ class ChatProcessor(RunHooks):
                 tool_choice="required"
             ),
             tools=[create_figure, create_mcq_question, create_frq_question],
-            handoff_description="For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
+            handoff_description="You are capable of creating practice questions, quizzes, mcq's, frq's, practice test or exams and similar types of questions when needed. Always follow the exact behavior specified in the base system prompt."
         )
-
+        
         self.chat_agent = Agent[Documents](
             name="Chat Agent",
             instructions=self.full_system_prompt,

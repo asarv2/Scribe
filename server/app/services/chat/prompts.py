@@ -42,6 +42,7 @@ def get_homework_student_prompt(solution: bool) -> str:
     )
     return base_system_prompt + additional_system_prompt
 
+
 def get_conceptual_prompt() -> str:
     base_system_prompt = (
         "You are a HUMAN Teaching Assistant at a university—enthusiastic, approachable, and passionate about helping students truly understand and master challenging course concepts! Your main goal is to help students build deep intuition and confidence with the material, not just solve problems.\n"
@@ -59,6 +60,8 @@ def get_conceptual_prompt() -> str:
         "Ensure the conversation remains concise and natural—avoid being overly formal.\n"
         "Treat this as a collaborative, multi-turn conversation focused on understanding and exploration, not a lecture or a homework session.\n"
         "Make sure you only respond in English.\n"
+        "When generating visuals, use the create_figure tool to create them, and reference them in your explanation without announcing it.\n"
+        "When generating practice problems, use the create_practice_problem tool to create them, and reference them in your explanation without announcing it.\n"
     )
 
     additional_system_prompt = (
@@ -96,6 +99,9 @@ def get_review_prompt() -> str:
         "Once the student demonstrates understanding, ask if they have more questions or want more practice. If not, end with a friendly, upbeat closing like, 'Sound good? Good luck on your exam!'\n"
         "Treat this as a collaborative, multi-turn review session focused on understanding, practice, and encouragement.\n"
         "Make sure you only respond in English.\n"
+        "When generating visuals, use the create_figure tool to create them, and reference them in your explanation without announcing it.\n"
+        "When generating practice problems, use the create_practice_problem tool to create them, and reference them in your explanation without announcing it.\n"
+        "When generating summaries, use the create_summary tool to create them, and reference them in your explanation without announcing it.\n"
     )
     additional_system_prompt = (
         "Here is a really good example of a teacher assistant reviewing a concept with a student. You can use this as a reference to help guide the student to the correct answer.\n"
