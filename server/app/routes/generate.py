@@ -26,6 +26,10 @@ async def handle_chat(
         # Get chat and class info
         chat_response = supabase.table("chats").select("*").eq("id", chat_id).single().execute()
         chat = chat_response.data
+        chat_title = chat.get('name', 'Chat')
+        if chat_title == "":
+            chat_title = "Chat"
+        trace_id = chat.get('trace')
         class_id = chat.get('class')
 
         class_response = supabase.table("classes").select(
@@ -82,6 +86,11 @@ async def handle_chat(
             }).eq("id", message_id).execute()
 
             return chunk
+        
+        async def update_trace_id(chat_id: str, trace_id: str):
+            supabase.table("chats").update({
+                "trace": trace_id
+            }).eq("id", chat_id).execute()
 
         # Initialize processor and response
         processor = ChatProcessor(
@@ -90,13 +99,16 @@ async def handle_chat(
             question=current_message['bare_question'],
             past_messages=past_messages,
             google_file_ids=google_file_ids,
+            trace_id=trace_id,
             stream_callback=update_callback,
-            remove_callback=remove_callback
+            remove_callback=remove_callback,
+            update_trace_id=update_trace_id
         )
 
         try:
             await processor.process_message(
                 chat_id=chat_id,
+                chat_title=chat_title,
                 complete_context=context,
                 documents=documents,
             )

@@ -28,12 +28,15 @@ class ChatProcessor(RunHooks):
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
         google_file_ids: List[str] = [],
+        trace_id: str | None = None,
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None,
-        remove_callback: Optional[Callable[[str], Awaitable[None]]] = None
+        remove_callback: Optional[Callable[[str], Awaitable[None]]] = None,
+        update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None,
     ):
         super().__init__()
         self.prompt_type = prompt_type
         self.course_title = course_title
+        self.trace_id = trace_id
         self.current_question = question
         self.chat_history = []
         # Format past messages into chat history
@@ -52,6 +55,7 @@ class ChatProcessor(RunHooks):
         # set the stream callback. Will be used to update the chat.
         self.stream_callback = stream_callback
         self.remove_callback = remove_callback
+        self.update_trace_id = update_trace_id
 
         system_prompt = ""
         match self.prompt_type:
@@ -226,10 +230,10 @@ class ChatProcessor(RunHooks):
                 user_message = self.chat_history[i]
             context_summary.append({"role": "user", "content": user_message})
 
-            assistant_message = {"role": "assistant", "content": "No assistant message"}
+            assistant_messages = [{"role": "assistant", "content": "No assistant message"}]
             if self.chat_history[i+1] != "":
-                assistant_message = await process_special_tags(self.chat_history[i+1], supabase, documents.class_id, documents.references)
-            context_summary.append(assistant_message)
+                assistant_messages = await process_special_tags(self.chat_history[i+1], supabase, documents)
+            context_summary.extend(assistant_messages)
         
         if add_current:
             # Getting current message ready
@@ -290,6 +294,7 @@ class ChatProcessor(RunHooks):
     async def process_message(
         self,
         chat_id: str,
+        chat_title: str,
         complete_context: str,
         documents: Documents,
     ) -> None:
@@ -299,9 +304,14 @@ class ChatProcessor(RunHooks):
 
             # need to add gemini files to context?
             result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
-                workflow_name="Chat",
-                group_id=chat_id
+                workflow_name=chat_title,
+                group_id=chat_id,
+                trace_id=self.trace_id
             ))
+
+            if not self.trace_id:
+                trace_id = result._trace.trace_id
+                await self.update_trace_id(chat_id, trace_id)
 
             async for event in result.stream_events():
                 if event.type == "raw_response_event" and isinstance(event, RawResponsesStreamEvent):
@@ -330,4 +340,6 @@ class ChatProcessor(RunHooks):
             post_conversation_context = await self.format_conversation("", wrapper.context, add_current=False) # can add empty context since it will not be used
             # adding the topic query to the context
             post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})
-            await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context)
+            await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context, run_config=RunConfig(
+                trace_id=self.trace_id
+            ))

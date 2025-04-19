@@ -6,6 +6,7 @@ from agents.items import TResponseInputItem
 from pydantic import BaseModel
 import google.generativeai as genai
 from google.generativeai.types import File
+import json
 
 class MultipleChoiceQuestion(BaseModel):
     question: str
@@ -151,301 +152,296 @@ async def fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id
         "google_file_ids": all_google_file_ids
     }
 
-
-async def fetch_figure_resources(supabase_client, figure_id):
-    """
-    Fetch figure resources.
-
-    Args:
-        supabase_client: The Supabase client
-        figure_id (str): The figure ID
-    
-    Returns:
-        str: Formatted figure text
-    """
-    figure_text = "<FIGURE_GENERATION>\n"
-    figure_response = supabase_client.table("figures").select("*").eq("id", figure_id).execute()
-    if not figure_response.data:
-        return {"error": "Figure not found"}
-    
-    figure = figure_response.data[0]
-    figure_text += "Figure: " + figure.get("title", "") + "\n\nCode: " + figure.get("code", "")
-    figure_text += "</FIGURE_GENERATION>"
-    return figure_text
-
-async def fetch_summary_text(supabase_client, summary_id):
-    """
-    Fetch summary text.
-    
-    Args:
-        supabase_client: The Supabase client
-        summary_id (str): The summary ID
-    
-    Returns:
-        str: Formatted summary text
-    """
-    summary_text = "<SUMMARY_GENERATION>\n"
-    summary_response = supabase_client.table("summaries").select("*").eq("id", summary_id).execute()
-    if not summary_response.data:
-        return {"error": "Summary not found"}
-    
-    summary = summary_response.data[0]
-    summary_text += "Summary: " + summary.get("title", "") + "\n\n" + summary.get("preamble", "") + "\n\n" + summary.get("body", "") + "\n\n" + summary.get("conclusion", "")
-    summary_text += "</SUMMARY_GENERATION>"
-    return summary_text
-
-async def fetch_question_text(supabase_client, question_id):
-    """
-    Fetch question text.
-
-    Args:
-        supabase_client: The Supabase client
-        question_id (str): The question ID
-    
-    Returns:
-        str: Formatted question text
-    """
-    question_response = supabase_client.table("questions").select("*").eq("id", question_id).execute()
-    if not question_response.data:
-        return {"error": "Question not found"}
-    
-    question = question_response.data[0]
-    question_text = "<QUESTION_GENERATION>\n"
-    question_text += f"Question: {question.get('problem', 'No problem statement')}\n\n"
-
-    # Handle MCQ questions
-    if not question.get('frq', False):
-        options = question.get('options', [])
-        answers = question.get('answers', [])
-        explanations = question.get('explanations', [])
-        
-        if options:
-            question_text += "Options:\n"
-            for idx, option in enumerate(options):
-                question_text += f"{idx + 1}. {option}\n"
-            question_text += "\n"
-        
-        if answers:
-            question_text += f"Correct Answer(s): {', '.join(answers)}\n\n"
-        
-        if explanations:
-            question_text += "Explanations:\n"
-            for idx, explanation in enumerate(explanations):
-                question_text += f"{idx + 1}. {explanation}\n"
-            question_text += "\n"
-    
-    # Handle FRQ questions
-    else:
-        if question.get('solution'):
-            question_text += f"Solution:\n{question['solution']}\n\n"
-    
-    return question_text + "</QUESTION_GENERATION>"
-
-async def get_image_content(supabase_client, figure_id, class_id):
-    """
-    Get image content for a figure.
-    
-    Args:
-        supabase_client: The Supabase client
-        figure_id (str): The figure ID
-        class_id (str): The class ID
-        
-    Returns:
-        dict or None: Image content part or None if error
-    """
-    import io
-    import base64
-    from PIL import Image
-    
-    try:
-        # Download image from Supabase storage
-        image_path = f"{class_id}/{figure_id}.png"
-        response = supabase_client.storage.from_("figures").download(image_path)
-        
-        if not response:
-            return None
-        
-        # Convert bytes to PIL Image
-        img = Image.open(io.BytesIO(response))
-        
-        # Resize image if it's too large
-        max_size = 800
-        if max(img.size) > max_size:
-            ratio = max_size / max(img.size)
-            new_size = (int(img.size[0] * ratio), int(img.size[1] * ratio))
-            img = img.resize(new_size, Image.LANCZOS)
-        
-        # Save as compressed JPEG
-        buffer = io.BytesIO()
-        img.convert('RGB').save(buffer, format="JPEG", quality=90)
-        compressed_image = buffer.getvalue()
-        
-        # Base64 encode the compressed image
-        base64_image = base64.b64encode(compressed_image).decode('utf-8')
-        
-        return {
-            "type": "input_image", 
-            "image_url": f"data:image/jpeg;base64,{base64_image}", 
-            "detail": "low"
-        }
-            
-    except Exception as e:
-        print(f"Error loading figure {figure_id}: {str(e)}")
-        return None
-
-async def process_special_tags(message, supabase_client, class_id, references_mapping: Dict[int, str]):
+async def process_special_tags(message, supabase_client, documents: Documents):
     """
     Process special tags in a message and replace them with the corresponding content.
     
     Supported tags:
+    Replace these with function calls and corresponding outputs
     - <QUESTION>question_id</QUESTION>
     - <SUMMARY>summary_id</SUMMARY>
     - <FIGURE>figure_id</FIGURE>
+
     - <DOCUMENT>document_id</DOCUMENT> replaces with the document reference
     
     Args:
         message (str): The message containing special tags
         supabase_client: The Supabase client to use for fetching data
-        references_mapping: The references to map the document ids to the reference number
+        documents: The documents to map the document ids to the reference number
     Returns:
-        list[Dict[str, Any]]: Will return a conversation history object that can be used directly in the chat history
-
-        Example for question tags:
-        {"role": "assistant", "content": "Question: What is the capital of France? \nSolution: The capital of France is Paris."}
-        {"role": "user", "content": "Question: What is the capital of France? \nOptions: Paris, London, Berlin, Madrid \nAnswer: Paris\nExplanations: \nParis is the capital of France. \nLondon is the capital of England. \nBerlin is the capital of Germany. \nMadrid is the capital of Spain."}
-
-        Example for summary tags (which includes document tags):
-        {"role": "assistant", "content": "Summary: What is Simplex Method? Preamble: The simplex method is a method for solving linear programming problems.[1] \nBody: The simplex method is a method for solving linear programming problems.[2, 3] \nConclusion: The simplex method is a method for solving linear programming problems.[4]"}
-
-        Example for figure tags:
-        {"role": "assistant", "content": [
-        {"type": "input_image", "image_url": f"data:image/jpeg;base64,{image_data}", "detail": "low"},
-        {"type": "input_text", "text": "Figure: A plot of time complexity of sorting algorithms"},
-        ]
-
-        Example for question with figures:
-        {"role": "assistant", "content": [
-        {"type": "input_image", "image_url": f"data:image/jpeg;base64,{image_data}", "detail": "low"},
-        {"type": "input_text", "text": "Question: What is the capital of France? \nOptions: Paris, London, Berlin, Madrid \nAnswer: Paris\nExplanations: \nParis is the capital of France. \nLondon is the capital of England. \nBerlin is the capital of Germany. \nMadrid is the capital of Spain."},
-        ]
-
-        Example for summary with figures:
-        {"role": "assistant", "content": [
-        {"type": "input_image", "image_url": f"data:image/jpeg;base64,{image_data1}", "detail": "low"},
-        {"type": "input_image", "image_url": f"data:image/jpeg;base64,{image_data2}", "detail": "low"},
-        {"type": "input_text", "text": "Summary: What is Simplex Method? Preamble: The simplex method is a method for solving linear programming problems.\nBody: The simplex method is a method for solving linear programming problems.{1, 2} \nConclusion: The simplex method is a method for solving linear programming problems."},
-        ]
-    }
+        list: Will return a conversation history object that can be used directly in the chat history
     """
     import re
+
+    references_reverse = {v: k for k, v in documents.references.items()}
+    figures_reverse = {v: k + 1 for k, v in enumerate(documents.figures)}
     
     # Track all figure IDs that need to be included
     all_figure_ids = []
+    content_parts = []
     
-    # Process question tags
-    question_pattern = r'<QUESTION>(.*?)</QUESTION>'
-    question_matches = re.findall(question_pattern, message)
-    
-    for question_id in question_matches:
-        # Fetch question data to get both text and associated figures
-        question_response = supabase_client.table("questions").select("*").eq("id", question_id).execute()
+    # Helper function to process document tags in a text
+    def process_document_tags(text):
+        if not documents.references:
+            return text
         
-        if not question_response.data:
-            replacement = f"[Error fetching question {question_id}: Question not found]"
-            message = message.replace(f"<QUESTION>{question_id}</QUESTION>", replacement)
-            continue
-            
-        question = question_response.data[0]
-        
-        # Get question text
-        question_text = await fetch_question_text(supabase_client, question_id)
-        if isinstance(question_text, dict) and "error" in question_text:
-            replacement = f"[Error fetching question {question_id}: {question_text['error']}]"
-        else:
-            replacement = question_text
-        
-        message = message.replace(f"<QUESTION>{question_id}</QUESTION>", replacement)
-        
-        # Add any figures associated with this question
-        if "figures" in question and question["figures"]:
-            all_figure_ids.extend(question["figures"])
-    
-    # Process summary tags
-    summary_pattern = r'<SUMMARY>(.*?)</SUMMARY>'
-    summary_matches = re.findall(summary_pattern, message)
-    
-    for summary_id in summary_matches:
-        # Fetch summary data to get both text and associated figures
-        summary_response = supabase_client.table("summaries").select("*").eq("id", summary_id).execute()
-        
-        if not summary_response.data:
-            replacement = f"[Error fetching summary {summary_id}: Summary not found]"
-            message = message.replace(f"<SUMMARY>{summary_id}</SUMMARY>", replacement)
-            continue
-            
-        summary = summary_response.data[0]
-        
-        # Get summary text
-        summary_text = await fetch_summary_text(supabase_client, summary_id)
-        if isinstance(summary_text, dict) and "error" in summary_text:
-            replacement = f"[Error fetching summary {summary_id}: {summary_text['error']}]"
-        else:
-            replacement = summary_text
-        
-        message = message.replace(f"<SUMMARY>{summary_id}</SUMMARY>", replacement)
-        
-        # Add any figures associated with this summary
-        if "figures" in summary and summary["figures"]:
-            all_figure_ids.extend(summary["figures"])
-    
-    # Process standalone figure tags
-    figure_pattern = r'<FIGURE>(.*?)</FIGURE>'
-    figure_matches = re.findall(figure_pattern, message)
-    
-    for figure_id in figure_matches:
-        figure_text = await fetch_figure_resources(supabase_client, figure_id)
-        if isinstance(figure_text, dict) and "error" in figure_text:
-            replacement = f"[Error fetching figure {figure_id}: {figure_text['error']}]"
-        else:
-            replacement = figure_text
-        
-        message = message.replace(f"<FIGURE>{figure_id}</FIGURE>", replacement)
-        
-        # Add this figure ID to our list if it's not already there
-        if figure_id not in all_figure_ids:
-            all_figure_ids.append(figure_id)
-    
-    # Process document tags if references_mapping is provided
-    if references_mapping:
-        # we need to reverse the references_mapping to get the reference number to the document id
-        references_reverse = {v: k for k, v in references_mapping.items()}
         document_pattern = r'<DOCUMENT>(.*?)</DOCUMENT>'
-        document_matches = re.findall(document_pattern, message)
+        document_matches = re.findall(document_pattern, text)
         
         for document_id in document_matches:
             if document_id in references_reverse:
                 reference_number = references_reverse[document_id]
-                message = message.replace(f"<DOCUMENT>{document_id}</DOCUMENT>", f"[{reference_number}]")
+                text = text.replace(f"<DOCUMENT>{document_id}</DOCUMENT>", f"[{reference_number}]")
             else:
-                message = message.replace(f"<DOCUMENT>{document_id}</DOCUMENT>", f"[unknown reference]")
+                text = text.replace(f"<DOCUMENT>{document_id}</DOCUMENT>", f"[unknown reference]")
+        
+        return text
     
-    # If there are no figures, return a simple text message
-    if not all_figure_ids:
-        return {"role": "assistant", "content": message}
+    # Process document tags in the main message
+    message = process_document_tags(message)
     
-    # If there are figures, create a multipart message
-    content_parts = []
+    # Find all special tags and their positions
+    tag_positions = []
     
-    # First, collect all figure images
-    for figure_id in all_figure_ids:
-        image_part = await get_image_content(supabase_client, figure_id, class_id)
-        if image_part:
-            content_parts.append(image_part)
+    # Find question tags
+    question_pattern = r'<QUESTION>(.*?)</QUESTION>'
+    for match in re.finditer(question_pattern, message):
+        question_id = match.group(1)
+        tag_positions.append({
+            'start': match.start(),
+            'end': match.end(),
+            'id': question_id,
+            'type': 'question'
+        })
     
-    # Add the text content as the final part
-    content_parts.append({
-        "type": "input_text",
-        "text": message
-    })
+    # Find summary tags
+    summary_pattern = r'<SUMMARY>(.*?)</SUMMARY>'
+    for match in re.finditer(summary_pattern, message):
+        summary_id = match.group(1)
+        tag_positions.append({
+            'start': match.start(),
+            'end': match.end(),
+            'id': summary_id,
+            'type': 'summary'
+        })
     
-    return {"role": "assistant", "content": content_parts if content_parts else message}
+    # Find figure tags
+    figure_pattern = r'<FIGURE>(.*?)</FIGURE>'
+    for match in re.finditer(figure_pattern, message):
+        figure_id = match.group(1)
+        tag_positions.append({
+            'start': match.start(),
+            'end': match.end(),
+            'id': figure_id,
+            'type': 'figure'
+        })
+    
+    # Sort positions by start index
+    tag_positions.sort(key=lambda x: x['start'])
+    
+    # Break the message into parts and insert function calls
+    last_end = 0
+    for pos in tag_positions:
+        # Add text before this tag
+        if pos['start'] > last_end:
+            text_before = message[last_end:pos['start']]
+            if text_before.strip():
+                content_parts.append({
+                    "role": "assistant",
+                    "content": text_before
+                })
+        
+        # Process the tag based on its type
+        if pos['type'] == 'question':
+            question_id = pos['id']
+            question_response = supabase_client.table("questions").select("*").eq("id", question_id).execute()
+            
+            if not question_response.data:
+                # Add error message
+                content_parts.append({
+                    "role": "assistant",
+                    "content": f"[Error fetching question {question_id}: Question not found]"
+                })
+                last_end = pos['end']
+                continue
+                
+            question = question_response.data[0]
+            
+            # Add function call part
+            tool_name = "create_frq_question" if question.get("frq", False) else "create_mcq_question"
+
+            # map question.references to the reference number, in references_reverse
+            question_references = [references_reverse[ref] for ref in question.get("references", [])]
+            question_figures = [figures_reverse[fig] for fig in question.get("figures", [])]
+            
+            if question.get("frq", False):
+                function_call = {
+                    "arguments": json.dumps({
+                        "title": question.get("title", ""),
+                        "question": question.get("problem", ""),
+                        "answer": question.get("solution", ""),
+                        "references": question_references,
+                        "figures": question_figures
+                    }),
+                    "call_id": question_id,
+                    "name": tool_name,
+                    "type": "function_call",
+                    "id": question_id,
+                    "status": "completed"
+                }
+            else:
+                function_call = {
+                    "arguments": json.dumps({
+                        "title": question.get("title", ""),
+                        "question": question.get("problem", ""),
+                        "options": question.get("options", []),
+                        "explanations": question.get("explanations", []),
+                        "answer": question.get("answers", [""])[0] if question.get("answers") else "",
+                        "references": question_references,
+                        "figures": question_figures
+                    }),
+                    "call_id": question_id,
+                    "name": tool_name,
+                    "type": "function_call",
+                    "id": question_id,
+                    "status": "completed"
+                }
+            
+            content_parts.append(function_call)
+            
+            # Add function output part
+            function_output = {
+                "call_id": question_id,
+                "output": question_id,
+                "type": "function_call_output",
+                "id": question_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_output)
+            
+            # Add any figures associated with this question
+            if "figures" in question and question["figures"]:
+                all_figure_ids.extend(question["figures"])
+                
+        elif pos['type'] == 'summary':
+            summary_id = pos['id']
+            summary_response = supabase_client.table("summaries").select("*").eq("id", summary_id).execute()
+            
+            if not summary_response.data:
+                # Add error message
+                content_parts.append({
+                    "role": "assistant",
+                    "content": f"[Error fetching summary {summary_id}: Summary not found]"
+                })
+                last_end = pos['end']
+                continue
+                
+            summary = summary_response.data[0]
+            
+            # Process document tags in summary content
+            preamble = process_document_tags(summary.get("preamble", ""))
+            body = process_document_tags(summary.get("body", ""))
+            conclusion = process_document_tags(summary.get("conclusion", ""))
+
+            # map summary.references to the reference number, in references_reverse
+            summary_references = [references_reverse[ref] for ref in summary.get("references", [])]
+            summary_figures = [figures_reverse[fig] for fig in summary.get("figures", [])]
+            
+            # Add function call part
+            function_call = {
+                "arguments": json.dumps({
+                    "title": summary.get("title", ""),
+                    "preamble": preamble,
+                    "body": body,
+                    "conclusion": conclusion,
+                    "references": summary_references,
+                    "figures": summary_figures
+                }),
+                "call_id": summary_id,
+                "name": "create_summary",
+                "type": "function_call",
+                "id": summary_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_call)
+            
+            # Add function output part
+            function_output = {
+                "call_id": summary_id,
+                "output": summary_id,
+                "type": "function_call_output",
+                "id": summary_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_output)
+            
+            # Add any figures associated with this summary
+            if "figures" in summary and summary["figures"]:
+                all_figure_ids.extend(summary["figures"])
+                
+        elif pos['type'] == 'figure':
+            figure_id = pos['id']
+            figure_response = supabase_client.table("figures").select("*").eq("id", figure_id).execute()
+            
+            if not figure_response.data:
+                # Add error message
+                content_parts.append({
+                    "role": "assistant",
+                    "content": f"[Error fetching figure {figure_id}: Figure not found]"
+                })
+                last_end = pos['end']
+                continue
+                
+            figure = figure_response.data[0]
+
+            # map figure.references to the reference number, in references_reverse
+            figure_references = [references_reverse[ref] for ref in figure.get("references", [])]
+            
+            # Add function call part
+            function_call = {
+                "arguments": json.dumps({
+                    "title": figure.get("title", ""),
+                    "python_code": figure.get("code", ""),
+                    "references": figure_references
+                }),
+                "call_id": figure_id,
+                "name": "create_figure",
+                "type": "function_call",
+                "id": figure_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_call)
+            
+            # Add function output part
+            figure_number = str(figures_reverse[figure_id])
+            function_output = {
+                "call_id": figure_id,
+                "output": figure_number,
+                "type": "function_call_output",
+                "id": figure_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_output)
+            
+            # Add this figure ID to our list
+            if figure_id not in all_figure_ids:
+                all_figure_ids.append(figure_id)
+        
+        last_end = pos['end']
+    
+    # Add any remaining text after the last tag
+    if last_end < len(message):
+        remaining_text = message[last_end:]
+        if remaining_text.strip():
+            content_parts.append({
+                "role": "assistant",
+                "content": remaining_text
+            })
+    
+    # Return the complete message with function calls and content parts
+    return content_parts

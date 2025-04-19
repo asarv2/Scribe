@@ -82,6 +82,27 @@ async def main_agent():
                     "detail": "high"
                 },
             ],
+        },
+        {
+            "arguments": "{\"title\": \"A logo\", \"description\": \"The words spell out Google, in a blue and red color\"}",
+            "call_id": "",
+            "name": "image_analysis",
+            "type": "function_call",
+            "id": "123",
+            "status": "completed"
+        }, {
+            "call_id": "",
+            "output": "",
+            "type": "function_call_output",
+            "id": "123",
+            "status": "completed"
+        },
+        {
+            "role": "assistant",
+            "content": "The image is a picture of Google's logo."
+        },{
+            "role": "user",
+            "content": "Why do you think that?"
         }
     ])
     
