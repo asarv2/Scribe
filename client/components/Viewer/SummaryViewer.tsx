@@ -33,6 +33,7 @@ interface SummaryViewerProps {
 const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
 
     const supabase = useSupabaseBrowser();
+    const [downloadLoading, setDownloadLoading] = useState(false);
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -86,6 +87,66 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         } finally {
             setLoading(false);
         }
+    }
+
+    const handleDownload = (format: 'pdf' | 'latex' | 'text') => {
+        const downloadUrl = getSummaryDownloadUrl(chatId, summary.id, format);
+        
+        setDownloadLoading(true);
+        
+        // Fetch the file with the ngrok-skip-browser-warning header
+        fetch(downloadUrl, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        })
+        .then(response => {
+            // Get filename from Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = `${summary.title}.${format === 'latex' ? 'tex' : format}`;
+            
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+            
+            return response.blob().then(blob => ({ blob, filename }));
+        })
+        .then(({ blob, filename }) => {
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create a hidden anchor element
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.download = filename;
+            
+            // Append to the document, click it, and remove it
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+            
+            notifications.show({
+                title: 'Download complete',
+                message: `${format.toUpperCase()} file has been downloaded`,
+                color: 'green',
+            });
+        })
+        .catch(error => {
+            console.error('Download failed:', error);
+            notifications.show({
+                title: 'Download failed',
+                message: 'Failed to download the summary',
+                color: 'red',
+            });
+        })
+        .finally(() => {
+            setDownloadLoading(false);
+        });
     }
 
     const renderFigure = (figureId: string) => {
@@ -152,19 +213,17 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                                     <Menu.Label>Download as</Menu.Label>
                                     <Menu.Item
                                         leftSection={<IconFile size={14} />}
-                                        component="a"
-                                        href={getSummaryDownloadUrl(chatId, summary.id, 'pdf')}
-                                        download
+                                        onClick={() => handleDownload('pdf')}
+                                        disabled={downloadLoading}
                                     >
-                                        PDF Document
+                                        {downloadLoading ? 'Downloading...' : 'PDF Document'}
                                     </Menu.Item>
                                     <Menu.Item
                                         leftSection={<IconFileTypography size={14} />}
-                                        component="a"
-                                        href={getSummaryDownloadUrl(chatId, summary.id, 'latex')}
-                                        download
+                                        onClick={() => handleDownload('latex')}
+                                        disabled={downloadLoading}
                                     >
-                                        LaTeX Source
+                                        {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
                                     </Menu.Item>
                                     {/* <Menu.Item
                                         leftSection={<IconFileText size={14} />}
@@ -175,13 +234,13 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                                         Plain Text
                                     </Menu.Item> */}
                                 </Menu.Dropdown>
-                            </Menu> : <Tooltip label="Download PDF">
+                            </Menu> : <Tooltip label={downloadLoading ? 'Downloading...' : 'Download PDF'}>
                                 <ActionIcon
-                                    component="a"
                                     variant="subtle"
                                     size="md"
-                                    href={getSummaryDownloadUrl(chatId, summary.id, 'pdf')}
-                                    download
+                                    onClick={() => handleDownload('pdf')}
+                                    disabled={downloadLoading}
+                                    loading={downloadLoading}
                                 >
                                     <IconDownload size={18} />
                                 </ActionIcon>

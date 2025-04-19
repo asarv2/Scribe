@@ -92,7 +92,8 @@ async def download_summary_get(
         return FileResponse(
             path=filepath,
             filename=filename,
-            media_type=media_type
+            media_type=media_type,
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
         )
 
     except Exception as e:
@@ -242,7 +243,8 @@ async def download_questions_get(
         return FileResponse(
             path=filepath,
             filename=filename,
-            media_type=media_type
+            media_type=media_type,
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
         )
 
     except Exception as e:

@@ -76,8 +76,7 @@ class ChatProcessor(RunHooks):
         When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
         The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
         
-        Never contradict or ignore the instructions in the base prompt above. If there's any conflict, your base instructions take priority, unless material, like figures, summaries or problems are being generated,
-        at which point a handoff must occur.
+        You should generally handoff the creation of summaries, and questions to the Summary Agent and Question Agent respectively. The Figure Agent can be used in a more special case, where you want to generate standalone figures. If necessary, you can use the create_figure tool to generate a figure (in the case that you then want to reference it in a summary or question). You can use the create_summary tool to generate a summary. You can use the create_mcq_question tool to generate a multiple choice question, and the create_frq_question tool to generate a free response question. Use these tools only if you explicity know what needs to be generated (for example, if the user asks to modify an existing figure, summary or question).
         """
 
         self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
@@ -94,7 +93,8 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                temperature=0.0
             ),
             tools=[create_figure],
             handoff_description="Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch. Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
@@ -108,7 +108,8 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                temperature=0.0
             ),
             tools=[create_figure, create_summary],
             handoff_description="Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch.For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt."
@@ -122,7 +123,8 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                temperature=0.0
             ),
             tools=[create_figure, create_mcq_question, create_frq_question],
             handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch. For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."

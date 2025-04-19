@@ -286,7 +286,6 @@ def get_figure_prompt(course_title: str) -> str:
         f"You may see previous figures in the chat history that are enclosed in <FIGURE_GENERATION></FIGURE_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_figure' tool to generate the figure. Do not repeat your figure in the next message."
         f"You may see previous summaries in the chat history that are enclosed in <SUMMARY_GENERATION></SUMMARY_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_summary' tool to generate the summary. Do not repeat your summary in the next message."
         f"You may see previous questions in the chat history that are enclosed in <QUESTION_GENERATION></QUESTION_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_mcq_question' or 'create_frq_question' tool to generate the question. Do not repeat your question in the next message."
-        f"Do not use things like print(default_api.create_figure(references=<span class='tag-badge'...</span>) or print(default_api.create_figure(references=<span class='tag-badge'...</span>) in your response, just use the exact parameters specified in the create_figure tool."
     )
     
 
@@ -352,11 +351,11 @@ def get_summary_prompt(course_title: str) -> str:
         "- Present information in a way that provides a holistic understanding, using varied formatting to maintain interest.\n"
         "- Use precise, academic language that conveys depth and nuance, and structure the summary to facilitate interaction and further inquiry.\n"
         "4. Structure:\n"
-        "- Begin with a brief introductory statement in <PREAMBLE> and </PREAMBLE> tags, setting the stage for an engaging exploration of the topic.\n"
-        "- Organize elements in <SUMMARY> and </SUMMARY> tags, using indentations and sub-points to create a more interactive structure.\n"
+        "- Begin with a brief introductory statement in the preamble, setting the stage for an engaging exploration of the topic.\n"
+        "- Organize elements in the body, using indentations and sub-points to create a more interactive structure.\n"
         "- Ensure each point adds unique value to the overall summary, encouraging further exploration and understanding.\n"
         "5. Final Review:\n"
-        "- Check that the summary reads as a cohesive, integrated overview, with a structure that invites interaction and further inquiry, and add a <CONCLUSION> and </CONCLUSION> tag.\n"
+        "- Check that the summary reads as a cohesive, integrated overview, with a structure that invites interaction and further inquiry, and add a conclusion.\n"
         "- Confirm that the summary provides a comprehensive yet concise understanding, presented in an engaging and interactive manner.\n"
         "6. Visuals:\n"
         "- For technical/quantitative subjects, include a figure, diagram, or table if it clarifies a key concept. Reference it in the summary and use the create_figure tool as needed, ensuring it is seamlessly integrated into the summary.\n"
@@ -385,7 +384,6 @@ def get_summary_prompt(course_title: str) -> str:
         f"You may see previous summaries in the chat history that are enclosed in <SUMMARY_GENERATION></SUMMARY_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_summary' tool to generate the summary. Do not repeat your summary in the next message."
         f"You may see previous questions in the chat history that are enclosed in <QUESTION_GENERATION></QUESTION_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_mcq_question' or 'create_frq_question' tool to generate the question. Do not repeat your question in the next message."
         f"You may see previous figures in the chat history that are enclosed in <FIGURE_GENERATION></FIGURE_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_figure' tool to generate the figure. Do not repeat your figure in the next message."
-        "Do not use things like print(default_api.create_summary(references=<span class='tag-badge'...</span>) or print(default_api.create_summary(references=<span class='tag-badge'...</span>) in your response, just use the exact parameters specified in the create_summary tool."
     )
 
     return (

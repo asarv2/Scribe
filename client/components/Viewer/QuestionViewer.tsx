@@ -40,6 +40,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string[]>>({});
     const [frqAnswers, setFrqAnswers] = useState<Record<string, string>>({});
     const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({});
+    const [downloadLoading, setDownloadLoading] = useState(false);
 
 
     // Store the question IDs in a ref to detect when the actual questions change
@@ -183,6 +184,67 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         setFrqAnswers(prev => ({ ...prev, [questionId]: value }));
         // Reset checked status when answer changes
         setCheckedAnswers(prev => ({ ...prev, [questionId]: false }));
+    };
+
+    const handleDownload = (format: 'pdf' | 'latex') => {
+        const downloadUrl = getQuestionDownloadUrl(chatId, questions.map(q => q.id), format);
+        
+        setDownloadLoading(true);
+        
+        // Fetch the file with the ngrok-skip-browser-warning header
+        fetch(downloadUrl, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        })
+        .then(response => {
+            // Get filename from Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            console.log('Content-Disposition:', contentDisposition);
+            let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
+            
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+            
+            return response.blob().then(blob => ({ blob, filename }));
+        })
+        .then(({ blob, filename }) => {
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create a hidden anchor element
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.download = filename;
+            
+            // Append to the document, click it, and remove it
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+            
+            notifications.show({
+                title: 'Download complete',
+                message: `${format.toUpperCase()} file has been downloaded`,
+                color: 'green',
+            });
+        })
+        .catch(error => {
+            console.error('Download failed:', error);
+            notifications.show({
+                title: 'Download failed',
+                message: 'Failed to download the questions',
+                color: 'red',
+            });
+        })
+        .finally(() => {
+            setDownloadLoading(false);
+        });
     };
 
     const renderFigure = (figureId: string) => {
@@ -402,29 +464,27 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                             <Menu.Dropdown>
                                 <Menu.Item
                                     leftSection={<IconFile size={14} />}
-                                    component="a"
-                                    href={getQuestionDownloadUrl(chatId, questions.map(q => q.id), 'pdf')}
-                                    download
+                                    onClick={() => handleDownload('pdf')}
+                                    disabled={downloadLoading}
                                 >
-                                    PDF Document
+                                    {downloadLoading ? 'Downloading...' : 'PDF Document'}
                                 </Menu.Item>
                                 <Menu.Item
                                     leftSection={<IconFileTypography size={14} />}
-                                    component="a"
-                                    href={getQuestionDownloadUrl(chatId, questions.map(q => q.id), 'latex')}
-                                    download
+                                    onClick={() => handleDownload('latex')}
+                                    disabled={downloadLoading}
                                 >
-                                    LaTeX Source
+                                    {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu> :
-                            <Tooltip label="Download PDF">
+                            <Tooltip label={downloadLoading ? 'Downloading...' : 'Download PDF'}>
                                 <ActionIcon
-                                    component="a"
                                     variant="subtle"
                                     size="md"
-                                    href={getQuestionDownloadUrl(chatId, questions.map(q => q.id), 'pdf')}
-                                    download
+                                    onClick={() => handleDownload('pdf')}
+                                    disabled={downloadLoading}
+                                    loading={downloadLoading}
                                 >
                                     <IconDownload size={18} />
                                 </ActionIcon>
