@@ -6,10 +6,10 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button, Box } from "@mantine/core";
-import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight, IconGripVertical } from "@tabler/icons-react";
+import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button, Box, Flex, Menu, Progress, RingProgress, Loader } from "@mantine/core";
+import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight, IconGripVertical, IconUpload, IconFileUpload, IconRefresh, IconPlus, IconLoader, IconEye } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, ViewerMode, Document, File } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -17,10 +17,12 @@ import { useDrag } from 'react-dnd';
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getFiles } from "@/utils/queries/get-files";
-import DeleteFileModal from "../Delete/DeleteFileModal";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClass } from "@/utils/queries/get-class";
+import UploadFileButton from "../Buttons/UploadFileButton";
+import { markFileIdle } from "@/utils/services/file";
+import DraggableWrapper from "../DragDrop/DraggableWrapper";
 declare global {
     interface Window {
         scrollToFirstItem?: (type: string) => void;
@@ -29,9 +31,11 @@ declare global {
 
 interface ContextPanelProps {
     classId: string;
+    isInitializing: boolean;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
-    addContextToChat: (contextId: string) => void;
+    addFileToChat: (fileId: string) => void;
+    addDocumentToChat: (documentId: string) => void;
     activeChat: ChatMessage;
     makeDraggable?: boolean;
     viewerMode: ViewerMode;
@@ -47,59 +51,6 @@ const CONTENT_COLORS = {
     other: 'violet',     // now matches badge color in ContextBadges
 } as const;
 
-// Define a wrapper component that makes an item draggable
-function DraggableWrapper({
-    children,
-    item,
-    type,
-    makeDraggable = false
-}: {
-    children: React.ReactNode;
-    item: { id: string };
-    type: 'lectures' | 'textbooks' | 'homeworks' | 'other';
-    makeDraggable?: boolean;
-}) {
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: 'CONTEXT_ITEM',
-        item: { id: item.id, type },
-        collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
-        }),
-    }), [item.id, type]);
-
-    if (!makeDraggable) {
-        return <>{children}</>;
-    }
-
-    return (
-        <div
-            ref={(drag as unknown) as React.LegacyRef<HTMLDivElement>}
-            style={{
-                opacity: isDragging ? 0.5 : 1,
-                cursor: 'move',
-                position: 'relative'
-            }}
-        >
-            {children}
-            {/* {isDragging && (
-                <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    background: 'rgba(0, 120, 255, 0.8)',
-                    color: 'white',
-                    fontSize: '11px',
-                    padding: '2px 5px',
-                    borderRadius: '0 0 0 4px',
-                    zIndex: 10
-                }}>
-                    Dragging
-                </div>
-            )} */}
-        </div>
-    );
-}
-
 // Define a reusable ItemCard component directly in ContextPanel
 const ItemCard = ({
     item,
@@ -107,7 +58,7 @@ const ItemCard = ({
     profileId,
     color,
     contextType,
-    addContextToChat,
+    addFileToChat,
     isVisible,
     makeDraggable = false,
     setViewerMode,
@@ -119,13 +70,53 @@ const ItemCard = ({
     profileId: string,
     color: string,
     contextType: 'lectures' | 'textbooks' | 'homeworks' | 'other',
-    addContextToChat: (contextId: string) => void,
+    addFileToChat: (fileId: string) => void,
     isVisible: boolean,
     makeDraggable?: boolean,
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
     fileDocuments?: Document[],
     onFileDelete?: () => void
 }) => {
+    const queryClient = useQueryClient();
+
+    // Calculate file progress
+    const getFileProgress = (fileId: string, uploading: boolean = false) => {
+        if (!fileDocuments) return 0;
+        const file = item;
+        if (!file || file.length === 0) return 0;
+
+        const docs = fileDocuments.filter(doc =>
+            doc.file === fileId && (uploading || doc.processed)
+        );
+
+        return (docs.length / file.length) * 100;
+    };
+    // Retry processing function
+    const handleRetryProcessing = async (fileId: string) => {
+        try {
+
+            // set the item to idle, so the user sees that it is loading
+            const { success, error } = await markFileIdle(fileId);
+            if (!success) {
+                throw new Error(error);
+            }
+            queryClient.invalidateQueries({
+                queryKey: ["fileDocuments", classId]
+            });
+
+            const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/parse/file`;
+
+            await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    file_id: fileId,
+                })
+            });
+        } catch (error) {
+            console.error(`Error retrying file:`, error);
+        }
+    };
 
     const originalCard = (
         <Card
@@ -141,15 +132,10 @@ const ItemCard = ({
             }}
             onClick={(e) => {
                 e.stopPropagation();
-                if (!makeDraggable) {
-                    addContextToChat(item.id);
-                } else if (setViewerMode) {
-                    const document = fileDocuments?.find(d => d.file === item.id)
-                    if (document) {
-                        handleDocumentClick(item.id, document.id, setViewerMode);
-                    }
+                // Only allow clicking if the file is complete
+                if (item.parse_status === 'complete' || item.parse_status === 'parsing') {
+                    addFileToChat(item.id);
                 }
-
             }}
         >
             <Group>
@@ -196,35 +182,66 @@ const ItemCard = ({
                         >
                             {item.newName}
                         </Text>
-                        <Group gap={2}>
-                            {contextType === 'other' && (item.profile && item.profile === profileId) && (
-                                <DeleteFileModal
-                                    fileId={item.id}
-                                    classId={classId}
-                                    fileName={item.newName}
-                                    navigateHome={false}
-                                    profileId={profileId}
-                                    onDelete={onFileDelete}
-                                    contentType="other"
-                                />
-                            )}
-                            {makeDraggable && (
-                                <Tooltip label="Drag to chat">
-                                    <ActionIcon variant="transparent" size="md" color="gray">
-                                        <IconGripVertical size={20} />
+                        <>
+                            {/* Status indicators based on parse_status */}
+                            {item.parse_status === 'idle' ? (
+                                <Tooltip label="Loading...">
+                                    <ActionIcon variant="transparent" color="blue" size="sm">
+                                        <Loader size={"xs"} />
+                                    </ActionIcon>
+                                </Tooltip>
+                            ) : item.parse_status === 'error' ? (
+                                <Tooltip label="Retry Processing">
+                                    <ActionIcon variant="light" color="red" size="sm" onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRetryProcessing(item.id);
+                                    }}>
+                                        <IconRefresh size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
+                            ) : (item.parse_status === 'uploading' || item.parse_status === 'parsing') ? (
+                                <Tooltip label={`Retry ${item.parse_status === 'uploading' ? 'upload' : 'parse'}`}>
+                                    <RingProgress
+                                        size={40}
+                                        thickness={2}
+                                        sections={[{ value: getFileProgress(item.id, item.parse_status !== 'parsing'), color: item.parse_status === 'uploading' ? 'blue' : 'green' }]}
+                                        label={
+                                            <Text size="xs" ta="center" fw={500}>
+                                                {Math.round(getFileProgress(item.id, item.parse_status !== 'parsing'))}%
+                                            </Text>
+                                        }
+                                        style={{ cursor: "pointer" }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleRetryProcessing(item.id);
+                                        }}
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Tooltip label="Open in viewer">
+                                    <ActionIcon variant="subtle" size="md" onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (setViewerMode) {
+                                            const document = fileDocuments?.find(d => d.file === item.id)
+                                            if (document) {
+                                                handleDocumentClick(item.id, document.id, setViewerMode, false);
+                                            }
+                                        }
+                                    }}>
+                                        <IconEye size={20} />
                                     </ActionIcon>
                                 </Tooltip>
                             )}
-                        </Group>
+                        </>
                     </Group>
                 </Stack>
-            </Group>
-        </Card>
+            </Group >
+        </Card >
     );
 
     // Wrap in draggable component if needed
-    return makeDraggable ? (
-        <DraggableWrapper item={item} type={contextType} makeDraggable={makeDraggable}>
+    return makeDraggable && item.parse_status === 'complete' ? (
+        <DraggableWrapper item={item} type={'file'} makeDraggable={makeDraggable}>
             {originalCard}
         </DraggableWrapper>
     ) : originalCard;
@@ -248,10 +265,12 @@ const SectionSkeleton = () => (
 );
 
 export function ContextPanel({
+    isInitializing,
     classId,
     searchQuery,
     setSearchQuery,
-    addContextToChat,
+    addFileToChat,
+    addDocumentToChat,
     activeChat,
     makeDraggable = false,
     viewerMode,
@@ -388,8 +407,8 @@ export function ContextPanel({
 
         // Add files
         if (lectureFiles && lectureEnabled) {
-            const filteredFiles = filterBySearch(lectureFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
-                .filter(f => !activeChat.context.includes(f.id))
+            const filteredFiles = filterBySearch(lectureFiles, fileDocuments || [])
+                .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
                     ...f,
                     newName: f.title ?? "",
@@ -407,8 +426,8 @@ export function ContextPanel({
         }
 
         if (textbookFiles && textbookEnabled) {
-            const filteredFiles = filterBySearch(textbookFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
-                .filter(f => !activeChat.context.includes(f.id))
+            const filteredFiles = filterBySearch(textbookFiles, fileDocuments || [])
+                .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
                     ...f,
                     newName: f.title ?? "",
@@ -426,8 +445,8 @@ export function ContextPanel({
         }
 
         if (homeworkFiles && homeworkEnabled) {
-            const filteredFiles = filterBySearch(homeworkFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
-                .filter(f => !activeChat.context.includes(f.id))
+            const filteredFiles = filterBySearch(homeworkFiles, fileDocuments || [])
+                .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
                     ...f,
                     newName: f.title ?? "",
@@ -445,8 +464,8 @@ export function ContextPanel({
         }
 
         if (otherFiles && otherEnabled) {
-            const filteredFiles = filterBySearch(otherFiles.sort((a, b) => (new Date(b.created_at).getTime() - new Date(a.created_at).getTime())), fileDocuments || [])
-                .filter(f => !activeChat.context.includes(f.id))
+            const filteredFiles = filterBySearch(otherFiles, fileDocuments || [])
+                .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
                     ...f,
                     newName: f.title ?? "",
@@ -530,20 +549,43 @@ export function ContextPanel({
             }}
         >
             <Stack>
-                <TextInput
-                    placeholder="Search context..."
-                    value={localSearchQuery}
-                    onChange={(e) => setLocalSearchQuery(e.target.value)}
-                    leftSection={<IconSearch size={16} />}
-                />
+                {isInitializing ? (
+                    // Skeleton for search bar and upload button when initializing
+                    <Flex justify="space-between" align="center" gap="md">
+                        <Skeleton height={36} radius="md" style={{ flex: 1 }} /> {/* Takes up available space */}
+                        <Skeleton height={36} width={36} radius="md" /> {/* Fixed width for icon */}
+                    </Flex>
+                ) : (
+                    <Flex justify="space-between" align="center" gap="md">
+                        <TextInput
+                            placeholder="Search context..."
+                            value={localSearchQuery}
+                            onChange={(e) => setLocalSearchQuery(e.target.value)}
+                            leftSection={<IconSearch size={16} />}
+                            style={{ flex: 1 }}
+                        />
+                        <UploadFileButton
+                            classId={classId}
+                            startParse={true}
+                        />
+                    </Flex>
+                )}
 
-                {isLoading ? (
-                    <>
-                        <SectionSkeleton />
-                        <SectionSkeleton />
-                        <SectionSkeleton />
-                    </>
-
+                {isLoading || isInitializing ? (
+                    // Always show 10 skeleton items when loading or initializing
+                    <Stack>
+                        {Array(10).fill(0).map((_, i) => (
+                            <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
+                                <Group>
+                                    <Skeleton width={40} height={40} radius="md" />
+                                    <Stack style={{ flex: 1 }}>
+                                        <Skeleton height={12} width="60%" />
+                                        <Skeleton height={8} width="40%" />
+                                    </Stack>
+                                </Group>
+                            </Card>
+                        ))}
+                    </Stack>
                 ) : (
                     <div
                         ref={containerRef}
@@ -599,7 +641,7 @@ export function ContextPanel({
                                                 profileId={profile?.id ?? ""}
                                                 color={item.color}
                                                 contextType={item.type}
-                                                addContextToChat={addContextToChat}
+                                                addFileToChat={addFileToChat}
                                                 isVisible={isItemVisible || localSearchQuery.length > 0}
                                                 makeDraggable={makeDraggable}
                                                 setViewerMode={setViewerMode}

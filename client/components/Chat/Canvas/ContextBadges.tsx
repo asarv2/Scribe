@@ -8,8 +8,8 @@ import { IconFile, IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { ChatMessage, ViewerMode, File } from "@/types";
-import { handleDocumentClick } from "@/utils/chat/chat-helpers";
+import { ChatMessage, ViewerMode, File, Document } from "@/types";
+import { getPageRanges, handleDocumentClick } from "@/utils/chat/chat-helpers";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getUser } from "@/utils/queries/get-user";
@@ -27,7 +27,8 @@ const CONTENT_COLORS = {
 interface ContextBadgesProps {
     activeChat: ChatMessage;
     classId: string;
-    onRemoveContext?: (contextId: string) => void;
+    onRemoveFile?: (fileId: string) => void;
+    onRemoveDocument?: (documentId: string) => void;
     onScrollToSection?: (sectionId: string) => void;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
     expandedSections: Set<string>;
@@ -39,7 +40,8 @@ interface ContextBadgesProps {
 export const ContextBadges = memo(({
     activeChat,
     classId,
-    onRemoveContext,
+    onRemoveFile,
+    onRemoveDocument,
     onScrollToSection,
     setViewerMode,
     expandedSections,
@@ -76,16 +78,16 @@ export const ContextBadges = memo(({
         if (!file) return null;
         const fileId = file.id;
         const fileDocument = fileDocuments?.filter(d => d.file === fileId).sort((a, b) => a.page - b.page)[0];
-        
+
         // Check if this is a video file (starts with "video-")
-        const isProcessingVideo = file.id.startsWith('video-') && 
-                                 ['extracting', 'uploading', 'processing', 'parsing'].includes(file.parse_status || '');
-        
+        const isProcessingVideo = file.id.startsWith('video-') &&
+            ['extracting', 'uploading', 'processing', 'parsing'].includes(file.parse_status || '');
+
         // Display title - show processing state for videos
-        const displayTitle = isProcessingVideo 
-            ? `Video (${file.parse_status || 'processing'}...)` 
+        const displayTitle = isProcessingVideo
+            ? `Video (${file.parse_status || 'processing'}...)`
             : file.title;
-        
+
         return file && (
             <Badge
                 key={fileId}
@@ -98,7 +100,7 @@ export const ContextBadges = memo(({
                         radius="sm"
                     /> : <IconFile size={14} />
                 }
-                rightSection={onRemoveContext && (
+                rightSection={onRemoveFile && (
                     <Tooltip label={`Remove from chat`} openDelay={500}>
                         <ActionIcon
                             variant="transparent"
@@ -107,7 +109,7 @@ export const ContextBadges = memo(({
                             style={{ cursor: 'pointer' }}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onRemoveContext(fileId);
+                                onRemoveFile(fileId);
                             }}
                         >
                             <IconX size={16} />
@@ -116,7 +118,7 @@ export const ContextBadges = memo(({
                 )}
                 onClick={(e) => {
                     if (setViewerMode && fileDocument?.id) {
-                        handleDocumentClick(fileId, fileDocument.id, setViewerMode);
+                        handleDocumentClick(fileId, fileDocument.id, setViewerMode, false);
                     }
                 }}
             >
@@ -127,25 +129,99 @@ export const ContextBadges = memo(({
         )
     }
 
+    const getDocumentLabel = (
+        doc?: Document,
+        range?: string
+    ): string => {
+        const file = files?.find(f => f.id === doc?.file);
+        return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
+    };
+
+    const renderDocumentBadges = (documentIds: string[]) => {
+        const documents = documentIds.map(id => fileDocuments?.find(doc => doc.id === id)).filter(doc => doc !== undefined)
+        const groupFiles = Array.from(new Set(documents.filter(doc => doc && doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
+        // get the page ranges for each lecture and chapter
+        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc && doc.file === file))).flat()
+        // combine the page ranges for each lecture and chapter
+        const allDocumentPageRanges = [...filePageRanges]
+
+        return (
+            <>
+                {allDocumentPageRanges.length > 0 && allDocumentPageRanges.map((pageRange, pageRangeIndex) => {
+                    const label = getDocumentLabel(
+                        pageRange.startDocument ?? undefined,
+                        pageRange.range
+                    );
+                    const file = files?.find(f => f.id === pageRange.startDocument?.file);
+                    return file && pageRange.startDocument && (
+                        <Badge
+                            key={pageRange.startDocument.id}
+                            color={CONTENT_COLORS[file.content_type]}
+                            style={{ cursor: 'pointer' }}
+                            leftSection={
+                                <Avatar
+                                    src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${file.id}/${pageRange.startDocument.id}.png`}
+                                    size="xs"
+                                    radius="sm"
+                                />
+                            }
+                            rightSection={onRemoveDocument && (
+                                <Tooltip label={`Remove from chat`} openDelay={500}>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="white"
+                                        size={"sm"}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // remove all the documents in the page range. Starting with the first document and until the last document.
+                                            const firstPageNumber = pageRange.startDocument?.page ?? 0;
+                                            const lastPageNumber = pageRange.endDocument?.page ?? 0;
+                                            const documentsInRange = fileDocuments?.filter(doc => doc.page >= firstPageNumber && doc.page <= lastPageNumber);
+                                            documentsInRange?.forEach(doc => {
+                                                onRemoveDocument(doc.id);
+                                            })
+                                        }}
+                                    >
+                                        <IconX size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
+                            )}
+                            onClick={(e) => {
+                                if (setViewerMode && pageRange.startDocument?.id) {
+                                    handleDocumentClick(file.id, pageRange.startDocument.id, setViewerMode, true);
+                                }
+                            }}
+                        >
+                            <Tooltip label={`View page details`} openDelay={500} offset={8}>
+                                <div>{label}</div>
+                            </Tooltip>
+                        </Badge>
+                    );
+                })}
+            </>
+        )
+    }
+
     return (
         <>
             <Box style={{ width: '100%' }}>
                 <Group gap={"xs"}>
                     {recordedVideos.map(video => {
-                        // check if the video is in the activeChat.context.files or if the file id does not exist
-                        const showVideo = activeChat.context.includes(video.fileId ?? '') || !video.fileId;
-                        
+                        // check if the video is in the activeChat.files or if the file id does not exist
+                        const showVideo = activeChat.files.includes(video.fileId ?? '') || !video.fileId;
+
                         // Find the file if it exists
                         const videoFile = video.fileId ? files?.find(f => f.id === video.fileId) : null;
-                        
+
                         // Determine processing status from the file
                         const processingStatus = videoFile?.parse_status || 'uploading';
                         const processingError = videoFile?.parse_error;
-                        
+
                         // Calculate progress based on status
                         let progressValue = video.uploadProgress || 0;
                         let statusMessage = 'Uploading...';
-                        
+
                         if (videoFile) {
                             switch (processingStatus) {
                                 case 'extracting':
@@ -166,7 +242,7 @@ export const ContextBadges = memo(({
                                     const processedDocs = fileDocuments?.filter(
                                         doc => doc.file === video.fileId && doc.processed === true
                                     )?.length || 0;
-                                    
+
                                     progressValue = 75 + (25 * (processedDocs / totalDocs));
                                     statusMessage = `Analyzing video (${processedDocs}/${totalDocs})`;
                                     break;
@@ -175,7 +251,7 @@ export const ContextBadges = memo(({
                                     break;
                             }
                         }
-                        
+
                         return showVideo && (
                             <Box
                                 key={video.id}
@@ -221,8 +297,8 @@ export const ContextBadges = memo(({
                                         padding: '0 16px'
                                     }}>
                                         <Text size="sm" fw={500} c="white" mb={8}>
-                                            {processingStatus === 'error' 
-                                                ? 'Processing Failed' 
+                                            {processingStatus === 'error'
+                                                ? 'Processing Failed'
                                                 : statusMessage}
                                         </Text>
                                         <Progress
@@ -254,8 +330,10 @@ export const ContextBadges = memo(({
             </Box>
 
             <Group gap={"xs"} pb={"sm"} pt={"sm"}>
-                {Array.from(new Set(activeChat.context.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)))).map(fileId => renderFileBadge(files?.find(f => f.id === fileId), true))}
+                {Array.from(new Set(activeChat.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)))).map(fileId => renderFileBadge(files?.find(f => f.id === fileId), true))}
+                {renderDocumentBadges(activeChat.documents)}
             </Group>
+
         </>
     )
 });

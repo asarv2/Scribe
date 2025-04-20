@@ -10,24 +10,33 @@ import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getClass } from "@/utils/queries/get-class";;
 import { useSearchParams } from "next/navigation";
-import { Box, Stack, Text, Skeleton, Modal } from "@mantine/core";
+import { Box, Stack, Text, Skeleton, Modal, Tooltip, ActionIcon, Group } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getFile } from "@/utils/queries/get-file";
+import Latex from "../Latex";
+import { IconEye, IconZoomIn } from "@tabler/icons-react";
+import { ChatMessage, ViewerMode } from "@/types";
+import DraggableWrapper from "../DragDrop/DraggableWrapper";
 
 type FileViewerProps = {
     classId: string;
-    fileId: string;
-    initialDocumentId?: string;
+    addDocumentToChat: (documentId: string) => void;
+    activeChat: ChatMessage;
+    viewerMode: ViewerMode;
+    setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
 }
 
 export default function FileViewer({
     classId,
-    fileId,
-    initialDocumentId,
+    addDocumentToChat,
+    activeChat,
+    viewerMode,
+    setViewerMode
 }: FileViewerProps) {
-    const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
-    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [activeDocumentId, setActiveDocumentId] = useState<string | null>(viewerMode.documentId ?? null);
+
+    const fileId = viewerMode.fileId;
 
     const supabase = useSupabaseBrowser();
     const searchParams = useSearchParams();
@@ -39,65 +48,61 @@ export default function FileViewer({
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({
-        queryKey: ["fileDocuments", classId],
-        queryFn: () => getFileDocuments(supabase, [fileId])
+        queryKey: ["fileDocuments", classId, fileId],
+        queryFn: () => getFileDocuments(supabase, fileId ? [fileId] : []),
+        enabled: !!fileId
     })
 
-    const { data: file, isLoading: loadingFile } = useQuery({
-        queryKey: ["file", fileId],
-        queryFn: () => getFile(supabase, fileId)
-    })
-
-    const filteredDocuments = documents?.filter(doc => doc.file === fileId);
+    const filteredDocuments = documents?.filter(doc => !activeChat.documents.includes(doc.id));
 
     const getActiveImage = (documentId: string | null) => {
-        if (!classData || !file || !documentId) return "/placeholder_image.svg";
-        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${documentId}.png`;
+        if (!documentId || !classId || !fileId) return "/placeholder_image.svg";
+        try {
+            return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${documentId}.png`;
+        } catch (error) {
+            console.error("Error generating image URL:", error);
+            return "/placeholder_image.svg";
+        }
     }
 
-    // Open the full-size image modal with the selected document
-    const openImageModal = (documentId: string) => {
-        setActiveDocumentId(documentId);
-        setIsImageModalOpen(true);
-    };
 
     useEffect(() => {
-        if (filteredDocuments && filteredDocuments.length > 0 && !activeDocumentId) {
-            if (initialDocumentId) {
-                setActiveDocumentId(initialDocumentId);
+        if (filteredDocuments && filteredDocuments.length > 0) {
+            let newActiveId = null;
+            
+            if (activeDocumentId && filteredDocuments.some(doc => doc.id === activeDocumentId)) {
+                newActiveId = activeDocumentId;
             } else if (page) {
-                // Handle both single page numbers and page ranges (e.g., "p.5" or "pp.5-7")
-                const pageNum = parseInt(page.replace(/[^0-9]/g, ''));
-                const matchingDoc = filteredDocuments.find(doc => doc.page === pageNum);
-                if (matchingDoc) {
-                    setActiveDocumentId(matchingDoc.id);
-                } else {
-                    // Default to first page if specified page not found
-                    setActiveDocumentId(filteredDocuments[0].id);
+                try {
+                    const pageNum = parseInt(page.replace(/[^0-9]/g, ''));
+                    const matchingDoc = filteredDocuments.find(doc => doc.page === pageNum);
+                    newActiveId = matchingDoc ? matchingDoc.id : filteredDocuments[0].id;
+                } catch (e) {
+                    newActiveId = filteredDocuments[0].id;
                 }
             } else {
-                // No page specified, default to first page
-                setActiveDocumentId(filteredDocuments[0].id);
+                newActiveId = filteredDocuments[0].id;
             }
+            setActiveDocumentId(newActiveId);
         }
-    }, [filteredDocuments, activeDocumentId, page, initialDocumentId]);
+    }, [filteredDocuments, page]);
 
     // Scroll to the active document when it changes
     useEffect(() => {
-        if (activeDocumentId && !isImageModalOpen) {
+        if (activeDocumentId) {
             const element = document.getElementById(`document-${activeDocumentId}`);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
-    }, [activeDocumentId, isImageModalOpen]);
+    }, [activeDocumentId]);
 
     return (
         <>
-            <Box 
-                style={{ 
-                    height: '100%', 
-                    width: '100%', 
+            <Box
+                style={{
+                    height: '100%',
+                    width: '100%',
                     overflowY: 'auto',
                     padding: '10px'
                 }}
@@ -110,93 +115,106 @@ export default function FileViewer({
                     </Stack>
                 ) : (
                     <Stack>
-                        {filteredDocuments?.map((doc) => (
-                            <Box
-                                key={doc.id}
-                                id={`document-${doc.id}`}
-                                style={{
-                                    position: 'relative',
-                                    width: '100%',
-                                    cursor: 'zoom-in',
-                                    borderRadius: '8px',
-                                    overflow: 'hidden',
-                                    boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                                }}
-                                onClick={() => openImageModal(doc.id)}
-                            >
-                                <Image
-                                    src={getActiveImage(doc.id)}
-                                    alt={`Page ${doc.page}`}
-                                    width={800}
-                                    height={1100}
-                                    style={{
-                                        width: '100%',
-                                        height: 'auto',
-                                        objectFit: "contain"
-                                    }}
-                                    sizes="100vw"
-                                    placeholder="blur"
-                                    blurDataURL={"/placeholder_image.svg"}
+                        {documents?.map((doc) => 
+                            activeChat.documents.includes(doc.id) ? (
+                                // Empty div with document ID for scrolling purposes
+                                <Box 
+                                    key={doc.id} 
+                                    id={`document-${doc.id}`} 
+                                    style={{ height: 0, margin: 0, padding: 0 }}
                                 />
-                                <Box
-                                    pos="absolute"
-                                    bottom={10}
-                                    right={10}
-                                    p={4}
-                                    style={{
-                                        zIndex: 100,
-                                        backgroundColor: "rgba(0,0,0,0.7)",
-                                        borderRadius: "4px",
-                                    }}
-                                >
-                                    <Text
-                                        size={"xs"}
-                                        fw={500}
+                            ) : (
+                                <DraggableWrapper key={doc.id} item={doc} type={'document'} makeDraggable={true}>
+                                    <Box
+                                        id={`document-${doc.id}`}
                                         style={{
-                                            color: "white",
-                                            textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
+                                            position: 'relative',
+                                            width: '100%',
+                                            cursor: 'grab',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                                        }}
+                                        onClick={() => {
+                                            addDocumentToChat(doc.id);
                                         }}
                                     >
-                                        Page {doc.page}
-                                    </Text>
-                                </Box>
-                            </Box>
-                        ))}
+                                        <Image
+                                            src={getActiveImage(doc.id)}
+                                            alt={`Page ${doc.page}`}
+                                            width={800}
+                                            height={1100}
+                                            style={{
+                                                width: '100%',
+                                                height: 'auto',
+                                                objectFit: "contain"
+                                            }}
+                                            sizes="100vw"
+                                            placeholder="blur"
+                                            blurDataURL={"/placeholder_image.svg"}
+                                            onError={() => console.log(`Failed to load image for document ${doc.id}`)}
+                                        />
+                                        {/* Add magnifying glass icon in top right corner to open the image modal */}
+                                        <Box
+                                            pos="absolute"
+                                            top={10}
+                                            right={10}
+                                            p={4}
+                                            style={{
+                                                zIndex: 100,
+                                                backgroundColor: "rgba(0,0,0,0.7)",
+                                                borderRadius: "4px",
+                                                cursor: "pointer"
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setViewerMode({
+                                                    ...viewerMode,
+                                                    documentId: doc.id,
+                                                    showPageDetails: true
+                                                });
+                                            }}
+                                        >
+                                            <Tooltip label={`Page details`}>
+                                                <Group gap={4} align="center">
+                                                    <IconZoomIn
+                                                        size={16}
+                                                        style={{
+                                                            color: "white"
+                                                        }}
+                                                    />
+                                                </Group>
+                                            </Tooltip>
+                                        </Box>
+                                        <Box
+                                            pos="absolute"
+                                            bottom={10}
+                                            right={10}
+                                            p={4}
+                                            style={{
+                                                zIndex: 100,
+                                                backgroundColor: "rgba(0,0,0,0.7)",
+                                                borderRadius: "4px",
+                                            }}
+                                        >
+                                            <Text
+                                                size={"xs"}
+                                                fw={500}
+                                                style={{
+                                                    color: "white",
+                                                    textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
+                                                }}
+                                            >
+                                                Page {doc.page}
+                                            </Text>
+                                        </Box>
+                                    </Box>
+                                </DraggableWrapper>
+                            )
+                        )}
                     </Stack>
                 )}
             </Box>
-
-            {/* Full-size image modal */}
-            <Modal
-                opened={isImageModalOpen}
-                onClose={() => setIsImageModalOpen(false)}
-                size="xl"
-                padding="md"
-                centered
-                title={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
-            >
-                <Box
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '80vh'
-                    }}
-                >
-                    <Image
-                        src={getActiveImage(activeDocumentId)}
-                        alt={`Page ${filteredDocuments?.find(doc => doc.id === activeDocumentId)?.page}`}
-                        width={1200}
-                        height={1200}
-                        style={{
-                            maxWidth: '100%',
-                            maxHeight: '100%',
-                            objectFit: "contain"
-                        }}
-                        sizes="100vw"
-                    />
-                </Box>
-            </Modal>
         </>
     );
 }

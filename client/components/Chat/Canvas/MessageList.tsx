@@ -255,13 +255,13 @@ export const MessageList = memo(({
           <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
             <Group gap="xs" align="center">
               <Avatar
-                src={professor ? getAvatarUrl(professor.id) : undefined}
+                src={(professor && !activeChat.teacher) ? getAvatarUrl(professor.id) : undefined}
                 size="sm"
                 radius="xl"
                 alt="AI Assistant"
               />
               <Text size="sm" c="dimmed">
-                {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                {(professor && !activeChat.teacher) ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
               </Text>
             </Group>
 
@@ -277,32 +277,32 @@ export const MessageList = memo(({
                 position: "relative"
               }}
             >
-              <Text>
+              <Box>
                 {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
                   <>
                     {/* Student follow-up text */}
                     {existingChat ? (
                       // Use existingChat data when available
-                      existingChat.type === 'concept' ? (
+                      existingChat.chat_type === 'learn' ? (
                         <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                      ) : existingChat.type === 'homework-student' ? (
+                      ) : existingChat.chat_type === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                      ) : existingChat.type === 'present' ? (
+                      ) : existingChat.chat_type === 'present' ? (
                         <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
-                      ) : existingChat.type === 'review' ? (
+                      ) : existingChat.chat_type === 'test' ? (
                         <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
                     ) : (
                       // Fall back to activeChat data for new chats
-                      activeChat.chatType === 'concept' ? (
+                      activeChat.chatType === 'learn' ? (
                         <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                      ) : activeChat.chatType === 'homework-student' ? (
+                      ) : activeChat.chatType === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
                       ) : activeChat.chatType === 'present' ? (
                         <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
-                      ) : activeChat.chatType === 'review' ? (
+                      ) : activeChat.chatType === 'test' ? (
                         <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
@@ -314,46 +314,35 @@ export const MessageList = memo(({
                     {/* Teacher follow-up text */}
                     {existingChat ? (
                       // Use existingChat data when available
-                      existingChat.type === 'method' ? (
-                        <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                      ) : existingChat.type === 'homework-professor' ? (
-                        <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                      ) : existingChat.type === 'generate' ? (
-                        <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                      existingChat.chat_type === 'figure' ? (
+                        <>What <Text span fw={600} c="grape">figures</Text> would you like me to generate?</>
+                      ) : existingChat.chat_type === 'summary' ? (
+                        <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
+                      ) : existingChat.chat_type === 'question' ? (
+                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
                     ) : (
                       // Fall back to activeChat data for new chats
-                      activeChat.chatType === 'method' ? (
-                        <>What specific <Text span fw={600} c="green">method</Text> would you like me to use when helping the students?</>
-                      ) : activeChat.chatType === 'homework-professor' ? (
-                        <>Which <Text span fw={600} c="indigo">homework</Text> requires some extra guidance or information?</>
-                      ) : activeChat.chatType === 'generate' ? (
-                        <>What content would you like me to<Text span fw={600} c="cyan"> generate</Text>?</>
+                      activeChat.chatType === 'figure' ? (
+                        <>What <Text span fw={600} c="grape">figures</Text> would you like me to generate?</>
+                      ) : activeChat.chatType === 'summary' ? (
+                        <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
+                      ) : activeChat.chatType === 'question' ? (
+                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
                     )}
                   </>
                 )}
-              </Text>
+              </Box>
             </Card>
           </Stack>
         </Flex>
       </Stack>
     );
-  };
-
-  // Get document label for display
-  const getDocumentLabel = (
-    type: 'lecture' | 'chapter' | 'homework-problem' | 'chapter-exercise' | 'files',
-    doc?: Document,
-    exercise?: Exercise,
-    range?: string
-  ): string => {
-    const file = files?.find(f => f.id === doc?.file);
-    return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
   };
 
   const renderLoadingState = () => (
@@ -389,24 +378,21 @@ export const MessageList = memo(({
   // Combine loading states
   const isLoading = isInitializing || isLoadingMessages || loading
 
-  // Define document item type
-  interface DocumentItem {
-    id: string;
-    type: string;
-    // Add other properties as needed
-    [key: string]: any;
-  }
-
   // Define proper drop handler that matches the context click behavior
   const handleContextDrop = (item: { id: string, type: string }) => {
-    if (item && item.id && item.type) {
-      // Update the active chat context, similar to addContextToChat in ChatCanvas
-      setActiveChat(prev => ({
-        ...prev,
-        context: [...prev.context, item.id]
-      }));
-
-      console.log(`Added context: ${item.type} - ${item.id}`);
+    if (item && item.id) {
+      if (item.type === 'file') {
+        // Update the active chat context, similar to addContextToChat in ChatCanvas
+        setActiveChat(prev => ({
+          ...prev,
+          files: [...prev.files, item.id]
+        }));
+      } else if (item.type === 'document') {
+        setActiveChat(prev => ({
+          ...prev,
+          documents: [...prev.documents, item.id]
+        }));
+      }
       return { dropped: true };
     }
     return { dropped: false };
@@ -530,12 +516,12 @@ export const MessageList = memo(({
     // Helper to find previous context to avoid showing duplicates
     const isPreviousContext = (type: string, id: string, currentMsgIndex: number) => {
       if (currentMsgIndex === 0) return false; // First message, nothing to compare with
-      
+
       // Check if this context item was already in a previous message
       for (let i = 0; i < currentMsgIndex; i++) {
         const prevMsg = messages?.[i];
         if (!prevMsg) continue;
-        
+
         if (type === 'lecture' && prevMsg.lectures?.includes(id)) return true;
         if (type === 'chapter' && prevMsg.chapters?.includes(id)) return true;
         if (type === 'homework' && prevMsg.homeworks?.includes(id)) return true;
@@ -553,7 +539,7 @@ export const MessageList = memo(({
         {hasFiles && message.files.map((fileId: string) => {
           // Skip if this was already shown in a previous message's context
           if (isPreviousContext('file', fileId, messageIndex)) return null;
-          
+
           const file = files?.find(f => f.id === fileId);
           if (!file) return null;
 
@@ -563,7 +549,7 @@ export const MessageList = memo(({
               size="sm"
               c={CONTENT_COLORS[file.content_type ?? 'other']}
               className="inline-reference file-reference"
-              style={{ 
+              style={{
                 cursor: 'pointer',
                 transition: 'text-decoration 0.2s ease',
                 '&:hover': {
@@ -738,14 +724,14 @@ export const MessageList = memo(({
             // Deduplicate messages based on content similarity
             const uniqueMessages: Message[] = [];
             const seenResponses = new Set();
-            
+
             messages?.forEach((message) => {
               // If no response yet, always include the message
               if (!message.response) {
                 uniqueMessages.push(message);
                 return;
               }
-              
+
               // For messages with responses, check for duplicates
               // Create a simplified fingerprint of the response (first 50 chars) to detect duplicates
               const responseFingerprint = message.response.trim().substring(0, 100);
@@ -756,7 +742,7 @@ export const MessageList = memo(({
                 console.log("Skipping duplicate message response");
               }
             });
-            
+
             return uniqueMessages;
           })().map((message, index) => (
             <Stack key={`${message.id}`}>
@@ -805,13 +791,13 @@ export const MessageList = memo(({
                   {/* AI info container */}
                   <Group gap="xs" align="center">
                     <Avatar
-                      src={professor ? getAvatarUrl(professor.id) : undefined}
+                      src={(professor && !activeChat.teacher) ? getAvatarUrl(professor.id) : undefined}
                       size="sm"
                       radius="xl"
                       alt="AI Assistant"
                     />
                     <Text size="sm" c="dimmed">
-                      {professor ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                      {(professor && !activeChat.teacher) ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
                     </Text>
                   </Group>
 
@@ -846,13 +832,13 @@ export const MessageList = memo(({
                             } else if (segment.summaryId && summaries) {
                               return (
                                 summaries.find(s => s.id === segment.summaryId) && (
-                                  <SummaryViewer classId={classId} chatId={chatId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                  <SummaryViewer key={segment.summaryId} classId={classId} chatId={chatId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
                               )
                             } else if (segment.questionIds && questions) {
                               return (
                                 questions.filter(q => segment.questionIds.includes(q.id)) && (
-                                  <QuestionViewer classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                  <QuestionViewer key={segment.questionIds.join('-')} classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
                               )
                             }

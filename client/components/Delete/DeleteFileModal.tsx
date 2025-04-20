@@ -15,31 +15,51 @@ import { ContentType, Profile } from "@/types"
 import { deleteFile } from "@/utils/services/file"
 import { getFile } from "@/utils/queries/get-file"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
+import { getUser } from "@/utils/queries/get-user"
+import { getProfile } from "@/utils/queries/get-profile"
+import { useStudentMode } from "../StudentModeContext"
 
 type DeleteFileModalProps = {
     classId: string
     fileId: string
-    fileName: string
-    contentType: ContentType
-    navigateHome?: boolean
-    profileId: string
     onDelete?: () => void
 }
 
-export default function DeleteFileModal({ fileId, fileName, classId, navigateHome = true, onDelete, profileId, contentType }: DeleteFileModalProps) {
+export default function DeleteFileModal({ fileId, classId, onDelete }: DeleteFileModalProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const [opened, { open, close }] = useDisclosure(false);
     const [loading, setLoading] = useState(false);
-    const router = useRouter()
+    const { studentMode } = useStudentMode();
+
+    // User and profile data
+    const { data: user, isLoading: loadingUser } = useQuery({
+        queryKey: ["user"],
+        queryFn: () => getUser(supabase)
+    });
+
+    const { data: profile, isLoading: loadingProfile } = useQuery({
+        queryKey: ["profile", user?.id],
+        queryFn: () => getProfile(supabase, user?.id ?? ""),
+        enabled: !!user
+    });
 
     const { data: file, isLoading: fileLoading } = useQuery({
         queryKey: ["file", fileId],
         queryFn: () => getFile(supabase, fileId)
     })
 
-    const handleDeleteClass = async (e?: React.MouseEvent) => {
+    const handleDeleteFile = async (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
+
+        if (!file) {
+            notifications.show({
+                title: "File not found",
+                message: "The file you are trying to delete does not exist",
+                color: "red",
+            })
+            return;
+        }
 
         setLoading(true);
         try {
@@ -53,22 +73,19 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
                 queryClient.invalidateQueries({
                     queryKey: ["files", classId]
                 });
-                if (onDelete) {
-                    onDelete();
-                }
-                if (navigateHome) {
-                    router.push(`/class/${classId}`);
-                }
+            }
+            if (onDelete) {
+                onDelete();
             }
             notifications.show({
                 title: "File deleted",
-                message: "You have successfully deleted " + fileName,
+                message: "You have successfully deleted " + file.title,
                 color: "blue",
             });
         } catch (error: any) {
             console.error(error);
             notifications.show({
-                title: "Failed to delete " + fileName,
+                title: "Failed to delete " + file.title,
                 message: error.message,
                 color: "red",
             })
@@ -78,9 +95,9 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
         }
     }
 
-    return (
+    return file && profile && ((profile.admin || profile.professor) && !studentMode) && (
         <>
-            <Tooltip label={`Delete ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`}>
+            <Tooltip label={`Delete ${file.content_type.charAt(0).toUpperCase() + file.content_type.slice(1)}`}>
                 <ActionIcon
                     size="lg"
                     variant="subtle"
@@ -103,9 +120,9 @@ export default function DeleteFileModal({ fileId, fileName, classId, navigateHom
                 onClick={(e) => e.stopPropagation()}
             >
                 <Stack>
-                    <Text>Are you sure you want to remove {fileName}?</Text>
+                    <Text>Are you sure you want to remove {file.title}?</Text>
                     <Button
-                        onClick={(e) => handleDeleteClass(e)}
+                        onClick={(e) => handleDeleteFile(e)}
                         loading={loading}
                         color="red"
                     >

@@ -15,10 +15,12 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import styles from './CallToAction.module.css';
+import { useStudentMode } from "../StudentModeContext";
 
 export default function CallToAction() {
     const supabase = useSupabaseBrowser();
     const isMobile = useMediaQuery('(max-width: 768px)');
+    const { studentMode } = useStudentMode();
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -43,7 +45,7 @@ export default function CallToAction() {
 
     const firstClass = getFilteredClasses()?.[0];
     const firstClassId = firstClass?.id;
-    const firstClassSuffix = (profile?.professor || profile?.admin) ? firstClassId : `${firstClassId}/chat/new`;
+    const firstClassSuffix = profile && ((profile.professor || profile.admin) && !studentMode) ? firstClassId : `${firstClassId}/chat/new`;
 
     return (
         <Box

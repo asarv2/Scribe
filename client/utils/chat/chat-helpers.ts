@@ -332,12 +332,47 @@ export const handleDocumentClick = (
     fileId: string,
     documentId: string,
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>,
+    showPageDetails: boolean
 ) => {
-    setViewerMode(prev => ({
-        ...prev,
-        active: true,
-        open: true,
-        fileId: fileId,
-        documentId: documentId,
-    }));
+    if (setViewerMode) {
+        setViewerMode(prev => ({
+            ...prev,
+            active: true,
+            open: true,
+            fileId: fileId,
+            documentId: documentId,
+            showPageDetails: showPageDetails
+        }));
+    }
+};
+
+export const getPageRanges = (documents: Document[]): { startDocument: Document | null, endDocument: Document | null, range: string }[] => {
+    if (!documents.length) return [];
+
+    const pageRanges: { startDocument: Document | null, endDocument: Document | null, range: string }[] = [];
+
+    if (documents.length > 0) {
+        // Remove duplicates and sort
+        const uniquePages = Array.from(new Set(documents.map(doc => doc.page))).sort((a, b) => a - b);
+        let start = uniquePages[0];
+        let prev = uniquePages[0];
+
+        for (let i = 1; i <= uniquePages.length; i++) {
+            if (i === uniquePages.length || uniquePages[i] !== prev + 1) {
+                const startDocument = documents.find(doc => doc.page === start);
+                const endDocument = documents.find(doc => doc.page === prev);
+                if (startDocument && endDocument) {
+                    pageRanges.push({ startDocument: startDocument, endDocument: endDocument, range: start === prev ? `${start}` : `${start}-${prev}` });
+                }
+                if (i < uniquePages.length) {
+                    start = uniquePages[i];
+                    prev = uniquePages[i];
+                }
+            } else {
+                prev = uniquePages[i];
+            }
+        }
+    }
+
+    return pageRanges;
 };

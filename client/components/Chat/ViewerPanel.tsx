@@ -4,21 +4,23 @@
  */
 
 import { Card, Stack, Group, Text, ActionIcon, Box, Button, Divider, Tooltip } from "@mantine/core";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import { IconPlus, IconX, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
 import { memo } from "react";
-import { ChatMessage, ViewerMode } from "@/types";
+import { ChatMessage, ContentType, ViewerMode } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import FileViewer from "@/components/Viewer/FileViewer";
 import { getFiles } from "@/utils/queries/get-files";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
+import DeleteFileModal from "../Delete/DeleteFileModal";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
     activeChat: ChatMessage;
-    addContextToChat: (contextId: string) => void;
+    addFileToChat: (fileId: string) => void;
+    addDocumentToChat: (documentId: string) => void;
     classId: string;
 }
 
@@ -29,7 +31,7 @@ const CONTENT_TYPES = {
     other: 'File'
 }
 
-export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, classId, activeChat }: ViewerPanelProps) => {
+export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, addDocumentToChat, classId, activeChat }: ViewerPanelProps) => {
     const supabase = useSupabaseBrowser();
 
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -82,7 +84,34 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
             radius="md"
             withBorder
             h="calc(100vh - 100px)"
+            style={{ position: 'relative', paddingTop: '30px' }}
         >
+            {/* Horizontal minimize bar at the top */}
+            <Tooltip label="Close viewer" openDelay={500}>
+                <Box
+                    onClick={handleClose}
+                    style={{
+                        position: 'absolute',
+                        left: '0',
+                        top: '0',
+                        width: '100%',
+                        height: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'var(--mantine-color-blue-light)',
+                        color: 'var(--mantine-color-blue-filled)',
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px',
+                        cursor: 'pointer',
+                        boxShadow: '0 0 5px rgba(0,0,0,0.1)',
+                        zIndex: 10
+                    }}
+                >
+                    <IconChevronDown size={16} />
+                </Box>
+            </Tooltip>
+
             <Stack style={{ height: "100%" }}>
                 <Group justify="space-between" wrap="nowrap" align="flex-start" style={{ width: '100%' }}>
                     <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
@@ -96,30 +125,31 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addContextToChat, 
                         </Text>
                         {viewerMode.fileId && renderExpiresAt(viewerMode.fileId)}
                     </Stack>
-                    <Tooltip label={`Close viewer`} openDelay={500} offset={8}>
-                        <ActionIcon
-                            onClick={handleClose}
-                            variant="subtle"
-                            color="gray"
-                            ml={8}
-                            style={{ flexShrink: 0 }}
-                        >
-                            <IconX size={20} />
-                        </ActionIcon>
-                    </Tooltip>
+                    <DeleteFileModal
+                        fileId={viewerMode.fileId ?? ""}
+                        classId={classId}
+                        onDelete={() => {
+                            setViewerMode(prev => ({
+                                ...prev,
+                                active: false,
+                            }));
+                        }}
+                    />
                 </Group>
                 <>
                     <Box style={{ flex: 1, overflow: 'hidden' }}>
                         <FileViewer
                             key={`${viewerMode.fileId}-${viewerMode.documentId}`}
                             classId={classId}
-                            fileId={viewerMode.fileId ?? ""}
-                            initialDocumentId={viewerMode.documentId}
+                            addDocumentToChat={addDocumentToChat}
+                            activeChat={activeChat}
+                            viewerMode={viewerMode}
+                            setViewerMode={setViewerMode}
                         />
                     </Box>
-                    {activeChat.context.includes(viewerMode.fileId ?? "") ? null : <Button
+                    {activeChat.files.includes(viewerMode.fileId ?? "") ? null : <Button
                         leftSection={<IconPlus size={16} />}
-                        onClick={() => addContextToChat(viewerMode.fileId ?? "")}
+                        onClick={() => addFileToChat(viewerMode.fileId ?? "")}
                     >Add {CONTENT_TYPES[files?.find(f => f.id === viewerMode.fileId)?.content_type as keyof typeof CONTENT_TYPES]} to Chat</Button>}
                 </>
 

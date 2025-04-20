@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional, Callable, Union
+from typing import List, Dict, Any, Optional, Callable, Union, Awaitable
 import base64
 import re
 import os
@@ -8,20 +8,35 @@ from PIL import Image
 import io
 import google.generativeai as genai
 from google.generativeai.types import File
-from agents import Agent, OpenAIChatCompletionsModel, Runner, trace
+from agents import Agent, OpenAIChatCompletionsModel, Runner, ModelSettings, RunConfig, RawResponsesStreamEvent, RunHooks, RunContextWrapper, TContext
 from app.extensions import gemini_client
 from app.services.parse.prompts import get_parse_prompt, get_file_type_prompt
-from app.services.parse.models import CleanedResponse, ParseOutput
+from app.services.parse.models import CleanedResponse
 from agents.items import TResponseInputItem
+from openai.types.responses import ResponseTextDeltaEvent
+from app.services.chat.models import Documents, process_special_tags, clean_references
+from agents.items import TResponseInputItem
+from openai.types.responses import ResponseTextDeltaEvent
 
 class FileProcessor(object):
-    def __init__(self, course_title: str, file_title: str, file_type: str):
+    def __init__(self, 
+        course_title: str, 
+        file_title: str, 
+        file_type: str, 
+        file_id: str, 
+        profile_id: str | None = None, 
+        update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None, 
+        update_file_usage: Optional[Callable[[str, str | None, int, int], Awaitable[None]]] = None,
+        trace_id: str | None = None
+    ):
         super().__init__()
         self.course_title = course_title
         self.file_title = file_title
         self.file_type = file_type
+        self.file_id = file_id
+        self.profile_id = profile_id
+        self.trace_id = trace_id
         self.chat_history = []
-
 
         # creating parse agent
         parse_system_prompt = get_parse_prompt(course_title)
@@ -32,149 +47,103 @@ class FileProcessor(object):
                 model="gemini-2.0-flash-lite",
                 openai_client=gemini_client,
             ),
-            output_type=ParseOutput
+            model_settings=ModelSettings(
+                include_usage=True
+            )
         )
 
-    def get_file_from_gemini(self, file_name: str) -> File | None:
-        # Get the file from Gemini
-        try:
-            response = genai.get_file(file_name)
-            if response.state.name == "ACTIVE":
-                return response
-            else:
-                error_info = ""
-                if hasattr(response, "error") and response.error:
-                    error_code = getattr(response.error, "code", "Unknown")
-                    error_message = getattr(response.error, "message", "No details available")
-                    
-                    # Try to extract detailed error information
-                    error_details = []
-                    if hasattr(response.error, "details") and response.error.details:
-                        for detail in response.error.details:
-                            if hasattr(detail, "@type"):
-                                error_details.append(f"Type: {detail['@type']}")
-                            # Add any other relevant fields from the detail object
-                            error_details_str = ", ".join(error_details) if error_details else "No details"
-                            error_info = f" (Code: {error_code}, Message: {error_message}, Details: {error_details_str})"
-                    else:
-                        error_info = f" (Code: {error_code}, Message: {error_message})"
-                
-                # Get additional metadata if available
-                metadata_info = ""
-                if hasattr(response, "updateTime"):
-                    metadata_info += f", Last updated: {response.updateTime}"
-                if hasattr(response, "sizeBytes"):
-                    metadata_info += f", Size: {response.sizeBytes} bytes"
-                
-                print(f"File {file_name} is not active. Status: {response.state.name}{error_info}{metadata_info}")
-                
-                # For error code 3 (INVALID_ARGUMENT), provide more specific guidance
-                if error_code == 3:
-                    print(f"This may indicate an issue with the file format or content. Please verify the file is valid and in a supported format.")
-                
-                return None
-        except Exception as e:
-            print(f"Error retrieving file {file_name}: {str(e)}")
-            return None
+        self.update_trace_id = update_trace_id
+        self.update_file_usage = update_file_usage
 
-    def format_conversation(self, document: Dict[str, Any], images: List[str], additional_files: List[File], add_current=True) -> list[TResponseInputItem]:
+    def format_conversation(self, document: Dict[str, Any], google_file_id: str) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-        # Initialize with system message regardless of chat history
-        context_summary = [{"role": "system", "content": str(f"You are a helpful assistant.")}]
+        context_text = f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class. Follow the instructions above and help describe the files."
+            
+        context_summary = [{"role": "user", "content": context_text}]
         
-        # # Add chat history if it exists
+        # Add chat history if it exists
         for message in self.chat_history:
             context_summary.append({"role": "assistant", "content": str(message)})
 
-        if add_current:
-            current_context = []
-            if images:
-                current_context.extend([{"type": "input_image", "image_url": f"data:image/jpeg;base64,{image}", "detail": "low"} for image in images])
-            
-            # if additional_files:
-            #     current_context.extend(additional_files)  # list of file objects
+        # Create current context with the file reference
+        current_context = []
+        
+        # Add the file reference if we have a google_file_id
+        if google_file_id:
+            # For Gemini, we use the file ID directly
+            current_context.append({
+                "type": "input_image",
+                "image_url": f"https://generativelanguage.googleapis.com/v1beta/files/{google_file_id}",
+                "detail": "low"
+            })
+        
+        # Add the text prompt based on file type
+        current_prompt = get_file_type_prompt(self.file_type, document)
+        current_context.append({"type": "input_text", "text": current_prompt})
 
-            current_prompt = get_file_type_prompt(self.file_type, document)
-            current_context.append({"type": "input_text", "text": current_prompt})
-
-            context_summary.append({"role": "user", "content": current_context})
+        context_summary.append({"role": "user", "content": current_context})
         return context_summary
 
     async def process_documents(
         self,
         documents: List[Dict[str, Any]],
-        file_names: List[str],
         after_generate: Callable[[CleanedResponse], None]
     ) -> List[CleanedResponse]:
         try:
             results = []
-            with trace("Parse Documents"):
-                for document in documents:
-                    document_id = document.get('id')
-                    page_number = document.get('page', 1)
-                    text = document.get('text', '')
-                    image = document.get('image')
-                    
-                    # Prepare the message based on file type
-                    images = []
-                    additional_files = []
-                    
-                    # For audio/video, use the Gemini file_name
-                    if self.file_type in ['audio', 'video']:
-                        for file_name in file_names:
-                            file_context = self.get_file_from_gemini(file_name)
-                            if file_context:
-                                additional_files.append(file_context)
-                    # For images and PDFs, use the image from Supabase
-                    elif image and self.file_type in ['pdf', 'image']:
-                        # Resize and compress the image before base64 encoding
-                        try:
-                            # Convert bytes to PIL Image
-                            img = Image.open(io.BytesIO(image))
-                            
-                            # Resize image if it's too large (e.g., max dimension 800px)
-                            max_size = 800
-                            if max(img.size) > max_size:
-                                ratio = max_size / max(img.size)
-                                new_size = (int(img.size[0] * ratio), int(img.size[1] * ratio))
-                                img = img.resize(new_size, Image.LANCZOS)
-                            
-                            # Save as compressed JPEG
-                            buffer = io.BytesIO()
-                            img.convert('RGB').save(buffer, format="JPEG", quality=90)
-                            compressed_image = buffer.getvalue()
-                            
-                            # Base64 encode the compressed image
-                            base64_image = base64.b64encode(compressed_image).decode('utf-8')
-                            images.append(base64_image)
-                            
-                            print(f"Image compressed from {len(image)} bytes to {len(compressed_image)} bytes")
-                        except Exception as e:
-                            print(f"Error compressing image: {e}")
-                            # Fall back to text-only if image processing fails
-                    
-                    # Format conversation context
-                    conversation_context = self.format_conversation(document, images, additional_files)
+            for document in documents:
+                document_id = document.get('id')
+                page_number = document.get('page', 1)
+                text = document.get('text', '')
+                google_file_id = document.get('google_file_id')
+                
+                print(f"Processing document {document_id}, page {page_number}, google_file_id: {google_file_id}")
+                
+                # Format conversation context with the google_file_id
+                conversation_context = self.format_conversation(document, google_file_id)
 
-                    # Generate response using AI
-                    raw_response = await Runner.run(self.parse_agent, input=conversation_context)
-                    response = raw_response.final_output.description
-                    print(f"Response for document {document_id}:", response)
-                    
-                    if response:
-                        # Add AI response to conversation history
-                        self.chat_history.append(response)
-                    
-                    result = CleanedResponse(
-                        page=page_number,
-                        description=response,
-                        text=text
-                    )
-                    
-                    results.append(result)
-                    await after_generate(result)
+                response = ""
+
+                # Generate response using AI
+                result = Runner.run_streamed(
+                    self.parse_agent, 
+                    input=conversation_context, 
+                    run_config=RunConfig(group_id=self.file_id, trace_id=self.trace_id, workflow_name=f"Parse {self.file_title}")
+                )
+                # setting the trace id
+                if not self.trace_id:
+                    trace_id = result._trace.trace_id
+                    self.trace_id = trace_id
+                    await self.update_trace_id(self.file_id, trace_id)
+
+                async for event in result.stream_events():
+                    if event.type == "raw_response_event" and isinstance(event, RawResponsesStreamEvent):
+                        if isinstance(event.data, ResponseTextDeltaEvent):
+                            chunk = event.data.delta
+                            response += chunk
+
+                # updating the usage
+                raw_responses = result.raw_responses
+                for raw_response in raw_responses:
+                    usage = raw_response.usage
+
+                    await self.update_file_usage(self.file_id, self.profile_id, usage.input_tokens, usage.output_tokens)
+
+                if response:
+                    # Add AI response to conversation history
+                    self.chat_history.append(response)
+                
+                result = CleanedResponse(
+                    page=page_number,
+                    description=response,
+                    text=text
+                )
+                
+                results.append(result)
+                await after_generate(result)
             
             return results
         except Exception as error:
             print("Error processing documents:", error)
             raise error
+        

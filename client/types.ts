@@ -21,7 +21,7 @@ export type Class = Database[SchemaName]["Tables"]["classes"]["Row"];
 export type Profile = Database[SchemaName]["Tables"]["profiles"]["Row"];
 
 export type Chat = Database[SchemaName]["Tables"]["chats"]["Row"];
-export type ChatType = Database[SchemaName]["Enums"]["chat_type"];
+export type ChatType = Database[SchemaName]["Enums"]["chat_type_2"];
 export type Code = Database[SchemaName]["Tables"]["codes"]["Row"];
 
 export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"];
@@ -47,7 +47,8 @@ export interface ChatMessage {
     id: number;
     title: string;
     prompt: string;
-    context: string[]; // file ids
+    files: string[]; // file ids
+    documents: string[]; // document ids (that should be shown separately)
     chatType: ChatType;
     teacher: boolean; // whether the chat is a teacher chat
     rating: number | null;
@@ -56,6 +57,7 @@ export interface ChatMessage {
 export interface ViewerMode {
     active: boolean; // whether we are on a document
     open: boolean; // whether the viewer is open
+    showPageDetails: boolean; // whether the page details are shown
     documentId?: string; // source of truth for document
     fileId?: string; // source of truth for file
 }

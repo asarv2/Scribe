@@ -20,6 +20,7 @@ class FreeResponseQuestion(BaseModel):
 
 class Documents(BaseModel):
     class_id: str
+    profile_id: str
     chat_id: str
     message_id: str
     references: Dict[int, str] # maps number found in text to the id in supabase
@@ -77,7 +78,7 @@ async def fetch_chat_context(supabase, chat_id):
         "references": list(set(references))
     }
 
-async def fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id, figures, summaries, questions, chat_references):
+async def fetch_file_resources(supabase, file_ids, class_id, profile_id, chat_id, message_id, figures, summaries, questions, chat_references):
     """
     Fetch file resources and their documents.
     
@@ -144,7 +145,7 @@ async def fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id
             
             content.append(file_content)
 
-    documents = Documents(references=references, class_id=class_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
+    documents = Documents(references=references, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
         
     return {
         "context": "\n\n".join(content),

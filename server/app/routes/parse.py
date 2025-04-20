@@ -45,7 +45,8 @@ async def parse_file(request: ParseRequest):
         file_title = file_data.get('title')
         file_type = file_data.get('type')
         class_id = file_data.get('class')
-        file_names = file_data.get('file_names', [])
+        trace_id = file_data.get('trace')
+        profile_id = file_data.get('profile')
         print(f"File query response: {file_title}, type: {file_type}")
 
         # Get class title
@@ -64,12 +65,30 @@ async def parse_file(request: ParseRequest):
         # Filter out processed documents
         documents_to_process = [doc for doc in documents if not doc.get('processed', False)]
         print(f"Documents to process: {len(documents_to_process)}")
+
+        async def update_trace_id(file_id: str, trace_id: str):
+            supabase.table("files").update({
+                "trace": trace_id
+            }).eq("id", file_id).execute()
+
+        async def update_file_usage(file_id: str, profile_id: str, input_tokens: int, output_tokens: int):
+            supabase.table("usage").insert({
+                "file": file_id,
+                "profile": profile_id,
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens
+            }).execute()
         
         # Initialize file processor
         processor = FileProcessor(
             course_title=class_title,
             file_title=file_title,
             file_type=file_type,
+            file_id=file_id,
+            profile_id=profile_id,
+            trace_id=trace_id,
+            update_trace_id=update_trace_id,
+            update_file_usage=update_file_usage
         )
         
         # Process in batches
@@ -79,54 +98,6 @@ async def parse_file(request: ParseRequest):
         for i in range(0, len(documents_to_process), batch_size):
             batch = documents_to_process[i:i + batch_size]
             print(f"Processing batch {i//batch_size + 1}: {len(batch)} documents")
-            
-            # Get images from supabase only for PDF and image files
-            images = []
-            
-            if file_type in ['pdf', 'image']:
-                try:
-                    for doc in batch:
-                        # Download image
-                        image_path = f"{class_id}/{file_id}/{doc['id']}.png"
-                        print(f"Trying to download: {image_path}")
-                        
-                        try:
-                            response = supabase.storage.from_("files").download(image_path)
-                        except Exception as e:
-                            print(f"Error downloading image for document {doc['id']}: {e}")
-                            images.append(None)
-                            continue
-                        
-                        if not response:
-                            print(f"No data received for image {doc['id']}")
-                            images.append(None)
-                            continue
-
-                        images.append(response)
-                        print(f"Successfully downloaded image for document {doc['id']}")
-
-                except Exception as error:
-                    print("Error in image download process:", error)
-                    raise error
-                
-                print("Total images downloaded:", len(images))
-            
-            # Prepare documents for processing
-            processed_documents = []
-            for j, doc in enumerate(batch):
-                doc_data = {
-                    "id": doc["id"],
-                    "page": doc["page"],
-                    "text": doc.get("text", ""),
-                    "start_time": doc.get("start_time"),
-                    "end_time": doc.get("end_time"),
-                }
-                
-                # Add image if available (only for PDF and image files)
-                if file_type in ['pdf', 'image'] and j < len(images) and images[j]:
-                    doc_data["image"] = images[j]
-                
-                processed_documents.append(doc_data)
             
             # Define callback function for after each document is processed
             async def after_generate(result):
@@ -147,11 +118,10 @@ async def parse_file(request: ParseRequest):
                 
                 print(f"Document {document_id} updated")
             
-            # Process the batch
+            # Process the batch - no need to download images anymore
             print("Starting file processing...")
             results = await processor.process_documents(
-                processed_documents,
-                file_names,
+                batch,  # Pass the documents directly with their google_file_id
                 after_generate
             )
             

@@ -10,6 +10,7 @@ import { getMessages } from "@/utils/queries/get-messages";
 import { format } from "date-fns";
 import { getFiles } from "@/utils/queries/get-files";
 import { getDocuments } from "@/utils/queries/get-documents";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 interface ChatHistoryDropdownProps {
     currentChatId: string;
@@ -54,74 +55,28 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
         enabled: !!messages && messages.length > 0
     })
 
-    const { data: documents } = useQuery({
-        queryKey: ["documents", classId],
-        queryFn: () => getDocuments(supabase, [classId]),
+    const { data: fileDocuments } = useQuery({
+        queryKey: ["fileDocuments", files?.map(f => f.id) || []],
+        queryFn: () => getFileDocuments(supabase, files?.map(f => f.id) || []),
         enabled: !!files && files.length > 0
     })
 
     // Helper function to get image URL for a chat
     const getChatImageUrl = (chatId: string): string => {
-        if (!messages || !files || !documents) return '/placeholder_image.svg';
-        
+        if (!messages || !files || !fileDocuments) return '/placeholder_image.svg';
+
         // Get all messages for this chat
         const chatMessages = messages.filter(m => m.chat === chatId);
         if (chatMessages.length === 0) return '/placeholder_image.svg';
 
-        // Extract all referenced file IDs from messages
-        const extractFileIds = (messages: any[], property: string) => {
-            const ids: string[] = [];
-            for (const message of messages) {
-                if (message[property] && message[property].length > 0) {
-                    ids.push(...message[property]);
-                }
-            }
-            return ids;
-        };
+        const references = Array.from(new Set(chatMessages.flatMap(m => m.references)));
 
-        // Try to find any file referenced in the messages
-        const fileTypes = [
-            { type: 'files', property: 'files' },
-            { type: 'lectures', property: 'lectures' },
-            { type: 'textbooks', property: 'textbooks' },
-            { type: 'homeworks', property: 'homeworks' }
-        ];
-
-        for (const { type, property } of fileTypes) {
-            const fileIds = extractFileIds(chatMessages, property);
-            
-            for (const fileId of fileIds) {
-                // Find the file in our files data
-                const file = files.find(f => f.id === fileId);
-                if (file) {
-                    // Find a document for this file
-                    const document = documents.find(d => d.file === fileId);
-                    if (document) {
-                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${document.id}.png`;
-                    }
-                }
+        for (const reference of references) {
+            const document = fileDocuments.find(d => d.id === reference);
+            if (document) {
+                return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${document.file}/${document.id}.png`;
             }
         }
-        
-        // Try to find a chapter image
-        for (const message of chatMessages) {
-            if (message.chapters && message.chapters.length > 0) {
-                const chapterId = message.chapters[0];
-                // Find documents related to this chapter
-                const chapterDocuments = documents.filter(doc => 
-                    doc.chapter === chapterId
-                );
-                
-                if (chapterDocuments.length > 0) {
-                    const document = chapterDocuments[0];
-                    const file = files.find(f => f.id === document.file);
-                    if (file) {
-                        return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${file.id}/${document.id}.png`;
-                    }
-                }
-            }
-        }
-        
         // Default placeholder
         return '/placeholder_image.svg';
     };
@@ -137,10 +92,10 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
     const otherChats = userChats
         ?.filter(chat => chat.id !== currentChatId && chat.id !== "new")
         ?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    
+
     // // If no other chats, don't show the dropdown
     // if (otherChats?.length === 0) return null;
-    
+
     return (
         <Menu position="bottom-start" shadow="md">
             <Menu.Target>
@@ -150,23 +105,23 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
                     </ActionIcon>
                 </Tooltip>
             </Menu.Target>
-            
+
             <Menu.Dropdown>
                 <Menu.Label>Previous Chats</Menu.Label>
                 <ScrollArea h={otherChats && otherChats.length > 5 ? 300 : undefined} scrollbarSize={8}>
                     {otherChats?.slice(0, 10).map(chat => (
-                        <Menu.Item 
+                        <Menu.Item
                             key={chat.id}
                             onClick={() => onChatSelect(chat.id)}
                         >
                             <Group>
-                                <Avatar 
-                                    src={getChatImageUrl(chat.id)} 
-                                    size="sm" 
+                                <Avatar
+                                    src={getChatImageUrl(chat.id)}
+                                    size="sm"
                                     radius="sm"
                                 />
                                 <Stack gap={0} w={250}>
-                                    <Text size="sm" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                                    <Text size="sm" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                         {chat.name || `Chat ${chat.id.substring(0, 6)}`}
                                     </Text>
                                     <Text size="xs" c="dimmed">

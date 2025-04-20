@@ -2,7 +2,7 @@ import React, { memo, useRef, useState, useEffect } from "react";
 import { ChatMessage, Document, File, ViewerMode } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton } from "@mantine/core";
 import { ContextBadges } from "./ContextBadges";
-import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash } from "@tabler/icons-react";
+import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash, IconMessage, IconChartInfographic, IconReportAnalytics, IconQuestionMark } from "@tabler/icons-react";
 import classes from './ChatInput.module.css';
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js';
@@ -26,14 +26,14 @@ interface ChatInputProps {
   chatId: string;
   classId: string;
   onSend: () => void;
-  onRemoveContext: (contextId: string) => void;
+  onRemoveFile: (fileId: string) => void;
+  onRemoveDocument: (documentId: string) => void;
   onScrollToSection: (sectionId: string) => void;
   viewerMode: ViewerMode;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>
   expandedSections: Set<string>;
   toggleSection: (section: string) => void;
-  toggleImmersive: () => void;
   recordedVideos: RecordedVideo[];
   setRecordedVideos: React.Dispatch<React.SetStateAction<RecordedVideo[]>>;
 }
@@ -44,7 +44,8 @@ export const ChatInput = memo(({
   chatId,
   classId,
   onSend,
-  onRemoveContext,
+  onRemoveFile,
+  onRemoveDocument,
   onScrollToSection,
   viewerMode,
   setViewerMode,
@@ -261,7 +262,7 @@ export const ChatInput = memo(({
                 // Update chat context with the new file
                 setActiveChat(prev => ({
                   ...prev,
-                  context: [...prev.context, fileData.file_id]
+                  files: [...prev.files, fileData.file_id]
                 }));
               } catch (error) {
                 console.error('Error finalizing file:', error);
@@ -382,9 +383,9 @@ export const ChatInput = memo(({
                 // Update chat context with the new file
                 setActiveChat(prev => ({
                   ...prev,
-                  context: {
-                    ...prev.context,
-                    files: Array.from(new Set([...prev.context, fileId]))
+                  files: {
+                    ...prev.files,
+                    files: Array.from(new Set([...prev.files, fileId]))
                   }
                 }));
 
@@ -940,9 +941,9 @@ export const ChatInput = memo(({
       // Update chat context with the new file
       setActiveChat(prev => ({
         ...prev,
-        context: {
-          ...prev.context,
-          files: Array.from(new Set([...prev.context, fileData.file_id]))
+        files: {
+          ...prev.files,
+          files: Array.from(new Set([...prev.files, fileData.file_id]))
         }
       }));
 
@@ -1039,124 +1040,127 @@ export const ChatInput = memo(({
     if (isInitializing || classDataLoading) {
       return (
         <>
-          <Skeleton height={36} width={80} radius="xl" />
-          <Skeleton height={36} width={80} radius="xl" />
-          <Skeleton height={36} width={80} radius="xl" />
+          <Skeleton height={36} width={100} radius="xl" />
+          <Skeleton height={36} width={100} radius="xl" />
+          <Skeleton height={36} width={100} radius="xl" />
         </>
       );
     }
 
     return (
       <>
-        {newChat && classData?.learn_mode_enabled && (isMobile ?
+        {newChat && classData?.learn_mode_enabled && !activeChat.teacher && (isMobile ?
           <Tooltip label="Learn">
             <ActionIcon
               onClick={() => setActiveChat((prev) => ({
                 ...prev,
-                chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+                chatType: prev.chatType === 'learn' ? 'student' : 'learn'
               }))}
               size="lg"
               color={"green"}
-              variant={activeChat.chatType === 'concept' ? "light" : "subtle"}
+              variant={activeChat.chatType === 'learn' ? "light" : "subtle"}
               style={{
-                border: `1px solid ${activeChat.chatType === 'concept' ? 'var(--mantine-color-green-filled)' : 'var(--mantine-color-green-outline)'}`
+                border: `1px solid ${activeChat.chatType === 'learn' ? 'var(--mantine-color-green-filled)' : 'var(--mantine-color-green-outline)'}`
               }}
             >
               <IconBook size={20} />
             </ActionIcon>
-          </Tooltip> : <Button 
-            color={"green"} 
-            variant={activeChat.chatType === 'concept' ? "light" : "subtle"} 
-            size="sm" 
-            leftSection={<IconBook size={16} />} 
-            radius="xl" 
+          </Tooltip> : <Button
+            color={"green"}
+            variant={activeChat.chatType === 'learn' ? "light" : "subtle"}
+            size="sm"
+            leftSection={<IconBook size={16} />}
+            radius="xl"
             onClick={() => setActiveChat((prev) => ({
               ...prev,
-              chatType: prev.chatType === 'concept' ? 'general-student' : 'concept'
+              chatType: prev.chatType === 'learn' ? 'student' : 'learn'
             }))}
             style={{
-              border: `1px solid ${activeChat.chatType === 'concept' ? 'var(--mantine-color-green-filled)' : 'var(--mantine-color-green-outline)'}`
+              border: `1px solid ${activeChat.chatType === 'learn' ? 'var(--mantine-color-green-filled)' : 'var(--mantine-color-green-outline)'}`
             }}
           >Learn</Button>)
         }
 
         {
-          newChat && classData?.homework_mode_enabled && (isMobile ?
+          newChat && classData?.homework_mode_enabled && !activeChat.teacher && (isMobile ?
             <Tooltip label="Homework">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({
                   ...prev,
-                  chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
+                  chatType: prev.chatType === 'homework' ? 'student' : 'homework'
                 }))}
                 size="lg"
                 color={"indigo"}
-                variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"}
+                variant={activeChat.chatType === 'homework' ? "light" : "subtle"}
                 style={{
-                  border: `1px solid ${activeChat.chatType === 'homework-student' ? 'var(--mantine-color-indigo-filled)' : 'var(--mantine-color-indigo-outline)'}`
+                  border: `1px solid ${activeChat.chatType === 'homework' ? 'var(--mantine-color-indigo-filled)' : 'var(--mantine-color-indigo-outline)'}`
                 }}
               >
                 <IconFile size={20} />
               </ActionIcon>
-            </Tooltip> : <Button 
-              color={"indigo"} 
-              variant={activeChat.chatType === 'homework-student' ? "light" : "subtle"} 
-              size="sm" 
-              leftSection={<IconFile size={16} />} 
-              radius="xl" 
+            </Tooltip> : <Button
+              color={"indigo"}
+              variant={activeChat.chatType === 'homework' ? "light" : "subtle"}
+              size="sm"
+              leftSection={<IconFile size={16} />}
+              radius="xl"
               onClick={() => setActiveChat((prev) => ({
                 ...prev,
-                chatType: prev.chatType === 'homework-student' ? 'general-student' : 'homework-student'
+                chatType: prev.chatType === 'homework' ? 'student' : 'homework'
               }))}
               style={{
-                border: `1px solid ${activeChat.chatType === 'homework-student' ? 'var(--mantine-color-indigo-filled)' : 'var(--mantine-color-indigo-outline)'}`
+                border: `1px solid ${activeChat.chatType === 'homework' ? 'var(--mantine-color-indigo-filled)' : 'var(--mantine-color-indigo-outline)'}`
               }}
             >Homework</Button>)
         }
 
         {
-          newChat && classData?.test_prep_mode_enabled && (isMobile ?
+          newChat && classData?.test_prep_mode_enabled && !activeChat.teacher && (isMobile ?
             <Tooltip label="Test-Prep">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({
                   ...prev,
-                  chatType: prev.chatType === 'review' ? 'general-student' : 'review'
+                  chatType: prev.chatType === 'test' ? 'student' : 'test'
                 }))}
                 size="lg"
                 color={"cyan"}
-                variant={activeChat.chatType === 'review' ? "light" : "subtle"}
+                variant={activeChat.chatType === 'test' ? "light" : "subtle"}
                 style={{
-                  border: `1px solid ${activeChat.chatType === 'review' ? 'var(--mantine-color-cyan-filled)' : 'var(--mantine-color-cyan-outline)'}`
+                  border: `1px solid ${activeChat.chatType === 'test' ? 'var(--mantine-color-cyan-filled)' : 'var(--mantine-color-cyan-outline)'}`
                 }}
               >
                 <IconPencil size={20} />
               </ActionIcon>
-            </Tooltip> : <Button 
-              color={"cyan"} 
-              variant={activeChat.chatType === 'review' ? "light" : "subtle"} 
-              size="sm" 
-              leftSection={<IconPencil size={16} />} 
-              radius="xl" 
+            </Tooltip> : <Button
+              color={"cyan"}
+              variant={activeChat.chatType === 'test' ? "light" : "subtle"}
+              size="sm"
+              leftSection={<IconPencil size={16} />}
+              radius="xl"
               onClick={() => setActiveChat((prev) => ({
                 ...prev,
-                chatType: prev.chatType === 'review' ? 'general-student' : 'review'
+                chatType: prev.chatType === 'test' ? 'student' : 'test'
               }))}
               style={{
-                border: `1px solid ${activeChat.chatType === 'review' ? 'var(--mantine-color-cyan-filled)' : 'var(--mantine-color-cyan-outline)'}`
+                border: `1px solid ${activeChat.chatType === 'test' ? 'var(--mantine-color-cyan-filled)' : 'var(--mantine-color-cyan-outline)'}`
               }}
             >Test-Prep</Button>)
         }
 
-        {/* {
-          newChat && classData?.present_mode_enabled && (isMobile ?
+        {
+          newChat && classData?.present_mode_enabled && !activeChat.teacher && (isMobile ?
             <Tooltip label="Present">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({
                   ...prev,
-                  chatType: prev.chatType === 'present' ? 'general-student' : 'present'
+                  chatType: prev.chatType === 'present' ? 'student' : 'present'
                 }))}
                 size="lg"
                 color={"orange"}
                 variant={activeChat.chatType === 'present' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'present' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
+                }}
               >
                 <IconPresentation size={20} />
               </ActionIcon>
@@ -1168,10 +1172,106 @@ export const ChatInput = memo(({
               radius="xl"
               onClick={() => setActiveChat((prev) => ({
                 ...prev,
-                chatType: prev.chatType === 'present' ? 'general-student' : 'present'
+                chatType: prev.chatType === 'present' ? 'student' : 'present'
               }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'present' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
+              }}
             >Present</Button>)
-        } */}
+        }
+
+        {
+          newChat && activeChat.teacher && (isMobile ?
+            <Tooltip label="Figure">
+              <ActionIcon
+                onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'figure' ? 'professor' : 'figure'
+                }))}
+                size="lg"
+                color={"grape"}
+                variant={activeChat.chatType === 'figure' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'figure' ? 'var(--mantine-color-grape-filled)' : 'var(--mantine-color-grape-outline)'}`
+                }}
+              >
+                <IconChartInfographic size={20} />
+              </ActionIcon>
+            </Tooltip> : <Button
+              color={"grape"}
+              variant={activeChat.chatType === 'figure' ? "light" : "subtle"}
+              size="sm"
+              leftSection={<IconChartInfographic size={16} />}
+              radius="xl"
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'figure' ? 'professor' : 'figure'
+              }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'figure' ? 'var(--mantine-color-grape-filled)' : 'var(--mantine-color-grape-outline)'}`
+              }}
+            >Figure</Button>)
+        }
+
+        {
+            newChat && activeChat.teacher && (isMobile ?
+            <Tooltip label="Summary">
+              <ActionIcon
+                onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'summary' ? 'professor' : 'summary'
+                }))}
+                size="lg"
+                color={"yellow"}
+                variant={activeChat.chatType === 'summary' ? "light" : "subtle"}
+              >
+                <IconReportAnalytics size={20} />
+              </ActionIcon>
+            </Tooltip> : <Button
+              color={"yellow"}
+              variant={activeChat.chatType === 'summary' ? "light" : "subtle"}
+              size="sm"
+              leftSection={<IconReportAnalytics size={16} />}
+              radius="xl"
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'summary' ? 'professor' : 'summary'
+              }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'summary' ? 'var(--mantine-color-yellow-filled)' : 'var(--mantine-color-yellow-outline)'}`
+              }}
+            >Summary</Button>)
+        }
+
+        {
+          newChat && activeChat.teacher && (isMobile ?
+            <Tooltip label="Question">
+              <ActionIcon
+                onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'question' ? 'professor' : 'question'
+                }))}
+                size="lg"
+                color={"blue"}
+                variant={activeChat.chatType === 'question' ? "light" : "subtle"}
+              >
+                <IconQuestionMark size={20} />
+              </ActionIcon>
+            </Tooltip> : <Button
+              color={"blue"}
+              variant={activeChat.chatType === 'question' ? "light" : "subtle"}
+              size="sm"
+              leftSection={<IconQuestionMark size={16} />}
+              radius="xl"
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'question' ? 'professor' : 'question'
+              }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'question' ? 'var(--mantine-color-blue-filled)' : 'var(--mantine-color-blue-outline)'}`
+              }}
+            >Question</Button>)
+        }
       </>
     )
   }
@@ -1180,7 +1280,6 @@ export const ChatInput = memo(({
     if (isInitializing) {
       return (
         <>
-          <Skeleton height={36} width={36} radius="md" />
           <Skeleton height={36} width={36} radius="md" />
           <Skeleton height={36} width={36} radius="md" />
         </>
@@ -1319,9 +1418,9 @@ export const ChatInput = memo(({
   // Check if any context is added
   const hasContext = React.useMemo(() => {
     return (
-      (activeChat.context.length > 0)
+      (activeChat.files.length > 0)
     );
-  }, [activeChat.context]);
+  }, [activeChat.files]);
 
   return (
     <Stack gap={"md"}>
@@ -1338,7 +1437,8 @@ export const ChatInput = memo(({
         <ContextBadges
           activeChat={activeChat}
           classId={classId}
-          onRemoveContext={onRemoveContext}
+          onRemoveFile={onRemoveFile}
+          onRemoveDocument={onRemoveDocument}
           onScrollToSection={onScrollToSection}
           setViewerMode={setViewerMode}
           expandedSections={expandedSections}
@@ -1438,7 +1538,7 @@ export const ChatInput = memo(({
         <Box className={classes.inputBox}>
           {isInitializing ? (
             <Box p={"xs"}>
-              <Skeleton height={80} />
+              <Skeleton height={60} />
             </Box>
           ) : !recordingMode ? (
             <Textarea
@@ -1446,7 +1546,7 @@ export const ChatInput = memo(({
               value={activeChat.prompt}
               onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
               onKeyDown={handleKeyDown}
-              placeholder={"Add context and start learning..."}
+              placeholder={activeChat.teacher ? "Add context and start creating..." : "Add context and start learning..."}
               autosize
               minRows={1}
               maxRows={4}
@@ -1500,7 +1600,7 @@ export const ChatInput = memo(({
               {isMobile ? (
                 <>
                   <Group gap={4}>
-                    {renderFileUpload()}
+                    {/* {renderFileUpload()} */}
                     {renderLeftChatIcons()}
                   </Group>
                   <Group gap={4}>
@@ -1510,7 +1610,7 @@ export const ChatInput = memo(({
               ) : (
                 <>
                   <Group gap={"xs"}>
-                    {renderFileUpload()}
+                    {/* {renderFileUpload()} */}
                     {renderLeftChatIcons()}
                   </Group>
                   <Group gap={8}>

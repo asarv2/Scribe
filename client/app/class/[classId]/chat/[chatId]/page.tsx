@@ -9,36 +9,13 @@
 "use client";
 
 import ChatCanvas from "@/components/Chat/Canvas/ChatCanvas";
-import { useFullscreen } from "@mantine/hooks";
-import { useEffect, useState } from "react";
+import { ClassLayout } from "@/components/Class/ClassLayout";
 import { use } from "react";
 
 export default function ChatPage({ params }: { params: Promise<{ classId: string, chatId: string }> }) {
     const { classId, chatId } = use(params);
-    const { toggle } = useFullscreen();
-    const [isFullscreen, setIsFullscreen] = useState(false);
 
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        
-        // Initial check
-        setIsFullscreen(!!document.fullscreenElement);
-
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (document.fullscreenElement) {
-            toggle();
-        }
-    }, []);
-
-    return <ChatCanvas classId={classId} chatId={chatId} toggle={toggle} fullscreen={isFullscreen} />;
+    return <ClassLayout classId={classId}>
+        <ChatCanvas classId={classId} chatId={chatId} />
+    </ClassLayout>;
 }
-

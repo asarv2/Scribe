@@ -14,7 +14,6 @@ import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { Skeleton, Group, Box, Collapse, Flex, Menu, useMantineColorScheme, Divider } from '@mantine/core';
 import { ScrollArea } from '@mantine/core';
-import { useClassMenu } from './ClassMenuContext';
 import { menuConfig } from '@/utils/menu/menuConfig';
 import { ClassNavbarLinksGroup } from './ClassNavbarLinksGroup';
 import { NAVBAR_CONSTANTS } from './ClassHeader';
@@ -53,14 +52,10 @@ export function ClassNavbar({ basePath, isExpanded, onExpandedChange, classId }:
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
     };
 
-    const { openSections, toggleSection } = useClassMenu();
-
-    // console.log(openSections);
-
     const generateNavData = () => {
         return Object.entries(menuConfig).map(([key, item]) => ({
             ...item,
-            icon: item.icon as React.FC<any>,  // Cast icon to correct type
+            icon: item.icon as React.FC<any>,
             link: item.link ? `${basePath}${item.link}` : undefined,
             isLink: !!item.link,
             links: item.links?.map(link => ({

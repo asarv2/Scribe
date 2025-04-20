@@ -13,11 +13,11 @@ export const menuConfig = {
     icon: IconHome,
     link: '/',
   },
-  content: {
-    label: 'Content',
-    icon: IconBook,
-    link: '/content',
-  },
+  // content: {
+  //   label: 'Content',
+  //   icon: IconBook,
+  //   link: '/content',
+  // },
   chat: {
     label: 'Chat',
     icon: IconMessage,

@@ -333,18 +333,18 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                     {joinCode ?
                         <Group gap="xs" pt={24}>
                             <Tooltip label={copySuccess ? "Copied!" : "Copy to clipboard"}>
-                                <ActionIcon 
-                                    onClick={handleCopyCode} 
-                                    variant="subtle" 
+                                <ActionIcon
+                                    onClick={handleCopyCode}
+                                    variant="subtle"
                                     color={copySuccess ? "green" : "blue"}
                                 >
                                     {copySuccess ? <IconCheck size={18} /> : <IconCopy size={18} />}
                                 </ActionIcon>
                             </Tooltip>
                             <Tooltip label="Delete Code">
-                                <ActionIcon 
-                                    onClick={() => handleDeleteCode(joinCode?.id || '')} 
-                                    variant="subtle" 
+                                <ActionIcon
+                                    onClick={() => handleDeleteCode(joinCode?.id || '')}
+                                    variant="subtle"
                                     color="red"
                                     loading={deleteLoading}
                                     disabled={deleteLoading}
@@ -355,9 +355,9 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                         </Group> :
                         <Group gap="xs" pt={24}>
                             <Tooltip label="Generate Code">
-                                <ActionIcon 
-                                    onClick={() => handleGenerateCode(classItem.id)} 
-                                    variant="subtle" 
+                                <ActionIcon
+                                    onClick={() => handleGenerateCode(classItem.id)}
+                                    variant="subtle"
                                     color="green"
                                     loading={generateLoading}
                                     disabled={generateLoading}
@@ -421,18 +421,18 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                             label="Homework"
                             labelPosition="right"
                         />
+                        <Switch
+                            checked={classFeatures[classItem.id]?.filesEnabled}
+                            onChange={(event) => handleFeatureToggle(classItem.id, 'filesEnabled', event.currentTarget.checked)}
+                            label="Student Files"
+                            labelPosition="right"
+                        />
                     </Group>
                 </Stack>
 
                 {/* <Stack gap="md">
                     <Text fw={500} size="sm">Enabled Chat Types</Text>
                     <Group>
-                        <Switch
-                            checked={classFeatures[classItem.id]?.filesEnabled}
-                            onChange={(event) => handleFeatureToggle(classItem.id, 'filesEnabled', event.currentTarget.checked)}
-                            label="Files"
-                            labelPosition="right"
-                        />
                         <Switch
                             checked={classFeatures[classItem.id]?.videoEnabled}
                             onChange={(event) => handleFeatureToggle(classItem.id, 'videoEnabled', event.currentTarget.checked)}

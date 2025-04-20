@@ -26,11 +26,9 @@ async def handle_chat(
         # Get chat and class info
         chat_response = supabase.table("chats").select("*").eq("id", chat_id).single().execute()
         chat = chat_response.data
-        chat_title = chat.get('name', 'Chat')
-        if chat_title == "":
-            chat_title = "Chat"
         trace_id = chat.get('trace')
         class_id = chat.get('class')
+        profile_id = chat.get('profile')
 
         class_response = supabase.table("classes").select(
             "title, course_description"
@@ -56,7 +54,7 @@ async def handle_chat(
         references = chat_context.get('references', [])
 
         # Fetch resources and their documents
-        file_resources = await fetch_file_resources(supabase, file_ids, class_id, chat_id, message_id, figures, summaries, questions, references)
+        file_resources = await fetch_file_resources(supabase, file_ids, class_id, profile_id, chat_id, message_id, figures, summaries, questions, references)
         context = file_resources.get('context', '')
         documents = file_resources.get('documents', {})
         google_file_ids = file_resources.get('google_file_ids', [])
@@ -92,9 +90,17 @@ async def handle_chat(
                 "trace": trace_id
             }).eq("id", chat_id).execute()
 
+        async def update_chat_usage(chat_id: str, profile_id: str, input_tokens: int, output_tokens: int):
+            supabase.table("usage").insert({
+                "chat": chat_id,
+                "profile": profile_id,
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens
+            }).execute()
+
         # Initialize processor and response
         processor = ChatProcessor(
-            prompt_type=chat['type'],
+            prompt_type=chat['chat_type'],
             course_title=class_title,
             question=current_message['bare_question'],
             past_messages=past_messages,
@@ -102,13 +108,13 @@ async def handle_chat(
             trace_id=trace_id,
             stream_callback=update_callback,
             remove_callback=remove_callback,
-            update_trace_id=update_trace_id
+            update_trace_id=update_trace_id,
+            update_chat_usage=update_chat_usage
         )
 
         try:
             await processor.process_message(
                 chat_id=chat_id,
-                chat_title=chat_title,
                 complete_context=context,
                 documents=documents,
             )

@@ -7,6 +7,7 @@ import { Notifications } from "@mantine/notifications";
 import { HealthCheck } from "@/components/HealthCheck";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
+import { StudentModeProvider } from "@/components/StudentModeContext";
 
 // Custom variant color resolver that adds light-outline variant
 const variantColorResolver: VariantColorsResolver = (input) => {
@@ -23,7 +24,7 @@ const variantColorResolver: VariantColorsResolver = (input) => {
       ...input,
       variant: 'light'
     });
-    
+
     // Return light variant colors but with a border that uses the same color as the text
     return {
       ...lightVariantColors,
@@ -35,26 +36,28 @@ const variantColorResolver: VariantColorsResolver = (input) => {
 };
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient());
 
-    return (
-        <QueryClientProvider client={queryClient}>
-            <ReactQueryClientProvider>
-                <MantineProvider 
-                    theme={{ 
-                        variantColorResolver,
-                        // @ts-ignore
-                        variantProps: {
-                            'light-outline': { variant: 'light-outline' }
-                        }
-                    }}
-                    defaultColorScheme="dark"
-                >
-                    <Notifications />
-                    <HealthCheck />
-                    {children}
-                </MantineProvider>
-            </ReactQueryClientProvider>
-        </QueryClientProvider>
-    );
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryClientProvider>
+        <MantineProvider
+          theme={{
+            variantColorResolver,
+            // @ts-ignore
+            variantProps: {
+              'light-outline': { variant: 'light-outline' }
+            }
+          }}
+          defaultColorScheme="dark"
+        >
+          <Notifications />
+          <HealthCheck />
+          <StudentModeProvider>
+            {children}
+          </StudentModeProvider>
+        </MantineProvider>
+      </ReactQueryClientProvider>
+    </QueryClientProvider>
+  );
 }

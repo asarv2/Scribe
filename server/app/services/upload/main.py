@@ -132,116 +132,54 @@ class FileExtractor:
         pdf_document.close()
         return pages_content
 
-    def _process_audio_chunk(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a single audio chunk with Whisper
-        
-        Args:
-            chunk_data: Dictionary containing chunk information
-            
-        Returns:
-            Dict with processed chunk data including transcription
-        """
+    def _process_audio_chunk(self, chunk_num: int, start_time: float, end_time: float, chunk_file_path: str) -> Dict[str, Any]:
+        """Process an audio chunk and extract transcription"""
         try:
-            chunk = chunk_data['audio_segment']
-            chunk_num = chunk_data['chunk_num']
-            start_ms = chunk_data['start_ms']
-            chunk_length_ms = chunk_data['chunk_length_ms']
+            # Transcribe the audio chunk
+            transcription = self._transcribe_audio(chunk_file_path)
             
-            # Create a temporary file for this chunk
-            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio:
-                temp_path = temp_audio.name
-            
-            # Export the chunk to the temporary file
-            chunk.export(temp_path, format="wav")
-            
-            # Load and transcribe the audio chunk
-            try:
-                audio_data = whisper.load_audio(temp_path)
-                
-                # Set appropriate options based on device
-                fp16 = torch.cuda.is_available()
-                
-                # Get the whisper model from the model manager
-                whisper_model = model_manager.get_whisper_model()
-                
-                # Transcribe with appropriate options
-                result = whisper_model.transcribe(
-                    audio_data, 
-                    fp16=fp16,
-                    language="en"  # You can make this configurable if needed
-                )
-                transcription = result["text"]
-            except Exception as e:
-                logger.error(f"Error transcribing chunk {chunk_num}: {str(e)}")
-                transcription = f"[Transcription error: {str(e)}]"
-            finally:
-                # Clean up the temporary file
-                try:
-                    os.unlink(temp_path)
-                except Exception as e:
-                    logger.error(f"Error removing temporary file: {str(e)}")
-            
-            # Calculate start and end times in seconds
-            start_time = start_ms / 1000
-            end_time = min((start_ms + chunk_length_ms) / 1000, start_time + 30)  # Cap at 30 seconds
+            # Generate a simple waveform image for the audio
+            img_bytes = self._generate_audio_waveform(chunk_file_path)
             
             return {
-                'type': 'audio_chunk',
                 'chunk_num': chunk_num,
                 'text': transcription,
+                'image': img_bytes,
                 'start_time': start_time,
-                'end_time': end_time
+                'end_time': end_time,
+                'type': 'audio_chunk',
+                'chunk_file_path': chunk_file_path  # Include the path to the chunk file
             }
         except Exception as e:
-            logger.error(f"Error processing audio chunk {chunk_data.get('chunk_num', 'unknown')}: {str(e)}")
+            logger.error(f"Error processing audio chunk {chunk_num}: {str(e)}")
             return {
-                'type': 'audio_chunk',
-                'chunk_num': chunk_data.get('chunk_num', 0),
+                'chunk_num': chunk_num,
                 'text': f"[Processing error: {str(e)}]",
-                'start_time': chunk_data.get('start_ms', 0) / 1000,
-                'end_time': (chunk_data.get('start_ms', 0) + chunk_data.get('chunk_length_ms', 30000)) / 1000
+                'image': None,
+                'start_time': start_time,
+                'end_time': end_time,
+                'type': 'audio_chunk',
+                'chunk_file_path': chunk_file_path  # Include the path even in error case
             }
 
     def _extract_audio_content(self) -> List[Dict[str, Any]]:
-        """Extract and transcribe content from audio file in 30-second chunks"""
+        """Extract and transcribe content from audio file"""
         try:
-            # Load audio file
+            # For audio files, we'll process the entire file as one chunk
+            # This method will be called either for small audio files or for individual chunks
+            
+            # Process the audio file
+            chunk_num = 1  # Default chunk number
+            start_time = 0
+            
+            # Get audio duration
             audio = AudioSegment.from_file(self.file_path)
+            end_time = len(audio) / 1000  # Convert to seconds
             
-            # Split into 30-second chunks
-            chunk_length_ms = 30 * 1000  # 30 seconds
-            chunk_data_list = []
+            # Process the audio chunk
+            processed_chunk = self._process_audio_chunk(chunk_num, start_time, end_time, self.file_path)
             
-            for i, start_ms in enumerate(range(0, len(audio), chunk_length_ms)):
-                chunk = audio[start_ms:start_ms + chunk_length_ms]
-                chunk_data_list.append({
-                    'audio_segment': chunk,
-                    'chunk_num': i + 1,
-                    'start_ms': start_ms,
-                    'chunk_length_ms': chunk_length_ms
-                })
-            
-            # Process chunks sequentially
-            processed_chunks = []
-            for chunk_data in chunk_data_list:
-                try:
-                    processed_chunk = self._process_audio_chunk(chunk_data)
-                    processed_chunks.append(processed_chunk)
-                except Exception as e:
-                    logger.error(f"Error processing chunk {chunk_data['chunk_num']}: {str(e)}")
-                    # Add a placeholder for failed chunks to maintain order
-                    processed_chunks.append({
-                        'type': 'audio_chunk',
-                        'chunk_num': chunk_data['chunk_num'],
-                        'text': f"[Processing error: {str(e)}]",
-                        'start_time': chunk_data['start_ms'] / 1000,
-                        'end_time': (chunk_data['start_ms'] + chunk_data['chunk_length_ms']) / 1000
-                    })
-            
-            # Sort chunks by chunk number to maintain order
-            processed_chunks.sort(key=lambda x: x['chunk_num'])
-            
-            return processed_chunks
+            return [processed_chunk]
             
         except Exception as e:
             logger.error(f"Error processing audio file: {str(e)}")
@@ -263,64 +201,27 @@ class FileExtractor:
             img.save(img_byte_arr, format='PNG')
             return img_byte_arr.getvalue()
 
-    def _process_video_chunk(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a single video chunk with Whisper and extract frame
-        
-        Args:
-            chunk_data: Dictionary containing chunk information
-            
-        Returns:
-            Dict with processed chunk data including transcription and frame
-        """
+    def _process_video_chunk(self, chunk_num: int, start_time: float, end_time: float, chunk_file_path: str) -> Dict[str, Any]:
+        """Process a video chunk and extract frames and transcription"""
         try:
-            chunk = chunk_data['audio_segment']
-            chunk_num = chunk_data['chunk_num']
-            start_ms = chunk_data['start_ms']
-            chunk_length_ms = chunk_data['chunk_length_ms']
-            cap = chunk_data['cap']
-            fps = chunk_data['fps']
+            # Open the video file
+            cap = cv2.VideoCapture(chunk_file_path)
             
-            # Create a temporary file for this chunk
-            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio:
-                temp_path = temp_audio.name
+            # Extract a frame from the beginning of the chunk
+            cap.set(cv2.CAP_PROP_POS_MSEC, 0)  # Set to beginning of chunk
+            success, frame = cap.read()
             
-            # Export the chunk to the temporary file
-            chunk.export(temp_path, format="wav")
+            if not success:
+                logger.warning(f"Could not read frame from video chunk {chunk_num}")
+                img_bytes = None
+            else:
+                # Convert frame to PNG image
+                img_bytes = self._frame_to_png(frame)
             
-            # Load and transcribe the audio chunk
-            try:
-                audio_data = whisper.load_audio(temp_path)
-                
-                # Set appropriate options based on device
-                fp16 = torch.cuda.is_available()
-                
-                # Get the whisper model from the model manager
-                whisper_model = model_manager.get_whisper_model()
-                
-                # Transcribe with appropriate options
-                result = whisper_model.transcribe(
-                    audio_data, 
-                    fp16=fp16,
-                    language="en"  # You can make this configurable if needed
-                )
-                transcription = result["text"]
-            except Exception as e:
-                logger.error(f"Error transcribing video chunk {chunk_num}: {str(e)}")
-                transcription = f"[Transcription error: {str(e)}]"
-            finally:
-                # Clean up the temporary file
-                try:
-                    os.unlink(temp_path)
-                except Exception as e:
-                    logger.error(f"Error removing temporary file: {str(e)}")
+            cap.release()
             
-            # Extract a frame at this timestamp
-            frame_position = int(start_ms / 1000 * fps)
-            img_bytes = self._process_video_frame(frame_position, cap)
-            
-            # Calculate start and end times in seconds
-            start_time = start_ms / 1000  # Convert to seconds
-            end_time = (start_ms + chunk_length_ms) / 1000  # Convert to seconds
+            # Transcribe the audio from the chunk
+            transcription = self._transcribe_audio(chunk_file_path)
             
             return {
                 'chunk_num': chunk_num,
@@ -329,22 +230,27 @@ class FileExtractor:
                 'start_time': start_time,
                 'end_time': end_time,
                 'type': 'video_chunk',
+                'chunk_file_path': chunk_file_path  # Include the path to the chunk file
             }
         except Exception as e:
-            logger.error(f"Error processing video chunk {chunk_data.get('chunk_num', 'unknown')}: {str(e)}")
+            logger.error(f"Error processing video chunk {chunk_num}: {str(e)}")
             return {
-                'chunk_num': chunk_data.get('chunk_num', 0),
+                'chunk_num': chunk_num,
                 'text': f"[Processing error: {str(e)}]",
-                'image': self._process_video_frame(0, chunk_data.get('cap')),
-                'start_time': chunk_data.get('start_ms', 0) / 1000,
-                'end_time': (chunk_data.get('start_ms', 0) + chunk_data.get('chunk_length_ms', 30000)) / 1000,
+                'image': None,
+                'start_time': start_time,
+                'end_time': end_time,
                 'type': 'video_chunk',
+                'chunk_file_path': chunk_file_path  # Include the path even in error case
             }
 
     def _extract_video_audio_content(self) -> List[Dict[str, Any]]:
         """Extract content from video file including audio transcription and frames"""
         try:
-            # Extract video metadata and thumbnail
+            # For video files, we'll process the entire file as one chunk
+            # This method will be called either for small video files or for individual chunks
+            
+            # Extract video metadata
             cap = cv2.VideoCapture(self.file_path)
             if not cap.isOpened():
                 raise ValueError("Failed to open video file")
@@ -354,71 +260,17 @@ class FileExtractor:
             frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             duration_ms = int((frame_count / fps) * 1000) if fps > 0 else 0
             
-            # Extract audio from video
-            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_audio_file:
-                temp_audio_path = temp_audio_file.name
+            # Process the video chunk
+            chunk_num = 1  # Default chunk number
+            start_time = 0
+            end_time = duration_ms / 1000  # Convert to seconds
             
-            # Use pydub to extract audio
-            video = AudioSegment.from_file(self.file_path)
-            video.export(temp_audio_path, format="wav")
-            
-            # Load the extracted audio
-            audio = AudioSegment.from_file(temp_audio_path)
-            
-            # Split into 30-second chunks
-            chunk_length_ms = 30 * 1000  # 30 seconds
-            chunk_data_list = []
-            
-            for i, start_ms in enumerate(range(0, len(audio), chunk_length_ms)):
-                chunk = audio[start_ms:start_ms + chunk_length_ms]
-                chunk_data_list.append({
-                    'audio_segment': chunk,
-                    'chunk_num': i + 1,
-                    'start_ms': start_ms,
-                    'chunk_length_ms': min(chunk_length_ms, len(chunk)),  # Ensure we don't exceed actual length
-                    'cap': cap,
-                    'fps': fps
-                })
-            
-            # Process chunks sequentially
-            processed_chunks = []
-            for chunk_data in chunk_data_list:
-                try:
-                    processed_chunk = self._process_video_chunk(chunk_data)
-                    processed_chunks.append(processed_chunk)
-                except Exception as e:
-                    logger.error(f"Error processing video chunk {chunk_data['chunk_num']}: {str(e)}")
-                    # Add a placeholder for failed chunks to maintain order
-                    processed_chunks.append({
-                        'chunk_num': chunk_data['chunk_num'],
-                        'text': f"[Processing error: {str(e)}]",
-                        'image': self._process_video_frame(0, chunk_data['cap']),
-                        'start_time': chunk_data['start_ms'] / 1000,
-                        'end_time': (chunk_data['start_ms'] + chunk_data['chunk_length_ms']) / 1000,
-                        'type': 'video_chunk',
-                    })
-            
-            # Sort chunks by chunk number to maintain order
-            processed_chunks.sort(key=lambda x: x['chunk_num'])
+            processed_chunk = self._process_video_chunk(chunk_num, start_time, end_time, self.file_path)
             
             # Clean up
             cap.release()
-            try:
-                os.unlink(temp_audio_path)
-            except Exception as e:
-                logger.error(f"Error removing temporary audio file: {str(e)}")
             
-            # Get MIME type for the whole file upload
-            mime = magic.Magic(mime=True)
-            mime_type = mime.from_file(self.file_path)
-            
-            # Add whole file info to the first chunk
-            if processed_chunks:
-                processed_chunks[0]['whole_file'] = True
-                processed_chunks[0]['file_path'] = self.file_path
-                processed_chunks[0]['mime_type'] = mime_type
-            
-            return processed_chunks
+            return [processed_chunk]
             
         except Exception as e:
             logger.error(f"Error processing video file: {str(e)}")
@@ -477,42 +329,59 @@ class FileExtractor:
             # get file response from supabase
             file_response = supabase.table("files").select("*").eq("id", file_id).execute()
             file_data = file_response.data[0]
-
-            # First, upload the whole file to Gemini if it's audio or video and we don't already have file names
-            whole_file_name = None
-            if self.file_type in ['audio', 'video']:
-                try:
-                    # Create debug directory
-                    debug_dir = os.path.join(FILES_DIR, "debug", file_id)
-                    os.makedirs(debug_dir, exist_ok=True)
+            
+            # Initialize google_file_id as None
+            google_file_id = None
+            
+            # Upload the specific item to Gemini based on its type
+            try:
+                # Determine what to upload to Gemini based on item type
+                upload_file = None
+                mime_type = None
+                
+                if item['type'] == 'pdf_page' and 'image' in item and item['image']:
+                    upload_file = item['image']
+                    mime_type = "image/png"
+                    log_msg = f"Uploading PDF page {item['page']} image to Gemini"
+                
+                elif item['type'] in ['audio_chunk', 'video_chunk'] and 'chunk_file_path' in item:
+                    if os.path.exists(item['chunk_file_path']):
+                        upload_file = item['chunk_file_path']
+                        mime = magic.Magic(mime=True)
+                        mime_type = mime.from_file(upload_file)
+                        log_msg = f"Uploading {item['type']} chunk {item['chunk_num']} to Gemini: {mime_type}"
+                
+                elif item['type'] == 'image' and 'image' in item and item['image']:
+                    upload_file = item['image']
+                    mime_type = "image/png"
+                    log_msg = "Uploading image to Gemini"
+                
+                # Perform the upload if we have a file to upload
+                if upload_file and mime_type:
+                    logger.info(log_msg)
                     
-                    # Get MIME type
-                    mime = magic.Magic(mime=True)
-                    detected_mime = mime.from_file(self.file_path)
-                    logger.info(f"Original file MIME type: {detected_mime}")
+                    # Handle file path vs bytes
+                    if isinstance(upload_file, str) and os.path.exists(upload_file):
+                        with open(upload_file, 'rb') as f:
+                            media_file = genai.upload_file(f, mime_type=mime_type)
+                    else:
+                        # Assume it's already bytes. Need to convert to io.BytesIO
+                        media_file = genai.upload_file(io.BytesIO(upload_file), mime_type=mime_type)
                     
-                    # Upload whole file to Gemini
-                    with open(self.file_path, "rb") as f:
-                        logger.info(f"Uploading whole file to Gemini: {detected_mime}, size: {os.path.getsize(self.file_path)} bytes")
-                        media_file = genai.upload_file(f, mime_type=detected_mime)
-                        whole_file_name = media_file.name
-                        logger.info(f"Successfully uploaded whole file to Gemini: {whole_file_name}")
-                        
-                        # Save full response for debugging
-                        with open(os.path.join(debug_dir, "whole_file_response.json"), 'w') as resp_file:
-                            resp_file.write(json.dumps(media_file.__dict__, default=str))
-                    
-                    # Update the file record with the Gemini file name
-                    supabase.table("files").update({
-                        "file_names": [whole_file_name]
-                    }).eq("id", file_id).execute()
-                    
-                except Exception as e:
-                    logger.error(f"Error uploading whole file to Gemini: {str(e)}")
-                    with open(os.path.join(debug_dir, "whole_file_error.txt"), 'w') as err_file:
-                        err_file.write(f"Error: {str(e)}\n")
-                        import traceback
-                        err_file.write(traceback.format_exc())
+                    google_file_id = media_file.name
+                    # removing the files/ prefix
+                    formatted_google_file_id = google_file_id.split("/")[-1]
+                    logger.info(f"Successfully uploaded to Gemini: {formatted_google_file_id}")
+                
+            except Exception as e:
+                logger.error(f"Error uploading item to Gemini: {str(e)}")
+                # Create debug directory and log error
+                debug_dir = os.path.join(FILES_DIR, "debug", file_id)
+                os.makedirs(debug_dir, exist_ok=True)
+                with open(os.path.join(debug_dir, "item_upload_error.txt"), 'w') as err_file:
+                    err_file.write(f"Error: {str(e)}\n")
+                    import traceback
+                    err_file.write(traceback.format_exc())
             
             # Upload the item to the documents table and store images
             if item['type'] == 'pdf_page':
@@ -520,11 +389,10 @@ class FileExtractor:
                     'page': item['page'],
                     'file': file_id,
                     'text': item.get('text', ''),
-                    'processed': file_data.get('content_type', 'other') == 'textbook' # we mark the textbook as processed
+                    'processed': file_data.get('content_type', 'other') == 'textbook', # we mark the textbook as processed
+                    'google_file_id': formatted_google_file_id
                 }
             elif item['type'] in ['audio_chunk', 'video_chunk']:
-                # For audio/video chunks, we don't need to upload individual chunks anymore
-                # Just use the whole file reference for all chunks
                 document_data = {
                     'page': item['chunk_num'],
                     'file': file_id,
@@ -532,13 +400,15 @@ class FileExtractor:
                     'processed': False,
                     'start_time': item['start_time'],
                     'end_time': item['end_time'],
+                    'google_file_id': formatted_google_file_id
                 }
             elif item['type'] == 'image':
                 document_data = {
                     'page': 1,
                     'file': file_id,
                     'text': '',
-                    'processed': file_data.get('content_type', 'other') == 'textbook' # we mark the textbook as processed
+                    'processed': file_data.get('content_type', 'other') == 'textbook', # we mark the textbook as processed
+                    'google_file_id': formatted_google_file_id
                 }
             else:
                 logger.warning(f"Unsupported content type: {item['type']}")

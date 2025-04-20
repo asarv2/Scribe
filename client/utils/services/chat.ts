@@ -22,7 +22,7 @@ export const createChat = async (
     const updates = {
         class: classId,
         name: name,
-        type: chatType,
+        chat_type: chatType,
         teacher: teacher,
     } as any;
     

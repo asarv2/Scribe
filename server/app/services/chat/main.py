@@ -32,6 +32,7 @@ class ChatProcessor(RunHooks):
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None,
         remove_callback: Optional[Callable[[str], Awaitable[None]]] = None,
         update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None,
+        update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None,
     ):
         super().__init__()
         self.prompt_type = prompt_type
@@ -56,21 +57,19 @@ class ChatProcessor(RunHooks):
         self.stream_callback = stream_callback
         self.remove_callback = remove_callback
         self.update_trace_id = update_trace_id
-
+        self.update_chat_usage = update_chat_usage
         system_prompt = ""
         match self.prompt_type:
-            case "concept":
+            case "learn":
                 system_prompt = get_conceptual_prompt()
-            case "homework-student":
+            case "homework":
                 system_prompt = get_homework_student_prompt(solution=False)
-            case "review":
+            case "test":
                 system_prompt = get_review_prompt()
-            case 'general-student':
+            case 'student':
                 system_prompt = get_general_student_prompt()
-            case 'general-teacher':
+            case 'teacher':
                 system_prompt = get_general_teacher_prompt()
-            case 'present':
-                system_prompt = get_present_mode()
             case _:
                 system_prompt = get_general_student_prompt()
 
@@ -98,7 +97,8 @@ class ChatProcessor(RunHooks):
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
-                temperature=0.0
+                temperature=0.0,
+                include_usage=True
             ),
             tools=[create_figure],
             handoff_description="Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch. Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
@@ -113,7 +113,8 @@ class ChatProcessor(RunHooks):
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
-                temperature=0.0
+                temperature=0.0,
+                include_usage=True
             ),
             tools=[create_figure, create_summary],
             handoff_description="Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch.For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt."
@@ -128,7 +129,8 @@ class ChatProcessor(RunHooks):
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
-                temperature=0.0
+                temperature=0.0,
+                include_usage=True
             ),
             tools=[create_figure, create_mcq_question, create_frq_question],
             handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch. For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
@@ -142,7 +144,8 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                temperature=0.0
+                temperature=0.0,
+                include_usage=True
             ),
             tools=[
                 create_figure,
@@ -167,7 +170,8 @@ class ChatProcessor(RunHooks):
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(
-                tool_choice="required"
+                tool_choice="required",
+                include_usage=True
             ),
             tools=[update_chat_title]
         )
@@ -294,7 +298,6 @@ class ChatProcessor(RunHooks):
     async def process_message(
         self,
         chat_id: str,
-        chat_title: str,
         complete_context: str,
         documents: Documents,
     ) -> None:
@@ -304,13 +307,14 @@ class ChatProcessor(RunHooks):
 
             # need to add gemini files to context?
             result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
-                workflow_name=chat_title,
                 group_id=chat_id,
                 trace_id=self.trace_id
             ))
 
+            # setting the trace id
             if not self.trace_id:
                 trace_id = result._trace.trace_id
+                self.trace_id = trace_id
                 await self.update_trace_id(chat_id, trace_id)
 
             async for event in result.stream_events():
@@ -320,6 +324,13 @@ class ChatProcessor(RunHooks):
                         # we need to extract the references from the chunk
                         cleaned_chunk = clean_references(chunk, documents.references)
                         await self.stream_callback(cleaned_chunk)
+
+            # updating the usage
+            raw_responses = result.raw_responses
+            for response in raw_responses:
+                usage = response.usage
+
+                await self.update_chat_usage(documents.chat_id, documents.profile_id, usage.input_tokens, usage.output_tokens)
 
         except Exception as e:
             print(f"Error in process_message: {str(e)}")
@@ -332,14 +343,32 @@ class ChatProcessor(RunHooks):
         output: Any,
     ) -> None:
         """Called when the agent produces a final output."""
-        # updating the chat history
-        self.chat_history.extend([self.current_question, output])
+        if agent.name != "Chat Title Agent":
+            # updating the chat history
+            self.chat_history.extend([self.current_question, output])
 
-        # run the title agent on the output if it is the first message
-        if len(self.chat_history) == 2:
-            post_conversation_context = await self.format_conversation("", wrapper.context, add_current=False) # can add empty context since it will not be used
-            # adding the topic query to the context
-            post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})
-            await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context, run_config=RunConfig(
-                trace_id=self.trace_id
-            ))
+            # run the title agent on the output if it is the first message
+            if len(self.chat_history) == 2:
+                # can add empty context since it will not be used
+                post_conversation_context = await self.format_conversation("", wrapper.context, add_current=False)
+
+                # adding the topic query to the context
+                post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})
+                response = await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context, run_config=RunConfig(
+                    group_id=wrapper.context.chat_id,
+                    trace_id=self.trace_id
+                ), hooks=self)
+
+                # dummy trace to update the chat title
+                if self.trace_id:
+                    chat_title = str(response.final_output).strip()
+                    with trace(workflow_name=chat_title, trace_id=self.trace_id):
+                        pass
+                else:
+                    print("No trace id found while updating chat title")
+        else:
+            # updating the usage
+            usage = wrapper.usage
+            chat_id = wrapper.context.chat_id
+            profile_id = wrapper.context.profile_id
+            await self.update_chat_usage(chat_id, profile_id, usage.input_tokens, usage.output_tokens)

@@ -6,7 +6,7 @@ export async function getFiles(client: TypedSupabaseClient, classIds: string[]) 
         .select("*")
         .in("class", classIds)
         .eq("deleted", false)
-        .order("created_at", {ascending: false})
+        .order("file_number", {ascending: false})
     
     if (error) {
         throw new Error(error.message);

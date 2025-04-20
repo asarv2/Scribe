@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 
-import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack } from '@mantine/core';
+import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack, Badge } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -31,6 +31,7 @@ import Management from '../Account/Management';
 import { createClass } from '@/utils/services/class';
 import { updateProfile } from '@/utils/services/profile';
 import { checkCode } from '@/utils/services/code';
+import { useStudentMode } from '../StudentModeContext';
 interface ClassHeaderProps {
     classId: string
     showClasses: boolean
@@ -40,14 +41,13 @@ interface ClassHeaderProps {
 export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassHeaderProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
-    const { setColorScheme } = useMantineColorScheme();
-    const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
     const [isOpen, { open, close }] = useDisclosure(false);
     const [classCode, setClassCode] = useState('');
     const [newClassName, setNewClassName] = useState("");
     const [newClassCode, setNewClassCode] = useState("");
     const [newClassDescription, setNewClassDescription] = useState("");
     const [loading, setLoading] = useState(false);
+    const { studentMode } = useStudentMode();
 
     const router = useRouter();
 
@@ -70,10 +70,6 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
     const getFilteredClasses = (profile: Profile | undefined, classData: Class[] | undefined) => {
         if (!profile || !classData) return [];
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
-    };
-
-    const toggleColorScheme = () => {
-        setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
     };
 
     const handleAddClass = async () => {
@@ -198,10 +194,9 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
         return showClasses && (
             <Group pt={4}>
                 {hasNoClasses ? <Button
-                    variant="light"
                     onClick={open}
                 >
-                    {profile?.professor || profile?.admin ? "Add Class" : "Join Class"}
+                    {profile && ((profile.professor || profile.admin) && !studentMode) ? "Add Class" : "Join Class"}
                 </Button> : <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
                     <Menu.Target>
                         <Button variant="subtle" className={classes.classSelector}>
@@ -220,7 +215,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                             <Menu.Item
                                 key={classItem.id}
                                 component={Link}
-                                href={profile?.professor || profile?.admin
+                                href={profile && ((profile.professor || profile.admin) && !studentMode)
                                     ? `/class/${classItem.id}`
                                     : `/class/${classItem.id}/chat/new`}
                             >
@@ -231,7 +226,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                         <Menu.Item
                             onClick={open}
                         >
-                            {profile?.professor || profile?.admin ? "Add Class" : "Join Class"}
+                            {profile && ((profile.professor || profile.admin) && !studentMode) ? "Add Class" : "Join Class"}
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>}
@@ -239,11 +234,11 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                 <Modal
                     opened={isOpen}
                     onClose={close}
-                    title={profile?.professor || profile?.admin ? "Add New Class" : "Join Class"}
+                    title={profile && ((profile.professor || profile.admin) && !studentMode) ? "Add New Class" : "Join New Class"}
                     size="lg"
                 >
                     <Stack gap="md">
-                        {profile?.professor || profile?.admin ? (
+                        {profile && ((profile.professor || profile.admin) && !studentMode) ? (
                             <Stack gap="md">
                                 <Group grow>
                                     <TextInput
@@ -296,7 +291,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                             />
                         )}
                         <Group justify="flex-end">
-                            {profile?.professor || profile?.admin ? (
+                            {profile && ((profile.professor || profile.admin) && !studentMode) ? (
                                 <Button onClick={handleAddClass} loading={loading}>Add</Button>
                             ) : (
                                 <Button onClick={handleJoinClass} loading={loading}>Join</Button>
@@ -309,9 +304,9 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
     }
 
     return (
-        <Group h="100%" px="md" w="100%" justify="space-between">
-            <Group gap="xs">
-                {profile && (profile.professor || profile.admin) && isMobile && (
+        <Group h="100%" px="md" w="100%" justify="space-between" pos="relative">
+            <Group gap="xs" style={{ zIndex: 2 }}>
+                {profile && ((profile.professor || profile.admin) && !studentMode) && isMobile && (
                     <Group pt={4}>
                         <Tooltip label="Open Menu">
                             <ActionIcon
@@ -346,22 +341,27 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                 </Link>
                 {!isMobile && renderClassSelector()}
             </Group>
+            
+            {profile && ((profile.professor || profile.admin) && studentMode) && 
+                <Center style={{ 
+                    position: 'absolute', 
+                    left: 0, 
+                    right: 0, 
+                    margin: 'auto',
+                    zIndex: 1,
+                    pointerEvents: 'none' // This makes the center container "click-through"
+                }}>
+                    <Tooltip label="To disable, click 'Exit Student Mode' under the profile menu">
+                        <Badge style={{ pointerEvents: 'auto' }}>Student Mode</Badge>
+                    </Tooltip>
+                </Center>
+            }
 
             {isMobile && renderClassSelector()}
-
-            <Group>
-                <Tooltip label={computedColorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
-                    <ActionIcon
-                        variant="subtle"
-                        onClick={toggleColorScheme}
-                        aria-label="Toggle color scheme"
-                    >
-                        <IconSun className={cx(classes.icon, classes.light)} size={24} />
-                        <IconMoon className={cx(classes.icon, classes.dark)} size={24} />
-                    </ActionIcon>
-                </Tooltip>
+            
+            <Group style={{ zIndex: 2 }}>
                 <FeedbackModal />
-                <AccountMenu profile={profile} />
+                <AccountMenu profile={profile} classId={classId} />
             </Group>
         </Group>
     );

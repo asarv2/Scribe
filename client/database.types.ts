@@ -52,6 +52,7 @@ export type Database = {
       }
       chats: {
         Row: {
+          chat_type: Database["prod"]["Enums"]["chat_type_2"]
           class: string
           created_at: string
           deleted: boolean
@@ -61,9 +62,11 @@ export type Database = {
           rating: number | null
           response_url: string
           teacher: boolean
+          trace: string | null
           type: Database["prod"]["Enums"]["chat_type"]
         }
         Insert: {
+          chat_type?: Database["prod"]["Enums"]["chat_type_2"]
           class: string
           created_at?: string
           deleted?: boolean
@@ -73,9 +76,11 @@ export type Database = {
           rating?: number | null
           response_url?: string
           teacher?: boolean
+          trace?: string | null
           type?: Database["prod"]["Enums"]["chat_type"]
         }
         Update: {
+          chat_type?: Database["prod"]["Enums"]["chat_type_2"]
           class?: string
           created_at?: string
           deleted?: boolean
@@ -85,6 +90,7 @@ export type Database = {
           rating?: number | null
           response_url?: string
           teacher?: boolean
+          trace?: string | null
           type?: Database["prod"]["Enums"]["chat_type"]
         }
         Relationships: [
@@ -271,6 +277,8 @@ export type Database = {
           exercise_number: number | null
           exercises: string[]
           file: string | null
+          google_expires_at: string | null
+          google_file_id: string | null
           homework: string | null
           homeworks: string[]
           id: string
@@ -296,6 +304,8 @@ export type Database = {
           exercise_number?: number | null
           exercises?: string[]
           file?: string | null
+          google_expires_at?: string | null
+          google_file_id?: string | null
           homework?: string | null
           homeworks?: string[]
           id?: string
@@ -321,6 +331,8 @@ export type Database = {
           exercise_number?: number | null
           exercises?: string[]
           file?: string | null
+          google_expires_at?: string | null
+          google_file_id?: string | null
           homework?: string | null
           homeworks?: string[]
           id?: string
@@ -811,6 +823,7 @@ export type Database = {
           profile: string | null
           response_url: string
           title: string
+          trace: string | null
           type: Database["prod"]["Enums"]["file_type"]
         }
         Insert: {
@@ -833,6 +846,7 @@ export type Database = {
           profile?: string | null
           response_url?: string
           title?: string
+          trace?: string | null
           type: Database["prod"]["Enums"]["file_type"]
         }
         Update: {
@@ -855,6 +869,7 @@ export type Database = {
           profile?: string | null
           response_url?: string
           title?: string
+          trace?: string | null
           type?: Database["prod"]["Enums"]["file_type"]
         }
         Relationships: [
@@ -1674,6 +1689,58 @@ export type Database = {
           },
         ]
       }
+      usage: {
+        Row: {
+          chat: string | null
+          created_at: string
+          file: string | null
+          id: string
+          input_tokens: number
+          output_tokens: number
+          profile: string | null
+        }
+        Insert: {
+          chat?: string | null
+          created_at?: string
+          file?: string | null
+          id?: string
+          input_tokens?: number
+          output_tokens?: number
+          profile?: string | null
+        }
+        Update: {
+          chat?: string | null
+          created_at?: string
+          file?: string | null
+          id?: string
+          input_tokens?: number
+          output_tokens?: number
+          profile?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_chat_fkey"
+            columns: ["chat"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "usage_file_fkey"
+            columns: ["file"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "usage_profile_fkey"
+            columns: ["profile"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       waitlist: {
         Row: {
           created_at: string | null
@@ -1708,6 +1775,16 @@ export type Database = {
         | "review"
         | "other"
         | "present"
+      chat_type_2:
+        | "student"
+        | "professor"
+        | "learn"
+        | "homework"
+        | "test"
+        | "present"
+        | "figure"
+        | "summary"
+        | "question"
       content_type: "lecture" | "textbook" | "homework" | "other"
       file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
@@ -1847,6 +1924,17 @@ export const Constants = {
         "review",
         "other",
         "present",
+      ],
+      chat_type_2: [
+        "student",
+        "professor",
+        "learn",
+        "homework",
+        "test",
+        "present",
+        "figure",
+        "summary",
+        "question",
       ],
       content_type: ["lecture", "textbook", "homework", "other"],
       file_type: ["audio", "video", "other", "image", "pdf"],

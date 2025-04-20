@@ -23,11 +23,13 @@ export const createFile = async (
         .from("files")
         .insert({
             class: classId,
-            name: fileTitle,
+            length: 1,
+            title: fileTitle,
             file_number: fileNumber,
             content_type: contentType,
             type: fileType,
             profile: profile,
+            expires: null,
         })
         .select("*")
         .single();
@@ -55,11 +57,19 @@ export const deleteFile = async (
     // updating the file itself in google
     if (deleteFromGemini) {
         const apiKey = process.env.GOOGLE_API_KEY;
-        const fileNames = data?.file_names;
-        if (fileNames) {
-            for (const fileName of fileNames) {
+        // get all of the documents for this file
+        const { data: documents, error: documentsError } = await supabase
+            .from("documents")
+            .select("google_file_id, google_expires_at")
+            .eq("file", fileId)
+            .gte("google_expires_at", new Date().toISOString());
+        if (documentsError) {
+            return { success: false, error: documentsError.message };
+        }
+        if (documents) {
+            for (const document of documents) {
                 const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/${fileName}?key=${apiKey}`,
+                    `https://generativelanguage.googleapis.com/v1beta/files/${document.google_file_id}?key=${apiKey}`,
                     {
                         method: "DELETE",
                     },
@@ -107,6 +117,19 @@ export const updateFileDate = async (fileId: string, fileDate: string) => {
     const { error } = await supabase
         .from("files")
         .update({file_date: fileDate})
+        .eq("id", fileId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
+
+export const markFileIdle = async (fileId: string) => {
+    const supabase = await useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("files")
+        .update({parse_status: 'idle'})
         .eq("id", fileId);
     if (error) {
         return { success: false, error: error.message };

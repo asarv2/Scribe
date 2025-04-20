@@ -17,10 +17,12 @@ import { IconSun } from "@tabler/icons-react";
 import cx from 'clsx';
 import classes from "./HomeHeader.module.css";
 import { getClasses } from "@/utils/queries/get-classes";
+import { useStudentMode } from "../StudentModeContext";
 export function HomeHeader() {
     const { setColorScheme } = useMantineColorScheme();
     const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
     const supabase = useSupabaseBrowser();
+    const { studentMode } = useStudentMode();
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -45,7 +47,7 @@ export function HomeHeader() {
 
     const firstClass = getFilteredClasses()?.[0];
     const firstClassId = firstClass?.id;
-    const firstClassSuffix = (profile?.professor || profile?.admin) ? firstClassId : `${firstClassId}/chat/new`;
+    const firstClassSuffix = profile && ((profile.professor || profile.admin) && !studentMode) ? firstClassId : `${firstClassId}/chat/new`;
 
 
     return (
@@ -74,16 +76,6 @@ export function HomeHeader() {
             </Group>
 
             <Group>
-                {/* <Tooltip label="Toggle theme">
-                    <ActionIcon
-                        variant="subtle"
-                        onClick={toggleColorScheme}
-                        aria-label="Toggle color scheme"
-                    >
-                        <IconSun className={cx(classes.icon, classes.light)} size={24} />
-                        <IconMoon className={cx(classes.icon, classes.dark)} size={24} />
-                    </ActionIcon>
-                </Tooltip> */}
                 {user && profile ? (
                     <Link href={`/class/${firstClassSuffix}`}>
                         <Button size="sm">

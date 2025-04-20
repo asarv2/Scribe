@@ -17,10 +17,12 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getClasses } from "@/utils/queries/get-classes";
 import { useMediaQuery } from "@mantine/hooks";
 import styles from './Hero.module.css';
+import { useStudentMode } from "../StudentModeContext";
 
 export default function Hero() {
     const supabase = useSupabaseBrowser();
     const isMobile = useMediaQuery('(max-width: 768px)');
+    const { studentMode } = useStudentMode();
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -45,7 +47,7 @@ export default function Hero() {
 
     const firstClass = getFilteredClasses()?.[0];
     const firstClassId = firstClass?.id;
-    const firstClassSuffix = (profile?.professor || profile?.admin) ? firstClassId : `${firstClassId}/chat/new`;
+    const firstClassSuffix = profile && ((profile.professor || profile.admin) && !studentMode) ? firstClassId : `${firstClassId}/chat/new`;
 
     return (
         <Box

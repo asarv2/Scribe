@@ -19,6 +19,8 @@ import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getFileDocuments } from '@/utils/queries/get-file-docs';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getUser } from '@/utils/queries/get-user';
+import { getPageRanges } from '@/utils/chat/chat-helpers';
+
 interface LatexProps {
     children: string;
     classId?: string;
@@ -60,84 +62,6 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
         enabled: !!files && !!classId
     });
 
-    const getPageRanges = (documents: Document[], exercises: Exercise[]): { startDocument: Document | null, startExercise: Exercise | null, range: string }[] => {
-        if (!documents.length && !exercises.length) return [];
-
-        const pageRanges: { startDocument: Document | null, startExercise: Exercise | null, range: string }[] = [];
-
-        if (documents.length > 0) {
-            // Remove duplicates and sort
-            const uniquePages = Array.from(new Set(documents.map(doc => doc.page))).sort((a, b) => a - b);
-            let start = uniquePages[0];
-            let prev = uniquePages[0];
-
-            for (let i = 1; i <= uniquePages.length; i++) {
-                if (i === uniquePages.length || uniquePages[i] !== prev + 1) {
-                    const document = documents.find(doc => doc.page === start);
-                    if (document) {
-                        pageRanges.push({ startDocument: document, startExercise: null, range: start === prev ? `${start}` : `${start}-${prev}` });
-                    }
-                    if (i < uniquePages.length) {
-                        start = uniquePages[i];
-                        prev = uniquePages[i];
-                    }
-                } else {
-                    prev = uniquePages[i];
-                }
-            }
-        } else {
-            // Check if these are chapter exercises or homework problems
-            const isHomeworkProblems = exercises.some(e => e && e.homework !== null);
-            const isChapterExercises = exercises.some(e => e && e.chapter !== null);
-            
-            if (isChapterExercises) {
-                // Process chapter exercises
-                const uniqueChapterPages = Array.from(new Set(exercises.map(e => e.exercise_number))).sort((a, b) => a - b);
-                let chapterStart = uniqueChapterPages[0];
-                let chapterPrev = uniqueChapterPages[0];
-
-                for (let i = 1; i <= uniqueChapterPages.length; i++) {
-                    if (i === uniqueChapterPages.length || uniqueChapterPages[i] !== chapterPrev + 1) {
-                        const exercise = exercises.find(e => e.exercise_number === chapterStart);
-                        if (exercise) {
-                            pageRanges.push({ startDocument: null, startExercise: exercise, range: chapterStart === chapterPrev ? `${chapterStart}` : `${chapterStart}-${chapterPrev}` });
-                        }
-                        if (i < uniqueChapterPages.length) {
-                            chapterStart = uniqueChapterPages[i];
-                            chapterPrev = uniqueChapterPages[i];
-                        }
-                    } else {
-                        chapterPrev = uniqueChapterPages[i];
-                    }
-                }
-            }
-            
-            if (isHomeworkProblems) {
-                // Process homework problems
-                const uniqueHomeworkPages = Array.from(new Set(exercises.map(e => e.problem_number))).sort((a, b) => a - b);
-                let homeworkStart = uniqueHomeworkPages[0];
-                let homeworkPrev = uniqueHomeworkPages[0];
-
-                for (let i = 1; i <= uniqueHomeworkPages.length; i++) {
-                    if (i === uniqueHomeworkPages.length || uniqueHomeworkPages[i] !== homeworkPrev + 1) {
-                        const exercise = exercises.find(e => e.problem_number === homeworkStart);
-                        if (exercise) {
-                            pageRanges.push({ startDocument: null, startExercise: exercise, range: homeworkStart === homeworkPrev ? `${homeworkStart}` : `${homeworkStart}-${homeworkPrev}` });
-                        }
-                        if (i < uniqueHomeworkPages.length) {
-                            homeworkStart = uniqueHomeworkPages[i];
-                            homeworkPrev = uniqueHomeworkPages[i];
-                        }
-                    } else {
-                        homeworkPrev = uniqueHomeworkPages[i];
-                    }
-                }
-            }
-        }
-
-        return pageRanges;
-    };
-
 
     const getDocumentLabel = (
         doc?: Document,
@@ -151,7 +75,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
         // find all of the distinct lectures and chapters in the group
         const groupFiles = Array.from(new Set(documents.filter(doc => doc && doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
         // get the page ranges for each lecture and chapter
-        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc && doc.file === file), [])).flat()
+        const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc && doc.file === file))).flat()
         // combine the page ranges for each lecture and chapter
         const allDocumentPageRanges = [...filePageRanges]
 
