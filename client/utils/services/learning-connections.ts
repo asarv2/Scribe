@@ -1,4 +1,4 @@
-import { Lecture, Objective, Outcome, TypedSupabaseClient } from "../../types";
+import { File, Objective, Outcome, TypedSupabaseClient } from "../../types";
 
 // Interface for a connection suggestion
 export interface ConnectionSuggestion {
@@ -36,7 +36,7 @@ export async function analyzeConnections(
   classId: string,
   outcomes: Outcome[],
   objectives: Objective[],
-  tasks: Lecture[]
+  files: File[]
 ): Promise<AnalysisResponse> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -51,7 +51,7 @@ export async function analyzeConnections(
     }
 
     console.log(`Sending connection analysis request to ${apiUrl}/learning/analyze-connections`);
-    console.log(`Data: ${outcomes.length} outcomes, ${objectives.length} objectives, ${tasks.length} tasks`);
+    console.log(`Data: ${outcomes.length} outcomes, ${objectives.length} objectives, ${files.length} files`);
     
     const response = await fetch(`${apiUrl}/learning/analyze-connections`, {
       method: "POST",
@@ -62,7 +62,7 @@ export async function analyzeConnections(
         class_id: classId,
         outcomes,
         objectives,
-        tasks
+        files
       }),
     });
 

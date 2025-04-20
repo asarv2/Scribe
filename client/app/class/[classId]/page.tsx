@@ -24,7 +24,6 @@ import { getProfiles } from "@/utils/queries/get-profiles";
 import { getMessages, getMessagesById } from "@/utils/queries/get-messages";
 import { AreaChart } from '@mantine/charts';
 import { BarChart } from '@mantine/charts';
-import { getFaqs } from "@/utils/queries/get-faqs";
 import { getAllChats } from "@/utils/queries/get-all-chats";
 import { BubbleChart } from '@mantine/charts';
 import { PieChart } from '@mantine/charts';
@@ -62,61 +61,11 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
         enabled: !!user
     })
 
-    const {data: profiles, isLoading: loadingProfiles} = useQuery({
-        queryKey: ["profiles", classId],
-        queryFn: () => getProfiles(supabase),
-        enabled: !!classData
-    })
-
     const { data: messages } = useQuery({
         queryKey: ["messages", classId, chats],
         queryFn: () => getMessages(supabase, chats ? chats.map(chat => chat.id) : []),
         enabled: !!chats
     })
-
-    const { data: faqs, isLoading: loadingFaqs } = useQuery({
-        queryKey: ["faqs", classId],
-        queryFn: () => getFaqs(supabase, classId),
-        enabled: !!classData
-    })
-
-    // Process chat data for visualization
-    const processChatsData = () => {
-        if (!chats) return [];
-
-        // Create a map of dates to chat counts
-        const chatsByDate = chats.reduce((acc: { [key: string]: number }, chat) => {
-            const date = new Date(chat.created_at).toISOString().split('T')[0];
-            acc[date] = (acc[date] || 0) + 1;
-            return acc;
-        }, {});
-
-        // Convert to array format for MantineCharts
-        return Object.entries(chatsByDate).map(([date, count]) => ({
-            date,
-            chats: count
-        })).sort((a, b) => a.date.localeCompare(b.date));
-    };
-
-    const chartData = processChatsData();
-
-    // Process messages data for visualization
-    const processMessagesData = () => {
-        if (!messages) return [];
-
-        const messagesByDate = messages.reduce((acc: { [key: string]: number }, message) => {
-            const date = new Date(message.created_at).toISOString().split('T')[0];
-            acc[date] = (acc[date] || 0) + 1;
-            return acc;
-        }, {});
-
-        return Object.entries(messagesByDate).map(([date, count]) => ({
-            date,
-            messages: count
-        })).sort((a, b) => a.date.localeCompare(b.date));
-    };
-
-    const messageChartData = processMessagesData();
 
     // Add these new data processing functions after the existing ones:
     const processMessagesPerDay = () => {
@@ -134,73 +83,8 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
         })).sort((a, b) => a.date.localeCompare(b.date));
     };
 
-    const processStudentMessages = () => {
-        if (!messages) return [];
-
-        const messagesByStudent = messages.reduce((acc: { [key: string]: number }, message) => {
-            const chat = chats?.find(chat => chat.id === message.chat);
-            const studentId = chat?.profile;
-            const student = profiles?.find(student => student.id === studentId);
-            const studentName = student ? (student.first_name + ' ' + student.last_name) : 'Anonymous';
-            acc[studentName] = (acc[studentName] || 0) + 1;
-            return acc;
-        }, {});
-
-        return Object.entries(messagesByStudent).map(([student, count]) => ({
-            student,
-            messages: count
-        })).sort((a, b) => b.messages - a.messages);  // Sort by question count descending
-    };
-
-    const processTimeOfDayMessages = () => {
-        if (!messages) return [];
-
-        const messagesByHour = messages.reduce((acc: { [key: number]: number }, message) => {
-            const hour = new Date(message.created_at).getHours();
-            acc[hour] = (acc[hour] || 0) + 1;
-            return acc;
-        }, {});
-
-        return Array.from({ length: 24 }, (_, hour) => ({
-            hour: `${hour}:00`,
-            messages: messagesByHour[hour] || 0
-        }));
-    };
-
     // Add these const declarations before the return statement:
     const messagesPerDayData = processMessagesPerDay();
-    const studentMessagesData = processStudentMessages();
-    const timeOfDayMessagesData = processTimeOfDayMessages();
-
-    // Add this new processing function with the other data processing functions
-    const processFaqTopics = () => {
-        if (!faqs) return [];
-
-        const topicCounts = faqs.reduce((acc: { [key: string]: number }, faq) => {
-            acc[faq.topic] = (acc[faq.topic] || 0) + faq.count;
-            return acc;
-        }, {});
-
-        // filter topics that do not have 'lecture', 'chapter' or 'homework' in the topic
-
-        const filteredTopics = Object.fromEntries(
-            Object.entries(topicCounts).filter(([topic]) => 
-                !topic.toLowerCase().includes('lecture') && 
-                !topic.toLowerCase().includes('chapter') && 
-                !topic.toLowerCase().includes('homework')
-            )
-        );
-
-        return Object.entries(filteredTopics)
-            .map(([topic, count]) => ({
-                topic,
-                count
-            }))
-            .sort((a, b) => b.count - a.count); // Sort by count descending
-    };
-
-    // Add this const declaration with the other data declarations
-    const faqTopicsData = processFaqTopics();
 
     // Process data for active students over time with different time frames
     const processActiveStudentsOverTime = (timeFrame: 'day' | 'week' | 'month') => {
@@ -321,41 +205,7 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
     const activeStudentsData = processActiveStudentsOverTime(studentTimeFrame);
 
     // Add state for toggles
-    const [resourceType, setResourceType] = useState<'general' | 'homework' | 'lecture' | 'textbook'>('general');
     const [timeFrame, setTimeFrame] = useState<'all' | 'recent'>('all');
-
-    // Process messages data for the last 24 hours
-    const processRecentMessagesData = () => {
-        if (!messages) return [];
-
-        const now = new Date();
-        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-        const recentMessages = messages.filter(message =>
-            new Date(message.created_at) >= oneDayAgo
-        );
-
-        const messagesByHour = Array.from({ length: 24 }, (_, i) => {
-            const hour = (now.getHours() - i + 24) % 24;
-            return {
-                hour: `${hour}:00`,
-                messages: 0
-            };
-        }).reverse();
-
-        recentMessages.forEach(message => {
-            const messageDate = new Date(message.created_at);
-            const hoursDiff = Math.floor((now.getTime() - messageDate.getTime()) / (60 * 60 * 1000));
-            if (hoursDiff < 24) {
-                const index = 23 - hoursDiff;
-                if (index >= 0) messagesByHour[index].messages++;
-            }
-        });
-
-        return messagesByHour;
-    };
-
-    const recentMessagesData = processRecentMessagesData();
 
     // Check if the user is a professor or admin
     const isProfessorOrAdmin = () => {

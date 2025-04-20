@@ -6,37 +6,13 @@ const nextConfig = {
             protocol: 'https',
             hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
             port: '',
-            pathname: '/storage/v1/object/public/lectures/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
-            port: '',
-            pathname: '/storage/v1/object/public/textbooks/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
-            port: '',
             pathname: '/storage/v1/object/public/profiles/**',
           },
           {
             protocol: 'https',
             hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
             port: '',
-            pathname: '/storage/v1/object/public/classes/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
-            port: '',
             pathname: '/storage/v1/object/public/figures/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'hmdqtnywfebxjugxzlvc.supabase.co',
-            port: '',
-            pathname: '/storage/v1/object/public/exercises/**',
           },
           {
             protocol: 'https',

@@ -5,14 +5,13 @@
  */
 
 import React, { useState } from 'react';
-import { Document, Exercise, Summary } from '../../types';
+import { Document, Summary } from '../../types';
 import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip, SimpleGrid } from '@mantine/core';
 import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile } from '@tabler/icons-react';
 import Latex from '../Latex';
 import { getSummaryDownloadUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
 import { ViewerMode } from '../../types';
-import { groupConsecutiveDocuments, splitTextByTags } from '@/utils/chat/chat-helpers';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getUser } from '@/utils/queries/get-user';

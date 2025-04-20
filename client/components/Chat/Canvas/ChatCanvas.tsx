@@ -549,16 +549,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     };
 
-    useEffect(() => {
-        if (classId === "547a83a8-ab2c-4f3c-9112-b1cb6414ff36") {
-
-            setActiveChat(prev => ({
-                ...prev,
-                chatType: "present"
-            }));
-        }
-    }, [classId]);
-
     return (
         <Container fluid>
             <Grid>
@@ -643,7 +633,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                                 activeChat.title
                                             )}
                                         </Text>
-                                        {existingChat?.chat_type === "present" && <Badge color="orange" variant="light">Present</Badge>}
+                                        {existingChat?.chat_type === "grade" && <Badge color="orange" variant="light">Grade</Badge>}
                                         {existingChat?.chat_type === "test" && <Badge color="cyan" variant="light">Test-Prep</Badge>}
                                         {existingChat?.chat_type === "homework" && <Badge color="indigo" variant="light">Homework</Badge>}
                                         {existingChat?.chat_type === "learn" && <Badge color="green" variant="light">Learn</Badge>}

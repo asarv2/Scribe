@@ -6,14 +6,7 @@ const schema = process.env.NEXT_PUBLIC_SUPABASE_SCHEMA as keyof Database;
 export type SchemaName = typeof schema;
 export type TypedSupabaseClient = SupabaseClient<Database>;
 
-export type Lecture = Database[SchemaName]["Tables"]["lectures"]["Row"];
-export type Textbook = Database[SchemaName]["Tables"]["textbooks"]["Row"];
 export type Document = Database[SchemaName]["Tables"]["documents"]["Row"];
-export type Chapter = Database[SchemaName]["Tables"]["chapters"]["Row"];
-export type Subchapter = Database[SchemaName]["Tables"]["subchapters"]["Row"];
-export type Exercise = Database[SchemaName]["Tables"]["exercises"]["Row"];
-export type Homework = Database[SchemaName]["Tables"]["homeworks"]["Row"];
-export type Problem = Database[SchemaName]["Tables"]["problems"]["Row"];
 
 export type GenerationType = Database[SchemaName]["Enums"]["generation_type"];
 export type Message = Database[SchemaName]["Tables"]["messages"]["Row"];
@@ -28,7 +21,6 @@ export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"];
 export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"];
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"];
 
-export type Faqs = Database[SchemaName]["Tables"]["faqs"]["Row"];
 export type File = Database[SchemaName]["Tables"]["files"]["Row"];
 
 export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"];
@@ -38,10 +30,10 @@ export type ContentType = Database[SchemaName]["Enums"]["content_type"];
 
 export type OneDrive = Database[SchemaName]["Tables"]["onedrive"]["Row"];
 
-export type OneDriveFile = Database[SchemaName]["Tables"]["onedrive_files"]["Row"];
-
 export type Outcome = Database[SchemaName]["Tables"]["outcomes"]["Row"];
 export type Objective = Database[SchemaName]["Tables"]["objectives"]["Row"];
+export type Usage = Database[SchemaName]["Tables"]["usage"]["Row"];
+export type Google = Database[SchemaName]["Tables"]["google"]["Row"];
 
 export interface ChatMessage {
     id: number;

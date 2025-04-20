@@ -27,11 +27,11 @@ import { IconPlus, IconEdit, IconRefresh } from '@tabler/icons-react';
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { 
   getOutcomes, getObjectives, createOutcome, updateOutcome, deleteOutcome,
-  createObjective, updateObjective, deleteObjective, updateObjectiveConnection,
-  getLectures
+  createObjective, updateObjective, deleteObjective, updateObjectiveConnection
 } from "@/utils/queries/get-connections";
 import { analyzeConnections, batchCreateConnections, getTaskConnections } from "@/utils/services/learning-connections";
-import { Lecture, Objective, Outcome } from "@/types";
+import { File, Objective, Outcome } from "@/types";
+import { getFiles } from "@/utils/queries/get-files";
 
 // New interfaces for connection suggestions
 interface ConnectionSuggestion {
@@ -519,7 +519,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
     const [outcomes, setOutcomes] = useState<any[]>([]);
     const [objectives, setObjectives] = useState<any[]>([]);
     const [connections, setConnections] = useState<any[]>([]);
-    const [lectures, setLectures] = useState<Lecture[]>([]);
+    const [files, setFiles] = useState<File[]>([]);
     const [isAdmin, setIsAdmin] = useState(true); // Set to true for simplicity
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -566,12 +566,12 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
         console.log(`Fetched ${fetchedObjectives.length} objectives`);
         
         // Fetch lectures for tasks
-        const fetchedLectures = await getLectures(supabase, classId);
-        console.log(`Fetched ${fetchedLectures.length} lectures`);
+        const fetchedFiles = await getFiles(supabase, [classId]);
+        console.log(`Fetched ${fetchedFiles.length} files`);
         
         setOutcomes(fetchedOutcomes);
         setObjectives(fetchedObjectives);
-        setLectures(fetchedLectures);
+        setFiles(fetchedFiles);
         
         // Generate connections based on outcome_id relationships, now including handles if available
         const derivedConnections = fetchedObjectives
@@ -854,7 +854,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
 
     // Modify the useEffect that converts data to nodes to apply the distribution algorithm
     useEffect(() => {
-        if (outcomes.length > 0 || objectives.length > 0 || lectures.length > 0 || connections.length > 0) {
+        if (outcomes.length > 0 || objectives.length > 0 || files.length > 0 || connections.length > 0) {
             // Convert outcomes to nodes
             const outcomeNodes = outcomes.map((outcome: Outcome) => ({
                 id: outcome.id,
@@ -884,16 +884,16 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             }));
             
             // Convert lectures to task nodes
-            const taskNodes = lectures.map((lecture, index) => ({
-                id: lecture.id,
+            const taskNodes = files.map((file, index) => ({
+                id: file.id,
                 type: 'task',
                 position: {
                     x: (Math.random() * 300) + 300, 
                     y: (Math.random() * 300) + 300 
                 },
                 data: { 
-                    title: lecture.name, 
-                    description: lecture.additional_info || '',
+                    title: file.title, 
+                    description: file.additional_info || '',
                     onNodeClick: handleNodeClickRef.current
                 }
             }));
@@ -967,7 +967,7 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
             
             setEdges(connectionEdges);
         }
-    }, [outcomes, objectives, lectures, connections, isProfessorOrAdmin, setNodes, setEdges, supabase]);
+    }, [outcomes, objectives, files, connections, isProfessorOrAdmin, setNodes, setEdges, supabase]);
 
     // Function to remove a node
     const removeNode = async (nodeId: string) => {
@@ -1196,14 +1196,14 @@ export default function LearningPage({ params }: { params: Promise<{ classId: st
       setAnalyzing(true);
       try {
         console.log("Starting connection analysis for class:", classId);
-        console.log("Outcomes:", outcomes.length, "Objectives:", objectives.length, "Lectures:", lectures.length);
+        console.log("Outcomes:", outcomes.length, "Objectives:", objectives.length, "Files:", files.length);
         
         // Call the API to analyze connections
         const result = await analyzeConnections(
           classId,
           outcomes,
           objectives,
-          lectures
+          files
         );
         
         if (result.success) {

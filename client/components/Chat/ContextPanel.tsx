@@ -11,7 +11,7 @@ import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPen
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { Lecture, Textbook, Chapter, Subchapter, Exercise, Homework, Problem, ChatMessage, ViewerMode, Document, File } from "@/types";
+import { ChatMessage, ViewerMode, Document, File } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useDrag } from 'react-dnd';
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";

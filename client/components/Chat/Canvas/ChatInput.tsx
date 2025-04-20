@@ -1148,36 +1148,36 @@ export const ChatInput = memo(({
         }
 
         {
-          newChat && classData?.present_mode_enabled && !activeChat.teacher && (isMobile ?
-            <Tooltip label="Present">
+          newChat && !activeChat.teacher && (isMobile ?
+            <Tooltip label="Grade">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({
                   ...prev,
-                  chatType: prev.chatType === 'present' ? 'student' : 'present'
+                  chatType: prev.chatType === 'grade' ? 'student' : 'grade'
                 }))}
                 size="lg"
                 color={"orange"}
-                variant={activeChat.chatType === 'present' ? "light" : "subtle"}
+                variant={activeChat.chatType === 'grade' ? "light" : "subtle"}
                 style={{
-                  border: `1px solid ${activeChat.chatType === 'present' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
+                  border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
                 }}
               >
                 <IconPresentation size={20} />
               </ActionIcon>
             </Tooltip> : <Button
               color={"orange"}
-              variant={activeChat.chatType === 'present' ? "light" : "subtle"}
+              variant={activeChat.chatType === 'grade' ? "light" : "subtle"}
               size="sm"
               leftSection={<IconPresentation size={16} />}
               radius="xl"
               onClick={() => setActiveChat((prev) => ({
                 ...prev,
-                chatType: prev.chatType === 'present' ? 'student' : 'present'
+                chatType: prev.chatType === 'grade' ? 'student' : 'grade'
               }))}
               style={{
-                border: `1px solid ${activeChat.chatType === 'present' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
+                border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
               }}
-            >Present</Button>)
+            >Grade</Button>)
         }
 
         {

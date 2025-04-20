@@ -1,4 +1,4 @@
-import { Chapter, Document, Exercise, Homework, Lecture, Textbook, ViewerMode } from "@/types";
+import { Document, ViewerMode } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 
 // Split text by document references and preserve formatting
@@ -249,80 +249,6 @@ export const splitTextByTags = (text: string): { text: string; figureId: string 
             });
         }
     }
-
-    return result;
-};
-
-// Group consecutive document references together
-export const groupConsecutiveDocuments = (
-    segments: { text: string; documentId: string | null; exerciseId: string | null; documentType: string | null }[],
-    lectureDocuments: Document[],
-    chapterDocuments: Document[],
-    chapterExercises: Exercise[],
-    homeworkExercises: Exercise[]
-): { text: string; documents: Document[], exercises: Exercise[] }[] => {
-    const result: { text: string; documents: Document[], exercises: Exercise[] }[] = [];
-    let currentGroup: { text: string; documents: Document[], exercises: Exercise[] } | null = null;
-
-    segments.forEach(segment => {
-        if (segment.documentId && segment.documentType === 'lecture') {
-            // This is a document reference
-            const document = lectureDocuments.find(doc => doc.id === segment.documentId);
-            
-            if (!currentGroup || currentGroup.text) {
-                // Start a new group if we don't have one or if the current group has text
-                currentGroup = { text: '', documents: [], exercises: [] };
-                result.push(currentGroup);
-            }
-            
-            if (document) {
-                currentGroup.documents.push(document);
-            }
-        } else if (segment.documentId && segment.documentType === 'chapter') {
-            // This is a chapter reference
-            const document = chapterDocuments.find(doc => doc.id === segment.documentId);
-            
-            if (!currentGroup || currentGroup.text) {
-                // Start a new group if we don't have one or if the current group has text
-                currentGroup = { text: '', documents: [], exercises: [] };
-                result.push(currentGroup);
-            }
-            
-            if (document) {
-                currentGroup.documents.push(document);
-            }
-        } else if (segment.exerciseId && segment.documentType === 'chapter_exercise') {
-            // This is a chapter exercise reference
-            const exercise = chapterExercises.find(ex => ex.id === segment.exerciseId);
-            
-            if (!currentGroup || currentGroup.text) {
-                // Start a new group if we don't have one or if the current group has text
-                currentGroup = { text: '', documents: [], exercises: [] };
-                result.push(currentGroup);
-            }
-            
-            if (exercise) {
-                currentGroup.exercises.push(exercise);
-            }
-        } else if (segment.exerciseId && segment.documentType === 'homework_problem') {
-            // This is a homework problem reference
-            const exercise = homeworkExercises.find(ex => ex.id === segment.exerciseId);
-            
-            if (!currentGroup || currentGroup.text) {
-                // Start a new group if we don't have one or if the current group has text
-                currentGroup = { text: '', documents: [], exercises: [] };
-                result.push(currentGroup);
-            }
-            
-            if (exercise) {
-                currentGroup.exercises.push(exercise);
-            }
-        } else if (segment.text) {
-            // This is text content
-            currentGroup = { text: segment.text, documents: [], exercises: [] };
-            result.push(currentGroup);
-        }
-    });
 
     return result;
 };

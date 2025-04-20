@@ -279,6 +279,21 @@ async def store_video():
 
     return uploaded_file
 
+async def store_pdf():
+    pdf_url = "https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/files//29%20Weighted%20Graph.pdf"
+    resp = requests.get(pdf_url)
+    pdf_bytes = resp.content
+
+    uploaded_file = genai.upload_file(
+        path=io.BytesIO(pdf_bytes),
+        mime_type="application/pdf",
+        display_name="CS 253 Lecture 29.pdf"
+    )
+
+    print(uploaded_file)
+
+    return uploaded_file
+
 async def main_agent_audio():
     # 1. Download audio
     audio_url = "https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/files//test.wav"
@@ -294,10 +309,10 @@ async def main_agent_audio():
         {
             "role": "user",
             "content": [
-                {"type": "input_text", "text": "Describe what happens in this video"},
+                {"type": "input_text", "text": "What is the display name of this file?"},
                 {
                     "type": "input_image",
-                    "image_url": "https://generativelanguage.googleapis.com/v1beta/files/c4gatyuhqy45",
+                    "image_url": "https://generativelanguage.googleapis.com/v1beta/files/4bdi9vb1s90y",
                     "detail": "high"
                 }
             ]
@@ -341,3 +356,4 @@ if __name__ == "__main__":
     asyncio.run(main_agent_audio())
     # asyncio.run(store_audio())
     # asyncio.run(store_video())
+    # asyncio.run(store_pdf())

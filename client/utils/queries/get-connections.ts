@@ -1,4 +1,4 @@
-import { Lecture, Objective, Outcome, TypedSupabaseClient } from "../../types";
+import { Objective, Outcome, TypedSupabaseClient } from "../../types";
 
 // Get all outcomes for a class
 export async function getOutcomes(client: TypedSupabaseClient, classId: string): Promise<Outcome[]> {
@@ -36,21 +36,6 @@ export async function getObjectives(client: TypedSupabaseClient, classId: string
     console.error("Exception fetching objectives:", err);
     return [];
   }
-}
-
-// Get all lectures for a class
-export async function getLectures(client: TypedSupabaseClient, classId: string): Promise<Lecture[]> {
-  const { data, error } = await client
-    .from("lectures")
-    .select("*")
-    .eq("class", classId);
-
-  if (error) {
-    console.error("Error fetching lectures:", error);
-    return [];
-  }
-
-  return data || [];
 }
 
 // Create a new outcome

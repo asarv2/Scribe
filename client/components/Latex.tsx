@@ -11,7 +11,7 @@ import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 import { Avatar, Badge, Flex, Text } from '@mantine/core';
 import { visit } from 'unist-util-visit';
-import { Document, Exercise } from '@/types';
+import { Document } from '@/types';
 import { IconChevronRight } from '@tabler/icons-react';
 import { getFiles } from '@/utils/queries/get-files';
 import { useQuery } from '@tanstack/react-query';

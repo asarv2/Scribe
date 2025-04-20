@@ -6,13 +6,12 @@
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme, Divider } from "@mantine/core";
 import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
-import { Message, Profile, Document, Chapter, ChatType, Chat, Lecture, Textbook, ChatMessage, ViewerMode, Exercise } from "@/types";
+import { Message, Profile, Document, ChatType, Chat, ChatMessage, ViewerMode } from "@/types";
 import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
 import {
   splitTextByDocuments,
-  groupConsecutiveDocuments,
   splitTextByTags,
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -287,7 +286,7 @@ export const MessageList = memo(({
                         <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
                       ) : existingChat.chat_type === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                      ) : existingChat.chat_type === 'present' ? (
+                      ) : existingChat.chat_type === 'grade' ? (
                         <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
                       ) : existingChat.chat_type === 'test' ? (
                         <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
@@ -300,7 +299,7 @@ export const MessageList = memo(({
                         <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
                       ) : activeChat.chatType === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                      ) : activeChat.chatType === 'present' ? (
+                      ) : activeChat.chatType === 'grade' ? (
                         <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
                       ) : activeChat.chatType === 'test' ? (
                         <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
@@ -612,79 +611,6 @@ export const MessageList = memo(({
       }
     };
   }, []);
-
-  // Add this helper function to generate page ranges
-  const getPageRanges = (documents: Document[], exercises: Exercise[]): { startDocument: Document | null, startExercise: Exercise | null, range: string }[] => {
-    if (!documents.length && !exercises.length) return [];
-
-    const pageRanges: { startDocument: Document | null, startExercise: Exercise | null, range: string }[] = [];
-
-
-    if (documents.length > 0) {
-      // Remove duplicates and sort
-      const uniquePages = Array.from(new Set(documents.map(doc => doc.page))).sort((a, b) => a - b);
-      let start = uniquePages[0];
-      let prev = uniquePages[0];
-
-      for (let i = 1; i <= uniquePages.length; i++) {
-        if (i === uniquePages.length || uniquePages[i] !== prev + 1) {
-          const document = documents.find(doc => doc.page === start);
-          if (document) {
-            pageRanges.push({ startDocument: document, startExercise: null, range: start === prev ? `${start}` : `${start}-${prev}` });
-          }
-          if (i < uniquePages.length) {
-            start = uniquePages[i];
-            prev = uniquePages[i];
-          }
-        } else {
-          prev = uniquePages[i];
-        }
-      }
-    } else {
-      // Remove duplicates and sort
-      const uniqueChapterPages = Array.from(new Set(exercises.map(e => e.exercise_number))).sort((a, b) => a - b);
-      let chapterStart = uniqueChapterPages[0];
-      let chapterPrev = uniqueChapterPages[0];
-
-      for (let i = 1; i <= uniqueChapterPages.length; i++) {
-        if (i === uniqueChapterPages.length || uniqueChapterPages[i] !== chapterPrev + 1) {
-          const exercise = exercises.find(e => e.exercise_number === chapterStart);
-          if (exercise) {
-            pageRanges.push({ startDocument: null, startExercise: exercise, range: chapterStart === chapterPrev ? `${chapterStart}` : `${chapterStart}-${chapterPrev}` });
-          }
-          if (i < uniqueChapterPages.length) {
-            chapterStart = uniqueChapterPages[i];
-            chapterPrev = uniqueChapterPages[i];
-          }
-        } else {
-          chapterPrev = uniqueChapterPages[i];
-        }
-      }
-
-      const uniqueHomeworkPages = Array.from(new Set(exercises.map(e => e.problem_number))).sort((a, b) => a - b);
-      let homeworkStart = uniqueHomeworkPages[0];
-      let homeworkPrev = uniqueHomeworkPages[0];
-
-      for (let i = 1; i <= uniqueHomeworkPages.length; i++) {
-        if (i === uniqueHomeworkPages.length || uniqueHomeworkPages[i] !== homeworkPrev + 1) {
-          const exercise = exercises.find(e => e.problem_number === homeworkStart);
-          if (exercise) {
-            pageRanges.push({ startDocument: null, startExercise: exercise, range: homeworkStart === homeworkPrev ? `${homeworkStart}` : `${homeworkStart}-${homeworkPrev}` });
-          }
-          if (i < uniqueHomeworkPages.length) {
-            homeworkStart = uniqueHomeworkPages[i];
-            homeworkPrev = uniqueHomeworkPages[i];
-          }
-        } else {
-          homeworkPrev = uniqueHomeworkPages[i];
-        }
-      }
-
-    }
-
-    return pageRanges;
-  };
-
 
   return (
 
