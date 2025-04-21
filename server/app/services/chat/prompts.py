@@ -196,7 +196,6 @@ def get_figure_prompt(course_title: str) -> str:
         f"Your task is to generate clear, informative, and visually appealing figures that help students deeply understand key concepts, relationships, or data from the course."
         f"Figures should be suitable for use in lectures, exams, or study materials, and should range from basic to advanced in complexity depending on the concept."
         f"Prioritize figures that clarify challenging or abstract ideas, illustrate multi-step processes, or summarize data in a way that aids exam preparation."
-        f"Use the create_figure tool to generate each figure, providing the Python code (using libraries such as matplotlib, numpy, seaborn, networkx, scipy, or others as appropriate) and file references."
         f"Always ensure the code is correct, well-commented, and produces a clean, uncluttered, and relevant visualization."
         f"Include axis labels, legends, and titles where appropriate. For mathematical or technical subjects, use LaTeX formatting in labels and annotations."
         f"Choose the most effective visualization type for the concept (e.g., graph, diagram, table, plot, network, etc.), and avoid unnecessary complexity."
@@ -220,38 +219,28 @@ def get_figure_prompt(course_title: str) -> str:
 
     example_prompt = (
         "Example Figure:\n"
-        "Purpose: Visualize the intersection of two equations in 2D space, showing both the lines and their intersection point.\n"
-        "Code:\n"
-        "import matplotlib.pyplot as plt\n"
-        "import numpy as np\n"
-        "x = np.linspace(-5, 5, 100)\n"
-        "y1 = 2*x + 1  # First equation: y = 2x + 1\n"
-        "y2 = x**2     # Second equation: y = x^2\n"
-        "plt.plot(x, y1, label='$y = 2x + 1$')\n"
-        "plt.plot(x, y2, label='$y = x^2$')\n"
-        "# Find intersection points\n"
-        "from scipy.optimize import fsolve\n"
-        "def equations(x): return 2*x + 1 - x**2\n"
-        "roots = fsolve(equations, [-2, 2])\n"
-        "for root in roots:\n"
-        "    plt.plot(root, 2*root + 1, 'ro')\n"
-        "plt.xlabel('$x$')\n"
-        "plt.ylabel('$y$')\n"
-        # "plt.title('Intersection of $y = 2x + 1$ and $y = x^2$')\n"
-        "plt.legend()\n"
-        "plt.grid(True)\n"
-        "plt.show()\n"
-        "You should only enclose the code in the create_figure tool, not anywhere else in your response."
+        "Purpose: Illustrate the parabola $y = (x+1)^2$ with its vertex marked, and show the completed-square form in a display math block.\n"
+        "LaTeX/TikZ Code:\n"
+        "```latex\n"
+        "\\begin{tikzpicture}[scale=0.8]\n"
+        "  % Axes\n"
+        "  \\draw[->] (-3,0) -- (3,0) node[right] {$x$};\n"
+        "  \\draw[->] (0,-1) -- (0,5) node[above] {$y$};\n"
+        "  % Parabola\n"
+        "  \\draw[domain=-2.5:1.5, smooth, thick, blue] plot (\\x,{(\\x+1)^2});\n"
+        "  % Vertex marker\n"
+        "  \\filldraw[red] (-1,0) circle (2pt) node[below right] {\\small Vertex $(-1,0)$};\n"
+        "\\end{tikzpicture}\n"
+        "```\n\n"
+        "And you can show the key algebraic form in a display math block:\n\n"
+        "\\[\n"
+        "  y = x^2 + 2x + 1 = (x + 1)^2\n"
+        "\\]\n"
+        "You should only enclose this LaTeX code in the create_figure tool; don't wrap it in any additional markdown or comments.\n"
     )
-    
 
-    return (
-        base_figure_prompt
-        + "\n\n"
-        + quality_prompt
-        + "\n\n"
-        + example_prompt
-    )
+    return "\n\n".join([base_figure_prompt, quality_prompt, example_prompt])
+
 
 def get_summary_prompt(course_title: str) -> str:
     base_summary_prompt = (

@@ -757,7 +757,7 @@ export const MessageList = memo(({
                             } else if (segment.figureId && figures) {
                               return (
                                 figures.find(f => f.id === segment.figureId) && (
-                                  <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} />
+                                  <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
                               )
                             } else if (segment.summaryId && summaries) {

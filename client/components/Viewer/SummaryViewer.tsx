@@ -122,6 +122,8 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                 figure={figure}
                 classId={classId}
                 viewerMode={viewerMode}
+                handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                fileDocuments={fileDocuments ?? []}
                 full={true}
             />
         );

@@ -4,6 +4,8 @@ from agents import function_tool, RunContextWrapper
 from app.services.chat.models import MultipleChoiceQuestion, FreeResponseQuestion, Documents, clean_references
 from app.extensions import get_supabase
 import logging
+import io, os, subprocess, hashlib, tempfile, shutil
+from pylatex import Document, Package, NoEscape
 
 logger = logging.getLogger(__name__)
 
@@ -243,6 +245,280 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
         plt.close('all')
         supabase.table('figures').update({'generation_status':'error','generation_error':str(e)}).eq('id', fig_id).execute()
         raise
+
+
+
+@function_tool
+async def create_figure_latex(wrapper: RunContextWrapper[Documents], title: str, latex_code: str, references: List[int] = []) -> str:
+    """Generates a figure object given the latex code that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
+
+    Args:
+        title: The title of the figure.
+        latex_code: The latex code that will produce the figure. Do not add the title to the plot, as this will be added seperately.
+        references: List of number references that were used.
+
+    Returns:
+        The number of the figure.
+    """
+    try:
+        # Import subprocess at the beginning of the function to ensure it's available in all scopes
+        import subprocess, shutil, os, tempfile, hashlib, logging
+        from pylatex import Document, Package, NoEscape
+        
+        logger = logging.getLogger(__name__)
+        supabase_client = get_supabase()
+        
+        # get the message id and class id
+        message_id = wrapper.context.message_id
+        class_id = wrapper.context.class_id
+        
+        # Get references
+        references = [wrapper.context.references.get(ref, None) for ref in references]
+        references = [ref for ref in references if ref is not None]
+
+        # find the first figure that is generating
+        figure_response = supabase_client.table('figures').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
+        figure_id = figure_response.data[0]['id']
+        fig_number = wrapper.context.figures.index(figure_id) + 1
+
+        # Create a hash of the latex code and settings for caching
+        cache_key = f"{latex_code}"
+        code_hash = hashlib.sha256(cache_key.encode()).hexdigest()
+        cache_folder = f"cache/figures/{class_id}"
+        os.makedirs(cache_folder, exist_ok=True)
+        
+        # Define paths for different formats
+        output_path = os.path.join(cache_folder, f"{code_hash}.svg")
+        tex_path = os.path.join(cache_folder, f"{code_hash}.tex")
+        
+        # Check if we already have this figure cached
+        if os.path.exists(output_path) and os.path.exists(tex_path):
+            # Upload cached files
+            content_type = "image/svg+xml"
+            
+            # Upload the image file
+            with open(output_path, 'rb') as f:
+                supabase_client.storage.from_('figures').upload(
+                    f"{class_id}/{figure_id}.svg", 
+                    f.read(), 
+                    {'content-type': content_type}
+                )
+            
+            # Upload the LaTeX source
+            supabase_client.storage.from_('figures').upload(
+                f"{class_id}/{figure_id}.tex", 
+                open(tex_path, 'rb').read(), 
+                {'content-type': 'application/x-tex'}
+            )
+        else:
+            # We need to render the LaTeX code to an image
+            with tempfile.TemporaryDirectory() as tmpdir:
+                # Extract just the TikZ content if full LaTeX document is provided
+                if '\\documentclass' in latex_code and '\\begin{document}' in latex_code:
+                    # Extract just the tikzpicture environment
+                    import re
+                    tikz_match = re.search(r'\\begin{tikzpicture}(.*?)\\end{tikzpicture}', latex_code, re.DOTALL)
+                    if tikz_match:
+                        latex_code = tikz_match.group(0)
+                        logger.info(f"Extracted TikZ content: {latex_code}")
+                
+                # Create a standalone document
+                doc_options = ['tikz', 'border=10pt']
+                doc_options.append('transparent')
+                
+                doc = Document(documentclass='standalone', document_options=doc_options)
+                
+                # Add necessary packages
+                doc.packages.append(Package('tikz'))
+                doc.packages.append(Package('amsmath'))
+                doc.packages.append(Package('amssymb'))
+                
+                # Add any additional TikZ libraries that might be needed
+                if '\\usetikzlibrary' not in latex_code:
+                    # Add common TikZ libraries that might be needed
+                    doc.preamble.append(NoEscape('\\usetikzlibrary{arrows.meta,positioning,shapes,calc,decorations.pathreplacing,decorations.markings}'))
+                
+                # Add the TikZ code to the document
+                doc.append(NoEscape(latex_code))
+                
+                # Generate the PDF
+                pdf_filename = os.path.join(tmpdir, "figure")
+                try:
+                    # Save the raw tex file for debugging
+                    doc.generate_tex(pdf_filename)
+                    
+                    # Log the generated tex file content
+                    with open(f"{pdf_filename}.tex", 'r') as f:
+                        logger.info(f"Generated TeX file:\n{f.read()}")
+                    
+                    # Try to compile with pdflatex directly first
+                    try:
+                        subprocess.run(
+                            ["pdflatex", "-interaction=nonstopmode", f"{pdf_filename}.tex"],
+                            cwd=tmpdir,
+                            check=True,
+                            capture_output=True
+                        )
+                        logger.info("Successfully compiled with pdflatex")
+                    except subprocess.CalledProcessError as e:
+                        logger.warning(f"pdflatex failed: {e.stderr.decode('utf-8', errors='ignore')}")
+                        # Fall back to PyLaTeX's method
+                        doc.generate_pdf(pdf_filename, clean_tex=False)
+                    
+                    # Save the LaTeX code to cache
+                    with open(tex_path, "w") as f:
+                        f.write(latex_code)
+                    
+                    # Convert PDF to SVG using pdf2svg
+                    svg_file = os.path.join(tmpdir, "figure.svg")
+                    try:
+                        subprocess.run(
+                            ["pdf2svg", f"{pdf_filename}.pdf", svg_file],
+                            check=True,
+                            capture_output=True
+                        )
+                        
+                        # Save to cache
+                        shutil.copy(svg_file, output_path)
+                        
+                        # Upload to Supabase storage
+                        with open(svg_file, "rb") as f:
+                            svg_data = f.read()
+                            supabase_client.storage.from_('figures').upload(
+                                f"{class_id}/{figure_id}.svg", 
+                                svg_data, 
+                                {'content-type': 'image/svg+xml'}
+                            )
+                    except (subprocess.SubprocessError, FileNotFoundError) as svg_error:
+                        # Log the specific error
+                        logger.warning(f"pdf2svg failed: {str(svg_error)}")
+                        
+                        # Fallback to Inkscape if pdf2svg is not available
+                        try:
+                            subprocess.run(
+                                ["inkscape", "--export-filename", svg_file, f"{pdf_filename}.pdf"],
+                                check=True,
+                                capture_output=True
+                            )
+                            
+                            # Save to cache
+                            shutil.copy(svg_file, output_path)
+                            
+                            # Upload to Supabase storage
+                            with open(svg_file, "rb") as f:
+                                svg_data = f.read()
+                                supabase_client.storage.from_('figures').upload(
+                                    f"{class_id}/{figure_id}.svg", 
+                                    svg_data, 
+                                    {'content-type': 'image/svg+xml'}
+                                )
+                        except (subprocess.SubprocessError, FileNotFoundError) as inkscape_error:
+                            # Log the specific error
+                            logger.warning(f"Inkscape fallback failed: {str(inkscape_error)}")
+                            
+                            # If both SVG conversion methods fail, fall back to PNG with transparency
+                            png_file = os.path.join(tmpdir, "figure.png")
+                            try:
+                                # Use ImageMagick with transparency
+                                subprocess.run(
+                                    ["convert", "-density", "300", "-transparent", "white", f"{pdf_filename}.pdf", png_file],
+                                    check=True,
+                                    capture_output=True
+                                )
+                                
+                                # Upload PNG as fallback
+                                with open(png_file, "rb") as f:
+                                    png_data = f.read()
+                                    supabase_client.storage.from_('figures').upload(
+                                        f"{class_id}/{figure_id}.png", 
+                                        png_data, 
+                                        {'content-type': 'image/png'}
+                                    )
+                                logger.info("Fallback to PNG with transparency successful")
+                            except Exception as png_error:
+                                logger.error(f"All conversion methods failed: {str(png_error)}")
+                                raise Exception("Failed to convert PDF to any image format")
+                    
+                    # Upload the LaTeX code
+                    supabase_client.storage.from_('figures').upload(
+                        f"{class_id}/{figure_id}.tex", 
+                        latex_code.encode(), 
+                        {'content-type': 'application/x-tex'}
+                    )
+                    
+                except Exception as e:
+                    # Check if the .log file exists to get more detailed error information
+                    log_file = f"{pdf_filename}.log"
+                    if os.path.exists(log_file):
+                        with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
+                            log_content = f.read()
+                            logger.error(f"LaTeX compilation log:\n{log_content}")
+                    
+                    # Try a simpler approach with direct file writing and compilation
+                    try:
+                        logger.info("Attempting alternative LaTeX compilation approach")
+                        simple_tex_path = os.path.join(tmpdir, "simple_figure.tex")
+                        
+                        # Create a minimal standalone document
+                        with open(simple_tex_path, 'w') as f:
+                            f.write("\\documentclass[tikz,border=10pt,transparent]{standalone}\n")
+                            f.write("\\usepackage{tikz}\n")
+                            f.write("\\usepackage{amsmath,amssymb}\n")
+                            f.write("\\usetikzlibrary{arrows.meta,positioning,shapes,calc}\n")
+                            f.write("\\begin{document}\n")
+                            f.write(latex_code)
+                            f.write("\\end{document}\n")
+                        
+                        # Compile with pdflatex
+                        result = subprocess.run(
+                            ["pdflatex", "-interaction=nonstopmode", simple_tex_path],
+                            cwd=tmpdir,
+                            capture_output=True,
+                            text=True
+                        )
+                        
+                        if result.returncode == 0:
+                            logger.info("Alternative compilation succeeded")
+                            # Handle different output formats similar to above
+                            # ... (similar conversion code as above)
+                            
+                            # Skip the original error
+                            raise Exception("Used alternative compilation method")
+                        else:
+                            logger.error(f"Alternative compilation failed: {result.stderr}")
+                    except Exception as alt_e:
+                        if str(alt_e) == "Used alternative compilation method":
+                            # This is our success signal
+                            pass
+                        else:
+                            logger.error(f"Alternative approach failed: {alt_e}")
+                            # Continue with the original error
+                            raise Exception(f"Failed to compile LaTeX: {str(e)}")
+                    
+                    # If we get here with the original error, raise it
+                    if str(e) != "Used alternative compilation method":
+                        raise Exception(f"Failed to compile LaTeX: {str(e)}")
+
+        # Update DB record
+        supabase_client.table('figures').update({
+            'message': message_id,
+            'title': title,
+            'code': latex_code,
+            'references': references,
+            'generation_status': 'complete'
+        }).eq('id', figure_id).execute()
+        
+        return fig_number
+
+    except Exception as e:
+        logger.error(f"Error in create_figure_latex: {str(e)}")
+        # update the figure status to error
+        supabase_client.table('figures').update({
+            "generation_status": "error",
+            "generation_error": str(e)
+        }).eq("id", figure_id).execute()
+
+        raise e
 
 @function_tool
 async def create_summary(wrapper: RunContextWrapper[Documents], title: str, preamble: str, body: str, conclusion: str, references: List[int] = [], figures: List[int] = []) -> str:

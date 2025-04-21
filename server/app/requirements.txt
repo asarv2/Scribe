@@ -26,3 +26,4 @@ seaborn==0.13.2
 colorlog==6.8.2
 tikzplotlib==0.10.1
 network2tikz==0.1.8
+pdf2image==1.16.3

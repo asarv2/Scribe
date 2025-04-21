@@ -11,12 +11,16 @@ import { Card, Text, ActionIcon, Box, Group, Loader, Button, Center, Skeleton, M
 import { IconDownload, IconRefresh } from '@tabler/icons-react';
 import Image from "next/image";
 import { notifications } from '@mantine/notifications';
-import { Figure, ViewerMode } from '../../types';
+import { Document, Figure, ViewerMode } from '../../types';
+import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
+import Latex from '../Latex';
 
 interface FigureViewerProps {
   figure: Figure;
   classId: string;
   viewerMode: ViewerMode;
+  fileDocuments: Document[],
+  handleEnhancedDocumentClick: (contextType: 'files', contextId: string, documentId?: string) => void;
   full?: boolean;
 }
 
@@ -24,6 +28,8 @@ export default function FigureViewer({
   figure,
   classId,
   viewerMode,
+  handleEnhancedDocumentClick,
+  fileDocuments,
   full = false
 }: FigureViewerProps) {
   const [loading, setLoading] = useState(false);
@@ -74,6 +80,7 @@ export default function FigureViewer({
                 <IconDownload size={18} />
               </ActionIcon>
             </Tooltip>
+            {/* <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(figure.code, fileDocuments ?? [])}</Latex> */}
 
             <Box style={{ width: '100%', position: 'relative' }}>
               <Skeleton

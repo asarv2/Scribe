@@ -217,6 +217,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 figure={figure}
                 classId={classId}
                 viewerMode={viewerMode}
+                handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                fileDocuments={fileDocuments ?? []}
             />
         );
     }
