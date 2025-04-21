@@ -1,5 +1,9 @@
 import os
 import torch
+import multiprocessing
+
+# Set the start method to 'spawn' for CUDA compatibility
+multiprocessing.set_start_method('spawn', force=True)
 
 # Determine if GPU is available
 has_gpu = torch.cuda.is_available()
