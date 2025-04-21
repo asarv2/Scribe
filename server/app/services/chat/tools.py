@@ -26,7 +26,8 @@ async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -
     except Exception as e:
         raise e
 
-@function_tool  
+
+@function_tool
 async def create_figure(wrapper: RunContextWrapper[Documents], title: str, python_code: str, references: List[int]) -> int:
     """Generates a figure object given the python code that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
 
@@ -48,106 +49,200 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
     Returns:
         The number of the figure.
     """
-    # 1. Execute the python code
-    import io
+    # 0. Import and set up non-interactive backend *before* pyplot
+    import matplotlib
+    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
+    import io, os, subprocess, hashlib, tempfile, logging
     import scipy
     import networkx as nx
     import numpy as np
     import seaborn as sns
     import pandas as pd
     import matplotlib.colors as mcolors
+
+    logger = logging.getLogger(__name__)
     
     try:
-        supabase_client = get_supabase()
-        # get class id
+        # Supabase client and context
+        supabase = get_supabase()
         class_id = wrapper.context.class_id
-        # get the message id
         message_id = wrapper.context.message_id
 
-        # get references
-        references = [wrapper.context.references.get(ref, None) for ref in references]
-        references = [ref for ref in references if ref is not None]
+        # Resolve references
+        refs = [wrapper.context.references.get(r) for r in references]
+        refs = [r for r in refs if r]
 
-        # find the first figure that is generating
-        figure_response = supabase_client.table('figures').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
-        figure_id = figure_response.data[0]['id']
+        # Find pending figure record
+        fig_rec = (
+            supabase.table('figures')
+            .select('id')
+            .eq('generation_status', 'generating')
+            .eq('message', message_id)
+            .order('created_at', desc=True)
+            .limit(1)
+            .execute().data[0]
+        )
+        fig_id = fig_rec['id']
+        fig_number = wrapper.context.figures.index(fig_id) + 1
 
-        # get the figure number, by checking which position in the wrapper.context.figures list it is
-        figure_number = wrapper.context.figures.index(figure_id) + 1
-
-        # Clear any existing plots
+        # Clear previous plots
         plt.close('all')
-        
-        # Create namespace with pre-imported modules and ensure plt.figure is called
-        namespace = {
-            'plt': plt,
-            'np': np,
-            'scipy': scipy,
-            'nx': nx,
-            'x': nx,  # Add networkx with alternative alias
-            'sns': sns,
-            'pd': pd,
-            'mcolors': mcolors,
-            'figure': plt.figure(figsize=(10, 6)),  # Default to a larger figure size
+
+        # RC settings for LaTeX - Modified to handle font availability
+        try:
+            # First attempt with full LaTeX setup
+            plt.rcParams.update({
+                'text.usetex': True,
+                'font.family': 'serif',
+                'font.serif': ['Computer Modern Roman'],
+                'pgf.preamble': r"\usepackage[T1]{fontenc} \usepackage{unicode-math}"
+            })
+            
+            # Test if LaTeX works by creating a simple text
+            plt.figure()
+            plt.text(0.5, 0.5, r'$\alpha$')
+            plt.close()
+            
+        except Exception as font_error:
+            logger.warning(f"LaTeX setup failed: {font_error}. Falling back to standard fonts.")
+            # Fallback to non-LaTeX rendering
+            plt.rcParams.update({
+                'text.usetex': False,
+                'font.family': 'sans-serif',
+            })
+
+        # Create fresh figure
+        fig = plt.figure(figsize=(5.5, 3.5))
+        # Controlled exec namespace with essential builtins
+        builtins_dict = {
+            '__import__': __import__,
+            'len': len,
+            'range': range,
+            'zip': zip,
+            'list': list,
+            'dict': dict,
+            'tuple': tuple,
+            'set': set,
+            'int': int,
+            'float': float,
+            'str': str,
+            'bool': bool,
+            'min': min,
+            'max': max,
+            'sum': sum,
+            'abs': abs,
+            'round': round
         }
         
-        # Set non-interactive backend before executing code
-        plt.switch_backend('Agg')
-        
-        # Execute the code
+        namespace = {
+            '__builtins__': builtins_dict,
+            'plt': plt, 'np': np, 'scipy': scipy,
+            'nx': nx, 'x': nx, 'sns': sns,
+            'pd': pd, 'mcolors': mcolors,
+            'figure': fig,
+        }
+
+        # Execute user code
         exec(python_code, namespace)
-        
-        # Get the current figure
         current_fig = plt.gcf()
-        
-        # Apply some styling improvements
         plt.tight_layout()
-        
-        # Verify the figure has actual content
-        if len(current_fig.axes) == 0 or not any(ax.lines or ax.collections or ax.patches or ax.images or ax.texts for ax in current_fig.axes):
-            return False, "Figure was created but has no plotted content"
-        
-        # 2. Save the figure to supabase, first in database, then storage
-        # Save to buffer for Supabase
-        buffer = io.BytesIO()
-        current_fig.savefig(buffer, format='png', bbox_inches='tight', dpi=300)
-        buffer.seek(0)
-        
-        # Upload to Supabase storage
-        supabase_client.storage.from_('figures').upload(
-            f"{class_id}/{figure_id}.png",
-            buffer.getvalue(),
-            {'content-type': 'image/png'}
+
+        # Ensure there's plotted content
+        has_content = any(
+            ax.lines or ax.collections or ax.patches or ax.images or ax.texts
+            for ax in current_fig.axes
         )
-        
-        # Clean up
+        if not has_content:
+            plt.close('all')
+            supabase.table('figures').update({
+                'generation_status': 'error',
+                'generation_error': 'Figure has no plotted content'
+            }).eq('id', fig_id).execute()
+            raise Exception('Figure has no plotted content')
+
+        # --- Caching: skip regen if same code hash exists ---
+        code_hash = hashlib.sha256(python_code.encode()).hexdigest()
+        cache_folder = f"cache/figures/{class_id}"
+        os.makedirs(cache_folder, exist_ok=True)
+        png_path = os.path.join(cache_folder, f"{code_hash}.png")
+        tex_path = os.path.join(cache_folder, f"{code_hash}.tex")
+        if os.path.exists(png_path) and os.path.exists(tex_path):
+            # Upload cached files
+            supabase.storage.from_('figures').upload(f"{class_id}/{fig_id}.png", open(png_path,'rb').read(), {'content-type':'image/png'})
+            supabase.storage.from_('figures').upload(f"{class_id}/{fig_id}.tex", open(tex_path,'rb').read(), {'content-type':'application/x-tex'})
+        else:
+            # 1) Save PNG
+            buf = io.BytesIO()
+            current_fig.savefig(buf, format='png', bbox_inches='tight', dpi=300)
+            buf.seek(0)
+            with open(png_path, 'wb') as f: f.write(buf.getvalue())
+            supabase.storage.from_('figures').upload(f"{class_id}/{fig_id}.png", buf.getvalue(), {'content-type':'image/png'})
+
+            # 2) Generate LaTeX
+            tikz_content = None
+            
+            # 2a) Primary: network2tikz for any graph
+            try:
+                for v in namespace.values():
+                    if isinstance(v, (nx.Graph, nx.DiGraph)):
+                        from network2tikz import plot
+                        tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.tex')
+                        plot(v, filename=tmp.name, edge_weights=True, edge_labels=True, pos=namespace.get('pos', None))
+                        tikz_content = open(tmp.name).read()
+                        os.unlink(tmp.name)
+                        logger.info("Successfully generated graph using network2tikz")
+                        break
+                if not tikz_content:
+                    raise Exception("No graph found in namespace")
+            except Exception as e3:
+                logger.warning(f"network2tikz attempt failed: {e3}")
+                
+                # 2b) Secondary: tikzplotlib
+                try:
+                    import tikzplotlib
+                    kod = tikzplotlib.get_tikz_code(
+                        figure=current_fig,
+                        axis_width='\\linewidth',
+                        strict=True,
+                        externalize_tables=True
+                    )
+                    tikz_content = kod
+                    logger.info("Successfully generated tikz using tikzplotlib")
+                except Exception as e2:
+                    logger.warning(f"tikzplotlib attempt failed: {e2}")
+                    
+                    # 2c) Tertiary: PGF backend
+                    try:
+                        pgf_buf = io.StringIO()
+                        current_fig.savefig(pgf_buf, format='pgf')
+                        tikz_content = pgf_buf.getvalue()
+                        logger.info("Successfully generated pgf using matplotlib pgf backend")
+                    except Exception as e:
+                        logger.warning(f"PGF backend attempt failed: {e}")
+
+            if tikz_content:
+                with open(tex_path, 'w') as f: f.write(tikz_content)
+                supabase.storage.from_('figures').upload(f"{class_id}/{fig_id}.tex", tikz_content.encode(), {'content-type':'application/x-tex'})
+
+        # Clean up plotting state
         plt.close('all')
 
-        # Update the figure into the database
-        figure_update_response = supabase_client.table('figures').update({
-            "message": message_id,
-            "title": title,
-            "code": python_code,
-            "references": references,
-            "generation_status": "complete"
-        }).eq("id", figure_id).execute()
+        # Update DB record
+        update = {
+            'message': message_id,
+            'title': title,
+            'code': python_code,
+            'references': refs,
+            'generation_status': 'complete'
+        }
+        supabase.table('figures').update(update).eq('id', fig_id).execute()
+        return fig_number
 
-        if not (figure_update_response.data and len(figure_update_response.data) > 0):
-            raise Exception("Failed to update figure: No ID returned from database")
-        
-        return figure_number
-        
     except Exception as e:
-        plt.close('all')  # Ensure cleanup even on error
-
-        # update the figure into the database
-        figure_update_response = supabase_client.table('figures').update({
-            "generation_status": "error",
-            "generation_error": str(e)
-        }).eq("id", figure_id).execute()
-
-        raise e
+        plt.close('all')
+        supabase.table('figures').update({'generation_status':'error','generation_error':str(e)}).eq('id', fig_id).execute()
+        raise
 
 @function_tool
 async def create_summary(wrapper: RunContextWrapper[Documents], title: str, preamble: str, body: str, conclusion: str, references: List[int] = [], figures: List[int] = []) -> str:

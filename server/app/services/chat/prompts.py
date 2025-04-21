@@ -243,12 +243,6 @@ def get_figure_prompt(course_title: str) -> str:
         "plt.show()\n"
         "You should only enclose the code in the create_figure tool, not anywhere else in your response."
     )
-
-    final_prompt = (
-        f"You may see previous figures in the chat history that are enclosed in <FIGURE_GENERATION></FIGURE_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_figure' tool to generate the figure. Do not repeat your figure in the next message."
-        f"You may see previous summaries in the chat history that are enclosed in <SUMMARY_GENERATION></SUMMARY_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_summary' tool to generate the summary. Do not repeat your summary in the next message."
-        f"You may see previous questions in the chat history that are enclosed in <QUESTION_GENERATION></QUESTION_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_mcq_question' or 'create_frq_question' tool to generate the question. Do not repeat your question in the next message."
-    )
     
 
     return (
@@ -257,8 +251,6 @@ def get_figure_prompt(course_title: str) -> str:
         + quality_prompt
         + "\n\n"
         + example_prompt
-        + "\n\n"
-        + final_prompt
     )
 
 def get_summary_prompt(course_title: str) -> str:
@@ -340,12 +332,6 @@ def get_summary_prompt(course_title: str) -> str:
         "Figure 1: [create_figure: A 2D plot showing the feasible region of a linear program as a polygon, with arrows indicating the path taken by the simplex method from vertex to vertex toward the optimal solution.]\n"
     )
 
-    final_prompt = (
-        f"You may see previous summaries in the chat history that are enclosed in <SUMMARY_GENERATION></SUMMARY_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_summary' tool to generate the summary. Do not repeat your summary in the next message."
-        f"You may see previous questions in the chat history that are enclosed in <QUESTION_GENERATION></QUESTION_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_mcq_question' or 'create_frq_question' tool to generate the question. Do not repeat your question in the next message."
-        f"You may see previous figures in the chat history that are enclosed in <FIGURE_GENERATION></FIGURE_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_figure' tool to generate the figure. Do not repeat your figure in the next message."
-    )
-
     return (
         base_summary_prompt
         + "\n\n"
@@ -356,8 +342,6 @@ def get_summary_prompt(course_title: str) -> str:
         + summary_formatting_prompt
         + "\n\n"
         + example
-        + "\n\n"
-        + final_prompt
     )
 
 def get_question_prompt(course_title: str) -> str:
@@ -411,12 +395,6 @@ def get_question_prompt(course_title: str) -> str:
         "Answer: The average rate of change is $[f(4) - f(2)] / (4-2) = (20-7)/2 = 6.5$."
     )
 
-    final_prompt = (
-        f"You may see previous questions in the chat history that are enclosed in <QUESTION_GENERATION></QUESTION_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_mcq_question' or 'create_frq_question' tool to generate the question. Do not repeat your question in the next message."
-        f"You may see previous summaries in the chat history that are enclosed in <SUMMARY_GENERATION></SUMMARY_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_summary' tool to generate the summary. Do not repeat your summary in the next message."
-        f"You may see previous figures in the chat history that are enclosed in <FIGURE_GENERATION></FIGURE_GENERATION> tags. Never use this format in any of your responses. Continue to use the 'create_figure' tool to generate the figure. Do not repeat your figure in the next message."
-    )
-
     return (
         base_question_prompt
         + "\n\n"
@@ -427,8 +405,6 @@ def get_question_prompt(course_title: str) -> str:
         + example_frq_prompt
         + "\n\n"
         + example_visual_prompt
-        + "\n\n"
-        + final_prompt
     )
 
 def get_grading_prompt(course_title: str) -> str:
