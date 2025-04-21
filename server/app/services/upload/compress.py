@@ -17,7 +17,7 @@ class FileCompressor:
     
     def compress_file(self, input_path: str, output_dir: str, filename: str, 
                      target_width: int = 240, gpu_id: int = 0, 
-                     quality: str = "ultrafast") -> FileCompressionResult:
+                     quality: str = "ultrafast", progress_callback=None) -> FileCompressionResult:
         """
         Compress a file based on its detected MIME type
         
@@ -28,6 +28,8 @@ class FileCompressor:
             target_width: Target width for video compression (0 for original)
             gpu_id: GPU ID to use for video compression
             quality: Quality preset for video compression
+            progress_callback: Optional callback function for progress updates
+                               Function signature: callback(progress: float, stage: str, message: str = "")
             
         Returns:
             FileCompressionResult with path and metadata
@@ -40,24 +42,33 @@ class FileCompressor:
             mime_type = self.mime.from_file(input_path)
             logger.info(f"Compressing file: {filename} ({mime_type})")
             
+            # Report initial progress
+            if progress_callback:
+                progress_callback(0.0, "starting", f"Detected file type: {mime_type}")
+            
             # Determine file type and compression method
             if mime_type.startswith('video/'):
                 return self.compress_video_file(input_path, output_dir, filename, 
-                                               target_width, gpu_id, quality)
+                                               target_width, gpu_id, quality, progress_callback)
             elif mime_type.startswith('audio/'):
-                return self.compress_audio_file(input_path, output_dir, filename)
+                return self.compress_audio_file(input_path, output_dir, filename, progress_callback)
             elif mime_type == 'application/pdf':
-                return self.compress_pdf_file(input_path, output_dir, filename)
+                return self.compress_pdf_file(input_path, output_dir, filename, progress_callback)
             elif mime_type.startswith('image/'):
-                return self.compress_image_file(input_path, output_dir, filename)
+                return self.compress_image_file(input_path, output_dir, filename, progress_callback)
             else:
+                if progress_callback:
+                    progress_callback(100.0, "complete", "No compression needed for this file type")
                 return self.compress_other_file(input_path, output_dir, filename)
                 
         except Exception as e:
             logger.error(f"Error compressing file: {str(e)}")
+            if progress_callback:
+                progress_callback(0.0, "error", str(e))
             return self._create_result(input_path)
 
-    def compress_audio_file(self, input_path: str, output_dir: str, filename: str) -> FileCompressionResult:
+    def compress_audio_file(self, input_path: str, output_dir: str, filename: str, 
+                           progress_callback=None) -> FileCompressionResult:
         """Compress audio to WAV format with high-quality compression"""
         base_filename = os.path.splitext(filename)[0]
         compressed_filename = f"{base_filename}.wav"
@@ -68,7 +79,13 @@ class FileCompressor:
             duration = self.get_media_duration(compressed_file_path)
             if duration > 0:
                 logger.info(f"Using existing compressed audio: {compressed_file_path}")
+                if progress_callback:
+                    progress_callback(100.0, "complete", "Using existing compressed file")
                 return self._create_result(compressed_file_path, duration)
+        
+        # Report progress
+        if progress_callback:
+            progress_callback(10.0, "preparing", "Setting up audio compression")
         
         # Compress audio to WAV with high-quality PCM compression
         # Use hardware acceleration if available
@@ -86,10 +103,15 @@ class FileCompressor:
         ]
         
         logger.info(f"Compressing audio to WAV: {compressed_file_path}")
+        if progress_callback:
+            progress_callback(20.0, "compressing", "Converting audio to WAV format")
+        
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode != 0:
             logger.error(f"FFmpeg audio compression error: {result.stderr}")
+            if progress_callback:
+                progress_callback(0.0, "error", "Audio compression failed")
             return self._create_result(input_path)
         
         # Check compression results
@@ -103,16 +125,22 @@ class FileCompressor:
             # If compression made the file larger by more than 10%, use original
             if compressed_size > original_size * 1.1:
                 logger.warning("WAV conversion increased file size significantly, using original")
+                if progress_callback:
+                    progress_callback(100.0, "complete", "Using original file (compressed version was larger)")
                 return self._create_result(input_path)
             
+            if progress_callback:
+                progress_callback(100.0, "complete", f"Audio compressed: {compressed_size/(1024*1024):.2f} MB")
             return self._create_result(compressed_file_path, duration)
         else:
             logger.error("Compressed audio file not created")
+            if progress_callback:
+                progress_callback(0.0, "error", "Compressed file not created")
             return self._create_result(input_path)
 
     def compress_video_file(self, input_path: str, output_dir: str, filename: str, 
                             target_width: int = 0, gpu_id: int = 0, 
-                            quality: str = "medium") -> FileCompressionResult:
+                            quality: str = "medium", progress_callback=None) -> FileCompressionResult:
         """
         Compress a video file using GPU acceleration if available
         
@@ -123,21 +151,36 @@ class FileCompressor:
             target_width: Target width (0 for no scaling)
             gpu_id: GPU ID to use (0 for first GPU)
             quality: Quality preset ("ultrafast", "low", "medium", "high")
+            progress_callback: Optional callback for progress updates
         """
         # For very large files, use parallel processing
         if os.path.getsize(input_path) > 50_000_000:  # 50MB threshold
-            compressed_path = self.process_large_video(input_path, output_dir, target_width, quality)
+            if progress_callback:
+                progress_callback(5.0, "analyzing", "Large video detected, preparing for parallel processing")
+            
+            compressed_path = self.process_large_video(input_path, output_dir, target_width, quality, progress_callback)
             duration = self.get_media_duration(compressed_path)
+            
+            if progress_callback:
+                progress_callback(100.0, "complete", "Large video compression complete")
+            
             return self._create_result(compressed_path, duration)
         else:
+            if progress_callback:
+                progress_callback(5.0, "analyzing", "Standard video detected")
+            
             compressed_path = self.compress_video_to_webm(input_path, output_dir, filename, 
-                                                         target_width, gpu_id, quality)
+                                                         target_width, gpu_id, quality, progress_callback)
             duration = self.get_media_duration(compressed_path)
+            
+            if progress_callback:
+                progress_callback(100.0, "complete", "Video compression complete")
+            
             return self._create_result(compressed_path, duration)
 
     def compress_video_to_webm(self, input_path: str, output_dir: str, filename: str, 
                               target_width: int = 0, gpu_id: int = 0, 
-                              quality: str = "medium") -> str:
+                              quality: str = "medium", progress_callback=None) -> str:
         """
         Compress a video file to WebM (VP9) or, if an NVIDIA GPU is available,
         to MP4 using NVENC, with real-time progress reporting.
@@ -149,6 +192,7 @@ class FileCompressor:
             target_width: Target width (0 for no scaling, height will be calculated automatically)
             gpu_id: GPU ID to use (0 for first GPU, 1 for second, etc.)
             quality: Quality preset ("ultrafast", "low", "medium", "high")
+            progress_callback: Optional callback for progress updates
         """
         os.makedirs(output_dir, exist_ok=True)
         base, _ = os.path.splitext(filename)
@@ -158,8 +202,12 @@ class FileCompressor:
         
         if gpu_available:
             logger.info(f"Using GPU {gpu_id} of {torch.cuda.device_count()} available GPUs")
+            if progress_callback:
+                progress_callback(10.0, "preparing", f"Using GPU {gpu_id} for encoding")
         else:
             logger.warning(f"GPU {gpu_id} not available. Total GPUs: {torch.cuda.device_count()}")
+            if progress_callback:
+                progress_callback(10.0, "preparing", "Using CPU for encoding (no GPU available)")
             gpu_available = False  # Fallback to CPU
 
         # Scaling filter if target_width is specified
@@ -249,11 +297,14 @@ class FileCompressor:
         ]
 
         logger.info(f"Running FFmpeg: {' '.join(cmd)}")
+        if progress_callback:
+            progress_callback(20.0, "encoding", "Starting video encoding")
 
         # Launch FFmpeg and parse progress
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
         percent = 0.0
         last_update_time = time.time()
+        last_callback_time = time.time()
         
         try:
             for line in proc.stdout:
@@ -267,8 +318,18 @@ class FileCompressor:
                         logger.info(f"Progress: {percent*100:5.1f}% (ETA: {(1-percent)*total_duration/60:.1f}m)")
                         last_update_time = current_time
                     
+                    # Call progress callback at most once every 3 seconds to avoid overwhelming the system
+                    if progress_callback and current_time - last_callback_time >= 3.0:
+                        # Scale percent from 0-1 to 20-90 (reserving 0-20 for setup and 90-100 for finalization)
+                        callback_percent = 20.0 + (percent * 70.0)
+                        progress_callback(callback_percent, "encoding", 
+                                         f"{percent*100:.1f}% (ETA: {(1-percent)*total_duration/60:.1f}m)")
+                        last_callback_time = current_time
+                    
                 elif line.startswith("progress=") and line.strip().endswith("end"):
                     logger.info("Progress: 100.0%")
+                    if progress_callback:
+                        progress_callback(90.0, "finalizing", "Encoding complete, finalizing file")
                     break  # Break the loop when FFmpeg signals completion
                 
             # Check if process is still running but not producing output
@@ -284,6 +345,8 @@ class FileCompressor:
         if proc.returncode != 0:
             stderr = proc.stderr.read()
             logger.error(f"FFmpeg error: {stderr}")
+            if progress_callback:
+                progress_callback(0.0, "error", "Video encoding failed")
             return input_path
 
         # Verify compression
@@ -293,13 +356,20 @@ class FileCompressor:
             logger.info(f"Finished: {comp/1e6:.2f} MB (was {orig/1e6:.2f} MB)")
             if comp > orig * 1.1:
                 logger.warning("Output larger than input; reverting")
+                if progress_callback:
+                    progress_callback(100.0, "complete", "Using original file (compressed version was larger)")
                 return input_path
+            
+            if progress_callback:
+                progress_callback(100.0, "complete", f"Video compressed: {comp/1e6:.2f} MB (was {orig/1e6:.2f} MB)")
             return compressed_path
 
         logger.error("Compression failed; returning original")
+        if progress_callback:
+            progress_callback(0.0, "error", "Compression failed")
         return input_path
 
-    def process_large_video(self, input_path, output_dir, target_width=480, quality="medium"):
+    def process_large_video(self, input_path, output_dir, target_width=480, quality="medium", progress_callback=None):
         """Process a large video by splitting it and using multiple GPUs in parallel with maximum speed."""
         import tempfile
         import math
@@ -328,6 +398,8 @@ class FileCompressor:
                 num_segments = max_segments
             
             logger.info(f"Splitting video into {num_segments} segments of {segment_duration:.1f}s each")
+            if progress_callback:
+                progress_callback(10.0, "splitting", f"Splitting video into {num_segments} segments")
             
             # Extract segments in parallel with more workers
             segments = []
@@ -351,12 +423,22 @@ class FileCompressor:
                         ]
                     futures.append(executor.submit(subprocess.run, cmd, check=True, capture_output=True))
                 
-                # Wait for all extractions to complete
+                # Wait for all extractions to complete with progress updates
+                completed = 0
                 for future in concurrent.futures.as_completed(futures):
                     try:
                         future.result()
+                        completed += 1
+                        if progress_callback and completed % max(1, num_segments // 10) == 0:
+                            # Scale progress from 10-30%
+                            progress = 10.0 + (completed / num_segments * 20.0)
+                            progress_callback(progress, "splitting", 
+                                             f"Split {completed}/{num_segments} segments")
                     except Exception as e:
                         logger.error(f"Segment extraction failed: {e}")
+            
+            if progress_callback:
+                progress_callback(30.0, "compressing", "Starting parallel compression of segments")
             
             # Process segments in parallel using a multi-strategy approach
             compressed_segments = []
@@ -405,6 +487,12 @@ class FileCompressor:
                         processed_count += 1
                         if processed_count % 10 == 0 or processed_count == len(segments):
                             logger.info(f"Processed {processed_count}/{len(segments)} segments")
+                            
+                            # Update progress callback if provided (scale from 30-80%)
+                            if progress_callback:
+                                progress = 30.0 + (processed_count / len(segments) * 50.0)
+                                progress_callback(progress, "compressing", 
+                                                f"Compressed {processed_count}/{len(segments)} segments")
                     
                     return result
                 except Exception as e:
@@ -414,6 +502,12 @@ class FileCompressor:
                         processed_count += 1
                         if processed_count % 10 == 0 or processed_count == len(segments):
                             logger.info(f"Processed {processed_count}/{len(segments)} segments")
+                            
+                            # Update progress callback if provided
+                            if progress_callback:
+                                progress = 30.0 + (processed_count / len(segments) * 50.0)
+                                progress_callback(progress, "compressing", 
+                                                f"Compressed {processed_count}/{len(segments)} segments")
                     return None
             
             # Process all segments with maximum parallelism
@@ -452,7 +546,12 @@ class FileCompressor:
                 logger.warning(f"Only {len(compressed_segments)}/{len(segments)} segments were successfully compressed")
                 if len(compressed_segments) < 10:  # If we have very few segments, return original
                     logger.error("Too few segments were compressed successfully")
+                    if progress_callback:
+                        progress_callback(0.0, "error", "Too few segments were compressed successfully")
                     return input_path
+            
+            if progress_callback:
+                progress_callback(80.0, "merging", "Merging compressed segments")
             
             try:
                 # Fast concatenation with copy
@@ -462,11 +561,18 @@ class FileCompressor:
                 ]
                 logger.info(f"Concatenating segments: {' '.join(cmd)}")
                 subprocess.run(cmd, check=True, capture_output=True)
+                
+                if progress_callback:
+                    progress_callback(95.0, "finalizing", "Finalizing compressed video")
+                
                 return output_path
                 
             except subprocess.CalledProcessError:
                 # If concatenation fails, try with re-encoding
                 try:
+                    if progress_callback:
+                        progress_callback(85.0, "merging", "First merge attempt failed, trying with re-encoding")
+                    
                     cmd = [
                         "ffmpeg", "-y", "-f", "concat", "-safe", "0", 
                         "-i", concat_file, 
@@ -475,10 +581,16 @@ class FileCompressor:
                     ]
                     logger.info(f"Re-encoding concatenation: {' '.join(cmd)}")
                     subprocess.run(cmd, check=True, capture_output=True)
+                    
+                    if progress_callback:
+                        progress_callback(95.0, "finalizing", "Finalizing compressed video")
+                    
                     return output_path
                 except:
                     # If all else fails, return original
                     logger.error("All concatenation attempts failed")
+                    if progress_callback:
+                        progress_callback(0.0, "error", "Failed to merge video segments")
                     return input_path
 
     def compress_video_cpu(self, input_path: str, output_dir: str, filename: str, 
@@ -585,17 +697,30 @@ class FileCompressor:
         logger.error("CPU compression failed; returning original")
         return input_path
 
-    def compress_pdf_file(self, input_path: str, output_dir: str, filename: str) -> FileCompressionResult:
+    def compress_pdf_file(self, input_path: str, output_dir: str, filename: str, 
+                         progress_callback=None) -> FileCompressionResult:
         """Compress PDF file - placeholder for future implementation"""
         # Get the number of pages in the PDF
+        if progress_callback:
+            progress_callback(10.0, "analyzing", "Analyzing PDF document")
+            
         page_count = self.get_pdf_page_count(input_path)
+        
+        if progress_callback:
+            progress_callback(100.0, "complete", f"PDF processing complete ({page_count} pages)")
+            
         # For now, just return the original file
         # Could implement PDF compression in the future
         return self._create_result(input_path, file_length=page_count)
 
-    def compress_image_file(self, input_path: str, output_dir: str, filename: str) -> FileCompressionResult:
+    def compress_image_file(self, input_path: str, output_dir: str, filename: str,
+                           progress_callback=None) -> FileCompressionResult:
         """Compress image file - placeholder for future implementation"""
         # For now, just return the original file
+        if progress_callback:
+            progress_callback(50.0, "processing", "Processing image")
+            progress_callback(100.0, "complete", "Image processing complete")
+            
         # Could implement image compression in the future
         return self._create_result(input_path, file_length=1)
 

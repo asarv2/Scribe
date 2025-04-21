@@ -393,6 +393,7 @@ export type Database = {
           active: boolean
           additional_info: string
           class: string
+          compression_progress: number
           content_type: Database["prod"]["Enums"]["content_type"]
           created_at: string
           deleted: boolean
@@ -416,6 +417,7 @@ export type Database = {
           active?: boolean
           additional_info?: string
           class?: string
+          compression_progress?: number
           content_type?: Database["prod"]["Enums"]["content_type"]
           created_at?: string
           deleted?: boolean
@@ -439,6 +441,7 @@ export type Database = {
           active?: boolean
           additional_info?: string
           class?: string
+          compression_progress?: number
           content_type?: Database["prod"]["Enums"]["content_type"]
           created_at?: string
           deleted?: boolean
@@ -1065,6 +1068,7 @@ export type Database = {
       parse_status:
         | "extracting"
         | "uploading"
+        | "compressing"
         | "processing"
         | "parsing"
         | "complete"
@@ -1216,6 +1220,7 @@ export const Constants = {
       parse_status: [
         "extracting",
         "uploading",
+        "compressing",
         "processing",
         "parsing",
         "complete",

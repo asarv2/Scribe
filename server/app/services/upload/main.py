@@ -21,6 +21,17 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
+# Set multiprocessing start method to 'spawn' to avoid CUDA issues
+# This needs to be done at module level before any multiprocessing occurs
+if torch.cuda.is_available():
+    import multiprocessing
+    try:
+        multiprocessing.set_start_method('spawn', force=True)
+        logger.info("Set multiprocessing start method to 'spawn' for CUDA compatibility")
+    except RuntimeError:
+        # Method already set
+        pass
+
 class FileProcessor:
     def __init__(self, supabase_client):
         """Initialize the file processor
@@ -58,7 +69,7 @@ class FileProcessor:
             # Update file status to processing
             logger.info(f"Starting to process file: {filename} (ID: {file_id}, Type: {os.path.splitext(filename)[1]})")
             self.saver.save_file_metadata(file_id, {
-                "parse_status": "processing",
+                "parse_status": "compressing",
                 "parse_error": "",
                 "last_parse_attempt": datetime.now().isoformat()
             })
@@ -75,12 +86,22 @@ class FileProcessor:
             # Compress the file
             compressed_dir = os.path.join(os.path.dirname(file_path), "compressed")
             logger.info(f"Compressing file: {file_path} -> {compressed_dir}")
+            
+            # Define a progress callback function
+            def compression_progress_callback(progress: float, stage: str, message: str = ""):
+                logger.info(f"Compression progress: {progress:.1f}% - {stage} {message}")
+                # Update file metadata with compression progress
+                self.saver.save_file_metadata(file_id, {
+                    "compression_progress": progress,
+                })
+            
             compression_result = self.compressor.compress_file(
                 file_path, 
                 compressed_dir, 
                 filename,
                 target_width=240,  # Default to 240p for videos
-                quality="ultrafast"  # Use ultrafast quality preset
+                quality="ultrafast",  # Use ultrafast quality preset
+                progress_callback=compression_progress_callback  # Add progress callback
             )
 
             # update metadata from compression result
@@ -93,58 +114,60 @@ class FileProcessor:
 
             compressed_file_path = compression_result.file_path
 
-            # Define the functions that will run in separate threads
-            def extract_and_save_documents():
-                logger.info(f"Extracting content from: {compressed_file_path}")
-                results = self.extractor.extract_file(compressed_file_path, file_type)
-                logger.info(f"Extraction complete: {len(results)} chunks extracted")
-                
-                # Save each chunk as a document
-                for i, result in enumerate(results):
-                    logger.info(f"Saving document {i+1}/{len(results)}: type={result.type}, has_image={bool(result.image_data)}")
-                    doc_id = self.saver.save_document(class_id, file_id, result)
-                    if doc_id:
-                        logger.info(f"Document saved successfully: {doc_id}")
-                    else:
-                        logger.warning(f"Failed to save document {i+1}")
-                return len(results)
+            # update metadata from compression result
+            self.saver.save_file_metadata(file_id, {
+                "parse_status": "extracting",
+                "parse_error": "",
+                "last_parse_attempt": datetime.now().isoformat()
+            })
+
+            # Process tasks sequentially to avoid CUDA issues
+            # First extract and save documents (this uses the Whisper model)
+            logger.info(f"Extracting content from: {compressed_file_path}")
+            results = self.extractor.extract_file(compressed_file_path, file_type)
+            logger.info(f"Extraction complete: {len(results)} chunks extracted")
             
-            def upload_to_gemini():
-                logger.info(f"Uploading to Gemini: {compressed_file_path}")
-                return self.saver.save_file_to_gemini(file_id, compressed_file_path)
-            
-            def upload_to_supabase():
-                logger.info(f"Uploading to Supabase: {compressed_file_path}")
-                storage_path = self.saver.save_file_to_supabase(class_id, file_id, compressed_file_path)
-                if storage_path:
-                    logger.info(f"File saved to Supabase: {storage_path}")
-                else:
-                    logger.error("Failed to save file to Supabase")
-                return storage_path
-            
-            # Create tasks for concurrent execution using asyncio.to_thread
-            extraction_task = asyncio.create_task(asyncio.to_thread(extract_and_save_documents))
-            gemini_task = asyncio.create_task(asyncio.to_thread(upload_to_gemini))
-            supabase_task = asyncio.create_task(asyncio.to_thread(upload_to_supabase))
-            
-            # Wait for all tasks to complete
-            results = await asyncio.gather(
-                extraction_task, 
-                gemini_task, 
-                supabase_task, 
-                return_exceptions=True
-            )
-            
-            # Check for exceptions
+            # Save each chunk as a document
             for i, result in enumerate(results):
-                if isinstance(result, Exception):
-                    task_names = ["extraction", "Gemini upload", "Supabase upload"]
-                    logger.error(f"Error in {task_names[i]} task: {str(result)}")
-                    raise result
+                logger.info(f"Saving document {i+1}/{len(results)}: type={result.type}, has_image={bool(result.image_data)}")
+                doc_id = self.saver.save_document(class_id, file_id, result)
+                if doc_id:
+                    logger.info(f"Document saved successfully: {doc_id}")
+                else:
+                    logger.warning(f"Failed to save document {i+1}")
+
+            # update metadata from extraction result
+            self.saver.save_file_metadata(file_id, {
+                "last_parse_attempt": datetime.now().isoformat(),
+                "parse_status": "processing",
+                "parse_error": ""
+            })
+            
+            # Now run the non-CUDA tasks concurrently
+            async def run_non_cuda_tasks():
+                gemini_task = asyncio.create_task(asyncio.to_thread(
+                    self.saver.save_file_to_gemini, file_id, compressed_file_path))
+                supabase_task = asyncio.create_task(asyncio.to_thread(
+                    self.saver.save_file_to_supabase, class_id, file_id, compressed_file_path))
+                
+                results = await asyncio.gather(gemini_task, supabase_task, return_exceptions=True)
+                
+                # Check for exceptions
+                task_names = ["Gemini upload", "Supabase upload"]
+                for i, result in enumerate(results):
+                    if isinstance(result, Exception):
+                        logger.error(f"Error in {task_names[i]} task: {str(result)}")
+                        raise result
+                
+                return results
+            
+            # Run non-CUDA tasks
+            await run_non_cuda_tasks()
             
             # Update file status to complete
             self.saver.save_file_metadata(file_id, {
                 "parse_status": "complete",
+                "last_parse_attempt": datetime.now().isoformat(),
                 "parse_error": ""
             })
             
@@ -158,7 +181,8 @@ class FileProcessor:
             # Update file status to error
             self.saver.save_file_metadata(file_id, {
                 "parse_status": "error",
-                "parse_error": str(e)
+                "parse_error": str(e),
+                "last_parse_attempt": datetime.now().isoformat()
             })
             
             # Return error

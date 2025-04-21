@@ -82,18 +82,101 @@ const ItemCard = ({
 }) => {
     const queryClient = useQueryClient();
 
-    // Simplified file progress calculation
+    // Get color based on parse status
+    const getStatusColor = () => {
+        switch (item.parse_status) {
+            case 'uploading':
+                return 'blue';
+            case 'compressing':
+                return 'yellow';
+            case 'extracting':
+                return 'violet';
+            case 'parsing':
+                return 'indigo';
+            case 'processing':
+                return 'green';
+            case 'error':
+                return 'red';
+            case 'complete':
+                return 'teal';
+            default:
+                return 'gray';
+        }
+    };
+
+    // Centralized file progress calculation based on parse_status
     const getFileProgress = (fileId: string) => {
+        // If no file documents, return 0
         if (!fileDocuments) return 0;
         
-        // Get documents associated with this file
-        const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
+        // Handle different states with appropriate progress calculations
+        switch (item.parse_status) {
+            case 'compressing':
+                // Use compression_progress (0-100) for compressing state
+                return item.compression_progress ? item.compression_progress : 0;
+                
+            case 'extracting':
+            case 'parsing':
+                // Get documents associated with this file
+                const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
+                
+                // If no documents or file has no length property, return 0
+                if (fileRelatedDocs.length === 0 || !item.length) return 0;
+                
+                // Calculate percentage based on document count vs expected length
+                return (fileRelatedDocs.length / item.length) * 100;
+                
+            case 'processing':
+                // Use file size and time-based heuristic for processing
+                if (!item.file_size || !item.last_parse_attempt) return 50; // Default to 50% if missing data
+                
+                // Calculate time elapsed since processing started
+                const startTime = new Date(item.last_parse_attempt).getTime();
+                const currentTime = new Date().getTime();
+                const elapsedSeconds = (currentTime - startTime) / 1000;
+                
+                // Estimate total processing time based on file size (KB)
+                // Assuming ~1MB per 10 seconds processing time as a rough heuristic
+                const fileSizeKB = item.file_size / 1024;
+                const estimatedTotalSeconds = (fileSizeKB / 100) * 10;
+                
+                // Calculate progress percentage
+                let progressPercentage = (elapsedSeconds / estimatedTotalSeconds) * 100;
+                
+                // Cap at 95% until complete
+                return Math.min(progressPercentage, 95);
+                
+            case 'uploading':
+                // For uploading, we rely on the tus progress updates
+                // This is handled separately in the notifications
+                return item.upload_progress ? item.upload_progress * 100 : 0;
+                
+            case 'complete':
+                return 100;
+                
+            default:
+                return 0;
+        }
+    };
+
+    // Get progress label based on status
+    const getProgressLabel = () => {
+        const progress = Math.round(getFileProgress(item.id));
         
-        // If no documents or file has no length property, return 0
-        if (fileRelatedDocs.length === 0 || !item.length) return 0;
-        
-        // Calculate percentage based on document count vs expected length
-        return (fileRelatedDocs.length / item.length) * 100;
+        switch (item.parse_status) {
+            case 'compressing':
+                return `Compressing: ${progress}%`;
+            case 'extracting':
+                return `Extracting: ${progress}%`;
+            case 'parsing':
+                return `Parsing: ${progress}%`;
+            case 'processing':
+                return `Processing: ${progress}%`;
+            case 'uploading':
+                return `Uploading: ${progress}%`;
+            default:
+                return `${progress}%`;
+        }
     };
 
     const originalCard = (
@@ -174,17 +257,19 @@ const ItemCard = ({
                                         <IconCircleX size={16} />
                                     </ActionIcon>
                                 </Tooltip>
-                            ) : (item.parse_status === 'uploading' || item.parse_status === 'parsing' || item.parse_status === 'extracting' || item.parse_status === 'processing') ? (
-                                <Tooltip label={`${Math.round(getFileProgress(item.id))}%`}>
+                            ) : (item.parse_status === 'uploading' || item.parse_status === 'compressing' || 
+                                item.parse_status === 'parsing' || item.parse_status === 'extracting' || 
+                                item.parse_status === 'processing') ? (
+                                <Tooltip label={getProgressLabel()}>
                                     <RingProgress
                                         size={40}
                                         thickness={2}
-                                        sections={[{ 
-                                            value: getFileProgress(item.id), 
-                                            color: 'green'
+                                        sections={[{
+                                            value: getFileProgress(item.id),
+                                            color: getStatusColor()
                                         }]}
                                         label={
-                                            <Text size="xs" ta="center" fw={500}>
+                                            <Text size="xs" ta="center" fw={500} c={getStatusColor()}>
                                                 {Math.round(getFileProgress(item.id))}%
                                             </Text>
                                         }
@@ -257,6 +342,7 @@ export function ContextPanel({
     const containerRef = useRef<HTMLDivElement>(null);
     const { studentMode } = useStudentMode();
 
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     // Add a new ref to track the selected content type
     const contentTypeRef = useRef<ContentType>('other');
@@ -295,6 +381,183 @@ export function ContextPanel({
         queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
         enabled: !!files
     });
+
+    // Add this function inside the ContextPanel component but outside any effects
+    const calculateFileProgress = (file: SupabaseFile, fileDocuments?: Document[]) => {
+        const fileId = file.id;
+        const status = file.parse_status;
+        
+        // Calculate progress based on status
+        if (status === 'compressing' && file.compression_progress) {
+            return Math.round(file.compression_progress);
+        } 
+        else if ((status === 'extracting' || status === 'parsing') && file.length) {
+            // Get documents for this file
+            if (fileDocuments) {
+                const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
+                return Math.round((fileRelatedDocs.length / file.length) * 100);
+            }
+        } 
+        else if (status === 'processing' && file.file_size && file.last_parse_attempt) {
+            // Calculate time-based progress for processing
+            const startTime = new Date(file.last_parse_attempt).getTime();
+            const currentTime = new Date().getTime();
+            const elapsedSeconds = (currentTime - startTime) / 1000;
+            
+            // Estimate total processing time based on file size (KB)
+            const fileSizeKB = file.file_size / 1024;
+            const estimatedTotalSeconds = (fileSizeKB / 100) * 10;
+            
+            return Math.min(Math.round((elapsedSeconds / estimatedTotalSeconds) * 100), 95);
+        } else if (status === 'complete') {
+            return 100;
+        }
+        
+        return 0; // Default for other states
+    };
+
+    // Get color based on parse status (for notifications)
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'uploading':
+                return 'blue';
+            case 'compressing':
+                return 'yellow';
+            case 'extracting':
+                return 'violet';
+            case 'parsing':
+                return 'indigo';
+            case 'processing':
+                return 'green';
+            case 'error':
+                return 'red';
+            case 'complete':
+                return 'teal';
+            default:
+                return 'gray';
+        }
+    };
+
+    // Then update the realtime subscription handler
+    useEffect(() => {
+        const channel = supabase
+            .channel(`realtime-files`)
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'prod',
+                    table: 'files',
+                    filter: `class=eq.${classId}`
+                },
+                async (payload) => {
+                    console.log("Received file update:", payload);
+                    const newFile = payload.new as SupabaseFile;
+
+                    // Check if this is a file we're tracking
+                    const fileId = newFile?.id;
+                    if (fileId) {
+                        const newStatus = newFile.parse_status;
+                        const parseError = newFile.parse_error;
+
+                        // Get documents for this file for progress calculation
+                        const fileDocuments = queryClient.getQueryData<Document[]>(["fileDocuments", classId]);
+                        
+                        // Calculate progress percentage using our centralized function
+                        const progressPercentage = calculateFileProgress(newFile, fileDocuments);
+                        const statusColor = getStatusColor(newStatus);
+
+                        // Update notification based on status
+                        switch (newStatus) {
+                            case 'compressing':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Compressing file',
+                                    message: `Compressing ${newFile.title}... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
+                                break;
+                            case 'extracting':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Extracting content',
+                                    message: `Extracting ${newFile.title}... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
+                                break;
+                            case 'processing':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Processing file',
+                                    message: `Processing ${newFile.title}... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
+                                break;
+                            case 'parsing':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Parsing content',
+                                    message: `Parsing ${newFile.title} (~${newFile.length} sections found)... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
+                                break;
+                            case 'complete':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Upload complete',
+                                    message: `${newFile.title} has been uploaded successfully`,
+                                    color: statusColor,
+                                    loading: false,
+                                    autoClose: 3000
+                                });
+                                break;
+                            case 'error':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Processing failed',
+                                    message: parseError || `Error processing ${newFile.title}`,
+                                    color: statusColor,
+                                    loading: false,
+                                    autoClose: 5000
+                                });
+                                break;
+                            case 'idle':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Processing paused',
+                                    message: `Processing of ${newFile.title} is currently paused`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
+                                break;
+                        }
+                    }
+
+                    // Then trigger a refetch to ensure we're in sync
+                    await queryClient.invalidateQueries({
+                        queryKey: ["files", classId],
+                        exact: true
+                    });
+                }
+            )
+            .subscribe();
+
+        console.log("Subscribed to channel:", `realtime-files`);
+
+        return () => {
+            console.log("Unsubscribing from channel:", `realtime-files`);
+            supabase.removeChannel(channel);
+        };
+    }, [classId, queryClient, supabase]);
 
     useEffect(() => {
         setLocalSearchQuery(searchQuery);
@@ -517,7 +780,7 @@ export function ContextPanel({
             if (!profile) {
                 throw new Error("Profile not found");
             }
-            
+
             // Use the contentTypeRef value
             const contentType = contentTypeRef.current;
 
@@ -553,6 +816,7 @@ export function ContextPanel({
                 message: `Uploading ${file.name}...`,
                 loading: true,
                 autoClose: false,
+                color: 'blue',
             });
 
             // Create a new tus upload
@@ -595,9 +859,26 @@ export function ContextPanel({
                     // Called when upload progress changes
                     onProgress(bytesUploaded, bytesTotal) {
                         const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                        
+                        // Update file's upload_progress in the cache if possible
+                        const currentFiles = queryClient.getQueryData<SupabaseFile[]>(["files", classId]);
+                        if (currentFiles) {
+                            const updatedFiles = currentFiles.map(f => {
+                                if (f.id === fileId) {
+                                    return {
+                                        ...f,
+                                        upload_progress: bytesUploaded / bytesTotal
+                                    };
+                                }
+                                return f;
+                            });
+                            queryClient.setQueryData(["files", classId], updatedFiles);
+                        }
+                        
                         notifications.update({
                             id: `upload-${fileId}`,
                             message: `Uploading ${file.name}: ${percentage}%`,
+                            color: 'blue', // Use blue for uploading
                         });
                     },
                     // Called when upload is completed successfully
@@ -811,7 +1092,7 @@ export function ContextPanel({
                     }}
                     activateOnDrag={true}
                 >
-                    <div style={{ 
+                    <div style={{
                         pointerEvents: 'auto', // Ensure children receive events
                         height: '100%',
                         width: '100%'

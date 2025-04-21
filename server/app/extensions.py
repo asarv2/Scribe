@@ -16,31 +16,15 @@ gemini_client = None
 BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_FOLDER, "uploads")
 MODEL_CACHE_DIR = os.path.join(BASE_FOLDER, "model_cache")
-
-# Directory paths
-MESSAGES_DIR = os.path.join(UPLOAD_FOLDER, 'messages')
-EVALUATIONS_DIR = os.path.join(UPLOAD_FOLDER, 'evaluations')
-CHATS_DIR = os.path.join(UPLOAD_FOLDER, 'chats')
-COURSES_DIR = os.path.join(UPLOAD_FOLDER, 'courses')
-FIGURES_DIR = os.path.join(UPLOAD_FOLDER, 'figures')
 QUESTIONS_DIR = os.path.join(UPLOAD_FOLDER, 'questions')
 SUMMARIES_DIR = os.path.join(UPLOAD_FOLDER, 'summaries')
-FILES_DIR = os.path.join(UPLOAD_FOLDER, 'files')
-ONEDRIVE_FILES_DIR = os.path.join(UPLOAD_FOLDER, 'onedrive_files')
 
 # Create directories without logging
 def create_directories():
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     os.makedirs(MODEL_CACHE_DIR, exist_ok=True)
-    os.makedirs(MESSAGES_DIR, exist_ok=True)
-    os.makedirs(EVALUATIONS_DIR, exist_ok=True)
-    os.makedirs(CHATS_DIR, exist_ok=True)
-    os.makedirs(COURSES_DIR, exist_ok=True)
-    os.makedirs(FIGURES_DIR, exist_ok=True)
     os.makedirs(QUESTIONS_DIR, exist_ok=True)
     os.makedirs(SUMMARIES_DIR, exist_ok=True)
-    os.makedirs(FILES_DIR, exist_ok=True)
-    os.makedirs(ONEDRIVE_FILES_DIR, exist_ok=True)
 
 # Always create directories (this is safe and idempotent)
 create_directories()
