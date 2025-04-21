@@ -1,13 +1,17 @@
 from typing import List, Any, Optional, Callable, Awaitable, Tuple
 from agents import Agent
 from datetime import datetime
-from app.extensions import gemini_client, supabase
+from app.extensions import get_supabase, get_gemini
 from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig
 from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question, grade_results
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ChatProcessor(RunHooks):
     def __init__(
@@ -23,6 +27,8 @@ class ChatProcessor(RunHooks):
         update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None,
     ):
         super().__init__()
+        self.supabase_client = get_supabase()
+        self.gemini_client = get_gemini()
         self.prompt_type = prompt_type
         self.course_title = course_title
         self.trace_id = trace_id
@@ -46,7 +52,7 @@ class ChatProcessor(RunHooks):
             instructions=self.chat_title_system_prompt,
             model=OpenAIChatCompletionsModel(
                 model="gemini-2.0-flash",
-                openai_client=gemini_client,
+                openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
@@ -69,7 +75,7 @@ class ChatProcessor(RunHooks):
             instructions=self.figure_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
-                openai_client=gemini_client,
+                openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
@@ -85,7 +91,7 @@ class ChatProcessor(RunHooks):
             instructions=self.summary_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
-                openai_client=gemini_client,
+                openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
@@ -101,7 +107,7 @@ class ChatProcessor(RunHooks):
             instructions=self.question_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
-                openai_client=gemini_client,
+                openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
@@ -117,7 +123,7 @@ class ChatProcessor(RunHooks):
             instructions=self.grading_system_prompt,
             model=OpenAIChatCompletionsModel(
                 model="gemini-2.0-flash",
-                openai_client=gemini_client,
+                openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
                 tool_choice="required",
@@ -167,7 +173,7 @@ class ChatProcessor(RunHooks):
             instructions=self.full_system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
-                openai_client=gemini_client,
+                openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
                 temperature=0.0,
@@ -213,7 +219,7 @@ class ChatProcessor(RunHooks):
 
             assistant_messages = [{"role": "assistant", "content": "No assistant message"}]
             if self.chat_history[i+1] != "":
-                assistant_messages = await process_special_tags(self.chat_history[i+1], supabase, documents)
+                assistant_messages = await process_special_tags(self.chat_history[i+1], self.supabase_client, documents)
             context_summary.extend(assistant_messages)
         
         if add_current:
@@ -237,7 +243,7 @@ class ChatProcessor(RunHooks):
         message_id = wrapper.context.message_id
         if tool.name == "create_figure":
             # create a figure in the database
-            figure_response = supabase.table("figures").insert({
+            figure_response = self.supabase_client.table("figures").insert({
                 "generation_status": "generating",
                 "message": message_id,
                 "last_generation_attempt": datetime.now().isoformat()
@@ -250,7 +256,7 @@ class ChatProcessor(RunHooks):
             # adding the figure id to the context
             wrapper.context.figures.append(figure_id)
         elif tool.name == "create_summary":
-            summary_response = supabase.table("summaries").insert({
+            summary_response = self.supabase_client.table("summaries").insert({
                 "generation_status": "generating",
                 "message": message_id,
                 "last_generation_attempt": datetime.now().isoformat()
@@ -261,7 +267,7 @@ class ChatProcessor(RunHooks):
             # adding the summary id to the context
             wrapper.context.summaries.append(summary_id)
         elif tool.name == "create_mcq_question" or tool.name == "create_frq_question":
-            question_response = supabase.table("questions").insert({
+            question_response = self.supabase_client.table("questions").insert({
                 "generation_status": "generating",
                 "message": message_id,
                 "last_generation_attempt": datetime.now().isoformat()
@@ -286,7 +292,7 @@ class ChatProcessor(RunHooks):
                 with trace(workflow_name=chat_title, trace_id=self.trace_id):
                     pass
             else:
-                print("No trace id found while updating chat title")
+                logger.warning("No trace id found while updating chat title")
   
     async def process_message(
         self,
@@ -326,7 +332,7 @@ class ChatProcessor(RunHooks):
                 await self.update_chat_usage(documents.chat_id, documents.profile_id, usage.input_tokens, usage.output_tokens)
 
         except Exception as e:
-            print(f"Error in process_message: {str(e)}")
+            logger.error(f"Error in process_message: {str(e)}")
             raise
 
     async def on_agent_end(

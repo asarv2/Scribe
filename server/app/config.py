@@ -3,7 +3,11 @@ import os
 import time
 import torch
 import gc
+import logging
 from app.extensions import MODEL_CACHE_DIR
+
+# Get logger
+logger = logging.getLogger(__name__)
 
 # Global model registry - single source of truth
 MODEL_REGISTRY = {
@@ -33,7 +37,7 @@ class ModelManager:
             free_memory = torch.cuda.get_device_properties(0).total_memory - torch.cuda.memory_allocated(0)
             return free_memory / 1024**3  # Convert to GB
         except Exception as e:
-            print(f"Error getting GPU memory: {e}")
+            logger.error(f"Error getting GPU memory: {e}")
             return 0
     
     def initialize_whisper_model(self):
@@ -42,6 +46,7 @@ class ModelManager:
         
         # If model is already loaded in registry, return it
         if MODEL_REGISTRY["whisper_initialized"]:
+            logger.info("Using already initialized Whisper model")
             return MODEL_REGISTRY["whisper_model"]
         
         has_gpu = torch.cuda.is_available()
@@ -50,7 +55,7 @@ class ModelManager:
         # Import whisper here to avoid loading it unnecessarily
         import whisper
         
-        print(f"Initializing Whisper {self.whisper_model_size} model on {device}...")
+        logger.info(f"Initializing Whisper {self.whisper_model_size} model on {device}...")
         start_time = time.time()
         
         # Force garbage collection before loading model
@@ -58,7 +63,7 @@ class ModelManager:
         if has_gpu:
             torch.cuda.empty_cache()
             available_memory = self._get_gpu_memory()
-            print(f"Available GPU memory: {available_memory:.2f} GB")
+            logger.info(f"Available GPU memory: {available_memory:.2f} GB")
         
         # Load the model
         whisper_model = whisper.load_model(
@@ -70,7 +75,7 @@ class ModelManager:
         whisper_model.eval()
         
         load_time = time.time() - start_time
-        print(f"Whisper model loaded in {load_time:.2f} seconds")
+        logger.info(f"Whisper model loaded in {load_time:.2f} seconds")
         
         # Store in global registry
         MODEL_REGISTRY["whisper_model"] = whisper_model
@@ -92,10 +97,5 @@ class ModelManager:
 # Initialize model manager
 model_manager = ModelManager()
 
-# Load model at startup
-try:
-    print("Loading Whisper model at startup...")
-    whisper_model = model_manager.initialize_whisper_model()
-    print("Successfully loaded Whisper model")
-except Exception as e:
-    print(f"Warning: Could not load Whisper model on startup: {str(e)}")
+# Don't load model at startup - let each worker initialize it when needed
+# This prevents CUDA initialization issues with forked processes

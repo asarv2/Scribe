@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 import os
 import uuid
 import shutil
-from app.extensions import supabase
+from app.extensions import get_supabase
 from dotenv import load_dotenv
 
 import logging
@@ -270,6 +270,7 @@ async def tus_options_upload_id(upload_id: str, request: Request):
 async def finalize_upload(request: Request):
     """Finalize an upload and process the file"""
     try:
+        supabase_client = get_supabase()
         # Parse request body
         body = await request.json()
         file_id = body.get("fileId")
@@ -368,7 +369,7 @@ async def finalize_upload(request: Request):
             )
         
         # Initialize the FileProcessor
-        file_processor = FileProcessor(supabase)
+        file_processor = FileProcessor(supabase_client)
         
         # Process the uploaded file
         result, message = await file_processor.process_uploaded_file(

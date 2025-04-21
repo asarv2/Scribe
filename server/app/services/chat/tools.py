@@ -2,7 +2,10 @@
 from typing import List, Tuple, Union
 from agents import function_tool, RunContextWrapper
 from app.services.chat.models import MultipleChoiceQuestion, FreeResponseQuestion, Documents, clean_references
-from app.extensions import supabase
+from app.extensions import get_supabase
+import logging
+
+logger = logging.getLogger(__name__)
 
 @function_tool
 async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -> str:
@@ -12,12 +15,13 @@ async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -
         title: The title of the chat.
     """
     try:
+        supabase_client = get_supabase()
         # get the chat id
         chat_id = wrapper.context.chat_id
         
         # update the chat title
-        chat_response = supabase.table('chats').update({"name": title}).eq("id", chat_id).execute()
-        print("Chat Response: ", chat_response)
+        chat_response = supabase_client.table('chats').update({"name": title}).eq("id", chat_id).execute()
+        logger.info(f"Chat Response: {chat_response}")  # Fixed logging statement
         return chat_response.data[0]['name']
     except Exception as e:
         raise e
@@ -55,6 +59,7 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
     import matplotlib.colors as mcolors
     
     try:
+        supabase_client = get_supabase()
         # get class id
         class_id = wrapper.context.class_id
         # get the message id
@@ -65,7 +70,7 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
         references = [ref for ref in references if ref is not None]
 
         # find the first figure that is generating
-        figure_response = supabase.table('figures').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
+        figure_response = supabase_client.table('figures').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
         figure_id = figure_response.data[0]['id']
 
         # get the figure number, by checking which position in the wrapper.context.figures list it is
@@ -110,7 +115,7 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
         buffer.seek(0)
         
         # Upload to Supabase storage
-        supabase.storage.from_('figures').upload(
+        supabase_client.storage.from_('figures').upload(
             f"{class_id}/{figure_id}.png",
             buffer.getvalue(),
             {'content-type': 'image/png'}
@@ -120,7 +125,7 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
         plt.close('all')
 
         # Update the figure into the database
-        figure_update_response = supabase.table('figures').update({
+        figure_update_response = supabase_client.table('figures').update({
             "message": message_id,
             "title": title,
             "code": python_code,
@@ -137,7 +142,7 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
         plt.close('all')  # Ensure cleanup even on error
 
         # update the figure into the database
-        figure_update_response = supabase.table('figures').update({
+        figure_update_response = supabase_client.table('figures').update({
             "generation_status": "error",
             "generation_error": str(e)
         }).eq("id", figure_id).execute()
@@ -182,7 +187,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
     Remember, do not repeat the summary in a message after this tool is run, as this will be confusing to the user.
     """
     try:
-        import re
+        supabase_client = get_supabase()
         
         # get the message id
         message_id = wrapper.context.message_id
@@ -192,7 +197,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
         references = [ref for ref in references if ref is not None]
 
         # find the first summary that is generating
-        summary_response = supabase.table('summaries').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
+        summary_response = supabase_client.table('summaries').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
         summary_id = summary_response.data[0]['id']
 
         # convert figure numbers to ids
@@ -204,7 +209,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
         conclusion = clean_references(conclusion, wrapper.context.references)
         
         # Update the summary into the database
-        summary_update_response = supabase.table('summaries').update({
+        summary_update_response = supabase_client.table('summaries').update({
             "title": title,
             "preamble": preamble,
             "body": body,
@@ -222,7 +227,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], title: str, prea
             
     except Exception as e:
         # update the summary into the database
-        summary_update_response = supabase.table('summaries').update({
+        summary_update_response = supabase_client.table('summaries').update({
             "generation_status": "error",
             "generation_error": str(e)
         }).eq("id", summary_id).execute()
@@ -250,6 +255,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str 
         The id of the question.
     """
     try:
+        supabase_client = get_supabase()
 
         # get the message id
         message_id = wrapper.context.message_id
@@ -259,7 +265,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str 
         references = [ref for ref in references if ref is not None]
 
         # find the first question that is generating
-        question_response = supabase.table('questions').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
+        question_response = supabase_client.table('questions').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
         question_id = question_response.data[0]['id']
 
         # convert figure numbers to ids
@@ -278,7 +284,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str 
         }
         
         # Insert the question into the database
-        question_update_response = supabase.table('questions').update(question_data).eq("id", question_id).execute()
+        question_update_response = supabase_client.table('questions').update(question_data).eq("id", question_id).execute()
 
         if not (question_update_response.data and len(question_update_response.data) > 0):
             raise Exception("Failed to update question: No ID returned from database")
@@ -288,7 +294,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str 
     except Exception as e:
 
         # update the question into the database
-        question_update_response = supabase.table('questions').update({
+        question_update_response = supabase_client.table('questions').update({
             "generation_status": "error",
             "generation_error": str(e)
         }).eq("id", question_id).execute()   
@@ -312,7 +318,7 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str 
         The id of the question.
     """
     try:
-
+        supabase_client = get_supabase()
         # get the message id
         message_id = wrapper.context.message_id
         
@@ -321,7 +327,7 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str 
         references = [ref for ref in references if ref is not None]
 
         # find the first question that is generating
-        question_response = supabase.table('questions').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
+        question_response = supabase_client.table('questions').select('id').eq('generation_status', 'generating').eq('message', message_id).order('created_at', desc=True).execute()
         question_id = question_response.data[0]['id']
 
         # convert figure numbers to ids
@@ -338,7 +344,7 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str 
         }
         
         # Insert the question into the database
-        question_update_response = supabase.table('questions').update(question_data).eq("id", question_id).execute()
+        question_update_response = supabase_client.table('questions').update(question_data).eq("id", question_id).execute()
 
         if not (question_update_response.data and len(question_update_response.data) > 0):
             raise Exception("Failed to update question: No ID returned from database")
@@ -348,7 +354,7 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str 
     except Exception as e:
 
         # update the question into the database
-        question_update_response = supabase.table('questions').update({
+        question_update_response = supabase_client.table('questions').update({
             "generation_status": "error",
             "generation_error": str(e)
         }).eq("id", question_id).execute()   

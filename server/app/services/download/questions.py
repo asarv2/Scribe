@@ -5,7 +5,9 @@ from pylatex import Document, Section, Command, Package
 from pylatex.utils import NoEscape
 import os
 import re
+import logging
 
+logger = logging.getLogger(__name__)
 
 class QuestionsDownloader:
     def __init__(self, questions: List[List[Union[MCQQuestion, FRQQuestion]]], chat_title: str, directory_id: str = None):
@@ -266,15 +268,15 @@ class QuestionsDownloader:
                     if os.path.exists(src_file):
                         # Display log content for debugging
                         if ext == '.log':
-                            print(f"\nContents of log file:")
+                            logger.info(f"\nContents of log file:")
                             with open(src_file, 'r', encoding='utf-8', errors='ignore') as f:
                                 lines = f.readlines()
-                                print("..." if len(lines) > 50 else "")
+                                logger.info("..." if len(lines) > 50 else "")
                                 for line in lines[-50:]:
                                     if "!" in line or "Error" in line or "Warning" in line:
-                                        print(f"ERROR/WARNING: {line.strip()}")
+                                        logger.error(f"ERROR/WARNING: {line.strip()}")
                     
-                print(f"PDF generated successfully: {filename}.pdf")
+                logger.info(f"PDF generated successfully: {filename}.pdf")
                 # Clean up the .tex file if successful
                 if os.path.exists(f"{filename}.tex"):
                     os.remove(f"{filename}.tex")
@@ -282,31 +284,31 @@ class QuestionsDownloader:
 
             except Exception as e:
                 error_msg = str(e)
-                print(f"Error during compilation: {error_msg}")
+                logger.error(f"Error during compilation: {error_msg}")
                 
                 # Error analysis and log display
                 if "! LaTeX Error:" in error_msg:
                     latex_error = re.search(r'! LaTeX Error:(.*?)\n', error_msg)
                     if latex_error:
-                        print(f"LaTeX Error: {latex_error.group(1).strip()}")
+                        logger.error(f"LaTeX Error: {latex_error.group(1).strip()}")
                 elif "! Package" in error_msg:
                     package_error = re.search(r'! Package (.*?) Error:(.*?)\n', error_msg)
                     if package_error:
-                        print(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
+                        logger.error(f"Package {package_error.group(1)} Error: {package_error.group(2).strip()}")
                 elif "! Missing" in error_msg:
                     missing_error = re.search(r'! Missing (.*?) inserted', error_msg)
                     if missing_error:
-                        print(f"Missing character error: {missing_error.group(1)}")
+                        logger.error(f"Missing character error: {missing_error.group(1)}")
                 
                 # Check log files in the log directory
                 for ext in ['.log', '.aux', '.out']:
                     log_file = os.path.join(log_dir, f"{base_filename}{ext}")
                     if os.path.exists(log_file):
-                        print(f"\nContents of {log_file}:")
+                        logger.error(f"\nContents of {log_file}:")
                         with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
                             for line in f:
                                 if any(marker in line for marker in ["!", "Error", "Warning"]):
-                                    print(line.strip())
+                                    logger.error(line.strip())
                 return False
         else:
             # remove .tex from filename

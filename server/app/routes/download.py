@@ -1,14 +1,18 @@
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Request, Form, Response, Query
 from fastapi.responses import FileResponse
-from app.extensions import supabase, ONEDRIVE_FILES_DIR
+from app.extensions import get_supabase
 from pydantic import BaseModel
 import traceback
 import os
+import logging
 from app.services.download.summary import SummaryDownloader
 from app.services.download.questions import QuestionsDownloader
 import re
 import httpx
+
+# Get logger for this module
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -21,8 +25,9 @@ async def download_summary_get(
 ):
     """Download a summary for a given summary ID using GET method."""
     try:
+        supabase_client = get_supabase()
         # Get chat data
-        chat_response = supabase.table("chats").select("*").eq("id", chat_id).execute()
+        chat_response = supabase_client.table("chats").select("*").eq("id", chat_id).execute()
 
         if not chat_response.data:
             raise HTTPException(status_code=404, detail="Chat not found")
@@ -32,7 +37,7 @@ async def download_summary_get(
 
 
         # get all messages for this chat
-        messages_response = supabase.table("messages").select("*").eq("chat", chat_id).execute()
+        messages_response = supabase_client.table("messages").select("*").eq("chat", chat_id).execute()
 
         if not messages_response.data:
             raise HTTPException(status_code=404, detail="Messages not found")
@@ -40,7 +45,7 @@ async def download_summary_get(
         
         
         # Get summary data
-        summary_response = supabase.table("summaries").select("*").eq("id", summary_id).execute()
+        summary_response = supabase_client.table("summaries").select("*").eq("id", summary_id).execute()
         
         if not summary_response.data:
             raise HTTPException(status_code=404, detail="Summary not found")
@@ -79,9 +84,9 @@ async def download_summary_get(
         else:
             raise HTTPException(status_code=400, detail="Invalid format")
         
-        # Add debug logging
-        print(f"Generated filepath: {filepath}")
-        print(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
+        # Replace print statements with logger
+        logger.info(f"Generated filepath: {filepath}")
+        logger.info(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
         
         if not filepath or not os.path.exists(filepath):
             raise HTTPException(status_code=500, detail=f"Failed to generate file at {filepath}")
@@ -97,9 +102,9 @@ async def download_summary_get(
         )
 
     except Exception as e:
-        # Add better error logging
-        print(f"Error in download-summary-get function: {str(e)}")
-        print(f"Traceback: {traceback.format_exc()}")
+        # Replace print statements with logger
+        logger.error(f"Error in download-summary-get function: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise
 
 @router.get('/questions')
@@ -111,8 +116,9 @@ async def download_questions_get(
 ):
     """Download questions for a given questions ID using GET method."""
     try:
+        supabase_client = get_supabase()
         # Get chat data
-        chat_response = supabase.table("chats").select("*").eq("id", chat_id).execute()
+        chat_response = supabase_client.table("chats").select("*").eq("id", chat_id).execute()
 
         if not chat_response.data:
             raise HTTPException(status_code=404, detail="Chat not found")
@@ -121,7 +127,7 @@ async def download_questions_get(
         chat_title = chat_data.get('name', 'Questions')
 
         # get messages
-        messages_response = supabase.table("messages").select("*").eq("chat", chat_id).execute()
+        messages_response = supabase_client.table("messages").select("*").eq("chat", chat_id).execute()
 
         if not messages_response.data:
             raise HTTPException(status_code=404, detail="Messages not found")
@@ -130,7 +136,7 @@ async def download_questions_get(
 
         # get all question ids from messages
         all_message_ids = [message.get('id') for message in messages_data]
-        all_questions_response = supabase.table("questions").select("*").in_("message", all_message_ids).execute()
+        all_questions_response = supabase_client.table("questions").select("*").in_("message", all_message_ids).execute()
         
         if not all_questions_response.data:
             raise HTTPException(status_code=404, detail="Questions not found")
@@ -144,7 +150,7 @@ async def download_questions_get(
         question_numbers = {q.get('id'): idx + 1 for idx, q in enumerate(all_questions)}
         
         # Get questions data for the selected questions
-        questions_response = supabase.table("questions").select("*").in_("id", question_ids).execute()
+        questions_response = supabase_client.table("questions").select("*").in_("id", question_ids).execute()
         
         if not questions_response.data:
             raise HTTPException(status_code=404, detail="Questions not found")
@@ -230,9 +236,9 @@ async def download_questions_get(
         else:
             raise HTTPException(status_code=400, detail="Invalid format")
         
-        # Add debug logging
-        print(f"Generated filepath: {filepath}")
-        print(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
+        # Replace print statements with logger
+        logger.info(f"Generated filepath: {filepath}")
+        logger.info(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
         
         if not filepath or not os.path.exists(filepath):
             raise HTTPException(status_code=500, detail=f"Failed to generate file at {filepath}")
@@ -248,11 +254,8 @@ async def download_questions_get(
         )
 
     except Exception as e:
-        print("Error in download-questions-get function:", {
-            "name": type(e).__name__,
-            "message": str(e),
-            "stack": traceback.format_exc()
-        })
+        # Replace print statements with logger
+        logger.error(f"Error in download-questions-get function: {e}")
 
         raise HTTPException(
             status_code=500,

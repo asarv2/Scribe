@@ -47,7 +47,7 @@ class FileExtractor:
                 
             pdf_document.close()
         except Exception as e:
-            print(f"Error parsing PDF: {e}")
+            logger.error(f"Error parsing PDF: {e}")
         
         return chunks
 
@@ -108,13 +108,13 @@ class FileExtractor:
                         # Extract frame at the start time of this segment
                         img_data = self._extract_video_frame(file_path, start_time)
                     except Exception as e:
-                        print(f"Warning: Could not extract frame at {start_time}s: {e}")
+                        logger.error(f"Warning: Could not extract frame at {start_time}s: {e}")
                 else:
                     # For audio files, generate a waveform visualization
                     try:
                         img_data = self._generate_audio_waveform(file_path, start_time, end_time)
                     except Exception as e:
-                        print(f"Warning: Could not generate waveform for segment at {start_time}s: {e}")
+                        logger.error(f"Warning: Could not generate waveform for segment at {start_time}s: {e}")
                 
                 # Create chunk with explicit start_time and end_time
                 chunk = FileExtractChunk(
@@ -135,14 +135,14 @@ class FileExtractor:
                         # Extract the first frame for the entire video
                         img_data = self._extract_video_frame(file_path, 0)
                     except Exception as e:
-                        print(f"Warning: Could not extract first frame: {e}")
+                        logger.error(f"Warning: Could not extract first frame: {e}")
                 else:
                     # For audio files, generate a waveform for the entire file
                     try:
                         duration = result.get("duration", 0)
                         img_data = self._generate_audio_waveform(file_path, 0, duration)
                     except Exception as e:
-                        print(f"Warning: Could not generate waveform for audio: {e}")
+                        logger.error(f"Warning: Could not generate waveform for audio: {e}")
                     
                 # For a single chunk, set start_time to 0 and end_time to the duration if available
                 duration = result.get("duration", 0)
@@ -157,7 +157,6 @@ class FileExtractor:
                 chunks.append(chunk)
                 
         except Exception as e:
-            print(f"Error parsing audio/video: {e}")
             logger.error(f"Error parsing audio/video: {str(e)}")
         
         return chunks
@@ -321,7 +320,7 @@ class FileExtractor:
             # Check if it's an image file by extension
             image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']
             file_ext = os.path.splitext(file_path)[1].lower()
-            print(f"[DEBUG] Processing file: {file_path} with extension: {file_ext}")
+            logger.info(f"Processing file: {file_path} with extension: {file_ext}")
             
             # Check if it's a text file
             is_text_file = file_ext == '.txt'
@@ -333,26 +332,26 @@ class FileExtractor:
                     import magic
                     mime = magic.Magic(mime=True)
                     mime_type = mime.from_file(file_path)
-                    print(f"[DEBUG] No extension detected. MIME type: {mime_type}")
+                    logger.info(f"No extension detected. MIME type: {mime_type}")
                     is_image = mime_type.startswith('image/')
                     is_text_file = mime_type == 'text/plain'
                 except Exception as e:
-                    print(f"[DEBUG] Error detecting MIME type: {e}")
+                    logger.error(f"Error detecting MIME type: {e}")
                     # If we can't detect the MIME type, assume it's an image
                     is_image = True
-                    print("[DEBUG] Assuming file is an image")
+                    logger.info("Assuming file is an image")
             
-            print(f"[DEBUG] Is image: {is_image}, Is text: {is_text_file}")
+            logger.info(f"Is image: {is_image}, Is text: {is_text_file}")
             
             if is_image:
                 # For images, read the file directly as bytes
                 file_size = os.path.getsize(file_path)
-                print(f"[DEBUG] Reading image file: {file_path}, size: {file_size} bytes")
+                logger.info(f"Reading image file: {file_path}, size: {file_size} bytes")
                 
                 with open(file_path, 'rb') as f:
                     img_data = f.read()
                 
-                print(f"[DEBUG] Image data read: {len(img_data)} bytes")
+                logger.info(f"Image data read: {len(img_data)} bytes")
                 
                 # Create a single chunk for the image
                 chunk = FileExtractChunk(
@@ -362,7 +361,7 @@ class FileExtractor:
                     type='image'
                 )
                 
-                print(f"[DEBUG] Created image chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
+                logger.info(f"Created image chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
                 return [chunk]
             elif is_text_file:
                 # For text files, read the content and create an image of the text
@@ -382,7 +381,7 @@ class FileExtractor:
                     )
                     return [chunk]
                 except Exception as e:
-                    print(f"[DEBUG] Error processing text file: {str(e)}")
+                    logger.error(f"Error processing text file: {str(e)}")
                     # If image generation fails, still return the text
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
@@ -403,7 +402,7 @@ class FileExtractor:
                         )
                         return [chunk]
             else:
-                print(f"[DEBUG] File not detected as image or text, creating 'other' chunk")
+                logger.info("File not detected as image or text, creating 'other' chunk")
                 # For other file types, just create an empty chunk
                 chunk = FileExtractChunk(
                     text="",
@@ -413,7 +412,7 @@ class FileExtractor:
                 return [chunk]
                 
         except Exception as e:
-            print(f"[DEBUG] Error in extract_image_or_other: {str(e)}")
+            logger.error(f"Error in extract_image_or_other: {str(e)}")
             # Return an empty chunk in case of error
             chunk = FileExtractChunk(
                 text="",
