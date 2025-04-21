@@ -412,6 +412,7 @@ export type Database = {
           response_url: string
           title: string
           type: Database["prod"]["Enums"]["file_type"]
+          upload_progress: number
         }
         Insert: {
           active?: boolean
@@ -436,6 +437,7 @@ export type Database = {
           response_url?: string
           title?: string
           type: Database["prod"]["Enums"]["file_type"]
+          upload_progress?: number
         }
         Update: {
           active?: boolean
@@ -460,6 +462,7 @@ export type Database = {
           response_url?: string
           title?: string
           type?: Database["prod"]["Enums"]["file_type"]
+          upload_progress?: number
         }
         Relationships: [
           {
@@ -1061,7 +1064,7 @@ export type Database = {
         | "figure"
         | "summary"
         | "question"
-      content_type: "lecture" | "textbook" | "homework" | "other"
+      content_type: "lecture" | "textbook" | "homework" | "rubric" | "other"
       file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
@@ -1213,7 +1216,7 @@ export const Constants = {
         "summary",
         "question",
       ],
-      content_type: ["lecture", "textbook", "homework", "other"],
+      content_type: ["lecture", "textbook", "homework", "rubric", "other"],
       file_type: ["audio", "video", "other", "image", "pdf"],
       generation_status: ["idle", "error", "complete", "generating"],
       generation_type: ["problem", "summary", "chat"],

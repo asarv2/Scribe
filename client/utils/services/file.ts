@@ -149,6 +149,17 @@ export const deleteFile = async (
     return { success: true, error: "" };
 };
 
+export const updateProgress = async (fileId: string, progress: number) => {
+    const supabase = await useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("files")
+        .update({upload_progress: progress})
+        .eq("id", fileId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
 
 export const updateFileInfo = async (fileId: string, aiInstructions: string) => {
     const supabase = await useSupabaseServer(cookies());

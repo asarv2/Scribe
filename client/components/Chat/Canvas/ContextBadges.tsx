@@ -21,6 +21,7 @@ const CONTENT_COLORS = {
     lecture: 'blue',    // matches badge color
     textbook: 'green',   // matches badge color
     homework: 'orange', // matches badge color
+    rubric: 'yellow',
     other: 'violet',     // now matches badge color in ContextBadges
 } as const;
 

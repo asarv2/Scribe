@@ -19,7 +19,7 @@ import { getFiles } from "@/utils/queries/get-files";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClass } from "@/utils/queries/get-class";
-import { markFileIdle } from "@/utils/services/file";
+import { markFileIdle, updateProgress } from "@/utils/services/file";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
 import { Dropzone } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
@@ -353,6 +353,8 @@ export function ContextPanel({
     const firstHomeworkRef = useRef<string | null>(null);
     const firstOtherRef = useRef<string | null>(null);
 
+    const [lastProgressUpdate, setLastProgressUpdate] = useState<number | null>(null);
+
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
@@ -409,6 +411,8 @@ export function ContextPanel({
             const estimatedTotalSeconds = (fileSizeKB / 100) * 10;
             
             return Math.min(Math.round((elapsedSeconds / estimatedTotalSeconds) * 100), 95);
+        } else if (status === 'uploading') {
+            return Math.round(file.upload_progress);
         } else if (status === 'complete') {
             return 100;
         }
@@ -467,104 +471,87 @@ export function ContextPanel({
                         const progressPercentage = calculateFileProgress(newFile, fileDocuments);
                         const statusColor = getStatusColor(newStatus);
 
-                        // Check if notification exists
-                        const notificationExists = notifications.exists(`upload-${fileId}`);
-                        
-                        // Function to create or update notification
-                        const showNotification = (id: string, title: string, message: string, color: string, loading: boolean, autoClose: boolean | number) => {
-                            if (notificationExists) {
-                                notifications.update({
-                                    id,
-                                    title,
-                                    message,
-                                    color,
-                                    loading,
-                                    autoClose
-                                });
-                            } else {
-                                // Create a new notification if it doesn't exist
-                                notifications.show({
-                                    id,
-                                    title,
-                                    message,
-                                    color,
-                                    loading,
-                                    autoClose
-                                });
-                            }
-                        };
-
                         // Update notification based on status
                         switch (newStatus) {
+                            case 'uploading':
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Uploading file',
+                                    message: `Uploading ${newFile.title}... ${progressPercentage}%`,
+                                    loading: true,
+                                    autoClose: false,
+                                    color: 'blue',
+                                });
+                                break;
                             case 'compressing':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Compressing file',
-                                    `Compressing ${newFile.title}... ${progressPercentage}%`,
-                                    statusColor,
-                                    true,
-                                    false
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Compressing file',
+                                    message: `Compressing ${newFile.title}... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
                                 break;
                             case 'extracting':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Extracting content',
-                                    `Extracting ${newFile.title}... ${progressPercentage}%`,
-                                    statusColor,
-                                    true,
-                                    false
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Extracting content',
+                                    message: `Extracting ${newFile.title}... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
                                 break;
                             case 'processing':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Processing file',
-                                    `Processing ${newFile.title}... ${progressPercentage}%`,
-                                    statusColor,
-                                    true,
-                                    false
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Processing file',
+                                    message: `Processing ${newFile.title}... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
                                 break;
                             case 'parsing':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Parsing content',
-                                    `Parsing ${newFile.title} (~${newFile.length} sections found)... ${progressPercentage}%`,
-                                    statusColor,
-                                    true,
-                                    false
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Parsing content',
+                                    message: `Parsing ${newFile.title} (~${newFile.length} sections found)... ${progressPercentage}%`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
                                 break;
                             case 'complete':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Upload complete',
-                                    `${newFile.title} has been uploaded successfully`,
-                                    statusColor,
-                                    false,
-                                    3000
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Upload complete',
+                                    message: `${newFile.title} has been uploaded successfully`,
+                                    color: statusColor,
+                                    loading: false,
+                                    autoClose: 3000
+                                });
                                 break;
                             case 'error':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Processing failed',
-                                    parseError || `Error processing ${newFile.title}`,
-                                    statusColor,
-                                    false,
-                                    5000
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Processing failed',
+                                    message: parseError || `Error processing ${newFile.title}`,
+                                    color: statusColor,
+                                    loading: false,
+                                    autoClose: 5000
+                                });
                                 break;
                             case 'idle':
-                                showNotification(
-                                    `upload-${fileId}`,
-                                    'Processing paused',
-                                    `Processing of ${newFile.title} is currently paused`,
-                                    statusColor,
-                                    true,
-                                    false
-                                );
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Processing paused',
+                                    message: `Processing of ${newFile.title} is currently paused`,
+                                    color: statusColor,
+                                    loading: true,
+                                    autoClose: false
+                                });
                                 break;
                         }
                     }
@@ -837,14 +824,15 @@ export function ContextPanel({
             const addProfile = !((profile.admin || profile.professor) && !studentMode); // if they are not a professor
 
             // Show upload notification
-            notifications.show({
+            const notificationId = notifications.show({
                 id: `upload-${fileId}`,
                 title: 'Uploading file',
-                message: `Uploading ${file.name}...`,
+                message: `Uploading ${file.name}: 0%`,
                 loading: true,
                 autoClose: false,
                 color: 'blue',
             });
+            console.log("Upload notification ID:", notificationId);
 
             // Create a new tus upload
             return new Promise((resolve, reject) => {
@@ -874,7 +862,6 @@ export function ContextPanel({
                         profile: profile.id,
                     };
                 }
-
                 // Create a new tus upload
                 const upload = new tus.Upload(file, {
                     // Endpoint for creating uploads
@@ -885,28 +872,19 @@ export function ContextPanel({
                     metadata: metadata,
                     // Called when upload progress changes
                     onProgress(bytesUploaded, bytesTotal) {
-                        const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-                        
-                        // Update file's upload_progress in the cache if possible
-                        const currentFiles = queryClient.getQueryData<SupabaseFile[]>(["files", classId]);
-                        if (currentFiles) {
-                            const updatedFiles = currentFiles.map(f => {
-                                if (f.id === fileId) {
-                                    return {
-                                        ...f,
-                                        upload_progress: bytesUploaded / bytesTotal
-                                    };
-                                }
-                                return f;
-                            });
-                            queryClient.setQueryData(["files", classId], updatedFiles);
-                        }
-                        
+                        const percentage = (bytesUploaded / bytesTotal) * 100;
+
                         notifications.update({
                             id: `upload-${fileId}`,
-                            message: `Uploading ${file.name}: ${percentage}%`,
-                            color: 'blue', // Use blue for uploading
+                            message: `Uploading ${file.name}: ${percentage.toFixed(2)}%`,
+                            loading: true,
+                            autoClose: false,
                         });
+                        // 2b. Push progress to Supabase (throttle to 100ms)
+                        if (lastProgressUpdate && Date.now() - lastProgressUpdate > 100) {
+                            updateProgress(fileId, percentage); // your edge function
+                            setLastProgressUpdate(Date.now());
+                        }
                     },
                     // Called when upload is completed successfully
                     onSuccess() {
@@ -931,13 +909,12 @@ export function ContextPanel({
                                     id: `upload-${fileId}`,
                                     title: 'Upload complete',
                                     message: `${file.name} uploaded successfully`,
-                                    loading: false,
-                                    autoClose: 5000,
                                     color: 'green',
-                                });
+                                    loading: false,
+                                    autoClose: 3000,
+                                  });
 
-                                // Refresh files data
-                                queryClient.invalidateQueries({ queryKey: ["files", classId] });
+                                  queryClient.invalidateQueries({ queryKey: ['files', classId] });
 
                                 // Reset the file input to allow re-uploading the same file
                                 if (fileInputRef.current) {
@@ -951,11 +928,11 @@ export function ContextPanel({
                                 notifications.update({
                                     id: `upload-${fileId}`,
                                     title: 'Upload error',
-                                    message: `Failed to process ${file.name}: ${error.message}`,
+                                    message: error.message,
+                                    color: 'red',
                                     loading: false,
                                     autoClose: 5000,
-                                    color: 'red',
-                                });
+                                  });
                                 reject(error);
                             });
                     },
