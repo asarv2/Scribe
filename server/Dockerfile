@@ -25,8 +25,8 @@ RUN apt-get update && apt-get install -y \
     # Add NVIDIA runtime libraries
     nvidia-cuda-toolkit \
     # Add NVIDIA video encoding/decoding libraries
-    libnvidia-encode-1 \
-    libnvidia-decode-1 \
+    libnvidia-encode \
+    libnvidia-decode \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container
