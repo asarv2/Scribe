@@ -212,12 +212,14 @@ class FileCompressor:
 
         # Scaling filter if target_width is specified
         scale_filter = []
+        
+        # Modify scale_filter to include format conversion to 8-bit
         if target_width > 0:
-            # Use standard scale filter instead of scale_npp which may not be available
             scale_filter = [
-                "-vf", f"scale={target_width}:-2"  # Standard scaling works with CUDA
+                "-vf", f"scale={target_width}:-2,format=yuv420p"  # Add format=yuv420p to convert to 8-bit
             ]
-            base = f"{base}_{target_width}p"  # Add resolution to filename
+        else:
+            scale_filter = ["-vf", "format=yuv420p"]  # Add even if no scaling
         
         # Quality presets - add "ultrafast" option
         if quality == "ultrafast":
@@ -618,11 +620,6 @@ class FileCompressor:
         else:  # medium
             cpu_preset = "medium"
             bitrate = "1000k"
-        
-        # Build scaling filter if needed
-        scale_filter = []
-        if target_width > 0:
-            scale_filter = ["-vf", f"scale={target_width}:-2"]
         
         # Use CPU encoding with libx264 instead of NVENC
         cmd = [
