@@ -287,7 +287,7 @@ export const MessageList = memo(({
                       ) : existingChat.chat_type === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
                       ) : existingChat.chat_type === 'grade' ? (
-                        <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
+                        <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
                       ) : existingChat.chat_type === 'test' ? (
                         <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
                       ) : (
@@ -300,7 +300,7 @@ export const MessageList = memo(({
                       ) : activeChat.chatType === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
                       ) : activeChat.chatType === 'grade' ? (
-                        <>I'd love to see your <Text span fw={600} c="orange">presentation</Text> and help you prepare!</>
+                        <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
                       ) : activeChat.chatType === 'test' ? (
                         <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
                       ) : (
@@ -319,6 +319,8 @@ export const MessageList = memo(({
                         <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
                       ) : existingChat.chat_type === 'question' ? (
                         <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
+                      ) : existingChat.chat_type === 'grade' ? (
+                        <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
@@ -330,6 +332,8 @@ export const MessageList = memo(({
                         <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
                       ) : activeChat.chatType === 'question' ? (
                         <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
+                      ) : activeChat.chatType === 'grade' ? (
+                        <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )

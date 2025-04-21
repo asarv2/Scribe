@@ -22,6 +22,8 @@ RUN apt-get update && apt-get install -y \
     texlive-fonts-recommended \
     latexmk \
     libmagic1 \
+    # Add NVIDIA runtime libraries
+    nvidia-cuda-toolkit \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

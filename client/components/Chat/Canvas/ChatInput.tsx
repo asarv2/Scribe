@@ -372,12 +372,12 @@ export const ChatInput = memo(({
         }
 
         {
-          newChat && !activeChat.teacher && (isMobile ?
+          newChat && (isMobile ?
             <Tooltip label="Grade">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({
                   ...prev,
-                  chatType: prev.chatType === 'grade' ? 'student' : 'grade'
+                  chatType: prev.chatType === 'grade' ? (activeChat.teacher ? 'professor' : 'student') : 'grade'
                 }))}
                 size="lg"
                 color={"orange"}
@@ -396,7 +396,7 @@ export const ChatInput = memo(({
               radius="xl"
               onClick={() => setActiveChat((prev) => ({
                 ...prev,
-                chatType: prev.chatType === 'grade' ? 'student' : 'grade'
+                chatType: prev.chatType === 'grade' ? (activeChat.teacher ? 'professor' : 'student') : 'grade'
               }))}
               style={{
                 border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
