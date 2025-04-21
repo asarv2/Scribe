@@ -1,7 +1,7 @@
 import logging
 from typing import List, Literal
 import os
-import fitz  # PyMuPDF
+import fitz
 from app.services.upload.models import FileExtractChunk
 from app.config import model_manager
 from PIL import Image
@@ -14,12 +14,19 @@ class FileExtractor:
         pass
 
     def extract_file(self, file_path: str, file_type: Literal['pdf', 'audio', 'video', 'image', 'other']) -> List[FileExtractChunk]:
-        if file_type == 'pdf':
-            return self.extract_pdf(file_path)
-        elif file_type in ['audio', 'video']:
-            return self.extract_audio_or_video(file_path)
-        else:
-            return self.extract_image_or_other(file_path)
+        try:
+            logger.info(f"Extracting content from: {file_path}")
+            
+            if file_type == 'pdf':
+                return self.extract_pdf(file_path)
+            elif file_type in ['audio', 'video']:
+                return self.extract_audio_or_video(file_path)
+            else:
+                return self.extract_image_or_other(file_path)
+        except Exception as e:
+            logger.error(f"Error extracting content: {str(e)}")
+            # Return empty list instead of crashing
+            return []
 
     def extract_pdf(self, file_path: str) -> List[FileExtractChunk]:
         chunks = []

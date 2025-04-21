@@ -73,6 +73,11 @@ class FileProcessor:
                 "parse_error": "",
                 "last_parse_attempt": datetime.now().isoformat()
             })
+
+            # Clear CUDA cache before starting
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info("Cleared CUDA cache before processing")
             
             # Get file info from database
             file_response = self.supabase.table("files").select("*").eq("id", file_id).execute()
@@ -121,11 +126,21 @@ class FileProcessor:
                 "last_parse_attempt": datetime.now().isoformat()
             })
 
+            # Clear CUDA cache again before extraction
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info("Cleared CUDA cache before extraction")
+
             # Process tasks sequentially to avoid CUDA issues
             # First extract and save documents (this uses the Whisper model)
             logger.info(f"Extracting content from: {compressed_file_path}")
             results = self.extractor.extract_file(compressed_file_path, file_type)
             logger.info(f"Extraction complete: {len(results)} chunks extracted")
+
+            # Clear CUDA cache after extraction
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info("Cleared CUDA cache after extraction")
             
             # Save each chunk as a document
             for i, result in enumerate(results):
