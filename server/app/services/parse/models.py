@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
-class CleanedResponse(BaseModel):
-    page: int
-    description: str
+class TranscriptionResponse(BaseModel):
     text: str
-
+    language: str = None
+    segments: list = None

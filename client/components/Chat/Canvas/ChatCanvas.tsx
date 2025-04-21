@@ -170,7 +170,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             formData.append("message_id", messageData.id);
 
             // Trigger generation, no need to wait for response
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/chat`, {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/message`, {
                 method: 'POST',
                 body: formData
             });

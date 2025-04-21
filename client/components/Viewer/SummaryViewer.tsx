@@ -53,41 +53,6 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
 
     const [loading, setLoading] = useState(false);
 
-    const handleRetry = async (summary: Summary) => {
-        try {
-            setLoading(true);
-
-            if (!summary.message) {
-                throw new Error('No message id found');
-            }
-
-            const formData = new FormData();
-            formData.append("message_id", summary.message);
-            formData.append("summary_id", summary.id);
-            formData.append("class_id", classId);
-
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/summaries`, {
-                method: 'POST',
-                body: formData
-            });
-
-            notifications.show({
-                title: 'Summary generated',
-                message: 'Summary generated successfully',
-                color: 'green',
-            });
-        } catch (error) {
-            console.error(error);
-            notifications.show({
-                title: 'Error generating summary',
-                message: 'Error generating summary',
-                color: 'red',
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
-
     const handleDownload = (format: 'pdf' | 'latex' | 'text') => {
         const downloadUrl = getSummaryDownloadUrl(chatId, summary.id, format);
         
@@ -175,21 +140,6 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                     <Center style={{ height: '100%' }}>
                         <Loader />
                         <Text ml="md">Generating summary...</Text>
-                    </Center>
-                );
-            case 'error':
-                return (
-                    <Center style={{ height: '100%', flexDirection: 'column' }}>
-                        <Text c="red" mb="md">Error generating summary: {summary.generation_error}</Text>
-                        <Button
-                            leftSection={<IconRefresh size={14} />}
-                            color="red"
-                            variant="outline"
-                            onClick={() => handleRetry(summary)}
-                            loading={loading}
-                        >
-                            Retry
-                        </Button>
                     </Center>
                 );
             case 'complete':

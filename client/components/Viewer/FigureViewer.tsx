@@ -29,41 +29,6 @@ export default function FigureViewer({
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleRetry = async (figure: Figure) => {
-    try {
-      setLoading(true);
-
-      if (!figure.message) {
-        throw new Error('No message id found');
-      }
-
-      const formData = new FormData();
-      formData.append("message_id", figure.message);
-      formData.append("figure_id", figure.id);
-      formData.append("class_id", classId);
-
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/figures`, {
-        method: 'POST',
-        body: formData
-      });
-
-      notifications.show({
-        title: 'Figure generated',
-        message: 'Figure generated successfully',
-        color: 'green',
-      });
-    } catch (error) {
-      console.error(error);
-      notifications.show({
-        title: 'Error generating figure',
-        message: 'Error generating figure',
-        color: 'red',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const renderContent = () => {
     switch (figure.generation_status) {
       case 'idle':
@@ -77,21 +42,6 @@ export default function FigureViewer({
           <Center style={{ height: '100%' }}>
             <Loader />
             <Text ml="md">Generating figure...</Text>
-          </Center>
-        );
-      case 'error':
-        return (
-          <Center style={{ height: '100%', flexDirection: 'column' }}>
-            <Text c="red" mb="md">Error generating figure: {figure.generation_error}</Text>
-            <Button
-              leftSection={<IconRefresh size={14} />}
-              color="red"
-              variant="outline"
-              onClick={() => handleRetry(figure)}
-              loading={loading}
-            >
-              Retry
-            </Button>
           </Center>
         );
       case 'complete':

@@ -1,8 +1,19 @@
+import os
+import torch
+
+# Determine if GPU is available
+has_gpu = torch.cuda.is_available()
+
 # Server socket
 bind = "0.0.0.0:5000"
 
 # Worker configuration
-workers = 4  # Adjust based on your CPU cores
+if has_gpu:
+    # Use a single worker for GPU operations
+    workers = 1
+else:
+    # Use multiple workers when no GPU is available
+    workers = 4  # Adjust based on your CPU cores
 
 # Use uvicorn worker for FastAPI
 worker_class = 'uvicorn.workers.UvicornWorker'
@@ -18,6 +29,10 @@ keepalive = 65
 
 def when_ready(server):
     print(f"Gunicorn server is ready. Running {workers} workers")
+    if has_gpu:
+        print("GPU detected - running in single-worker mode for GPU operations")
+    else:
+        print("No GPU detected - running in multi-worker mode")
 
 def post_fork(server, worker):
     # Simple worker ID assignment based on PID

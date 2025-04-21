@@ -1,172 +1,21 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
-import traceback
-from app.extensions import supabase
-from datetime import datetime
-from app.services.parse.main import FileProcessor
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 import tempfile
 import os
 import torch
 from app.config import model_manager
+from app.services.parse.models import TranscriptionResponse
+
+
 router = APIRouter()
 
-# Define request models
 
-class TranscriptionResponse(BaseModel):
-    text: str
-    language: str = None
-    segments: list = None
-
-class ParseRequest(BaseModel):
-    file_id: str | None = None
-
-@router.post('/file')
-async def parse_file(request: ParseRequest):
-    """Parse a file and return the documents."""
-    try:
-        print("Starting parse-file function...")
-        file_id = request.file_id
-
-        # Update file status to parsing
-        supabase.table("files").update({
-            "parse_status": "parsing",
-            "parse_error": "",
-            "last_parse_attempt": datetime.now().isoformat()
-        }).eq("id", file_id).execute()
-
-        # Get file info
-        file_response = supabase.table("files").select("*").eq("id", file_id).single().execute()
-        file_data = file_response.data
-        
-        if not file_data:
-            raise HTTPException(status_code=404, detail=f"File with ID {file_id} not found")
-            
-        file_title = file_data.get('title')
-        file_type = file_data.get('type')
-        class_id = file_data.get('class')
-        trace_id = file_data.get('trace')
-        profile_id = file_data.get('profile')
-        print(f"File query response: {file_title}, type: {file_type}")
-
-        # Get class title
-        class_response = supabase.table("classes").select("*").eq("id", class_id).single().execute()
-        class_title = class_response.data.get('title')
-        print("Class title:", class_title)
-        
-        # Get documents for this file
-        documents_response = supabase.table("documents").select("*").eq("file", file_id).order("page").execute()
-        documents = documents_response.data
-        print(f"Found {len(documents)} documents to process")
-        
-        if not documents:
-            return {"status": "success", "message": "No documents found for this file"}
-        
-        # Filter out processed documents
-        documents_to_process = [doc for doc in documents if not doc.get('processed', False)]
-        print(f"Documents to process: {len(documents_to_process)}")
-
-        async def update_trace_id(file_id: str, trace_id: str):
-            supabase.table("files").update({
-                "trace": trace_id
-            }).eq("id", file_id).execute()
-
-        async def update_file_usage(file_id: str, profile_id: str, input_tokens: int, output_tokens: int):
-            supabase.table("usage").insert({
-                "file": file_id,
-                "profile": profile_id,
-                "input_tokens": input_tokens,
-                "output_tokens": output_tokens
-            }).execute()
-        
-        # Initialize file processor
-        processor = FileProcessor(
-            course_title=class_title,
-            file_title=file_title,
-            file_type=file_type,
-            file_id=file_id,
-            profile_id=profile_id,
-            trace_id=trace_id,
-            update_trace_id=update_trace_id,
-            update_file_usage=update_file_usage
-        )
-        
-        # Process in batches
-        batch_size = 15
-        batch_results = []
-        
-        for i in range(0, len(documents_to_process), batch_size):
-            batch = documents_to_process[i:i + batch_size]
-            print(f"Processing batch {i//batch_size + 1}: {len(batch)} documents")
-            
-            # Define callback function for after each document is processed
-            async def after_generate(result):
-                # Find document ID based on page number
-                document_id = next(
-                    (doc['id'] for doc in batch if doc['page'] == result.page),
-                    None
-                )
-                if not document_id:
-                    print(f"Document not found for page {result.page}")
-                    return
-
-                # Update document
-                supabase.table("documents").update({
-                    "description": result.description,
-                    "processed": True
-                }).eq("id", document_id).execute()
-                
-                print(f"Document {document_id} updated")
-            
-            # Process the batch - no need to download images anymore
-            print("Starting file processing...")
-            results = await processor.process_documents(
-                batch,  # Pass the documents directly with their google_file_id
-                after_generate
-            )
-            
-            # Convert results to serializable format
-            serializable_results = [
-                {
-                    "page": result.page,
-                    "description": result.description,
-                }
-                for result in results
-            ]
-            batch_results.append(serializable_results)
-        
-        # Update file status to complete
-        supabase.table("files").update({
-            "parse_status": "complete",
-            "parse_error": ""
-        }).eq("id", file_id).execute()
-        
-        return {
-            "status": "success", 
-            "message": f"Successfully processed {len(documents_to_process)} documents",
-            "results": batch_results
-        }
-
-    except Exception as error:
-        print("Error in parse-file function:", {
-            "name": type(error).__name__,
-            "message": str(error),
-            "stack": traceback.format_exc(),
-        })
-        
-        # Update file status to error
-        if 'file_id' in locals():
-            supabase.table("files").update({
-                "parse_status": "error",
-                "parse_error": str(error)
-            }).eq("id", file_id).execute()
-        
-        raise HTTPException(status_code=500, detail={
-            "error": str(error),
-            "stack": traceback.format_exc(),
-            "name": type(error).__name__
-        })
-
+@router.post("/syllabus")
+async def transcribe_syllabus(
+    file_id: str = Form(...)
+):
+    # TODO: complete this
+    # transcribe the syllabus and get a result that can be parsed into the class. Will find the basic information, and create learning outcomes.
+    return {"syllabus": file_id}
 
 @router.post('/audio', response_model=TranscriptionResponse)
 async def transcribe_audio(
@@ -237,4 +86,7 @@ async def transcribe_audio(
                 pass
         
         raise HTTPException(status_code=500, detail=f"Error processing audio: {str(e)}")
+    
+
+
 

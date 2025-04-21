@@ -4,6 +4,24 @@ from agents import function_tool, RunContextWrapper
 from app.services.chat.models import MultipleChoiceQuestion, FreeResponseQuestion, Documents, clean_references
 from app.extensions import supabase
 
+@function_tool
+async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -> str:
+    """Update the chat title. Will return a True as boolean if it was able to sucessfully update the chat title and the string will contain the id of the updated chat title. If unsuccessful, the boolean will be false adn the string will contain the error message.
+
+    Args:
+        title: The title of the chat.
+    """
+    try:
+        # get the chat id
+        chat_id = wrapper.context.chat_id
+        
+        # update the chat title
+        chat_response = supabase.table('chats').update({"name": title}).eq("id", chat_id).execute()
+        print("Chat Response: ", chat_response)
+        return chat_response.data[0]['name']
+    except Exception as e:
+        raise e
+
 @function_tool  
 async def create_figure(wrapper: RunContextWrapper[Documents], title: str, python_code: str, references: List[int]) -> int:
     """Generates a figure object given the python code that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
@@ -337,20 +355,16 @@ async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str 
 
         raise e
 
+
 @function_tool
-async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -> str:
-    """Update the chat title. Will return a True as boolean if it was able to sucessfully update the chat title and the string will contain the id of the updated chat title. If unsuccessful, the boolean will be false adn the string will contain the error message.
+async def grade_results(wrapper: RunContextWrapper[Documents], results: List[str], feedback: List[str]) -> str:
+    """Used to display the graded results of a given set of problems, with the results and feedback for each problem. You should aim to make the results have the format of the rubric if specified, otherwise just display the results in a nice format. The feedback should be detailed and specific to the problem, with actionable feedback for the user. These two arrays should be the same length, and the results should be in the same order as the feedback.
 
     Args:
-        title: The title of the chat.
+        results: The results of the user's work.
+        feedback: The feedback of the user's work.
+    Returns:
+        The id of the grading entry that was just created.
     """
-    try:
-        # get the chat id
-        chat_id = wrapper.context.chat_id
-        
-        # update the chat title
-        chat_response = supabase.table('chats').update({"name": title}).eq("id", chat_id).execute()
-        print("Chat Response: ", chat_response)
-        return chat_response.data[0]['name']
-    except Exception as e:
-        raise e
+    # TODO: complete this
+    return "123"

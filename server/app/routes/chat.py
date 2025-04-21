@@ -3,11 +3,11 @@ from datetime import datetime
 import traceback
 from app.extensions import supabase
 from app.services.chat.main import ChatProcessor
-from app.services.chat.models import Documents, fetch_file_resources, fetch_chat_context
-
+from app.services.chat.models import Documents, fetch_chat_context, get_mapped_references
+from app.services.chat.google import GoogleFiles
 router = APIRouter()
 
-@router.post('/chat')
+@router.post('/message')
 async def handle_chat(
     request: Request,
     chat_id: str = Form(...),
@@ -53,11 +53,15 @@ async def handle_chat(
         questions = chat_context.get('questions', [])
         references = chat_context.get('references', [])
 
-        # Fetch resources and their documents
-        file_resources = await fetch_file_resources(supabase, file_ids, class_id, profile_id, chat_id, message_id, figures, summaries, questions, references)
-        context = file_resources.get('context', '')
-        documents = file_resources.get('documents', {})
-        google_file_ids = file_resources.get('google_file_ids', [])
+        # get the mapped references
+        mapped_references = await get_mapped_references(supabase, file_ids, references)
+
+        # to call the agents
+        documents = Documents(references=mapped_references, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
+
+        # Fetch google file ids
+        google_files = GoogleFiles(file_ids, supabase)
+        google_file_ids = google_files.get_files()
 
         total_response = ""
         async def update_callback(chunk: str):
@@ -104,7 +108,6 @@ async def handle_chat(
             course_title=class_title,
             question=current_message['bare_question'],
             past_messages=past_messages,
-            google_file_ids=google_file_ids,
             trace_id=trace_id,
             stream_callback=update_callback,
             remove_callback=remove_callback,
@@ -115,7 +118,7 @@ async def handle_chat(
         try:
             await processor.process_message(
                 chat_id=chat_id,
-                complete_context=context,
+                google_file_ids=google_file_ids,
                 documents=documents,
             )
 

@@ -1008,32 +1008,6 @@ export const ChatInput = memo(({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-
-  const renderFileUpload = () => {
-    if (isInitializing) {
-      return <Skeleton height={36} width={36} radius="md" />;
-    }
-
-    if (classData?.files_enabled) {
-      return (
-        <>
-          <Tooltip label="Add files">
-            <ActionIcon size="lg" variant="subtle" onClick={handleFileUpload}>
-              <IconPlus size={20} />
-            </ActionIcon>
-          </Tooltip>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-            accept="image/*,application/pdf,audio/*,video/*"
-          />
-        </>
-      )
-    }
-  }
-
   const renderLeftChatIcons = () => {
     const newChat = chatId === "new"
 
@@ -1049,7 +1023,7 @@ export const ChatInput = memo(({
 
     return (
       <>
-        {newChat && classData?.learn_mode_enabled && !activeChat.teacher && (isMobile ?
+        {newChat && !activeChat.teacher && (isMobile ?
           <Tooltip label="Learn">
             <ActionIcon
               onClick={() => setActiveChat((prev) => ({
@@ -1081,8 +1055,10 @@ export const ChatInput = memo(({
           >Learn</Button>)
         }
 
+        {/* TODO: check that we have at least one homework file, a file with .content_type = homework */}
+
         {
-          newChat && classData?.homework_mode_enabled && !activeChat.teacher && (isMobile ?
+          newChat && files && files.some(file => file.content_type === 'homework') && !activeChat.teacher && (isMobile ?
             <Tooltip label="Homework">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({
@@ -1115,7 +1091,7 @@ export const ChatInput = memo(({
         }
 
         {
-          newChat && classData?.test_prep_mode_enabled && !activeChat.teacher && (isMobile ?
+          newChat && !activeChat.teacher && (isMobile ?
             <Tooltip label="Test-Prep">
               <ActionIcon
                 onClick={() => setActiveChat((prev) => ({

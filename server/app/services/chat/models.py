@@ -78,24 +78,16 @@ async def fetch_chat_context(supabase, chat_id):
         "references": list(set(references))
     }
 
-async def fetch_file_resources(supabase, file_ids, class_id, profile_id, chat_id, message_id, figures, summaries, questions, chat_references):
+async def get_mapped_references(supabase, file_ids, chat_references):
     """
     Fetch file resources and their documents.
     
     Returns a dictionary with files and their documents.
     """
-    all_files = []
     all_documents = []
-    all_google_file_ids = []
     references = {}  # Initialize references dictionary outside the if block
-    references_reverse = {}  # Initialize references_reverse dictionary outside the if block
     
     if file_ids:
-        # Fetch files
-        files_response = supabase.table("files").select("*").in_("id", file_ids).order("title", desc=False).execute()
-        all_files = files_response.data or []
-        all_google_file_ids = [file_name for gemini_file in all_files for file_name in gemini_file.get("file_names", [])]
-
         file_documents = supabase.table("documents").select("*").in_("file", file_ids).execute().data or []
 
         # get the documents that are in the chat_references
@@ -105,53 +97,8 @@ async def fetch_file_resources(supabase, file_ids, class_id, profile_id, chat_id
         all_documents = file_documents + chat_documents
 
         references = {idx + 1: doc.get("id") for idx, doc in enumerate(all_documents)}
-        references_reverse = {doc.get("id"): idx + 1 for idx, doc in enumerate(all_documents)}
 
-    
-    content = []
-    for idx, f in enumerate(all_files):
-        file_docs = [doc for doc in all_documents if doc.get("file") == f.get("id")]
-        content_type = f.get("content_type")
-        if content_type == "lecture":
-            file_content = f"LECTURE {f.get('file_number')}: {f.get('title')}\n"
-            
-            for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
-                file_content += f"\\SLIDE {doc.get('page')} (REFERENCE {references_reverse[doc.get('id')]})\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
-            
-            content.append(file_content)
-        elif content_type == "textbook":
-            file_content = f"TEXTBOOK {f.get('file_number')}: {f.get('title')}\n"
-
-            # group by the chapter_number. TODO
-            
-            for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
-                file_content += f"\nPAGE {doc.get('page')}\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
-            
-            content.append(file_content)
-        elif content_type == "homework":
-            file_content = f"HOMEWORK {f.get('file_number')}: {f.get('title')}\n"
-
-            # group by the problem_number. TODO
-            
-            for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
-                file_content += f"\nPAGE {doc.get('page')}\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
-            
-            content.append(file_content)
-        else:
-            file_content = f"FILE {f.get('file_number')}: {f.get('title')}\n"
-            
-            for doc in sorted(file_docs, key=lambda d: d.get("page", 0)):
-                file_content += f"\nPAGE {doc.get('page')} (REFERENCE {references_reverse[doc.get('id')]})\nContent: {doc.get('text', '')}\nDescription: {doc.get('description', '')}\n"
-            
-            content.append(file_content)
-
-    documents = Documents(references=references, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
-        
-    return {
-        "context": "\n\n".join(content),
-        "documents": documents,
-        "google_file_ids": all_google_file_ids
-    }
+    return references
 
 async def process_special_tags(message, supabase_client, documents: Documents):
     """

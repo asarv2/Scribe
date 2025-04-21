@@ -294,6 +294,25 @@ async def store_pdf():
 
     return uploaded_file
 
+
+async def upload_large_video():
+    # Use absolute path to the file
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    video_path = os.path.join(current_dir, "Lab1.mp4")
+    
+    uploaded_file = genai.upload_file(
+        path=video_path,
+        mime_type="video/mp4",
+        display_name="Lab1.mp4"
+    )
+    print(uploaded_file)
+    # poll until ACTIVE
+    while uploaded_file.state.name != "ACTIVE":
+        await asyncio.sleep(1)
+        uploaded_file = await asyncio.to_thread(genai.get_file, uploaded_file.id)
+    print(uploaded_file)
+
 async def main_agent_audio():
     # 1. Download audio
     audio_url = "https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/files//test.wav"
@@ -309,10 +328,10 @@ async def main_agent_audio():
         {
             "role": "user",
             "content": [
-                {"type": "input_text", "text": "What is the display name of this file?"},
+                {"type": "input_text", "text": "What is said in this audio?"},
                 {
                     "type": "input_image",
-                    "image_url": "https://generativelanguage.googleapis.com/v1beta/files/4bdi9vb1s90y",
+                    "image_url": "https://generativelanguage.googleapis.com/v1beta/files/jf6brc3uy0lj",
                     "detail": "high"
                 }
             ]
@@ -357,3 +376,4 @@ if __name__ == "__main__":
     # asyncio.run(store_audio())
     # asyncio.run(store_video())
     # asyncio.run(store_pdf())
+    # asyncio.run(upload_large_video())

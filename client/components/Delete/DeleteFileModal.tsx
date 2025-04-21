@@ -63,7 +63,7 @@ export default function DeleteFileModal({ fileId, classId, onDelete }: DeleteFil
 
         setLoading(true);
         try {
-            const { success, error } = await deleteFile(fileId);
+            const { success, error } = await deleteFile(classId, fileId);
             if (!success) {
                 throw new Error(error);
             } else {

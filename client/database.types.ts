@@ -233,8 +233,6 @@ export type Database = {
           end_time: number | null
           exercise_number: number | null
           file: string | null
-          google_expires_at: string | null
-          google_file_id: string | null
           id: string
           page: number
           problem_number: number | null
@@ -252,8 +250,6 @@ export type Database = {
           end_time?: number | null
           exercise_number?: number | null
           file?: string | null
-          google_expires_at?: string | null
-          google_file_id?: string | null
           id?: string
           page: number
           problem_number?: number | null
@@ -271,8 +267,6 @@ export type Database = {
           end_time?: number | null
           exercise_number?: number | null
           file?: string | null
-          google_expires_at?: string | null
-          google_file_id?: string | null
           id?: string
           page?: number
           problem_number?: number | null
@@ -403,6 +397,7 @@ export type Database = {
           created_at: string
           deleted: boolean
           expires: string | null
+          extension: string
           file_date: string
           file_names: string[]
           file_number: number
@@ -415,7 +410,6 @@ export type Database = {
           profile: string | null
           response_url: string
           title: string
-          trace: string | null
           type: Database["prod"]["Enums"]["file_type"]
         }
         Insert: {
@@ -426,6 +420,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           expires?: string | null
+          extension?: string
           file_date?: string
           file_names?: string[]
           file_number?: number
@@ -438,7 +433,6 @@ export type Database = {
           profile?: string | null
           response_url?: string
           title?: string
-          trace?: string | null
           type: Database["prod"]["Enums"]["file_type"]
         }
         Update: {
@@ -449,6 +443,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean
           expires?: string | null
+          extension?: string
           file_date?: string
           file_names?: string[]
           file_number?: number
@@ -461,7 +456,6 @@ export type Database = {
           profile?: string | null
           response_url?: string
           title?: string
-          trace?: string | null
           type?: Database["prod"]["Enums"]["file_type"]
         }
         Relationships: [
@@ -484,6 +478,7 @@ export type Database = {
       google: {
         Row: {
           created_at: string
+          deleted: boolean
           document: string | null
           expires_at: string
           file: string | null
@@ -492,6 +487,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted?: boolean
           document?: string | null
           expires_at: string
           file?: string | null
@@ -500,6 +496,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted?: boolean
           document?: string | null
           expires_at?: string
           file?: string | null
@@ -517,6 +514,51 @@ export type Database = {
           {
             foreignKeyName: "google_file_fkey"
             columns: ["file"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grades: {
+        Row: {
+          created_at: string
+          feedback: string[]
+          file: string | null
+          id: string
+          questions: string[]
+          results: string[]
+          rubric: string | null
+        }
+        Insert: {
+          created_at?: string
+          feedback?: string[]
+          file?: string | null
+          id?: string
+          questions?: string[]
+          results?: string[]
+          rubric?: string | null
+        }
+        Update: {
+          created_at?: string
+          feedback?: string[]
+          file?: string | null
+          id?: string
+          questions?: string[]
+          results?: string[]
+          rubric?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grades_file_fkey"
+            columns: ["file"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grades_rubric_fkey"
+            columns: ["rubric"]
             isOneToOne: false
             referencedRelation: "files"
             referencedColumns: ["id"]

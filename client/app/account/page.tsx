@@ -48,7 +48,7 @@ import { createCode, deleteCode } from "@/utils/services/code";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "@/components/Class/ClassLayout";
-import { updateClassPrivacy, updateClassPrompts } from "@/utils/services/class";
+import { updateClassPrivacy } from "@/utils/services/class";
 import Management from "@/components/Account/Management";
 import avatarStyles from '@/components/Account/Avatar.module.css';
 

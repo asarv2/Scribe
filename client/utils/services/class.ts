@@ -19,50 +19,20 @@ export const updateClassPrivacy = async (classId: string, privacyStatus: boolean
     return { success: true, error: "" };
 }
 
-export const updateClassPrompts = async (
+export const updateClass = async (
     classId: string,
-    lecturePrompt: string,
-    textbookPrompt: string,
-    homeworkPrompt: string,
-    learnModeEnabled: boolean,
-    homeworkModeEnabled: boolean,
-    testPrepModeEnabled: boolean,
-    presentModeEnabled: boolean,
-    lectureEnabled: boolean = false,
-    textbookEnabled: boolean = false,
-    homeworkEnabled: boolean = false,
-    filesEnabled: boolean = false,
-    videoEnabled: boolean = false,
     title: string,
     class_code: string,
     course_description: string,
-    download: boolean,
-    download_time: string,
-    privateMode: boolean
 ) => {
     const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("classes")
         .update({
             saved: true,
-            lecture_prompt: lecturePrompt,
-            textbook_prompt: textbookPrompt,
-            homework_prompt: homeworkPrompt,
-            lecture_enabled: lectureEnabled,
-            textbook_enabled: textbookEnabled,
-            homework_enabled: homeworkEnabled,
-            files_enabled: filesEnabled,
-            video_enabled: videoEnabled,
-            learn_mode_enabled: learnModeEnabled,
-            homework_mode_enabled: homeworkModeEnabled,
-            test_prep_mode_enabled: testPrepModeEnabled,
-            present_mode_enabled: presentModeEnabled,
             title,
             class_code,
             course_description,
-            download,
-            download_time,
-            privacy: privateMode
         })
         .eq("id", classId);
     if (error) {

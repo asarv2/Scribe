@@ -55,19 +55,15 @@ app.add_middleware(
 
 # Import latest version routers
 from app.routes.parse import router as parse_router
-from app.routes.generate import router as generate_router
+from app.routes.chat import router as chat_router
 from app.routes.upload import router as upload_router
 from app.routes.download import router as download_router
-from app.routes.grader import router as grader_router
-from app.routes.learning import router as learning_router  # Import the new learning router
 
 # Include latest version routers directly on app
 app.include_router(parse_router, prefix="/parse")
-app.include_router(generate_router, prefix="/generate")
+app.include_router(chat_router, prefix="/chat")
 app.include_router(upload_router, prefix="/upload")
 app.include_router(download_router, prefix="/download")
-app.include_router(grader_router)
-app.include_router(learning_router, prefix="/learning")  # Add the learning router
 
 @app.get("/", response_class=HTMLResponse)
 async def index():

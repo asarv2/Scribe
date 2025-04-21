@@ -6,23 +6,26 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, ScrollArea, useMantineColorScheme, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Button, Box, Flex, Menu, Progress, RingProgress, Loader } from "@mantine/core";
-import { IconSearch, IconPresentation, IconBook, IconFile, IconNotebook, IconPencil, IconSchool, IconChalkboard, IconCaretLeftRight, IconChevronDown, IconChevronRight, IconGripVertical, IconUpload, IconFileUpload, IconRefresh, IconPlus, IconLoader, IconEye } from "@tabler/icons-react";
+import { TextInput, Group, Stack, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Flex, Loader, RingProgress, Menu } from "@mantine/core";
+import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { ChatMessage, ViewerMode, Document, File } from "@/types";
+import { ChatMessage, ViewerMode, Document, File as SupabaseFile, ContentType, FileType } from "@/types";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useDrag } from 'react-dnd';
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getFiles } from "@/utils/queries/get-files";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClass } from "@/utils/queries/get-class";
-import UploadFileButton from "../Buttons/UploadFileButton";
 import { markFileIdle } from "@/utils/services/file";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
+import { Dropzone } from "@mantine/dropzone";
+import { notifications } from "@mantine/notifications";
+import * as tus from 'tus-js-client';
+import { createFile } from "@/utils/services/file";
+import { useStudentMode } from "../StudentModeContext";
 declare global {
     interface Window {
         scrollToFirstItem?: (type: string) => void;
@@ -79,43 +82,18 @@ const ItemCard = ({
 }) => {
     const queryClient = useQueryClient();
 
-    // Calculate file progress
-    const getFileProgress = (fileId: string, uploading: boolean = false) => {
+    // Simplified file progress calculation
+    const getFileProgress = (fileId: string) => {
         if (!fileDocuments) return 0;
-        const file = item;
-        if (!file || file.length === 0) return 0;
-
-        const docs = fileDocuments.filter(doc =>
-            doc.file === fileId && (uploading || doc.processed)
-        );
-
-        return (docs.length / file.length) * 100;
-    };
-    // Retry processing function
-    const handleRetryProcessing = async (fileId: string) => {
-        try {
-
-            // set the item to idle, so the user sees that it is loading
-            const { success, error } = await markFileIdle(fileId);
-            if (!success) {
-                throw new Error(error);
-            }
-            queryClient.invalidateQueries({
-                queryKey: ["fileDocuments", classId]
-            });
-
-            const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/parse/file`;
-
-            await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    file_id: fileId,
-                })
-            });
-        } catch (error) {
-            console.error(`Error retrying file:`, error);
-        }
+        
+        // Get documents associated with this file
+        const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
+        
+        // If no documents or file has no length property, return 0
+        if (fileRelatedDocs.length === 0 || !item.length) return 0;
+        
+        // Calculate percentage based on document count vs expected length
+        return (fileRelatedDocs.length / item.length) * 100;
     };
 
     const originalCard = (
@@ -132,8 +110,8 @@ const ItemCard = ({
             }}
             onClick={(e) => {
                 e.stopPropagation();
-                // Only allow clicking if the file is complete
-                if (item.parse_status === 'complete' || item.parse_status === 'parsing') {
+                // Only allow clicking if the file is complete or in processing stages
+                if (item.parse_status === 'complete' || item.parse_status === 'parsing' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
                     addFileToChat(item.id);
                 }
             }}
@@ -191,30 +169,25 @@ const ItemCard = ({
                                     </ActionIcon>
                                 </Tooltip>
                             ) : item.parse_status === 'error' ? (
-                                <Tooltip label="Retry Processing">
-                                    <ActionIcon variant="light" color="red" size="sm" onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleRetryProcessing(item.id);
-                                    }}>
-                                        <IconRefresh size={16} />
+                                <Tooltip label="Error Processing">
+                                    <ActionIcon variant="light" color="red" size="sm">
+                                        <IconCircleX size={16} />
                                     </ActionIcon>
                                 </Tooltip>
-                            ) : (item.parse_status === 'uploading' || item.parse_status === 'parsing') ? (
-                                <Tooltip label={`Retry ${item.parse_status === 'uploading' ? 'upload' : 'parse'}`}>
+                            ) : (item.parse_status === 'uploading' || item.parse_status === 'parsing' || item.parse_status === 'extracting' || item.parse_status === 'processing') ? (
+                                <Tooltip label={`${Math.round(getFileProgress(item.id))}%`}>
                                     <RingProgress
                                         size={40}
                                         thickness={2}
-                                        sections={[{ value: getFileProgress(item.id, item.parse_status !== 'parsing'), color: item.parse_status === 'uploading' ? 'blue' : 'green' }]}
+                                        sections={[{ 
+                                            value: getFileProgress(item.id), 
+                                            color: 'green'
+                                        }]}
                                         label={
                                             <Text size="xs" ta="center" fw={500}>
-                                                {Math.round(getFileProgress(item.id, item.parse_status !== 'parsing'))}%
+                                                {Math.round(getFileProgress(item.id))}%
                                             </Text>
                                         }
-                                        style={{ cursor: "pointer" }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleRetryProcessing(item.id);
-                                        }}
                                     />
                                 </Tooltip>
                             ) : (
@@ -278,9 +251,15 @@ export function ContextPanel({
     onFileDelete
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
+    const queryClient = useQueryClient();
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
     const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
     const containerRef = useRef<HTMLDivElement>(null);
+    const { studentMode } = useStudentMode();
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    // Add a new ref to track the selected content type
+    const contentTypeRef = useRef<ContentType>('other');
 
     // Add refs for the first items of each type
     const firstLectureRef = useRef<string | null>(null);
@@ -365,7 +344,7 @@ export function ContextPanel({
         };
     }, []);
 
-    const getFileImageUrl = (item: File, documentId: string) => {
+    const getFileImageUrl = (item: SupabaseFile, documentId: string) => {
         if (documentId.length > 0) {
             return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${item.id}/${documentId}.png`;
         }
@@ -400,13 +379,8 @@ export function ContextPanel({
         const homeworkFiles = files?.filter(f => f.content_type === 'homework');
         const otherFiles = files?.filter(f => f.content_type === 'other');
 
-        const lectureEnabled = classData?.lecture_enabled;
-        const textbookEnabled = classData?.textbook_enabled;
-        const homeworkEnabled = classData?.homework_enabled;
-        const otherEnabled = classData?.files_enabled;
-
         // Add files
-        if (lectureFiles && lectureEnabled) {
+        if (lectureFiles) {
             const filteredFiles = filterBySearch(lectureFiles, fileDocuments || [])
                 .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
@@ -425,7 +399,7 @@ export function ContextPanel({
             allItems.push(...filteredFiles);
         }
 
-        if (textbookFiles && textbookEnabled) {
+        if (textbookFiles) {
             const filteredFiles = filterBySearch(textbookFiles, fileDocuments || [])
                 .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
@@ -444,7 +418,7 @@ export function ContextPanel({
             allItems.push(...filteredFiles);
         }
 
-        if (homeworkFiles && homeworkEnabled) {
+        if (homeworkFiles) {
             const filteredFiles = filterBySearch(homeworkFiles, fileDocuments || [])
                 .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
@@ -463,7 +437,7 @@ export function ContextPanel({
             allItems.push(...filteredFiles);
         }
 
-        if (otherFiles && otherEnabled) {
+        if (otherFiles) {
             const filteredFiles = filterBySearch(otherFiles, fileDocuments || [])
                 .filter(f => !activeChat.files.includes(f.id))
                 .map(f => ({
@@ -537,6 +511,264 @@ export function ContextPanel({
         };
     }, [rowVirtualizer.getVirtualItems()]);
 
+    // Handle file upload (similar to UploadFileButton)
+    const handleUploadFile = async (file: File) => {
+        try {
+            if (!profile) {
+                throw new Error("Profile not found");
+            }
+            
+            // Use the contentTypeRef value
+            const contentType = contentTypeRef.current;
+
+            const fullFileName = file.name;
+            // get the file name without the extension
+            const fileName = fullFileName.split('.').slice(0, -1).join('.');
+            let fileType: FileType = "other";
+            // find the file type
+            if (file.type === "application/pdf") {
+                fileType = "pdf";
+            } else if (file.type === "video/mp4") {
+                fileType = "video";
+            } else if (file.type === "audio/wav") {
+                fileType = "audio";
+            } else if (file.type === "video/webm") {
+                fileType = "video";
+            } else if (file.type === "image/jpeg" || file.type === "image/png") {
+                fileType = "image";
+            }
+
+            // find the file number (1 more than the highest file number in the class)
+            const fileNumber = files?.length ? Math.max(...files.map(file => file.file_number)) + 1 : 1;
+
+            // create a new file
+            const fileId = await createFile(classId, fileName, fileNumber, fileType, contentType, profile.id);
+
+            const addProfile = !((profile.admin || profile.professor) && !studentMode); // if they are not a professor
+
+            // Show upload notification
+            notifications.show({
+                id: `upload-${fileId}`,
+                title: 'Uploading file',
+                message: `Uploading ${file.name}...`,
+                loading: true,
+                autoClose: false,
+            });
+
+            // Create a new tus upload
+            return new Promise((resolve, reject) => {
+                // Get the base URL for the API
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+
+                let metadata = {};
+                if (addProfile) {
+                    metadata = {
+                        filename: file.name,
+                        filetype: file.type,
+                        fileId: fileId,
+                        classId: classId,
+                        startParse: 'true', // Always start parsing for dropped files
+                        baseUrl: baseUrl,
+                        contentType: contentType,
+                    };
+                } else {
+                    metadata = {
+                        filename: file.name,
+                        filetype: file.type,
+                        fileId: fileId,
+                        classId: classId,
+                        startParse: 'true',
+                        baseUrl: baseUrl,
+                        contentType: contentType,
+                        profile: profile.id,
+                    };
+                }
+
+                // Create a new tus upload
+                const upload = new tus.Upload(file, {
+                    // Endpoint for creating uploads
+                    endpoint: `${baseUrl}/upload/tus`,
+                    // Store URL in localStorage to resume upload after browser restart
+                    storeFingerprintForResuming: true,
+                    // Add metadata
+                    metadata: metadata,
+                    // Called when upload progress changes
+                    onProgress(bytesUploaded, bytesTotal) {
+                        const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                        notifications.update({
+                            id: `upload-${fileId}`,
+                            message: `Uploading ${file.name}: ${percentage}%`,
+                        });
+                    },
+                    // Called when upload is completed successfully
+                    onSuccess() {
+                        console.log('Upload completed successfully');
+
+                        // Finalize the upload by calling the finalize endpoint
+                        fetch(`${baseUrl}/upload/tus/finalize`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ fileId: fileId }),
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to finalize upload');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Upload complete',
+                                    message: `${file.name} uploaded successfully`,
+                                    loading: false,
+                                    autoClose: 5000,
+                                    color: 'green',
+                                });
+
+                                // Refresh files data
+                                queryClient.invalidateQueries({ queryKey: ["files", classId] });
+
+                                // Reset the file input to allow re-uploading the same file
+                                if (fileInputRef.current) {
+                                    fileInputRef.current.value = '';
+                                }
+
+                                resolve(data);
+                            })
+                            .catch(error => {
+                                console.error('Error finalizing upload:', error);
+                                notifications.update({
+                                    id: `upload-${fileId}`,
+                                    title: 'Upload error',
+                                    message: `Failed to process ${file.name}: ${error.message}`,
+                                    loading: false,
+                                    autoClose: 5000,
+                                    color: 'red',
+                                });
+                                reject(error);
+                            });
+                    },
+                    // Called when an error occurs
+                    onError(error) {
+                        console.error('Error uploading file:', error);
+                        notifications.update({
+                            id: `upload-${fileId}`,
+                            title: 'Upload error',
+                            message: `Failed to upload ${file.name}: ${error.message}`,
+                            loading: false,
+                            autoClose: 5000,
+                            color: 'red',
+                        });
+                        reject(error);
+                    },
+                });
+
+                // Start the upload
+                upload.start();
+            });
+
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            notifications.show({
+                title: 'Error uploading file',
+                message: error instanceof Error ? error.message : 'Please try again.',
+                color: 'red',
+            });
+
+            // Reset the file input even on error
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    // Render the upload button with menu options
+    const renderUploadButton = () => {
+        return profile && ((profile.admin || profile.professor) && !studentMode) ?
+            <Menu
+                openDelay={100}
+                closeDelay={200}
+                width={200}
+                shadow="md"
+                trigger="click-hover"
+                transitionProps={{ transition: 'fade', duration: 200 }}
+            >
+                <Menu.Target>
+                    <ActionIcon size={30} aria-label="Upload content">
+                        <IconUpload size={18} />
+                    </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    <Menu.Label>Upload Content</Menu.Label>
+                    <Menu.Item
+                        leftSection={<IconFileTypePpt size={14} />}
+                        onClick={() => {
+                            // Set content type before clicking
+                            contentTypeRef.current = 'lecture';
+                            if (fileInputRef.current) {
+                                fileInputRef.current.click();
+                            }
+                        }}
+                    >
+                        Lecture
+                    </Menu.Item>
+                    <Menu.Item
+                        leftSection={<IconBookDownload size={14} />}
+                        onClick={() => {
+                            // Set content type before clicking
+                            contentTypeRef.current = 'textbook';
+                            if (fileInputRef.current) {
+                                fileInputRef.current.click();
+                            }
+                        }}
+                    >
+                        Textbook
+                    </Menu.Item>
+                    <Menu.Item
+                        leftSection={<IconFileExcel size={14} />}
+                        onClick={() => {
+                            // Set content type before clicking
+                            contentTypeRef.current = 'homework';
+                            if (fileInputRef.current) {
+                                fileInputRef.current.click();
+                            }
+                        }}
+                    >
+                        Homework
+                    </Menu.Item>
+                    <Menu.Item
+                        leftSection={<IconFile size={14} />}
+                        onClick={() => {
+                            // Set content type before clicking
+                            contentTypeRef.current = 'other';
+                            if (fileInputRef.current) {
+                                fileInputRef.current.click();
+                            }
+                        }}
+                    >
+                        Other
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu> : classData?.files_enabled ?
+                <Tooltip label={"Upload files"}>
+                    <ActionIcon size={30} aria-label="Upload files" onClick={() => {
+                        // Set content type before clicking
+                        contentTypeRef.current = 'other';
+                        if (fileInputRef.current) {
+                            fileInputRef.current.click();
+                        }
+                    }}>
+                        <IconUpload size={18} />
+                    </ActionIcon>
+                </Tooltip> : null;
+    };
+
+    // Check if uploads are allowed
+    const canUpload = classData?.files_enabled || (profile && ((profile.admin || profile.professor) && !studentMode));
+
     return (
         <Card
             shadow="sm"
@@ -548,15 +780,162 @@ export function ContextPanel({
                 overflowY: "auto"
             }}
         >
-            <Stack>
-                {isInitializing ? (
-                    // Skeleton for search bar and upload button when initializing
-                    <Flex justify="space-between" align="center" gap="md">
-                        <Skeleton height={36} radius="md" style={{ flex: 1 }} /> {/* Takes up available space */}
-                        <Skeleton height={36} width={36} radius="md" /> {/* Fixed width for icon */}
-                    </Flex>
-                ) : (
-                    <Flex justify="space-between" align="center" gap="md">
+            {canUpload ? (
+                <Dropzone
+                    onDrop={(files) => {
+                        files.forEach(file => handleUploadFile(file));
+                    }}
+                    onReject={(files) => {
+                        notifications.show({
+                            title: 'Invalid file',
+                            message: 'Only PDF, video, audio, and image files are allowed.',
+                            color: 'red',
+                        });
+                    }}
+                    accept={['application/pdf', 'video/*', 'audio/*', 'image/*', 'text/*']}
+                    multiple={true}
+                    styles={{
+                        root: {
+                            border: 'none',
+                            backgroundColor: 'transparent',
+                            height: '100%',
+                            padding: 0,
+                            margin: 0,
+                            // Allow pointer events to pass through when not in active drop state
+                            pointerEvents: 'none'
+                        },
+                        inner: {
+                            // This ensures the inner content receives pointer events
+                            pointerEvents: 'auto'
+                        }
+                    }}
+                    activateOnDrag={true}
+                >
+                    <div style={{ 
+                        pointerEvents: 'auto', // Ensure children receive events
+                        height: '100%',
+                        width: '100%'
+                    }}>
+                        <Stack style={{ height: '100%' }}>
+                            {isInitializing ? (
+                                // Skeleton for search bar and upload button when initializing
+                                <Flex justify="space-between" align="center" gap="md">
+                                    <Skeleton height={36} radius="md" style={{ flex: 1 }} />
+                                    <Skeleton height={36} width={36} radius="md" />
+                                </Flex>
+                            ) : (
+                                <Flex justify="space-between" align="center" gap="md">
+                                    <TextInput
+                                        placeholder="Search context..."
+                                        value={localSearchQuery}
+                                        onChange={(e) => setLocalSearchQuery(e.target.value)}
+                                        leftSection={<IconSearch size={16} />}
+                                        style={{ flex: 1 }}
+                                    />
+                                    {renderUploadButton()}
+                                </Flex>
+                            )}
+
+                            {isLoading || isInitializing ? (
+                                // Always show 10 skeleton items when loading or initializing
+                                <Stack>
+                                    {Array(10).fill(0).map((_, i) => (
+                                        <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
+                                            <Group>
+                                                <Skeleton width={40} height={40} radius="md" />
+                                                <Stack style={{ flex: 1 }}>
+                                                    <Skeleton height={12} width="60%" />
+                                                    <Skeleton height={8} width="40%" />
+                                                </Stack>
+                                            </Group>
+                                        </Card>
+                                    ))}
+                                </Stack>
+                            ) : (
+                                <div
+                                    ref={containerRef}
+                                    style={{
+                                        height: "calc(100vh - 100px)",
+                                        overflow: 'auto',
+                                        position: 'relative'
+                                    }}
+                                >
+                                    {/* Add section marker divs for scrolling */}
+                                    <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                                    <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                                    <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                                    <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+
+                                    {allContentItems.length > 0 ? (
+                                        <div
+                                            style={{
+                                                height: `${rowVirtualizer.getTotalSize()}px`,
+                                                width: '100%',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                                                const item = allContentItems[virtualRow.index];
+                                                const itemId = `${item.type}-${item.id}`;
+                                                const isItemVisible = visibleItems.has(itemId);
+
+                                                // Add section-specific IDs to the first item of each type
+                                                const isFirstOfType =
+                                                    (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
+                                                    (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
+                                                    (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
+                                                    (item.type === 'other' && item.id === firstOtherItem?.id);
+
+                                                return (
+                                                    <div
+                                                        key={itemId}
+                                                        data-id={itemId}
+                                                        id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            left: 0,
+                                                            width: '100%',
+                                                            height: `${virtualRow.size}px`,
+                                                            transform: `translateY(${virtualRow.start}px)`,
+                                                        }}
+                                                    >
+                                                        <ItemCard
+                                                            item={item}
+                                                            classId={classId}
+                                                            profileId={profile?.id ?? ""}
+                                                            color={item.color}
+                                                            contextType={item.type}
+                                                            addFileToChat={addFileToChat}
+                                                            isVisible={isItemVisible || localSearchQuery.length > 0}
+                                                            makeDraggable={makeDraggable}
+                                                            setViewerMode={setViewerMode}
+                                                            fileDocuments={fileDocuments}
+                                                            onFileDelete={onFileDelete}
+                                                        />
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <Text c="dimmed" ta="center" py="md">
+                                            {localSearchQuery ? "No results found" : "No content available"}
+                                        </Text>
+                                    )}
+                                </div>
+                            )}
+                        </Stack>
+                    </div>
+                </Dropzone>
+            ) : (
+                // Regular non-dropzone version when uploads aren't allowed
+                <Stack>
+                    {isInitializing ? (
+                        // Skeleton for search bar when initializing
+                        <Flex justify="space-between" align="center" gap="md">
+                            <Skeleton height={36} radius="md" style={{ flex: 1 }} />
+                        </Flex>
+                    ) : (
                         <TextInput
                             placeholder="Search context..."
                             value={localSearchQuery}
@@ -564,102 +943,115 @@ export function ContextPanel({
                             leftSection={<IconSearch size={16} />}
                             style={{ flex: 1 }}
                         />
-                        <UploadFileButton
-                            classId={classId}
-                            startParse={true}
-                        />
-                    </Flex>
-                )}
+                    )}
 
-                {isLoading || isInitializing ? (
-                    // Always show 10 skeleton items when loading or initializing
-                    <Stack>
-                        {Array(10).fill(0).map((_, i) => (
-                            <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
-                                <Group>
-                                    <Skeleton width={40} height={40} radius="md" />
-                                    <Stack style={{ flex: 1 }}>
-                                        <Skeleton height={12} width="60%" />
-                                        <Skeleton height={8} width="40%" />
-                                    </Stack>
-                                </Group>
-                            </Card>
-                        ))}
-                    </Stack>
-                ) : (
-                    <div
-                        ref={containerRef}
-                        style={{
-                            height: "calc(100vh - 100px)",
-                            overflow: 'auto',
-                            position: 'relative'
-                        }}
-                    >
-                        {/* Add section marker divs for scrolling */}
-                        <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                        <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                        <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                        <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                    {isLoading || isInitializing ? (
+                        // Always show 10 skeleton items when loading or initializing
+                        <Stack>
+                            {Array(10).fill(0).map((_, i) => (
+                                <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
+                                    <Group>
+                                        <Skeleton width={40} height={40} radius="md" />
+                                        <Stack style={{ flex: 1 }}>
+                                            <Skeleton height={12} width="60%" />
+                                            <Skeleton height={8} width="40%" />
+                                        </Stack>
+                                    </Group>
+                                </Card>
+                            ))}
+                        </Stack>
+                    ) : (
+                        <div
+                            ref={containerRef}
+                            style={{
+                                height: "calc(100vh - 100px)",
+                                overflow: 'auto',
+                                position: 'relative'
+                            }}
+                        >
+                            {/* Add section marker divs for scrolling */}
+                            <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                            <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                            <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                            <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
 
-                        {allContentItems.length > 0 ? (
-                            <div
-                                style={{
-                                    height: `${rowVirtualizer.getTotalSize()}px`,
-                                    width: '100%',
-                                    position: 'relative'
-                                }}
-                            >
-                                {rowVirtualizer.getVirtualItems().map(virtualRow => {
-                                    const item = allContentItems[virtualRow.index];
-                                    const itemId = `${item.type}-${item.id}`;
-                                    const isItemVisible = visibleItems.has(itemId);
+                            {allContentItems.length > 0 ? (
+                                <div
+                                    style={{
+                                        height: `${rowVirtualizer.getTotalSize()}px`,
+                                        width: '100%',
+                                        position: 'relative'
+                                    }}
+                                >
+                                    {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                                        const item = allContentItems[virtualRow.index];
+                                        const itemId = `${item.type}-${item.id}`;
+                                        const isItemVisible = visibleItems.has(itemId);
 
-                                    // Add section-specific IDs to the first item of each type
-                                    const isFirstOfType =
-                                        (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
-                                        (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
-                                        (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
-                                        (item.type === 'other' && item.id === firstOtherItem?.id);
+                                        // Add section-specific IDs to the first item of each type
+                                        const isFirstOfType =
+                                            (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
+                                            (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
+                                            (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
+                                            (item.type === 'other' && item.id === firstOtherItem?.id);
 
-                                    return (
-                                        <div
-                                            key={itemId}
-                                            data-id={itemId}
-                                            id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
-                                            style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                width: '100%',
-                                                height: `${virtualRow.size}px`,
-                                                transform: `translateY(${virtualRow.start}px)`,
-                                            }}
-                                        >
-                                            <ItemCard
-                                                item={item}
-                                                classId={classId}
-                                                profileId={profile?.id ?? ""}
-                                                color={item.color}
-                                                contextType={item.type}
-                                                addFileToChat={addFileToChat}
-                                                isVisible={isItemVisible || localSearchQuery.length > 0}
-                                                makeDraggable={makeDraggable}
-                                                setViewerMode={setViewerMode}
-                                                fileDocuments={fileDocuments}
-                                                onFileDelete={onFileDelete}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <Text c="dimmed" ta="center" py="md">
-                                {localSearchQuery ? "No results found" : "No content available"}
-                            </Text>
-                        )}
-                    </div>
-                )}
-            </Stack>
+                                        return (
+                                            <div
+                                                key={itemId}
+                                                data-id={itemId}
+                                                id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: `${virtualRow.size}px`,
+                                                    transform: `translateY(${virtualRow.start}px)`,
+                                                }}
+                                            >
+                                                <ItemCard
+                                                    item={item}
+                                                    classId={classId}
+                                                    profileId={profile?.id ?? ""}
+                                                    color={item.color}
+                                                    contextType={item.type}
+                                                    addFileToChat={addFileToChat}
+                                                    isVisible={isItemVisible || localSearchQuery.length > 0}
+                                                    makeDraggable={makeDraggable}
+                                                    setViewerMode={setViewerMode}
+                                                    fileDocuments={fileDocuments}
+                                                    onFileDelete={onFileDelete}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <Text c="dimmed" ta="center" py="md">
+                                    {localSearchQuery ? "No results found" : "No content available"}
+                                </Text>
+                            )}
+                        </div>
+                    )}
+                </Stack>
+            )}
+
+            {/* Hidden file input for manual uploads */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                onChange={(e) => {
+                    e.preventDefault();
+                    if (e.target.files?.length) {
+                        Array.from(e.target.files).forEach(file => handleUploadFile(file));
+                        // Reset the input value after handling files
+                        e.currentTarget.value = '';
+                    }
+                }}
+                accept="application/pdf,video/*,audio/*,image/*,text/*"
+                style={{ display: 'none' }}
+                multiple
+            />
         </Card>
     );
 }

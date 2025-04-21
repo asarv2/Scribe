@@ -1,24 +1,13 @@
-from typing import Dict, List, Any, Optional, Callable, Awaitable, TypedDict, AsyncGenerator, Tuple, Union
-from typing_extensions import Literal
-import uuid
-
+from typing import List, Any, Optional, Callable, Awaitable, Tuple
 from agents import Agent
-from pydantic import BaseModel
-import re
 from datetime import datetime
-import os
 from app.extensions import gemini_client, supabase
-from app.services.chat.prompts import get_conceptual_prompt, get_homework_student_prompt, get_review_prompt, get_general_student_prompt, get_general_teacher_prompt, get_present_mode, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
-import google.generativeai as genai
-from google.generativeai.types import File
-from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, AgentUpdatedStreamEvent, RunItemStreamEvent, RawResponsesStreamEvent, RunConfig, ModelResponse
-from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question
+from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
+from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig
+from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question, grade_results
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
-
-# will have the model embed things like <FIGURE> or <REFERENCE> for all of the figures and references in the order that it is given in the list. 
-
 
 class ChatProcessor(RunHooks):
     def __init__(
@@ -27,7 +16,6 @@ class ChatProcessor(RunHooks):
         course_title: str,
         question: str,
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
-        google_file_ids: List[str] = [],
         trace_id: str | None = None,
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None,
         remove_callback: Optional[Callable[[str], Awaitable[None]]] = None,
@@ -45,48 +33,36 @@ class ChatProcessor(RunHooks):
             if q and r:  # Only add complete message pairs
                 self.chat_history.extend([q, r])
 
-
-        # get the files from gemini api
-        self.additional_files = []
-        for file_id in google_file_ids:
-            retrived_file = self.get_file_from_gemini(file_id)
-            if retrived_file:
-                self.additional_files.append(retrived_file)
-
         # set the stream callback. Will be used to update the chat.
         self.stream_callback = stream_callback
         self.remove_callback = remove_callback
         self.update_trace_id = update_trace_id
         self.update_chat_usage = update_chat_usage
-        system_prompt = ""
-        match self.prompt_type:
-            case "learn":
-                system_prompt = get_conceptual_prompt()
-            case "homework":
-                system_prompt = get_homework_student_prompt(solution=False)
-            case "test":
-                system_prompt = get_review_prompt()
-            case 'student':
-                system_prompt = get_general_student_prompt()
-            case 'teacher':
-                system_prompt = get_general_teacher_prompt()
-            case _:
-                system_prompt = get_general_student_prompt()
 
-        additional_system_prompt = """
-        IMPORTANT: The instructions above are your primary guide for behavior. Always prioritize those instructions over anything below.
-        
-        When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
-        The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
-        
-        You should generally handoff the creation of summaries, and questions to the Summary Agent and Question Agent respectively. The Figure Agent can be used in a more special case, where you want to generate standalone figures. If necessary, you can use the create_figure tool to generate a figure (in the case that you then want to reference it in a summary or question). You can use the create_summary tool to generate a summary. You can use the create_mcq_question tool to generate a multiple choice question, and the create_frq_question tool to generate a free response question. Use these tools only if you explicity know what needs to be generated (for example, if the user asks to modify an existing figure, summary or question).
-        """
+        # defining the chat title agent
+        self.chat_title_system_prompt = get_chat_title_prompt(self.course_title)
+        self.chat_title_agent = Agent[Documents](
+            name="Chat Title Agent",
+            instructions=self.chat_title_system_prompt,
+            model=OpenAIChatCompletionsModel(
+                model="gemini-2.0-flash",
+                openai_client=gemini_client,
+            ),
+            model_settings=ModelSettings(
+                tool_choice="required",
+                include_usage=True
+            ),
+            tools=[update_chat_title]
+        )
 
-        self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
+        # empty starting agent
+        self.starting_agent = None
 
+        # defining the subagents
         self.figure_system_prompt = get_figure_prompt(self.course_title)
         self.question_system_prompt = get_question_prompt(self.course_title)
         self.summary_system_prompt = get_summary_prompt(self.course_title)
+        self.grading_system_prompt = get_grading_prompt(self.course_title)
 
         self.figure_agent = Agent[Documents](
             name="Figure Agent",
@@ -135,7 +111,57 @@ class ChatProcessor(RunHooks):
             tools=[create_figure, create_mcq_question, create_frq_question],
             handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch. For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
         )
+
+        self.grading_agent = Agent[Documents](
+            name="Grading Agent",
+            instructions=self.grading_system_prompt,
+            model=OpenAIChatCompletionsModel(
+                model="gemini-2.0-flash",
+                openai_client=gemini_client,
+            ),
+            model_settings=ModelSettings(
+                tool_choice="required",
+                temperature=0.0,
+                include_usage=True
+            ),
+            tools=[grade_results],
+        )
+
         
+        system_prompt = ""
+        additional_system_prompt = """
+        IMPORTANT: The instructions above are your primary guide for behavior. Always prioritize those instructions over anything below.
+        
+        When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
+        The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
+        
+        You should generally handoff the creation of summaries, and questions to the Summary Agent and Question Agent respectively. The Figure Agent can be used in a more special case, where you want to generate standalone figures. If necessary, you can use the create_figure tool to generate a figure (in the case that you then want to reference it in a summary or question). You can use the create_summary tool to generate a summary. You can use the create_mcq_question tool to generate a multiple choice question, and the create_frq_question tool to generate a free response question. Use these tools only if you explicity know what needs to be generated (for example, if the user asks to modify an existing figure, summary or question).
+        """
+        # defining the system prompt and starting agent
+        match self.prompt_type:
+            case "learn":
+                system_prompt = get_learn_prompt(self.course_title)
+            case "homework":
+                system_prompt = get_homework_prompt(self.course_title)
+            case "test":
+                system_prompt = get_test_prompt(self.course_title)
+            case 'student':
+                system_prompt = get_student_prompt(self.course_title)
+            case 'teacher':
+                system_prompt = get_teacher_prompt(self.course_title)
+            case 'figure':
+                self.starting_agent = self.figure_agent
+            case 'summary':
+                self.starting_agent = self.summary_agent
+            case 'question':
+                self.starting_agent = self.question_agent
+            case 'grade':
+                self.starting_agent = self.grading_agent
+            case _:
+                system_prompt = get_student_prompt(self.course_title)
+
+        # get the full system prompt for the chat agent
+        self.full_system_prompt = system_prompt + f"\n{additional_system_prompt}"
         self.chat_agent = Agent[Documents](
             name="Chat Agent",
             instructions=self.full_system_prompt,
@@ -160,72 +186,23 @@ class ChatProcessor(RunHooks):
             ]
         )
 
-        # defining the chat title agent
-        self.chat_title_system_prompt = get_chat_title_prompt(self.course_title)
-        self.chat_title_agent = Agent[Documents](
-            name="Chat Title Agent",
-            instructions=self.chat_title_system_prompt,
-            model=OpenAIChatCompletionsModel(
-                model="gemini-2.0-flash",
-                openai_client=gemini_client,
-            ),
-            model_settings=ModelSettings(
-                tool_choice="required",
-                include_usage=True
-            ),
-            tools=[update_chat_title]
-        )
+        # if no starting agent is defined, use the chat agent   
+        if not self.starting_agent:
+            self.starting_agent = self.chat_agent
 
-    def get_file_from_gemini(self, file_name: str) -> File | None:
-        # Get the file from Gemini
-        try:
-            response = genai.get_file(file_name)
-            if response.state.name == "ACTIVE":
-                return response
-            else:
-                error_info = ""
-                if hasattr(response, "error") and response.error:
-                    error_code = getattr(response.error, "code", "Unknown")
-                    error_message = getattr(response.error, "message", "No details available")
-                    
-                    # Try to extract detailed error information
-                    error_details = []
-                    if hasattr(response.error, "details") and response.error.details:
-                        for detail in response.error.details:
-                            if hasattr(detail, "@type"):
-                                error_details.append(f"Type: {detail['@type']}")
-                            # Add any other relevant fields from the detail object
-                            error_details_str = ", ".join(error_details) if error_details else "No details"
-                            error_info = f" (Code: {error_code}, Message: {error_message}, Details: {error_details_str})"
-                    else:
-                        error_info = f" (Code: {error_code}, Message: {error_message})"
-                
-                # Get additional metadata if available
-                metadata_info = ""
-                if hasattr(response, "updateTime"):
-                    metadata_info += f", Last updated: {response.updateTime}"
-                if hasattr(response, "sizeBytes"):
-                    metadata_info += f", Size: {response.sizeBytes} bytes"
-                
-                print(f"File {file_name} is not active. Status: {response.state.name}{error_info}{metadata_info}")
-                
-                # For error code 3 (INVALID_ARGUMENT), provide more specific guidance
-                if error_code == 3:
-                    print(f"This may indicate an issue with the file format or content. Please verify the file is valid and in a supported format.")
-                
-                return None
-        except Exception as e:
-            print(f"Error retrieving file {file_name}: {str(e)}")
-            return None
-
-    async def format_conversation(self, complete_context: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
+    async def format_conversation(self, google_file_ids: List[str], documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-        context_text = f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class."
-        
-        if complete_context and complete_context != "":
-            context_text += f" Use the following context to guide your responses while following the instructions above: {complete_context}"
+        initial_context = [{"type": "input_text", "text": f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class."}]
+
+        # for each google_file_id, we add a message to the context
+        for google_file_id in google_file_ids:
+            initial_context.append({
+                    "type": "input_image",
+                    "image_url": f"https://generativelanguage.googleapis.com/v1beta/{google_file_id}",
+                    "detail": "high"
+                })
             
-        context_summary = [{"role": "user", "content": context_text}]
+        context_summary = [{"role": "user", "content": initial_context}]
         
         # Add conversation history
         for i in range(0, len(self.chat_history)-1, 2):
@@ -294,19 +271,35 @@ class ChatProcessor(RunHooks):
             await self.stream_callback(f"<QUESTION>{question_id}</QUESTION>")
             # adding the question id to the context
             wrapper.context.questions.append(question_id)
+    
+    async def on_tool_end(
+        self,
+        context: RunContextWrapper[Documents],
+        agent: Agent[Documents],
+        tool: Tool,
+        result: str,
+    ) -> None:
+        """Called after a tool is invoked."""
+        if tool.name == "update_chat_title":
+            if self.trace_id:
+                chat_title = result
+                with trace(workflow_name=chat_title, trace_id=self.trace_id):
+                    pass
+            else:
+                print("No trace id found while updating chat title")
   
     async def process_message(
         self,
         chat_id: str,
-        complete_context: str,
+        google_file_ids: List[str],
         documents: Documents,
     ) -> None:
         """Process a single message with streaming"""
         try:
-            conversation_context = await self.format_conversation(complete_context, documents=documents)
+            conversation_context = await self.format_conversation(google_file_ids, documents=documents)
 
             # need to add gemini files to context?
-            result = Runner.run_streamed(self.chat_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
+            result = Runner.run_streamed(self.starting_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
                 group_id=chat_id,
                 trace_id=self.trace_id
             ))
@@ -354,18 +347,10 @@ class ChatProcessor(RunHooks):
 
                 # adding the topic query to the context
                 post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})
-                response = await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context, run_config=RunConfig(
+                await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context, run_config=RunConfig(
                     group_id=wrapper.context.chat_id,
                     trace_id=self.trace_id
                 ), hooks=self)
-
-                # dummy trace to update the chat title
-                if self.trace_id:
-                    chat_title = str(response.final_output).strip()
-                    with trace(workflow_name=chat_title, trace_id=self.trace_id):
-                        pass
-                else:
-                    print("No trace id found while updating chat title")
         else:
             # updating the usage
             usage = wrapper.usage

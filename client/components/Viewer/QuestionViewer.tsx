@@ -133,45 +133,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         }
     }, [questions]);
 
-    const handleRetry = async (question: Question) => {
-        try {
-            setLoading(true);
-            if (!question.message) {
-                notifications.show({
-                    title: 'Error generating question',
-                    message: 'Question has no message ID',
-                    color: 'red',
-                });
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append("message_id", question.message);
-            formData.append("question_id", question.id);
-            formData.append("class_id", classId);
-
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate/questions`, {
-                method: 'POST',
-                body: formData
-            });
-
-            notifications.show({
-                title: 'Question generation started',
-                message: 'Questions are being generated',
-                color: 'green',
-            });
-        } catch (error) {
-            console.error(error);
-            notifications.show({
-                title: 'Error generating question',
-                message: 'Error generating question',
-                color: 'red',
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
-
     // Handle answer selection for multiple choice
     const handleAnswerSelect = (questionId: string, value: string) => {
         setSelectedAnswers(prev => {
@@ -389,21 +350,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     <Center style={{ height: '100%' }}>
                         <Loader />
                         <Text ml="md">Generating question {currentIndex + 1} of {questions.length}...</Text>
-                    </Center>
-                );
-            case 'error':
-                return (
-                    <Center style={{ height: '100%', flexDirection: 'column' }}>
-                        <Text c="red" mb="md">Error generating question: {question.generation_error}</Text>
-                        <Button
-                            leftSection={<IconRefresh size={14} />}
-                            color="red"
-                            variant="outline"
-                            onClick={() => handleRetry(question)}
-                            loading={loading}
-                        >
-                            Retry
-                        </Button>
                     </Center>
                 );
             case 'complete':
