@@ -6,6 +6,7 @@ from app.services.upload.models import FileExtractChunk
 from app.config import model_manager
 from PIL import Image
 import io
+import torch
 
 logger = logging.getLogger(__name__)
 
@@ -64,107 +65,121 @@ class FileExtractor:
             # Get the Whisper model
             whisper_model = model_manager.get_whisper_model()
             
-            # Transcribe the audio/video
-            result = whisper_model.transcribe(file_path)
+            # Clear CUDA cache before transcription
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info("Cleared CUDA cache before transcription")
             
-            # Get the segments from the result
-            segments = result.get("segments", [])
-            
-            # Determine if this is a video file
-            is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
-            
-            # Merge segments into 30-second chunks
-            merged_segments = []
-            current_segment = None  # Start with None instead of an empty dict
-            
-            for segment in segments:
-                # If this is the first segment or if adding this segment would exceed 30 seconds
-                if current_segment is None or segment.get("end", 0) - current_segment["start"] > 30:
-                    # If we have text in the current segment, save it
-                    if current_segment and current_segment["text"]:
-                        merged_segments.append(current_segment)
+            # Use a try-finally block to ensure CUDA cache is cleared
+            try:
+                # Transcribe the audio/video with explicit device placement
+                result = whisper_model.transcribe(file_path)
+                
+                # Get the segments from the result
+                segments = result.get("segments", [])
+                
+                # Determine if this is a video file
+                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
+                
+                # Merge segments into 30-second chunks
+                merged_segments = []
+                current_segment = None  # Start with None instead of an empty dict
+                
+                for segment in segments:
+                    # If this is the first segment or if adding this segment would exceed 30 seconds
+                    if current_segment is None or segment.get("end", 0) - current_segment["start"] > 30:
+                        # If we have text in the current segment, save it
+                        if current_segment and current_segment["text"]:
+                            merged_segments.append(current_segment)
+                        
+                        # Start a new segment
+                        current_segment = {
+                            "text": segment.get("text", "").strip(),
+                            "start": segment.get("start", 0),
+                            "end": segment.get("end", 0),
+                            "words": segment.get("words", [])
+                        }
+                    else:
+                        # Append this segment to the current one
+                        current_segment["text"] += " " + segment.get("text", "").strip()
+                        current_segment["end"] = segment.get("end", 0)
+                        if "words" in segment:
+                            current_segment["words"].extend(segment.get("words", []))
+                
+                # Add the last segment if it has content
+                if current_segment and current_segment["text"]:
+                    merged_segments.append(current_segment)
+                
+                # Process each merged segment
+                for i, segment in enumerate(merged_segments):
+                    start_time = segment["start"]
+                    end_time = segment["end"]
+                    text = segment["text"].strip()
                     
-                    # Start a new segment
-                    current_segment = {
-                        "text": segment.get("text", "").strip(),
-                        "start": segment.get("start", 0),
-                        "end": segment.get("end", 0),
-                        "words": segment.get("words", [])
-                    }
-                else:
-                    # Append this segment to the current one
-                    current_segment["text"] += " " + segment.get("text", "").strip()
-                    current_segment["end"] = segment.get("end", 0)
-                    if "words" in segment:
-                        current_segment["words"].extend(segment.get("words", []))
-            
-            # Add the last segment if it has content
-            if current_segment and current_segment["text"]:
-                merged_segments.append(current_segment)
-            
-            # Process each merged segment
-            for i, segment in enumerate(merged_segments):
-                start_time = segment["start"]
-                end_time = segment["end"]
-                text = segment["text"].strip()
-                
-                # Extract frame for video segments or generate waveform for audio
-                img_data = None
-                if is_video:
-                    try:
-                        # Extract frame at the start time of this segment
-                        img_data = self._extract_video_frame(file_path, start_time)
-                    except Exception as e:
-                        logger.error(f"Warning: Could not extract frame at {start_time}s: {e}")
-                else:
-                    # For audio files, generate a waveform visualization
-                    try:
-                        img_data = self._generate_audio_waveform(file_path, start_time, end_time)
-                    except Exception as e:
-                        logger.error(f"Warning: Could not generate waveform for segment at {start_time}s: {e}")
-                
-                # Create chunk with explicit start_time and end_time
-                chunk = FileExtractChunk(
-                    text=text,
-                    page=i + 1,  # Use segment number as page
-                    start_time=start_time,
-                    end_time=end_time,
-                    image_data=img_data,
-                    type='video_chunk' if is_video else 'audio_chunk'
-                )
-                chunks.append(chunk)
-                
-            # If no segments were found, create a single chunk with the full transcript
-            if not chunks and result.get("text"):
-                img_data = None
-                if is_video:
-                    try:
-                        # Extract the first frame for the entire video
-                        img_data = self._extract_video_frame(file_path, 0)
-                    except Exception as e:
-                        logger.error(f"Warning: Could not extract first frame: {e}")
-                else:
-                    # For audio files, generate a waveform for the entire file
-                    try:
-                        duration = result.get("duration", 0)
-                        img_data = self._generate_audio_waveform(file_path, 0, duration)
-                    except Exception as e:
-                        logger.error(f"Warning: Could not generate waveform for audio: {e}")
+                    # Extract frame for video segments or generate waveform for audio
+                    img_data = None
+                    if is_video:
+                        try:
+                            # Extract frame at the start time of this segment
+                            img_data = self._extract_video_frame(file_path, start_time)
+                        except Exception as e:
+                            logger.error(f"Warning: Could not extract frame at {start_time}s: {e}")
+                    else:
+                        # For audio files, generate a waveform visualization
+                        try:
+                            img_data = self._generate_audio_waveform(file_path, start_time, end_time)
+                        except Exception as e:
+                            logger.error(f"Warning: Could not generate waveform for segment at {start_time}s: {e}")
                     
-                # For a single chunk, set start_time to 0 and end_time to the duration if available
-                duration = result.get("duration", 0)
-                chunk = FileExtractChunk(
-                    text=result.get("text", "").strip(),
-                    page=1,
-                    start_time=0,  # Explicitly set start_time to 0
-                    end_time=duration,  # Set end_time to duration
-                    image_data=img_data,
-                    type='video_chunk' if is_video else 'audio_chunk'
-                )
-                chunks.append(chunk)
-                
+                    # Create chunk with explicit start_time and end_time
+                    chunk = FileExtractChunk(
+                        text=text,
+                        page=i + 1,  # Use segment number as page
+                        start_time=start_time,
+                        end_time=end_time,
+                        image_data=img_data,
+                        type='video_chunk' if is_video else 'audio_chunk'
+                    )
+                    chunks.append(chunk)
+                    
+                # If no segments were found, create a single chunk with the full transcript
+                if not chunks and result.get("text"):
+                    img_data = None
+                    if is_video:
+                        try:
+                            # Extract the first frame for the entire video
+                            img_data = self._extract_video_frame(file_path, 0)
+                        except Exception as e:
+                            logger.error(f"Warning: Could not extract first frame: {e}")
+                    else:
+                        # For audio files, generate a waveform for the entire file
+                        try:
+                            duration = result.get("duration", 0)
+                            img_data = self._generate_audio_waveform(file_path, 0, duration)
+                        except Exception as e:
+                            logger.error(f"Warning: Could not generate waveform for audio: {e}")
+                        
+                    # For a single chunk, set start_time to 0 and end_time to the duration if available
+                    duration = result.get("duration", 0)
+                    chunk = FileExtractChunk(
+                        text=result.get("text", "").strip(),
+                        page=1,
+                        start_time=0,  # Explicitly set start_time to 0
+                        end_time=duration,  # Set end_time to duration
+                        image_data=img_data,
+                        type='video_chunk' if is_video else 'audio_chunk'
+                    )
+                    chunks.append(chunk)
+            finally:
+                # Clear CUDA cache after transcription
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+                    logger.info("Cleared CUDA cache after transcription")
+        
         except Exception as e:
             logger.error(f"Error parsing audio/video: {str(e)}")
+            # Return empty list instead of crashing
+            return []
         
         return chunks
 

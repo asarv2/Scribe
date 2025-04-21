@@ -31,7 +31,7 @@ class GoogleFiles:
             ).in_("id", file_ids).execute()
             
             if not files_response.data:
-                logger.error(f"No files found for IDs: {file_ids}")
+                logger.warning(f"No files found for IDs: {file_ids}")
                 return []
             
             files_data = []

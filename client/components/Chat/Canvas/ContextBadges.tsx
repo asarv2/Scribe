@@ -135,7 +135,16 @@ export const ContextBadges = memo(({
         range?: string
     ): string => {
         const file = files?.find(f => f.id === doc?.file);
-        return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
+        if (file?.type === 'video' || file?.type === 'audio') {
+            const formatTime = (seconds: number) => {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            };  
+            return `${file?.title ?? 'File'} ${formatTime(doc?.start_time ?? 0)} - ${formatTime(doc?.end_time ?? 0)}`;
+        } else {
+            return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
+        }
     };
 
     const renderDocumentBadges = (documentIds: string[]) => {

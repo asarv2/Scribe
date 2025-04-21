@@ -15,7 +15,8 @@ from concurrent.futures import ThreadPoolExecutor
 from app.services.upload.compress import FileCompressor
 from app.services.upload.save import FileSaver
 from app.services.upload.extract import FileExtractor
-from app.config import model_manager  # Import the model manager
+from app.config import model_manager
+from app.services.upload.models import FileExtractChunk
 
 load_dotenv()
 
@@ -134,7 +135,11 @@ class FileProcessor:
             # Process tasks sequentially to avoid CUDA issues
             # First extract and save documents (this uses the Whisper model)
             logger.info(f"Extracting content from: {compressed_file_path}")
-            results = self.extractor.extract_file(compressed_file_path, file_type)
+            
+            # Isolate Whisper model usage in a separate function call
+            # This helps prevent CUDA context issues
+            results = await self._extract_file_content(compressed_file_path, file_type)
+            
             logger.info(f"Extraction complete: {len(results)} chunks extracted")
 
             # Clear CUDA cache after extraction
@@ -202,3 +207,8 @@ class FileProcessor:
             
             # Return error
             return False, f"Error processing file: {str(e)}"
+
+    async def _extract_file_content(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+        """Isolate extraction in a separate method to better manage CUDA resources"""
+        # Run extraction in a separate thread to avoid blocking the event loop
+        return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)

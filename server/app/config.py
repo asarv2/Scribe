@@ -92,6 +92,16 @@ class ModelManager:
         if not model:
             raise RuntimeError("No Whisper model available")
         
+        # Ensure model is in eval mode and on the correct device
+        model.eval()
+        
+        # Check if model is on the expected device
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        if next(model.parameters()).device.type != device:
+            logger.warning(f"Model was on {next(model.parameters()).device.type}, moving to {device}")
+            model = model.to(device)
+            MODEL_REGISTRY["whisper_model"] = model
+        
         return model
 
 # Initialize model manager

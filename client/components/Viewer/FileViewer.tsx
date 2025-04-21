@@ -16,8 +16,9 @@ import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getFile } from "@/utils/queries/get-file";
 import Latex from "../Latex";
 import { IconEye, IconZoomIn } from "@tabler/icons-react";
-import { ChatMessage, ViewerMode } from "@/types";
+import { ChatMessage, Document, ViewerMode } from "@/types";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
+import { getFiles } from "@/utils/queries/get-files";
 
 type FileViewerProps = {
     classId: string;
@@ -47,6 +48,11 @@ export default function FileViewer({
         queryFn: () => getClass(supabase, classId)
     })
 
+    const { data: files, isLoading: loadingFiles } = useQuery({
+        queryKey: ["files", classId],
+        queryFn: () => getFiles(supabase, [classId])
+    })
+
     const { data: documents, isLoading: loadingDocuments } = useQuery({
         queryKey: ["fileDocuments", classId, fileId],
         queryFn: () => getFileDocuments(supabase, fileId ? [fileId] : []),
@@ -65,6 +71,20 @@ export default function FileViewer({
         }
     }
 
+    const getPageLabel = (document: Document) => {
+        const file = files?.find(f => document.file === f.id);
+        if (!file) return `Page ${document.page}`;
+        if (file.type === 'video' || file.type === 'audio') {
+            const formatTime = (seconds: number) => {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            };
+            return `${formatTime(document.start_time ?? 0)} - ${formatTime(document.end_time ?? 0)}`;
+        } else {
+            return `Page ${document.page}`;
+        }
+    }
 
     useEffect(() => {
         if (filteredDocuments && filteredDocuments.length > 0) {
@@ -205,7 +225,7 @@ export default function FileViewer({
                                                     textShadow: "0px 0px 4px rgba(0,0,0,0.5)"
                                                 }}
                                             >
-                                                Page {doc.page}
+                                                {getPageLabel(doc)}
                                             </Text>
                                         </Box>
                                     </Box>
