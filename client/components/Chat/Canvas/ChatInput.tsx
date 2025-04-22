@@ -27,14 +27,8 @@ interface ChatInputProps {
   onSend: () => void;
   onRemoveFile: (fileId: string) => void;
   onRemoveDocument: (documentId: string) => void;
-  onScrollToSection: (sectionId: string) => void;
-  viewerMode: ViewerMode;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>
-  expandedSections: Set<string>;
-  toggleSection: (section: string) => void;
-  recordedVideos: RecordedVideo[];
-  setRecordedVideos: React.Dispatch<React.SetStateAction<RecordedVideo[]>>;
 }
 
 export const ChatInput = memo(({
@@ -45,18 +39,11 @@ export const ChatInput = memo(({
   onSend,
   onRemoveFile,
   onRemoveDocument,
-  onScrollToSection,
-  viewerMode,
   setViewerMode,
-  expandedSections,
-  toggleSection,
   setActiveChat,
-  recordedVideos,
-  setRecordedVideos,
   isInitializing = false
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
-  const queryClient = useQueryClient();
 
   const isMobile = useMediaQuery('(max-width: 768px)');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -82,11 +69,6 @@ export const ChatInput = memo(({
     enabled: !!user?.id
   });
 
-  const { data: classData, isLoading: classDataLoading } = useQuery({
-    queryKey: ["class", classId],
-    queryFn: () => getClass(supabase, classId)
-  });
-
 
   const { data: files, isLoading: loadingFiles } = useQuery({
     queryKey: ["files", classId],
@@ -101,7 +83,7 @@ export const ChatInput = memo(({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (!loading && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
+      if (!loading && activeChat.prompt.trim()) {
         onSend();
       }
     }
@@ -259,7 +241,7 @@ export const ChatInput = memo(({
   const renderLeftChatIcons = () => {
     const newChat = chatId === "new"
 
-    if (isInitializing || classDataLoading) {
+    if (isInitializing) {
       return (
         <>
           <Skeleton height={36} width={100} radius="xl" />
@@ -372,39 +354,6 @@ export const ChatInput = memo(({
         }
 
         {
-          newChat && (isMobile ?
-            <Tooltip label="Grade">
-              <ActionIcon
-                onClick={() => setActiveChat((prev) => ({
-                  ...prev,
-                  chatType: prev.chatType === 'grade' ? (activeChat.teacher ? 'professor' : 'student') : 'grade'
-                }))}
-                size="lg"
-                color={"orange"}
-                variant={activeChat.chatType === 'grade' ? "light" : "subtle"}
-                style={{
-                  border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
-                }}
-              >
-                <IconPresentation size={20} />
-              </ActionIcon>
-            </Tooltip> : <Button
-              color={"orange"}
-              variant={activeChat.chatType === 'grade' ? "light" : "subtle"}
-              size="sm"
-              leftSection={<IconPresentation size={16} />}
-              radius="xl"
-              onClick={() => setActiveChat((prev) => ({
-                ...prev,
-                chatType: prev.chatType === 'grade' ? (activeChat.teacher ? 'professor' : 'student') : 'grade'
-              }))}
-              style={{
-                border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
-              }}
-            >Grade</Button>)
-        }
-
-        {
           newChat && activeChat.teacher && (isMobile ?
             <Tooltip label="Figure">
               <ActionIcon
@@ -502,6 +451,39 @@ export const ChatInput = memo(({
               }}
             >Question</Button>)
         }
+
+        {
+          newChat && (isMobile ?
+            <Tooltip label="Grade">
+              <ActionIcon
+                onClick={() => setActiveChat((prev) => ({
+                  ...prev,
+                  chatType: prev.chatType === 'grade' ? (activeChat.teacher ? 'professor' : 'student') : 'grade'
+                }))}
+                size="lg"
+                color={"orange"}
+                variant={activeChat.chatType === 'grade' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
+                }}
+              >
+                <IconPresentation size={20} />
+              </ActionIcon>
+            </Tooltip> : <Button
+              color={"orange"}
+              variant={activeChat.chatType === 'grade' ? "light" : "subtle"}
+              size="sm"
+              leftSection={<IconPresentation size={16} />}
+              radius="xl"
+              onClick={() => setActiveChat((prev) => ({
+                ...prev,
+                chatType: prev.chatType === 'grade' ? (activeChat.teacher ? 'professor' : 'student') : 'grade'
+              }))}
+              style={{
+                border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
+              }}
+            >Grade</Button>)
+        }
       </>
     )
   }
@@ -534,13 +516,13 @@ export const ChatInput = memo(({
             onClick={onSend}
             size="lg"
             loading={loading}
-            disabled={!activeChat.prompt.trim() && recordedVideos.length === 0}
+            disabled={!activeChat.prompt.trim()}
             variant="transparent"
             color="blue"
             style={{
               border: 'none',
               background: 'transparent',
-              opacity: (!activeChat.prompt.trim() && recordedVideos.length === 0) ? 0.5 : 1
+              opacity: (!activeChat.prompt.trim()) ? 0.5 : 1
             }}
             classNames={{
               root: classes.sendButton
@@ -599,7 +581,7 @@ export const ChatInput = memo(({
         }
 
         // Send message if there's content and not loading or transcribing
-        if (!loading && !transcribing && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
+        if (!loading && !transcribing && (activeChat.prompt.trim())) {
           onSend();
         }
         return;
@@ -614,17 +596,17 @@ export const ChatInput = memo(({
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [activeChat.prompt, loading, onSend, recordedVideos.length, isRecording, transcribing]);
+  }, [activeChat.prompt, loading, onSend, isRecording, transcribing]);
 
   // Add useEffect to send message after transcription completes if Enter was pressed
   useEffect(() => {
     if (enterPressedDuringRecording && !transcribing && !isRecording && !recordingMode) {
-      if (!loading && (activeChat.prompt.trim() || recordedVideos.length > 0)) {
+      if (!loading && (activeChat.prompt.trim())) {
         onSend();
       }
       setEnterPressedDuringRecording(false);
     }
-  }, [enterPressedDuringRecording, transcribing, isRecording, recordingMode, loading, activeChat.prompt, recordedVideos.length, onSend]);
+  }, [enterPressedDuringRecording, transcribing, isRecording, recordingMode, loading, activeChat.prompt, onSend]);
 
   return (
     <Stack gap={"md"}>
@@ -643,12 +625,7 @@ export const ChatInput = memo(({
           classId={classId}
           onRemoveFile={onRemoveFile}
           onRemoveDocument={onRemoveDocument}
-          onScrollToSection={onScrollToSection}
           setViewerMode={setViewerMode}
-          expandedSections={expandedSections}
-          toggleSection={toggleSection}
-          recordedVideos={recordedVideos}
-          setRecordedVideos={setRecordedVideos}
         />
       </Box>}
 

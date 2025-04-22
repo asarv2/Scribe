@@ -1,39 +1,38 @@
 from typing import List, Literal, TypedDict
 
+class Grade(TypedDict):
+    id: str
+    title: str
+    results: List[str]
+    feedback: List[str]
+    references: List[str]
+    figures: List[str]
 
 class Summary(TypedDict):
     id: str
+    title: str
     preamble: str
     content: str
     conclusion: str
-    lecture_references: List[str]
-    chapter_references: List[str]
-    chapter_exercise_references: List[str]
-    homework_exercise_references: List[str]
+    references: List[str]
     figures: List[str]
 
 class MCQQuestion(TypedDict):
     id: str
+    title: str
     question: str
     question_type: Literal["mcq"]
     options: List[str]
     answers: List[str]
     explanations: List[str]
-    tags: List[str]
-    lecture_references: List[str]
-    chapter_references: List[str]
-    chapter_exercise_references: List[str]
-    homework_exercise_references: List[str]
+    references: List[str]
     figures: List[str]
 
 class FRQQuestion(TypedDict):
     id: str
+    title: str
     question: str
     question_type: Literal["frq"]
     solution: str
-    tags: List[str]
-    lecture_references: List[str]
-    chapter_references: List[str]
-    chapter_exercise_references: List[str]
-    homework_exercise_references: List[str]
+    references: List[str]
     figures: List[str]

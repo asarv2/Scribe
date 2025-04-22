@@ -11,7 +11,7 @@ import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 import { Avatar, Badge, Flex, Text } from '@mantine/core';
 import { visit } from 'unist-util-visit';
-import { Document } from '@/types';
+import { CONTENT_COLORS, Document } from '@/types';
 import { IconChevronRight } from '@tabler/icons-react';
 import { getFiles } from '@/utils/queries/get-files';
 import { useQuery } from '@tanstack/react-query';
@@ -24,17 +24,8 @@ import { getPageRanges } from '@/utils/chat/chat-helpers';
 interface LatexProps {
     children: string;
     classId?: string;
-    handleEnhancedDocumentClick?: (contextType: 'files', contextId: string, documentId?: string) => void;
+    handleEnhancedDocumentClick?: (fileId: string, documentId?: string) => void;
 }
-
-// Define consistent colors for different content types
-const CONTENT_COLORS = {
-    lecture: 'blue',    // matches badge color
-    textbook: 'green',   // matches badge color
-    homework: 'orange', // matches badge color
-    rubric: 'yellow', // matches badge color
-    other: 'violet',     // now matches badge color in ContextBadges
-} as const;
 
 export default function Latex({ children, classId, handleEnhancedDocumentClick }: LatexProps) {
     const supabase = useSupabaseBrowser();
@@ -82,11 +73,11 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
     };
 
     const renderBadges = (documents: Document[]) => {
-        // find all of the distinct lectures and chapters in the group
+        // find all of the distinct files in the group
         const groupFiles = Array.from(new Set(documents.filter(doc => doc && doc.file !== null).map(doc => doc.file).filter((fileId) => fileId !== null)))
-        // get the page ranges for each lecture and chapter
+        // get the page ranges for each file
         const filePageRanges = groupFiles.map(file => getPageRanges(documents.filter(doc => doc && doc.file === file))).flat()
-        // combine the page ranges for each lecture and chapter
+        // combine the page ranges for each file
         const allDocumentPageRanges = [...filePageRanges]
 
         return (
@@ -110,7 +101,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                             }}
                             onClick={() => {
                                 if (pageRange.startDocument?.file) {
-                                    handleEnhancedDocumentClick('files', pageRange.startDocument.file, pageRange.startDocument.id);
+                                    handleEnhancedDocumentClick(pageRange.startDocument.file, pageRange.startDocument.id);
                                 }
                             }}
                         >
@@ -126,11 +117,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
 
     // Preprocess the text to replace all tag types with custom HTML
     const processedText = children
-        .replace(/::lecture{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="lecture" data-tag-id="$1"></span>')
-        .replace(/::chapter{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="chapter" data-tag-id="$1"></span>')
         .replace(/::file{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="file" data-tag-id="$1"></span>')
-        .replace(/::exercise{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="exercise" data-tag-id="$1"></span>')
-        .replace(/::problem{id=([a-zA-Z0-9,-]+)}/g, '<span class="tag-badge" data-tag-type="problem" data-tag-id="$1"></span>')
         .replace(/\n/g, '  \n');
 
     return (
@@ -160,7 +147,6 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                     td: ({ children }) => <td className="prose-td">{children}</td>,
                     span: (props: any) => {
                         if (props.className === 'tag-badge' && props['data-tag-id'] && classId) {
-                            const tagType = props['data-tag-type'] || 'lecture';
                             const tagIds = props['data-tag-id'].split(',');
 
                             // find documents and exercises for each tag id

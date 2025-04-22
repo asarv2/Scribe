@@ -95,6 +95,7 @@ export type Database = {
           root_folder: string | null
           saved: boolean
           students: string[]
+          syllabus: string | null
           test_prep_mode_enabled: boolean
           textbook_enabled: boolean
           textbook_prompt: string
@@ -127,6 +128,7 @@ export type Database = {
           root_folder?: string | null
           saved?: boolean
           students?: string[]
+          syllabus?: string | null
           test_prep_mode_enabled?: boolean
           textbook_enabled?: boolean
           textbook_prompt?: string
@@ -159,6 +161,7 @@ export type Database = {
           root_folder?: string | null
           saved?: boolean
           students?: string[]
+          syllabus?: string | null
           test_prep_mode_enabled?: boolean
           textbook_enabled?: boolean
           textbook_prompt?: string
@@ -402,7 +405,7 @@ export type Database = {
           deleted: boolean
           expires: string | null
           extension: string
-          file_date: string
+          file_date: string | null
           file_names: string[]
           file_number: number
           file_size: number
@@ -427,7 +430,7 @@ export type Database = {
           deleted?: boolean
           expires?: string | null
           extension?: string
-          file_date?: string
+          file_date?: string | null
           file_names?: string[]
           file_number?: number
           file_size?: number
@@ -452,7 +455,7 @@ export type Database = {
           deleted?: boolean
           expires?: string | null
           extension?: string
-          file_date?: string
+          file_date?: string | null
           file_names?: string[]
           file_number?: number
           file_size?: number
@@ -533,29 +536,47 @@ export type Database = {
         Row: {
           created_at: string
           feedback: string[]
+          figures: string[]
           file: string | null
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
           id: string
-          questions: string[]
+          last_generation_attempt: string | null
+          message: string
+          references: Json[]
           results: string[]
           rubric: string | null
+          title: string
         }
         Insert: {
           created_at?: string
           feedback?: string[]
+          figures?: string[]
           file?: string | null
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
-          questions?: string[]
+          last_generation_attempt?: string | null
+          message: string
+          references?: Json[]
           results?: string[]
           rubric?: string | null
+          title?: string
         }
         Update: {
           created_at?: string
           feedback?: string[]
+          figures?: string[]
           file?: string | null
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
           id?: string
-          questions?: string[]
+          last_generation_attempt?: string | null
+          message?: string
+          references?: Json[]
           results?: string[]
           rubric?: string | null
+          title?: string
         }
         Relationships: [
           {
@@ -563,6 +584,13 @@ export type Database = {
             columns: ["file"]
             isOneToOne: false
             referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grades_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
           {
@@ -582,6 +610,7 @@ export type Database = {
           chapter_references: string[]
           chapters: string[]
           chat: string | null
+          class: string
           created_at: string
           documents: string[]
           file_references: string[]
@@ -609,6 +638,7 @@ export type Database = {
           chapter_references?: string[]
           chapters?: string[]
           chat?: string | null
+          class?: string
           created_at?: string
           documents?: string[]
           file_references?: string[]
@@ -636,6 +666,7 @@ export type Database = {
           chapter_references?: string[]
           chapters?: string[]
           chat?: string | null
+          class?: string
           created_at?: string
           documents?: string[]
           file_references?: string[]
@@ -662,6 +693,13 @@ export type Database = {
             columns: ["chat"]
             isOneToOne: false
             referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]
@@ -759,6 +797,7 @@ export type Database = {
         Row: {
           class: string | null
           created_at: string
+          deleted: boolean
           description: string | null
           id: string
           position_x: number | null
@@ -768,6 +807,7 @@ export type Database = {
         Insert: {
           class?: string | null
           created_at?: string
+          deleted?: boolean
           description?: string | null
           id?: string
           position_x?: number | null
@@ -777,6 +817,7 @@ export type Database = {
         Update: {
           class?: string | null
           created_at?: string
+          deleted?: boolean
           description?: string | null
           id?: string
           position_x?: number | null

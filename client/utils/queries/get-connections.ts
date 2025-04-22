@@ -1,19 +1,7 @@
 import { Objective, Outcome, TypedSupabaseClient } from "../../types";
 
 // Get all outcomes for a class
-export async function getOutcomes(client: TypedSupabaseClient, classId: string): Promise<Outcome[]> {
-  const { data, error } = await client
-    .from("outcomes")
-    .select("*")
-    .eq("class", classId);
 
-  if (error) {
-    console.error("Error fetching outcomes:", error);
-    return [];
-  }
-
-  return data || [];
-}
 
 // Get all objectives for a class
 export async function getObjectives(client: TypedSupabaseClient, classId: string): Promise<Objective[]> {

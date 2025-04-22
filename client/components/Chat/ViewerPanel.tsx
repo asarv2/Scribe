@@ -14,6 +14,7 @@ import { getFiles } from "@/utils/queries/get-files";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import DeleteFileModal from "../Delete/DeleteFileModal";
+import FileSettingsModal from "./FileSettingsModal";
 
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
@@ -68,15 +69,6 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
         }
     };
 
-    const renderExpiresAt = (fileId: string) => {
-        const file = files?.find(f => f.id === fileId);
-        return file && file.expires ? (
-            <Text size="xs" fw={500} c="red" truncate="end">
-                Expires at {new Date(file.expires).toLocaleString()}
-            </Text>
-        ) : null;
-    }
-
     return (
         <Card
             shadow="sm"
@@ -123,18 +115,23 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                         >
                             {getViewerTitle()}
                         </Text>
-                        {viewerMode.fileId && renderExpiresAt(viewerMode.fileId)}
                     </Stack>
-                    <DeleteFileModal
-                        fileId={viewerMode.fileId ?? ""}
-                        classId={classId}
-                        onDelete={() => {
-                            setViewerMode(prev => ({
-                                ...prev,
-                                active: false,
-                            }));
-                        }}
-                    />
+                    <Group gap={2}>
+                        <FileSettingsModal
+                            fileId={viewerMode.fileId ?? ""}
+                            classId={classId}
+                        />
+                        <DeleteFileModal
+                            fileId={viewerMode.fileId ?? ""}
+                            classId={classId}
+                            onDelete={() => {
+                                setViewerMode(prev => ({
+                                    ...prev,
+                                    active: false,
+                                }));
+                            }}
+                        />
+                    </Group>
                 </Group>
                 <>
                     <Box style={{ flex: 1, overflow: 'hidden' }}>

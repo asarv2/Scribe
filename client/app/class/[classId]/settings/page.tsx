@@ -6,28 +6,41 @@
  */
 "use client"
 import { ClassLayout } from "@/components/Class/ClassLayout";
-import { Container, Group, Text, Paper } from "@mantine/core";
+import { Container, Group, Text, Paper, Stack, Box, Divider } from "@mantine/core";
 import Management from "@/components/Account/Management";
 import { use } from "react";
 import DeleteClassModal from "@/components/Delete/DeleteClassModal";
+import Outcomes from "@/components/Account/Outcomes";
+import AddOutcomeModal from "@/components/Account/AddOutcomeModal";
 
 export default function SettingsPage({ params }: { params: Promise<{ classId: string }> }) {
   const { classId } = use(params);
 
   return <ClassLayout classId={classId}>
     <Container fluid>
-      <Group justify="space-between">
-        <Text size="xl" fw={700}>Settings</Text>
-        <DeleteClassModal classId={classId} />
-      </Group>
+      <Stack>
+        <Box>
+          <Group justify="space-between">
+            <Text size="xl" fw={700}>Settings</Text>
+            <DeleteClassModal classId={classId} />
+          </Group>
 
-      <Paper p="md" withBorder mt="md">
-        <Management classId={classId} />
-      </Paper>
 
-      {/* <Paper p="md" withBorder mt="md">
-        <Onedrive classId={classId} />
-      </Paper> */}
+          <Management classId={classId} />
+
+        </Box>
+
+        <Divider />
+
+        <Box>
+          <Group justify="space-between">
+            <Text size="xl" fw={700}>Outcomes</Text>
+            <AddOutcomeModal classId={classId} />
+          </Group>
+
+          <Outcomes classId={classId} />
+        </Box>
+      </Stack>
     </Container>
   </ClassLayout>
 }

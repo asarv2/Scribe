@@ -108,6 +108,7 @@ export default function DeleteClassModal({ classId }: { classId: string }) {
             onClose={close}
             title={`Delete ${classData?.title}`}
             size={"md"}
+            centered
         >
             <Stack>
                 <Text size="sm">

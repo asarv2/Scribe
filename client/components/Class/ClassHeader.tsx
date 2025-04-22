@@ -51,18 +51,18 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
 
     const router = useRouter();
 
-    const { data: user } = useQuery({
+    const { data: user, isLoading: userLoading } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
     })
 
-    const { data: profile } = useQuery({
+    const { data: profile, isLoading: profileLoading } = useQuery({
         queryKey: ["profile", user?.id],
         queryFn: () => getProfile(supabase, user!.id),
         enabled: !!user
     })
 
-    const { data: classData } = useQuery({
+    const { data: classData, isLoading: classDataLoading } = useQuery({
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase),
     })
@@ -191,7 +191,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
 
     const renderClassSelector = () => {
         const hasNoClasses = getFilteredClasses(profile, classData).length === 0;
-        return showClasses && (
+        return showClasses && !userLoading && !profileLoading && !classDataLoading && (
             <Group pt={4}>
                 {hasNoClasses ? <Button
                     onClick={open}
@@ -236,6 +236,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                     onClose={close}
                     title={profile && ((profile.professor || profile.admin) && !studentMode) ? "Add New Class" : "Join New Class"}
                     size="lg"
+                    centered
                 >
                     <Stack gap="md">
                         {profile && ((profile.professor || profile.admin) && !studentMode) ? (

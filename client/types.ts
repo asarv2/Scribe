@@ -20,6 +20,7 @@ export type Code = Database[SchemaName]["Tables"]["codes"]["Row"];
 export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"];
 export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"];
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"];
+export type Grade = Database[SchemaName]["Tables"]["grades"]["Row"];
 
 export type File = Database[SchemaName]["Tables"]["files"]["Row"];
 
@@ -62,3 +63,26 @@ export interface OneDriveFolder {
     children?: OneDriveFolder[];
     level?: number;
 }
+
+export interface ImportOutcomesResult {
+    class_name: string;
+    class_code: string;
+    class_description: string;
+    outcomes: string[];
+}
+
+export const CONTENT_COLORS: Record<ContentType, string> = {
+    lecture: 'blue',
+    textbook: 'green',
+    homework: 'orange',
+    rubric: 'yellow',
+    other: 'violet',
+};
+
+export const CONTENT_PLURAL: Record<ContentType, string> = {
+    lecture: 'Lectures',
+    textbook: 'Textbooks',
+    homework: 'Homeworks',
+    rubric: 'Rubrics',
+    other: 'Files',
+};

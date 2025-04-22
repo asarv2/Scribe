@@ -22,7 +22,7 @@ interface FigureViewerProps {
   classId: string;
   viewerMode: ViewerMode;
   fileDocuments: Document[],
-  handleEnhancedDocumentClick: (contextType: 'files', contextId: string, documentId?: string) => void;
+  handleEnhancedDocumentClick: (fileId: string, documentId?: string) => void;
   full?: boolean;
 }
 
@@ -176,6 +176,7 @@ export default function FigureViewer({
           backgroundOpacity: 0.55,
           blur: 3,
         }}
+        centered
       >
         <Box
           p="md"

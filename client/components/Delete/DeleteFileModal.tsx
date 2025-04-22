@@ -11,7 +11,7 @@ import { useState } from "react"
 import { notifications } from "@mantine/notifications"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { ContentType, Profile } from "@/types"
+import { ContentType, File, Profile } from "@/types"
 import { deleteFile } from "@/utils/services/file"
 import { getFile } from "@/utils/queries/get-file"
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser"
@@ -95,9 +95,24 @@ export default function DeleteFileModal({ fileId, classId, onDelete }: DeleteFil
         }
     }
 
+    const getDeleteMessage = (file: File) => {
+        switch (file.content_type) {
+            case 'lecture':
+                return `Delete Lecture`
+            case 'homework':
+                return `Delete Homework`
+            case 'rubric':
+                return `Delete Rubric`
+            case 'textbook':
+                return `Delete Textbook`
+            default:
+                return `Delete File`
+        }
+    }
+
     return file && profile && ((profile.admin || profile.professor) && !studentMode) && (
         <>
-            <Tooltip label={`Delete ${file.content_type.charAt(0).toUpperCase() + file.content_type.slice(1)}`}>
+            <Tooltip label={getDeleteMessage(file)}>
                 <ActionIcon
                     size="lg"
                     variant="subtle"

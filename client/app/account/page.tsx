@@ -64,25 +64,8 @@ export default function AccountPage() {
     const router = useRouter();
     const supabase = useSupabaseBrowser()
 
-    // Replace the single state variables with a state object keyed by class ID
-    const [classPrompts, setClassPrompts] = useState<Record<string, {
-        lecture: string;
-        textbook: string;
-        homework: string;
-    }>>({});
-    const [saveLoading, setSaveLoading] = useState<Record<string, boolean>>({});
     const [deleteModalOpened, setDeleteModalOpened] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
-
-    const handlePromptChange = (classId: string, type: 'lecture' | 'textbook' | 'homework', value: string) => {
-        setClassPrompts(prev => ({
-            ...prev,
-            [classId]: {
-                ...prev[classId],
-                [type]: value
-            }
-        }));
-    };
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -240,21 +223,6 @@ export default function AccountPage() {
             setDeleteModalOpened(false);
         }
     };
-
-    // Initialize prompts when classes data is loaded
-    useEffect(() => {
-        if (classes) {
-            const initialPrompts: Record<string, { lecture: string; textbook: string; homework: string }> = {};
-            classes.forEach(classItem => {
-                initialPrompts[classItem.id] = {
-                    lecture: classItem.lecture_prompt || '',
-                    textbook: classItem.textbook_prompt || '',
-                    homework: classItem.homework_prompt || ''
-                };
-            });
-            setClassPrompts(initialPrompts);
-        }
-    }, [classes]);
 
     return (
         <ClassLayout classId={null} showClasses={false}>

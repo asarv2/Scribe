@@ -4,11 +4,11 @@ from datetime import datetime
 from app.extensions import get_supabase, get_gemini
 from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig
-from app.services.chat.tools import create_figure, create_figure_matplotlib, create_summary, update_chat_title, create_frq_question, create_mcq_question, grade_results
+from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question, classify_grade_files, grade_results
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
-
+import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -130,7 +130,7 @@ class ChatProcessor(RunHooks):
                 temperature=0.0,
                 include_usage=True
             ),
-            tools=[grade_results],
+            tools=[classify_grade_files, grade_results],
         )
 
         
@@ -189,6 +189,7 @@ class ChatProcessor(RunHooks):
                 self.figure_agent,
                 self.summary_agent,
                 self.question_agent,
+                self.grading_agent
             ]
         )
 
@@ -293,6 +294,11 @@ class ChatProcessor(RunHooks):
                     pass
             else:
                 logger.warning("No trace id found while updating chat title")
+        elif tool.name == "classify_grade_files":
+            grade_ids = json.loads(result)
+            # we can add all of the grade ids to the message
+            for grade_id in grade_ids:
+                await self.stream_callback(f"<GRADE>{grade_id}</GRADE>")
   
     async def process_message(
         self,

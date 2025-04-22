@@ -3,7 +3,10 @@ app/env
 uploads
 classes
 cache
-**/**/__pycache__/
 
-# ignore all Python bytecode files
-**/*.pyc
+# Byte‑compiled / optimized / DLL files
+__pycache__/
+**/__pycache__/
+
+# Compiled Python files
+*.py[cod]

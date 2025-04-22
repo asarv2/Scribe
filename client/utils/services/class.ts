@@ -24,6 +24,7 @@ export const updateClass = async (
     title: string,
     class_code: string,
     course_description: string,
+    syllabus: string | null
 ) => {
     const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
@@ -33,6 +34,7 @@ export const updateClass = async (
             title,
             class_code,
             course_description,
+            syllabus
         })
         .eq("id", classId);
     if (error) {

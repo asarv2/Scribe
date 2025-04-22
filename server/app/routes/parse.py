@@ -1,21 +1,57 @@
+import logging
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 import tempfile
 import os
 import torch
 from app.config import model_manager
 from app.services.parse.models import TranscriptionResponse
-
+from app.services.parse.main import FileParser
+from app.extensions import get_supabase
 
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
 
 @router.post("/syllabus")
-async def transcribe_syllabus(
-    file_id: str = Form(...)
+async def parse_syllabus(
+    class_id: str = Form(...)
 ):
-    # TODO: complete this
-    # transcribe the syllabus and get a result that can be parsed into the class. Will find the basic information, and create learning outcomes.
-    return {"syllabus": file_id}
+    try:
+        supabase_client = get_supabase()
+
+        # getting the class in supabase
+        class_result = await supabase_client.table("classes").select("*").eq("id", class_id).execute()
+        class_data = class_result.data[0]
+
+        # save non-empty data, so we know what to update
+        prev_class_name = class_data.get("title")
+        prev_class_code = class_data.get("class_code")
+        prev_class_description = class_data.get("course_description")
+        syllabus_file_id = class_data.get("syllabus")
+
+        if syllabus_file_id is None:
+            raise HTTPException(status_code=400, detail="No syllabus file found")
+
+        # get existing outcomes
+        outcomes_result = await supabase_client.table("outcomes").select("*").eq("class", class_id).execute()
+        outcomes = outcomes_result.data
+        prev_outcomes = [outcome.get("title") for outcome in outcomes]
+
+        # getting the google file in supabase
+        google_file_result = await supabase_client.table("google_files").select("*").eq("file", syllabus_file_id).execute()
+        google_file_data = google_file_result.data[0]
+        google_file_id = google_file_data.get("google_id")
+
+        file_parser = FileParser(supabase_client, class_id, syllabus_file_id)
+
+        class_name, class_code, class_description, outcomes = await file_parser.parse_syllabus(google_file_id, prev_class_name, prev_class_code, prev_class_description, prev_outcomes)
+
+        logger.info(f"Parsed syllabus for class {class_id}: {class_name}, {class_code}, {class_description}, {', '.join(outcomes)}")
+
+        return HTTPException(status_code=200, detail="Syllabus parsed successfully")
+    except Exception as e:
+        logger.error(f"Error parsing syllabus: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error parsing syllabus: {str(e)}")
 
 @router.post('/audio', response_model=TranscriptionResponse)
 async def transcribe_audio(

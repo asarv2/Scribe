@@ -6,7 +6,7 @@
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme, Divider } from "@mantine/core";
 import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
-import { Message, Profile, Document, ChatType, Chat, ChatMessage, ViewerMode } from "@/types";
+import { Message, Profile, Document, ChatType, Chat, ChatMessage, ViewerMode, CONTENT_COLORS } from "@/types";
 import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
@@ -34,15 +34,6 @@ import FigureViewer from "@/components/Viewer/FigureViewer";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import PulseText from "./PulseText";
-
-const CONTENT_COLORS = {
-  lecture: 'blue',    // matches badge color
-  textbook: 'green',   // matches badge color
-  homework: 'orange', // matches badge color
-  rubric: 'yellow',
-  other: 'violet',     // now matches badge color in ContextBadges
-} as const;
-
 interface MessageListProps {
   chatId: string;
   classId: string;
@@ -128,37 +119,6 @@ export const MessageList = memo(({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  // Add state to track if context was automatically added
-  const [autoAddedContext, setAutoAddedContext] = useState<{
-    lectures: string[],
-    chapters: string[],
-    homeworks: string[]
-  }>({
-    lectures: [],
-    chapters: [],
-    homeworks: []
-  });
-
-  // Function to calculate simple text similarity based on shared words
-  const calculateTextSimilarity = (text1: string, text2: string): number => {
-    const words1 = text1.toLowerCase().split(/\W+/).filter(word => word.length > 2);
-    const words2 = text2.toLowerCase().split(/\W+/).filter(word => word.length > 2);
-
-    // Count matching unique words
-    const uniqueWords1 = new Set(words1);
-    const uniqueWords2 = new Set(words2);
-
-    let matchCount = 0;
-    uniqueWords1.forEach(word => {
-      if (uniqueWords2.has(word)) matchCount++;
-    });
-
-    // Calculate similarity score
-    const totalUniqueWords = Array.from(uniqueWords1).concat(Array.from(uniqueWords2)).length;
-    return totalUniqueWords > 0 ? matchCount / totalUniqueWords : 0;
-  };
-
   // Scroll to bottom handler
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -345,92 +305,18 @@ export const MessageList = memo(({
     }),
   }), [setActiveChat]); // Add dependency on setActiveChat
 
-  const isActive = isOver && canDrop;
-
   // Enhanced document click handler
   const handleEnhancedDocumentClick = (
-    contextType: 'lectures' | 'chapters' | 'homeworks' | 'files',
     contextId: string,
     documentId?: string,
-    textbookId?: string,
-    exerciseId?: string,
   ) => {
-
-    // For lectures
-    if (contextType === 'lectures' && documentId) {
-      // Use the setViewerMode function prop instead of directly setting state
-      setViewerMode(prev => ({
-        ...prev,
-        active: true,
-        open: true,
-        documentId,
-        lectureId: contextId,
-        exerciseId: undefined,
-        textbookId: undefined,
-        chapterId: undefined,
-        homeworkId: undefined,
-        fileId: undefined,
-      }));
-    }
-    else if (contextType === 'chapters' && exerciseId) {
-      setViewerMode(prev => ({
-        ...prev,
-        active: true,
-        open: true,
-        chapterId: contextId,
-        exerciseId,
-        lectureId: undefined,
-        textbookId: undefined,
-        homeworkId: undefined,
-        documentId: undefined,
-        fileId: undefined,
-      }));
-    }
-    // For chapters
-    else if (contextType === 'chapters' && textbookId) {
-      setViewerMode(prev => ({
-        ...prev,
-        active: true,
-        open: true,
-        documentId: documentId || undefined,
-        textbookId,
-        chapterId: contextId,
-        exerciseId: undefined,
-        lectureId: undefined,
-        homeworkId: undefined,
-        fileId: undefined,
-      }));
-    }
-    // For chapter exercises
-
-    // For homework exercises
-    else if (contextType === 'homeworks' && exerciseId) {
-      setViewerMode(prev => ({
-        ...prev,
-        active: true,
-        open: true,
-        homeworkId: contextId,
-        exerciseId,
-        textbookId: undefined,
-        chapterId: undefined,
-        lectureId: undefined,
-        documentId: undefined,
-        fileId: undefined,
-      }));
-    }
-    else if (contextType === 'files' && documentId) {
-      setViewerMode(prev => ({
-        ...prev,
-        active: true,
-        open: true,
-        documentId,
-        lectureId: undefined,
-        textbookId: undefined,
-        chapterId: undefined,
-        homeworkId: undefined,
-        fileId: contextId,
-      }));
-    }
+    setViewerMode(prev => ({
+      ...prev,
+      active: true,
+      open: true,
+      documentId,
+      fileId: contextId,
+    }));
   };
 
   // Function to render context badges for user messages
@@ -491,7 +377,7 @@ export const MessageList = memo(({
               onClick={() => {
                 const document = fileDocuments?.find(d => d.file === fileId);
                 if (document) {
-                  handleEnhancedDocumentClick('files', fileId, document.id, undefined, undefined);
+                  handleEnhancedDocumentClick(fileId, document.id);
                 }
               }}
             >

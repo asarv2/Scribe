@@ -27,7 +27,7 @@ class Documents(BaseModel):
     figures: List[str] = []
     summaries: List[str] = []
     questions: List[str] = []
-
+    grades: List[str] = []
 
 
 def clean_references(text: str, references: Dict[int, str]) -> str:

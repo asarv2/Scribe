@@ -424,3 +424,7 @@ def get_grading_prompt(course_title: str) -> str:
 def get_chat_title_prompt(course_title: str) -> str:
     base_chat_title_prompt = f"You are a professor for the class {course_title}. You will be given chat history messages and be asked to generate a title for the chat. Your title should be concise and descriptive of the chat, and should not be more than 5 words, with a focus on being concise and descriptive. It should be title case and not end with a period. Here is an example of a title: 'Lecture 1: Intro to Linear Programming'."
     return base_chat_title_prompt
+
+
+if __name__ == "__main__":
+    print(get_student_prompt("Data Structures and Algorithms for DS/AI"))

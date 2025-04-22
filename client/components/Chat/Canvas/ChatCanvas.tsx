@@ -57,13 +57,10 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
 
     // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
-    const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
-    const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['lectures']));
 
     const router = useRouter();
     const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-    const [recordedVideos, setRecordedVideos] = useState<RecordedVideo[]>([]);
     const { studentMode } = useStudentMode();
 
     // Fetch necessary data
@@ -96,12 +93,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         enabled: !!profile
     });
 
-    const { data: fileDocuments } = useQuery({
-        queryKey: ["fileDocuments", classId],
-        queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
-        enabled: !!files
-    });
-
     const [activeChat, setActiveChat] = useState<ChatMessage>({
         id: 1,
         title: "Office Hours",
@@ -116,11 +107,9 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
     // Combine all loading states
     const isInitializing = !user || !profile || !files;
 
-    const [isWaitingForVideos, setIsWaitingForVideos] = useState(false);
-
     const [shouldAnimateTitle, setShouldAnimateTitle] = useState<boolean>(false);
 
-    const getContext = () => {
+    const getContextFiles = () => {
         const previousMessagesFiles = messages?.flatMap(message =>
             // Check if references exists and is an array before accessing
             Array.isArray(message.files) ? message.files : []
@@ -129,6 +118,14 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         const allFiles = Array.from(new Set([...(activeChat.files ?? []), ...previousMessagesFiles]));
         return allFiles;
 
+    }
+
+    const getContextDocuments = () => {
+        const previousMessagesDocuments = messages?.flatMap(message =>
+            Array.isArray(message.documents) ? message.documents : []
+        ) ?? [];
+        const allDocuments = Array.from(new Set([...(activeChat.documents ?? []), ...previousMessagesDocuments]));
+        return allDocuments;
     }
 
     // Define sendMessage with useCallback
@@ -157,8 +154,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 profile: profileId,
                 bare_question: activeChat.prompt,
                 question: activeChat.prompt,
-                files: getContext(),
-                documents: activeChat.documents,
+                files: getContextFiles(),
+                documents: getContextDocuments(),
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -186,7 +183,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
             // Reset states
             setActiveChat({
                 ...activeChat,
-                prompt: "",
                 files: [],
                 documents: []
             });
@@ -201,35 +197,14 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         classId,
         activeChat,
         router,
-        getContext
+        getContextFiles,
+        getContextDocuments
     ]);
 
     const handleChat = async () => {
-        if (!activeChat.prompt.trim() && recordedVideos.length === 0) return;
-
+        if (!activeChat.prompt.trim()) return;
         try {
-            // Check if there are any unprocessed videos or videos still being processed
-            const hasUnprocessedVideos = recordedVideos.some(video => {
-                // If no fileId, it's still uploading
-                if (video.fileId === undefined) return true;
-
-                // Find the corresponding file and check its parse_status
-                const file = files?.find(f => f.id === video.fileId);
-
-                // If file exists, check if it's complete, otherwise consider it unprocessed
-                return !file || file.parse_status !== 'complete';
-            });
-
-            if (hasUnprocessedVideos) {
-                console.log("Waiting for videos to fully process before sending message");
-                // Set flags to indicate we're waiting for videos and should send when ready
-                setIsWaitingForVideos(true);
-                return; // Exit early, the useEffect will handle sending when videos are ready
-            }
-
-            // If all videos are already processed or there are no videos, send immediately
             await sendMessage();
-
         } catch (error) {
             console.error("Error in message processing:", error);
             notifications.show({
@@ -238,18 +213,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 color: "red"
             });
         }
-    };
-
-    const toggleSection = (section: string) => {
-        setExpandedSections(prev => {
-            const next = new Set(prev);
-            if (next.has(section)) {
-                next.delete(section);
-            } else {
-                next.add(section);
-            }
-            return next;
-        });
     };
 
     // Modify addContextToChat to remove drag-related state updates
@@ -291,71 +254,12 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         removeFileFromChat(viewerMode.fileId ?? "");
     };
 
-    const handleScrollToSection = useCallback((sectionId: string) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, []);
-
     const handleOptionClick = useCallback((type: ChatType) => {
         setActiveChat(prev => ({
             ...prev,
             chatType: type,
         }));
     }, []);
-
-    // Add this useEffect to monitor video processing status
-    useEffect(() => {
-        // Only run this effect if we're actively waiting for videos to process
-        if (!isWaitingForVideos || !files) return;
-
-        // Check if all videos have fileIds AND are fully processed
-        const allVideosProcessed = recordedVideos.every(video => {
-            // If no fileId, it's not processed
-            if (video.fileId === undefined) return false;
-
-            // Find the corresponding file
-            const file = files.find(f => f.id === video.fileId);
-
-            // Consider it processed if file exists and status is complete
-            return file && file.parse_status === 'complete';
-        });
-
-        if (allVideosProcessed) {
-            console.log("All videos processed, sending message now");
-            setIsWaitingForVideos(false);
-
-            // Trigger the message sending
-            // Make sure we're not already in a loading state
-            if (!loading) {
-                console.log("Executing sendMessage function");
-                sendMessage()
-                    .then(() => {
-                        console.log("Message sent successfully");
-                    })
-                    .catch(error => {
-                        console.error("Error sending message:", error);
-                        notifications.show({
-                            title: "Error",
-                            message: "Failed to send message. Please try again.",
-                            color: "red"
-                        });
-                    });
-            } else {
-                console.log("Already in loading state, not sending message");
-            }
-        } else {
-            // Set up a timer to check again
-            const timer = setTimeout(() => {
-                console.log("Checking video processing status...");
-                // This will trigger this effect to run again
-                setIsWaitingForVideos(state => state);
-            }, 250);
-
-            return () => clearTimeout(timer);
-        }
-    }, [isWaitingForVideos, recordedVideos, files, sendMessage, loading]);
 
     useEffect(() => {
         if (profile) {
@@ -545,13 +449,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                             onSend={handleChat}
                             onRemoveFile={removeFileFromChat}
                             onRemoveDocument={removeDocumentFromChat}
-                            onScrollToSection={handleScrollToSection}
-                            viewerMode={viewerMode}
                             setViewerMode={setViewerMode}
-                            expandedSections={expandedSections}
-                            toggleSection={toggleSection}
-                            recordedVideos={recordedVideos}
-                            setRecordedVideos={setRecordedVideos}
                         />
                     </Card>
                 </Grid.Col>

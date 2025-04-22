@@ -214,11 +214,31 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
             }
           )
           .subscribe();
+
+        const gradesChannel = supabase
+          .channel(`realtime-grades-${chatId}`)
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'prod',
+              table: 'grades',
+              filter: `message=in.(${messages.map(m => m.id).join(',')})`
+            },
+            () => {
+              console.log("grades changed");
+              queryClient.invalidateQueries({
+                queryKey: ["grades", chatId]
+              });
+            }
+          )
+          .subscribe();
     
         return () => {
           supabase.removeChannel(figuresChannel);
           supabase.removeChannel(summariesChannel);
           supabase.removeChannel(questionsChannel);
+          supabase.removeChannel(gradesChannel);
         };
     }, [chatId, supabase, queryClient, messages]);
 

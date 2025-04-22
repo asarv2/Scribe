@@ -26,6 +26,15 @@ export const getSummaryDownloadUrl = (chatId: string, summaryId: string, format:
     return url.toString();
 }
 
+export const getGradeDownloadUrl = (chatId: string, gradeId: string, format: 'pdf' | 'latex' | 'text') => {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/grade`;
+    const url = new URL(baseUrl, window.location.origin);
+    url.searchParams.append('chat_id', chatId);
+    url.searchParams.append('grade_id', gradeId);
+    url.searchParams.append('format', format);
+    return url.toString();
+}
+
 export const getQuestionDownloadUrl = (chatId: string, questionIds: string[], format: 'pdf' | 'latex' | 'text') => {
     
     const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/questions`;

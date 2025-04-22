@@ -8,34 +8,19 @@ import { IconFile, IconPlus, IconWand, IconX } from "@tabler/icons-react";
 import { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { ChatMessage, ViewerMode, File, Document } from "@/types";
+import { ChatMessage, ViewerMode, File, Document, CONTENT_COLORS } from "@/types";
 import { getPageRanges, handleDocumentClick } from "@/utils/chat/chat-helpers";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { RecordedVideo } from "./ChatCanvas";
-
-// Define consistent colors for different content types
-const CONTENT_COLORS = {
-    lecture: 'blue',    // matches badge color
-    textbook: 'green',   // matches badge color
-    homework: 'orange', // matches badge color
-    rubric: 'yellow',
-    other: 'violet',     // now matches badge color in ContextBadges
-} as const;
-
 interface ContextBadgesProps {
     activeChat: ChatMessage;
     classId: string;
     onRemoveFile?: (fileId: string) => void;
     onRemoveDocument?: (documentId: string) => void;
-    onScrollToSection?: (sectionId: string) => void;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
-    expandedSections: Set<string>;
-    toggleSection: (section: string) => void;
-    recordedVideos: RecordedVideo[];
-    setRecordedVideos: React.Dispatch<React.SetStateAction<RecordedVideo[]>>;
 }
 
 export const ContextBadges = memo(({
@@ -43,12 +28,7 @@ export const ContextBadges = memo(({
     classId,
     onRemoveFile,
     onRemoveDocument,
-    onScrollToSection,
     setViewerMode,
-    expandedSections,
-    toggleSection,
-    recordedVideos,
-    setRecordedVideos
 }: ContextBadgesProps) => {
     const supabase = useSupabaseBrowser();
 
@@ -140,7 +120,7 @@ export const ContextBadges = memo(({
                 const minutes = Math.floor(seconds / 60);
                 const remainingSeconds = Math.floor(seconds % 60);
                 return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-            };  
+            };
             return `${file?.title ?? 'File'} ${formatTime(doc?.start_time ?? 0)} - ${formatTime(doc?.end_time ?? 0)}`;
         } else {
             return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
@@ -214,137 +194,10 @@ export const ContextBadges = memo(({
     }
 
     return (
-        <>
-            <Box style={{ width: '100%' }}>
-                <Group gap={"xs"}>
-                    {recordedVideos.map(video => {
-                        // check if the video is in the activeChat.files or if the file id does not exist
-                        const showVideo = activeChat.files.includes(video.fileId ?? '') || !video.fileId;
-
-                        // Find the file if it exists
-                        const videoFile = video.fileId ? files?.find(f => f.id === video.fileId) : null;
-
-                        // Determine processing status from the file
-                        const processingStatus = videoFile?.parse_status || 'uploading';
-                        const processingError = videoFile?.parse_error;
-
-                        // Calculate progress based on status
-                        let progressValue = video.uploadProgress || 0;
-                        let statusMessage = 'Uploading...';
-
-                        if (videoFile) {
-                            switch (processingStatus) {
-                                case 'extracting':
-                                    progressValue = 25;
-                                    statusMessage = 'Extracting content...';
-                                    break;
-                                case 'uploading':
-                                    progressValue = 50;
-                                    statusMessage = 'Processing content...';
-                                    break;
-                                case 'processing':
-                                    progressValue = 75;
-                                    statusMessage = 'Processing video...';
-                                    break;
-                                case 'parsing':
-                                    // For parsing, we can check document progress
-                                    const totalDocs = videoFile.length || 1;
-                                    const processedDocs = fileDocuments?.filter(
-                                        doc => doc.file === video.fileId && doc.processed === true
-                                    )?.length || 0;
-
-                                    progressValue = 75 + (25 * (processedDocs / totalDocs));
-                                    statusMessage = `Analyzing video (${processedDocs}/${totalDocs})`;
-                                    break;
-                                case 'error':
-                                    statusMessage = processingError || 'Error processing video';
-                                    break;
-                            }
-                        }
-
-                        return showVideo && (
-                            <Box
-                                key={video.id}
-                                style={{
-                                    position: 'relative',
-                                    width: '240px',
-                                    height: '150px',
-                                    borderRadius: '4px',
-                                    overflow: 'hidden',
-                                    backgroundColor: '#f0f0f0',
-                                    border: '1px solid #ddd',
-                                    flexShrink: 0,
-                                    pointerEvents: 'all',
-                                    zIndex: 5
-                                }}
-                            >
-                                <video
-                                    src={video.url}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        opacity: !video.fileId || processingStatus !== 'complete' ? 0.5 : 1,
-                                        pointerEvents: 'all'
-                                    }}
-                                    controls={processingStatus === 'complete'}
-                                    playsInline
-                                />
-
-                                {(!video.fileId || processingStatus !== 'complete') ? (
-                                    <Box style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        flexDirection: 'column',
-                                        backgroundColor: 'rgba(0,0,0,0.2)',
-                                        pointerEvents: 'none',
-                                        padding: '0 16px'
-                                    }}>
-                                        <Text size="sm" fw={500} c="white" mb={8}>
-                                            {processingStatus === 'error'
-                                                ? 'Processing Failed'
-                                                : statusMessage}
-                                        </Text>
-                                        <Progress
-                                            value={processingStatus === 'error' ? 100 : progressValue}
-                                            size="sm"
-                                            radius="xl"
-                                            color={processingStatus === 'error' ? 'red' : 'blue'}
-                                            style={{ width: '80%' }}
-                                        />
-                                        {progressValue > 0 && processingStatus !== 'error' && (Math.round(progressValue) !== Infinity) && (
-                                            <Text size="xs" c="white" mt={4}>{Math.round(progressValue)}%</Text>
-                                        )}
-                                    </Box>
-                                ) : (
-                                    <Box style={{
-                                        position: 'absolute',
-                                        top: '4px',
-                                        right: '4px',
-                                        zIndex: 10,
-                                        pointerEvents: 'auto'
-                                    }}>
-                                        {renderFileBadge(files?.find(f => f.id === video.fileId), false)}
-                                    </Box>
-                                )}
-                            </Box>
-                        )
-                    })}
-                </Group>
-            </Box>
-
-            <Group gap={"xs"} pb={"sm"} pt={"sm"}>
-                {Array.from(new Set(activeChat.files.filter(fileId => !recordedVideos.some(video => video.fileId === fileId)))).map(fileId => renderFileBadge(files?.find(f => f.id === fileId), true))}
-                {renderDocumentBadges(activeChat.documents)}
-            </Group>
-
-        </>
+        <Group gap={"xs"} pb={"sm"} pt={"sm"}>
+            {activeChat.files.map(fileId => renderFileBadge(files?.find(f => f.id === fileId), true))}
+            {renderDocumentBadges(activeChat.documents)}
+        </Group>
     )
 });
 

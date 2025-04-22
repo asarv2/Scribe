@@ -181,6 +181,18 @@ export const updateFileStatus = async (fileId: string, status: ParseStatus) => {
     return { success: true, error: "" };
 }
 
+export const updateFileNumber = async (fileId: string, fileNumber: number) => {
+    const supabase = await useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("files")
+        .update({file_number: fileNumber})
+        .eq("id", fileId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
 export const updateFileInfo = async (fileId: string, aiInstructions: string) => {
     const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
@@ -205,7 +217,19 @@ export const updateFileName = async (fileId: string, fileName: string) => {
     return { success: true, error: "" };
 }
 
-export const updateFileDate = async (fileId: string, fileDate: string) => {
+export const updateFileContentType = async (fileId: string, contentType: ContentType) => {
+    const supabase = await useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("files")
+        .update({content_type: contentType})
+        .eq("id", fileId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
+export const updateFileDate = async (fileId: string, fileDate: string | null) => {
     const supabase = await useSupabaseServer(cookies());
     const { error } = await supabase
         .from("files")

@@ -71,6 +71,15 @@ export default function FileViewer({
         }
     }
 
+    // const calculatePosition = (size: { x: number, y: number, w: number, h: number } | null) => {
+    //     if (!size || size.w === undefined) {
+    //         return '50% 50%'; // Default to center if no size data is available
+    //     }
+    //     const x = size.w === 100 ? size.x : (size.x / (100 - size.w)) * 100;
+    //     const y = size.h === 100 ? size.y : (size.y / (100 - size.h)) * 100;
+    //     return `${x}% ${y}%`;
+    // };
+
     const getPageLabel = (document: Document) => {
         const file = files?.find(f => document.file === f.id);
         if (!file) return `Page ${document.page}`;
@@ -85,6 +94,29 @@ export default function FileViewer({
             return `Page ${document.page}`;
         }
     }
+
+    const getAspectRatio = (document: Document) => {
+        const file = files?.find(f => document.file === f.id);
+        if (!file) return { width: 1, height: 1 }; // Default square
+        
+        if (file.type === 'pdf') {
+            if (file.content_type === 'lecture') {
+                return { width: 16, height: 9 }; // Landscape 16:9 for lectures
+            } else {
+                return { width: 8.5, height: 11 }; // Paper 8.5x11 for other PDFs
+            }
+        }
+        
+        return { width: 1, height: 1 }; // Square for all other cases
+    };
+
+    const getImageDimensions = (document: Document) => {
+        const ratio = getAspectRatio(document);
+        // Calculate height based on a fixed width to maintain aspect ratio
+        const baseWidth = 800;
+        const height = (baseWidth * ratio.height) / ratio.width;
+        return { width: baseWidth, height };
+    };
 
     useEffect(() => {
         if (filteredDocuments && filteredDocuments.length > 0) {
@@ -159,21 +191,36 @@ export default function FileViewer({
                                             addDocumentToChat(doc.id);
                                         }}
                                     >
-                                        <Image
-                                            src={getActiveImage(doc.id)}
-                                            alt={`Page ${doc.page}`}
-                                            width={800}
-                                            height={1100}
+                                        {/* Add a wrapper div to enforce aspect ratio */}
+                                        <Box 
                                             style={{
+                                                position: 'relative',
                                                 width: '100%',
-                                                height: 'auto',
-                                                objectFit: "contain"
+                                                paddingBottom: `${(getAspectRatio(doc).height / getAspectRatio(doc).width) * 100}%`,
+                                                overflow: 'hidden'
                                             }}
-                                            sizes="100vw"
-                                            placeholder="blur"
-                                            blurDataURL={"/placeholder_image.svg"}
-                                            onError={() => console.log(`Failed to load image for document ${doc.id}`)}
-                                        />
+                                        >
+                                            <Image
+                                                src={getActiveImage(doc.id)}
+                                                alt={`Page ${doc.page}`}
+                                                width={getImageDimensions(doc).width}
+                                                height={getImageDimensions(doc).height}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: "cover",
+                                                    // objectPosition: calculatePosition(doc.size as any),
+                                                    borderRadius: '8px' // Add border radius to the image itself as well
+                                                }}
+                                                sizes="100vw"
+                                                placeholder="blur"
+                                                blurDataURL={"/placeholder_image.svg"}
+                                                onError={() => console.log(`Failed to load image for document ${doc.id}`)}
+                                            />
+                                        </Box>
                                         {/* Add magnifying glass icon in top right corner to open the image modal */}
                                         <Box
                                             pos="absolute"
