@@ -27,7 +27,7 @@ interface GradeViewerProps {
     grade: Grade;
     viewerMode: ViewerMode;
     fileDocuments: Document[],
-    handleEnhancedDocumentClick: (contextType: 'files', contextId: string, documentId?: string) => void;
+    handleEnhancedDocumentClick: (fileId: string, documentId?: string) => void;
 }
 
 const GradeViewer: React.FC<GradeViewerProps> = ({ classId, chatId, grade, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
@@ -219,18 +219,6 @@ const GradeViewer: React.FC<GradeViewerProps> = ({ classId, chatId, grade, viewe
                             </Box>
                         )}
                     </Card>
-                );
-            case 'error':
-                return (
-                    <Center style={{ height: '100%' }}>
-                        <PulseText text="Error generating summary" error={true} />
-                    </Center>
-                );
-            default:
-                return (
-                    <Center style={{ height: '100%' }}>
-                        <PulseText text="Unknown status" error={true} />
-                    </Center>
                 );
         }
     };

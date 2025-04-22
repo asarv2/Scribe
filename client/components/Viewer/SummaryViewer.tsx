@@ -216,18 +216,6 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                         )}
                     </Card>
                 );
-            case 'error':
-                return (
-                    <Center style={{ height: '100%' }}>
-                        <PulseText text="Error generating summary" error={true} />
-                    </Center>
-                );
-            default:
-                return (
-                    <Center style={{ height: '100%' }}>
-                        <PulseText text="Unknown status" error={true} />
-                    </Center>
-                );
         }
     };
 

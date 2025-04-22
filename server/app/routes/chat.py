@@ -49,6 +49,7 @@ async def handle_chat(
 
         # Get resource IDs from the message
         file_ids = current_message.get('files', []) or []
+        document_ids = current_message.get('documents', []) or []
 
         # Fetch chat context
         chat_context = await fetch_chat_context(supabase_client, chat_id)
@@ -58,14 +59,21 @@ async def handle_chat(
         references = chat_context.get('references', [])
 
         # get the mapped references
-        mapped_references = await get_mapped_references(supabase_client, file_ids, references)
+        mapped_references, text_description = await get_mapped_references(supabase_client, file_ids, document_ids, references)
+        logger.info(f"Mapped references: {mapped_references}")
+        logger.info(f"Text description: {text_description}")
 
         # to call the agents
         documents = Documents(references=mapped_references, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
 
         # Fetch google file ids
-        google_files = GoogleFiles(file_ids, supabase_client)
+        google_files = GoogleFiles(file_ids, document_ids, supabase_client)
         google_file_ids = google_files.get_files()
+        logger.info(f"Google file IDs: {google_file_ids}")
+        google_document_ids = google_files.get_documents()
+        logger.info(f"Google document IDs: {google_document_ids}")
+        google_ids = google_file_ids + google_document_ids
+        logger.info(f"Google IDs: {google_ids}")
 
         total_response = ""
         async def update_callback(chunk: str):
@@ -122,8 +130,9 @@ async def handle_chat(
         try:
             await processor.process_message(
                 chat_id=chat_id,
-                google_file_ids=google_file_ids,
+                google_ids=google_ids,
                 documents=documents,
+                reference_description=text_description
             )
 
             # update the status of the message to completed

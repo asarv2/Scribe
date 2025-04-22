@@ -356,12 +356,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 );
             case 'complete':
                 return renderQuestion();
-            case 'error':
-                return (
-                    <Center style={{ height: '100%' }}>
-                        <PulseText text="Error generating question" error={true} />
-                    </Center>
-                );
         }
     };
 

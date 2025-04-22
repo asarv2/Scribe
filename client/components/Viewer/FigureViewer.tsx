@@ -51,12 +51,6 @@ export default function FigureViewer({
             <PulseText text="Generating figure..." />
           </Center>
         );
-      case 'error':
-        return (
-          <Center style={{ height: '100%' }}>
-            <PulseText text="Error generating figure" error={true} />
-          </Center>
-        );
       case 'complete':
         return (
           <Card p={0} w={full ? "100%" : viewerMode.open ? "70%" : "50%"} key={"figure-" + figure.id} shadow={"none"}>
@@ -135,12 +129,6 @@ export default function FigureViewer({
               </Box>
             </Box>
           </Card>
-        );
-      default:
-        return (
-          <Center style={{ height: '100%' }}>
-            <Text>Unknown status</Text>
-          </Center>
         );
     }
   };

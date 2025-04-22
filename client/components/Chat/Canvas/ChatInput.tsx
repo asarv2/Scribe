@@ -452,7 +452,7 @@ export const ChatInput = memo(({
             >Question</Button>)
         }
 
-        {
+        {/* {
           newChat && (isMobile ?
             <Tooltip label="Grade">
               <ActionIcon
@@ -483,7 +483,7 @@ export const ChatInput = memo(({
                 border: `1px solid ${activeChat.chatType === 'grade' ? 'var(--mantine-color-orange-filled)' : 'var(--mantine-color-orange-outline)'}`
               }}
             >Grade</Button>)
-        }
+        } */}
       </>
     )
   }

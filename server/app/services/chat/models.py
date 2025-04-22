@@ -1,12 +1,15 @@
 # creating the output types
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 from agents import AgentHooks, RunContextWrapper, Agent, Tool
 from agents.items import TResponseInputItem
 from pydantic import BaseModel
 import google.generativeai as genai
 from google.generativeai.types import File
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 class MultipleChoiceQuestion(BaseModel):
     question: str
@@ -78,27 +81,65 @@ async def fetch_chat_context(supabase, chat_id):
         "references": list(set(references))
     }
 
-async def get_mapped_references(supabase, file_ids, chat_references):
+async def get_mapped_references(supabase, file_ids, document_ids, chat_references) -> Tuple[Dict[int, str], str]:
     """
     Fetch file resources and their documents.
     
     Returns a dictionary with files and their documents.
+
+    Will create a text description of the references, with the name of the File and what reference number it is. If we have a document, we will first need to find the file it belongs to, and proceed with the following format:
+
+    File 1
+    Page 1 -> REFERENCE 1
+    Page 2 -> REFERENCE 2
+
+    File 2
+    Page 1 -> REFERENCE 3
+    Page 2 -> REFERENCE 4
+
+
     """
     all_documents = []
     references = {}  # Initialize references dictionary outside the if block
+    references_reverse = {} # Initialize references_reverse dictionary outside the if block
     
     if file_ids:
         file_documents = supabase.table("documents").select("*").in_("file", file_ids).execute().data or []
+
+        # get basic documents
+        basic_documents = supabase.table("documents").select("*").in_("id", document_ids).execute().data or []
 
         # get the documents that are in the chat_references
         chat_documents = supabase.table("documents").select("*").in_("id", chat_references).execute().data or []
 
         # merge the file_documents and chat_documents
-        all_documents = file_documents + chat_documents
+        all_documents = file_documents + basic_documents + chat_documents
 
         references = {idx + 1: doc.get("id") for idx, doc in enumerate(all_documents)}
+        references_reverse = {v: k for k, v in references.items()}
 
-    return references
+
+    # get the files for the file_ids
+    files = supabase.table("files").select("*").in_("id", file_ids).execute().data or []
+
+    # get the files for the document_ids
+    document_file_ids = [document.get("file") for document in document_ids]
+    document_files = supabase.table("files").select("*").in_("id", document_file_ids).execute().data or []
+
+    output = ""
+    for file in files:
+        output += f"{file.get('title')}\n"
+        file_documents = sorted([document for document in all_documents if document.get("file") == file.get("id")], key=lambda x: x.get("page"))
+        for document in file_documents:
+            output += f"Page {document.get('page')} -> REFERENCE {references_reverse[document.get('id')]}\n"
+
+    for document_file in document_files:
+        output += f"{document_file.get('title')}\n"
+        file_documents = sorted([document for document in all_documents if document.get("file") == document_file.get("id") and document.get("id") in document_ids], key=lambda x: x.get("page"))
+        for document in file_documents:
+            output += f"Page {document.get('page')} -> REFERENCE {references_reverse[document.get('id')]}\n"
+
+    return references, output
 
 async def process_special_tags(message, supabase_client, documents: Documents):
     """

@@ -197,9 +197,9 @@ class ChatProcessor(RunHooks):
         if not self.starting_agent:
             self.starting_agent = self.chat_agent
 
-    async def format_conversation(self, google_file_ids: List[str], documents: Documents, add_current=True) -> list[TResponseInputItem]:
+    async def format_conversation(self, google_file_ids: List[str], reference_description: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
-        initial_context = [{"type": "input_text", "text": f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class."}]
+        initial_context = [{"type": "input_text", "text": f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class. Use the following reference description to help you with your responses: {reference_description}"}]
 
         # for each google_file_id, we add a message to the context
         for google_file_id in google_file_ids:
@@ -303,12 +303,13 @@ class ChatProcessor(RunHooks):
     async def process_message(
         self,
         chat_id: str,
-        google_file_ids: List[str],
+        google_ids: List[str],
         documents: Documents,
+        reference_description: str,
     ) -> None:
         """Process a single message with streaming"""
         try:
-            conversation_context = await self.format_conversation(google_file_ids, documents=documents)
+            conversation_context = await self.format_conversation(google_ids, reference_description, documents=documents)
 
             # need to add gemini files to context?
             result = Runner.run_streamed(self.starting_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
@@ -383,7 +384,7 @@ class ChatProcessor(RunHooks):
             # run the title agent on the output if it is the first message
             if len(self.chat_history) == 2:
                 # can add empty context since it will not be used
-                post_conversation_context = await self.format_conversation("", wrapper.context, add_current=False)
+                post_conversation_context = await self.format_conversation("", "", wrapper.context, add_current=False)
 
                 # adding the topic query to the context
                 post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})

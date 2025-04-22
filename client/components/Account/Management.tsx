@@ -339,7 +339,7 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                                     disabled={syllabusLoading || loadingFiles}
                                     label="Syllabus"
                                 />
-                                <Box pt={24}>
+                                {/* <Box pt={24}>
                                     <Tooltip label="Import Class & Outcomes">
                                         <ActionIcon
                                             color="blue"
@@ -350,7 +350,7 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                                             <IconFileImport size={18} />
                                         </ActionIcon>
                                     </Tooltip>
-                                </Box>
+                                </Box> */}
                             </Group>
                             <Group grow>
                                 <TextInput
