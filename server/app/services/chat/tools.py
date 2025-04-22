@@ -369,19 +369,21 @@ async def create_figure_latex(wrapper: RunContextWrapper[Documents], title: str,
                     with open(tex_path, "w") as f:
                         f.write(latex_code)
                     
-                    # Convert PDF to SVG using pdf2svg
+                    # Try to convert PDF to SVG using pdf2svg (system tool)
                     svg_file = os.path.join(tmpdir, "figure.svg")
                     try:
+                        # First check if pdf2svg is installed
+                        subprocess.run(["which", "pdf2svg"], check=True, capture_output=True)
+                        
+                        # Convert PDF to SVG
                         subprocess.run(
                             ["pdf2svg", f"{pdf_filename}.pdf", svg_file],
                             check=True,
                             capture_output=True
                         )
                         
-                        # Save to cache
+                        # Save to cache and upload
                         shutil.copy(svg_file, output_path)
-                        
-                        # Upload to Supabase storage
                         with open(svg_file, "rb") as f:
                             svg_data = f.read()
                             supabase_client.storage.from_('figures').upload(
@@ -389,22 +391,41 @@ async def create_figure_latex(wrapper: RunContextWrapper[Documents], title: str,
                                 svg_data, 
                                 {'content-type': 'image/svg+xml'}
                             )
-                    except (subprocess.SubprocessError, FileNotFoundError) as svg_error:
-                        # Log the specific error
-                        logger.warning(f"pdf2svg failed: {str(svg_error)}")
+                        logger.info("Successfully converted PDF to SVG using pdf2svg")
+                    except subprocess.CalledProcessError:
+                        # If pdf2svg is not available, use a pure Python approach with matplotlib
+                        logger.warning("pdf2svg not available, using matplotlib for conversion")
                         
-                        # Fallback to Inkscape if pdf2svg is not available
-                        try:
-                            subprocess.run(
-                                ["inkscape", "--export-filename", svg_file, f"{pdf_filename}.pdf"],
-                                check=True,
-                                capture_output=True
-                            )
+                        # Use pdf2image to convert PDF to PNG
+                        from pdf2image import convert_from_path
+                        png_file = os.path.join(tmpdir, "figure.png")
+                        images = convert_from_path(f"{pdf_filename}.pdf", dpi=300)
+                        if images:
+                            # Save PNG with transparency
+                            images[0].save(png_file, "PNG")
                             
-                            # Save to cache
+                            # Use matplotlib to convert PNG to SVG
+                            import matplotlib.pyplot as plt
+                            from matplotlib import image
+                            
+                            # Read the image
+                            img = image.imread(png_file)
+                            
+                            # Create figure with transparent background
+                            fig = plt.figure(figsize=(10, 10), frameon=False)
+                            ax = plt.Axes(fig, [0., 0., 1., 1.])
+                            ax.set_axis_off()
+                            fig.add_axes(ax)
+                            
+                            # Display the image
+                            ax.imshow(img)
+                            
+                            # Save as SVG
+                            plt.savefig(svg_file, format='svg', transparent=True, bbox_inches='tight', pad_inches=0)
+                            plt.close()
+                            
+                            # Save to cache and upload
                             shutil.copy(svg_file, output_path)
-                            
-                            # Upload to Supabase storage
                             with open(svg_file, "rb") as f:
                                 svg_data = f.read()
                                 supabase_client.storage.from_('figures').upload(
@@ -412,40 +433,9 @@ async def create_figure_latex(wrapper: RunContextWrapper[Documents], title: str,
                                     svg_data, 
                                     {'content-type': 'image/svg+xml'}
                                 )
-                        except (subprocess.SubprocessError, FileNotFoundError) as inkscape_error:
-                            # Log the specific error
-                            logger.warning(f"Inkscape fallback failed: {str(inkscape_error)}")
-                            
-                            # If both SVG conversion methods fail, fall back to PNG with transparency
-                            png_file = os.path.join(tmpdir, "figure.png")
-                            try:
-                                # Use ImageMagick with transparency
-                                subprocess.run(
-                                    ["convert", "-density", "300", "-transparent", "white", f"{pdf_filename}.pdf", png_file],
-                                    check=True,
-                                    capture_output=True
-                                )
-                                
-                                # Upload PNG as fallback
-                                with open(png_file, "rb") as f:
-                                    png_data = f.read()
-                                    supabase_client.storage.from_('figures').upload(
-                                        f"{class_id}/{figure_id}.png", 
-                                        png_data, 
-                                        {'content-type': 'image/png'}
-                                    )
-                                logger.info("Fallback to PNG with transparency successful")
-                            except Exception as png_error:
-                                logger.error(f"All conversion methods failed: {str(png_error)}")
-                                raise Exception("Failed to convert PDF to any image format")
-                    
-                    # Upload the LaTeX code
-                    supabase_client.storage.from_('figures').upload(
-                        f"{class_id}/{figure_id}.tex", 
-                        latex_code.encode(), 
-                        {'content-type': 'application/x-tex'}
-                    )
-                    
+                            logger.info("Successfully converted PDF to SVG using matplotlib")
+                        else:
+                            raise Exception("Failed to convert PDF to PNG")
                 except Exception as e:
                     # Check if the .log file exists to get more detailed error information
                     log_file = f"{pdf_filename}.log"

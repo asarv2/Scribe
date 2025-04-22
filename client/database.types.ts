@@ -597,6 +597,7 @@ export type Database = {
           references: string[]
           response: string
           response_url: string
+          status_text: string
         }
         Insert: {
           bare_question?: string
@@ -623,6 +624,7 @@ export type Database = {
           references?: string[]
           response?: string
           response_url?: string
+          status_text?: string
         }
         Update: {
           bare_question?: string
@@ -649,6 +651,7 @@ export type Database = {
           references?: string[]
           response?: string
           response_url?: string
+          status_text?: string
         }
         Relationships: [
           {

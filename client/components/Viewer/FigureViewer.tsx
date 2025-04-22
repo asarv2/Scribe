@@ -14,6 +14,7 @@ import { notifications } from '@mantine/notifications';
 import { Document, Figure, ViewerMode } from '../../types';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
 import Latex from '../Latex';
+import styles from './FigureViewer.module.css';
 
 interface FigureViewerProps {
   figure: Figure;
@@ -101,6 +102,7 @@ export default function FigureViewer({
                 alt="Figure"
                 width={800}
                 height={600}
+                className={styles.figureImage}
                 style={{
                   maxWidth: '100%',
                   height: 'auto',
@@ -200,6 +202,7 @@ export default function FigureViewer({
                 alt="Figure"
                 width={1200}
                 height={900}
+                className={styles.figureImage}
                 style={{
                   maxWidth: '100%',
                   maxHeight: 'calc(90vh - 80px)',

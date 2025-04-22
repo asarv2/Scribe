@@ -14,7 +14,7 @@ export const getCourseImageUrl = (classId: string) => {
 }
 
 export const getFigureUrl = (classId: string, figureId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${classId}/${figureId}.png`
+    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${classId}/${figureId}.svg`
 }
 
 export const getSummaryDownloadUrl = (chatId: string, summaryId: string, format: 'pdf' | 'latex' | 'text') => {

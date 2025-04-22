@@ -335,6 +335,34 @@ class ChatProcessor(RunHooks):
             logger.error(f"Error in process_message: {str(e)}")
             raise
 
+    async def on_handoff(
+        self,
+        context: RunContextWrapper[Documents],
+        from_agent: Agent[Documents],
+        to_agent: Agent[Documents],
+    ) -> None:
+        """Called when a handoff occurs."""
+        logger.info(f"Handing off from {from_agent.name} to {to_agent.name}")
+        message_id = context.message_id
+        # update supabase with the status_text
+        if from_agent.name == "Chat Agent":
+            if to_agent.name == "Figure Agent":
+                self.supabase_client.table("messages").update({
+                    "status_text": f"Generating figure..."
+                }).eq("id", message_id).execute()
+            elif to_agent.name == "Summary Agent":
+                self.supabase_client.table("messages").update({
+                    "status_text": f"Generating summary..."
+                }).eq("id", message_id).execute()
+            elif to_agent.name == "Question Agent":
+                self.supabase_client.table("messages").update({
+                    "status_text": f"Generating question..."
+                }).eq("id", message_id).execute()
+            elif to_agent.name == "Grading Agent":
+                self.supabase_client.table("messages").update({
+                    "status_text": f"Grading results..."
+                }).eq("id", message_id).execute()
+
     async def on_agent_end(
         self,
         wrapper: RunContextWrapper[Documents],

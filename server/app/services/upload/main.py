@@ -22,17 +22,6 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# Set multiprocessing start method to 'spawn' to avoid CUDA issues
-# This needs to be done at module level before any multiprocessing occurs
-if torch.cuda.is_available():
-    import multiprocessing
-    try:
-        multiprocessing.set_start_method('spawn', force=True)
-        logger.info("Set multiprocessing start method to 'spawn' for CUDA compatibility")
-    except RuntimeError:
-        # Method already set
-        pass
-
 class FileProcessor:
     def __init__(self, supabase_client):
         """Initialize the file processor
@@ -210,5 +199,10 @@ class FileProcessor:
 
     async def _extract_file_content(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
         """Isolate extraction in a separate method to better manage CUDA resources"""
-        # Run extraction in a separate thread to avoid blocking the event loop
-        return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)
+        # For audio/video files that need CUDA, run directly in the main process
+        if file_type in ['audio', 'video'] and torch.cuda.is_available():
+            logger.info("Running audio/video extraction directly in main process to avoid CUDA issues")
+            return self.extractor.extract_file(file_path, file_type)
+        else:
+            # For other file types, we can use a separate thread
+            return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)
