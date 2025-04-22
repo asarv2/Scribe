@@ -85,6 +85,9 @@ class FileExtractor:
                     num_chunks = max(1, int(duration / chunk_duration) + (1 if duration % chunk_duration > 0 else 0))
                     logger.info(f"Splitting into {num_chunks} chunks of {chunk_duration}s each")
                     
+                    # Unload Whisper model before running ffmpeg to free GPU memory
+                    model_manager.unload_whisper_model()
+                    
                     # Process each chunk
                     for i in range(num_chunks):
                         start_time = i * chunk_duration
@@ -110,6 +113,9 @@ class FileExtractor:
                             
                             subprocess.run(cmd, check=True, capture_output=True, timeout=60)
                             
+                            # Reload the Whisper model for transcription
+                            model_manager.reload_whisper_model()
+                            
                             # Get the Whisper model
                             whisper_model = model_manager.get_whisper_model()
                             
@@ -121,6 +127,9 @@ class FileExtractor:
                             # Transcribe this chunk
                             result = whisper_model.transcribe(chunk_path)
                             text = result.get("text", "").strip()
+                            
+                            # Unload model again before generating preview image
+                            model_manager.unload_whisper_model()
                             
                             # Generate preview image for this chunk
                             img_data = None
@@ -155,6 +164,9 @@ class FileExtractor:
                             logger.error(f"Error processing chunk {i+1}/{num_chunks}: {str(e)}")
                             # Continue with next chunk
                     
+                    # Make sure to reload the model when done
+                    model_manager.reload_whisper_model()
+                    
                     # If no chunks were processed successfully, create a fallback chunk
                     if not chunks:
                         logger.warning("No chunks were processed successfully")
@@ -180,6 +192,9 @@ class FileExtractor:
                         type='video_chunk' if is_video else 'audio_chunk'
                     )
                     chunks.append(chunk)
+                    
+                    # Make sure to reload the model when done with error
+                    model_manager.reload_whisper_model()
         
         except Exception as e:
             logger.error(f"Error in extract_audio_or_video: {str(e)}")
@@ -190,6 +205,9 @@ class FileExtractor:
                 type='error'
             )
             chunks.append(chunk)
+            
+            # Make sure to reload the model in case of error
+            model_manager.reload_whisper_model()
         
         return chunks
 
