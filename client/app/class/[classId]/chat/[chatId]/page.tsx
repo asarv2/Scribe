@@ -15,6 +15,8 @@ import { use } from "react";
 export default function ChatPage({ params }: { params: Promise<{ classId: string, chatId: string }> }) {
     const { classId, chatId } = use(params);
 
+    // define all realtime listeners here
+
     return <ClassLayout classId={classId}>
         <ChatCanvas classId={classId} chatId={chatId} />
     </ClassLayout>;

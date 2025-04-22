@@ -199,10 +199,212 @@ class FileProcessor:
 
     async def _extract_file_content(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
         """Isolate extraction in a separate method to better manage CUDA resources"""
-        # For audio/video files that need CUDA, run directly in the main process
-        if file_type in ['audio', 'video'] and torch.cuda.is_available():
-            logger.info("Running audio/video extraction directly in main process to avoid CUDA issues")
-            return self.extractor.extract_file(file_path, file_type)
+        # For audio/video files that need special handling
+        if file_type in ['audio', 'video']:
+            logger.info("Running audio/video extraction with CUDA safeguards")
+            
+            # Create a semaphore to ensure only one CUDA operation runs at a time
+            # This is a global semaphore to coordinate across all requests
+            if not hasattr(FileProcessor, '_cuda_semaphore'):
+                FileProcessor._cuda_semaphore = asyncio.Semaphore(1)
+            
+            try:
+                if torch.cuda.is_available():
+                    # Acquire the semaphore to ensure exclusive GPU access
+                    async with FileProcessor._cuda_semaphore:
+                        logger.info("Acquired CUDA semaphore for transcription")
+                        try:
+                            # Use a subprocess for complete isolation instead of a thread
+                            # This ensures a clean CUDA context
+                            return await self._run_whisper_in_subprocess(file_path, file_type)
+                        except Exception as e:
+                            logger.error(f"GPU transcription failed: {str(e)}, falling back to CPU")
+                            return await self._extract_with_cpu_fallback(file_path, file_type)
+                        finally:
+                            logger.info("Released CUDA semaphore after transcription")
+                else:
+                    # No GPU available, use CPU directly
+                    return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)
+            except Exception as e:
+                logger.error(f"All transcription attempts failed: {str(e)}")
+                # Return a minimal error chunk if all attempts fail
+                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
+                return [FileExtractChunk(
+                    text=f"Transcription failed after multiple attempts. Error: {str(e)}",
+                    page=1,
+                    type='video_chunk' if is_video else 'audio_chunk'
+                )]
         else:
-            # For other file types, we can use a separate thread
+            # For other file types, we can use a separate thread as before
             return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)
+
+    async def _run_whisper_in_subprocess(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+        """Run Whisper in the main process with proper CUDA handling"""
+        logger.info("Running Whisper transcription in main process")
+        
+        # Clear CUDA cache before transcription
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            logger.info("Cleared CUDA cache before transcription")
+        
+        try:
+            # Set a timeout for the extraction process
+            return await asyncio.wait_for(
+                # Run directly in the main process, not in a thread
+                # This avoids CUDA context issues
+                self._run_extraction_directly(file_path, file_type),
+                timeout=300  # 5 minute timeout
+            )
+        except asyncio.TimeoutError:
+            logger.error("Whisper transcription timed out")
+            raise
+        finally:
+            # Clear CUDA cache after transcription
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info("Cleared CUDA cache after transcription")
+
+    async def _run_extraction_directly(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+        """Run extraction directly in the main process"""
+        # This runs in the main process, not in a separate thread
+        # We use asyncio.to_thread for CPU-bound work but keep CUDA ops in main thread
+        
+        # Get the model in the main thread
+        model = model_manager.get_whisper_model()
+        
+        # For video files, extract frames in a separate thread
+        is_video = file_type == 'video'
+        img_data = None
+        
+        if is_video:
+            try:
+                # Extract frame in a separate thread (CPU operation)
+                img_data = await asyncio.to_thread(
+                    self.extractor._extract_video_frame, file_path, 0
+                )
+            except Exception as e:
+                logger.error(f"Could not extract video frame: {str(e)}")
+        
+        # Transcribe directly in the main thread (GPU operation)
+        # This is the critical part that needs to stay in the main thread
+        result = model.transcribe(file_path)
+        
+        # Process the result
+        segments = result.get("segments", [])
+        chunks = []
+        
+        # Process segments into chunks (CPU operation, can be done in main thread)
+        if segments:
+            # Merge segments into 30-second chunks
+            merged_segments = []
+            current_segment = None
+            
+            for segment in segments:
+                if current_segment is None or segment.get("end", 0) - current_segment["start"] > 30:
+                    if current_segment and current_segment["text"]:
+                        merged_segments.append(current_segment)
+                    
+                    current_segment = {
+                        "text": segment.get("text", "").strip(),
+                        "start": segment.get("start", 0),
+                        "end": segment.get("end", 0),
+                    }
+                else:
+                    current_segment["text"] += " " + segment.get("text", "").strip()
+                    current_segment["end"] = segment.get("end", 0)
+            
+            # Add the last segment if it has content
+            if current_segment and current_segment["text"]:
+                merged_segments.append(current_segment)
+            
+            # Create chunks from merged segments
+            for i, segment in enumerate(merged_segments):
+                # For video, try to extract a frame at this timestamp
+                segment_img_data = img_data
+                if is_video and i > 0:
+                    try:
+                        # Try to get a frame at this segment's timestamp
+                        timestamp = segment["start"]
+                        segment_img_data = await asyncio.to_thread(
+                            self.extractor._extract_video_frame, file_path, timestamp
+                        )
+                    except Exception as e:
+                        logger.error(f"Could not extract frame at {timestamp}s: {str(e)}")
+                
+                chunk = FileExtractChunk(
+                    text=segment["text"],
+                    page=i+1,
+                    start_time=segment["start"],
+                    end_time=segment["end"],
+                    image_data=segment_img_data,
+                    type='video_chunk' if is_video else 'audio_chunk'
+                )
+                chunks.append(chunk)
+        else:
+            # No segments, create a single chunk with the full transcription
+            chunk = FileExtractChunk(
+                text=result.get("text", "").strip(),
+                page=1,
+                start_time=0,
+                end_time=result.get("duration", 0),
+                image_data=img_data,
+                type='video_chunk' if is_video else 'audio_chunk'
+            )
+            chunks.append(chunk)
+        
+        return chunks
+
+    async def _extract_with_cpu_fallback(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+        """Fallback to CPU-only extraction when GPU fails"""
+        logger.info("Attempting CPU-only transcription fallback")
+        
+        # Import here to avoid circular imports
+        import whisper
+        import tempfile
+        import shutil
+        
+        # Create a temporary directory for this operation
+        with tempfile.TemporaryDirectory() as temp_dir:
+            try:
+                # Force CPU device
+                os.environ["CUDA_VISIBLE_DEVICES"] = ""
+                
+                # Load a CPU-only model (use tiny model for speed)
+                cpu_model = whisper.load_model("tiny", device="cpu")
+                
+                # Transcribe directly with the CPU model
+                result = cpu_model.transcribe(file_path)
+                
+                # Create a simple chunk with just the text
+                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
+                
+                # Try to get a frame if it's a video
+                img_data = None
+                if is_video:
+                    try:
+                        img_data = self.extractor._extract_video_frame(file_path, 0)
+                    except Exception as e:
+                        logger.error(f"Could not extract frame in CPU fallback: {str(e)}")
+                
+                # Create and return a single chunk with the transcription
+                return [FileExtractChunk(
+                    text=result.get("text", "CPU fallback transcription (limited quality)"),
+                    page=1,
+                    start_time=0,
+                    end_time=result.get("duration", 0),
+                    image_data=img_data,
+                    type='video_chunk' if is_video else 'audio_chunk'
+                )]
+            except Exception as e:
+                logger.error(f"CPU fallback transcription failed: {str(e)}")
+                # Return a minimal error chunk
+                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
+                return [FileExtractChunk(
+                    text=f"Transcription failed. Error: {str(e)}",
+                    page=1,
+                    type='video_chunk' if is_video else 'audio_chunk'
+                )]
+            finally:
+                # Restore GPU visibility
+                if torch.cuda.is_available():
+                    os.environ.pop("CUDA_VISIBLE_DEVICES", None)

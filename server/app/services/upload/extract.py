@@ -178,8 +178,36 @@ class FileExtractor:
         
         except Exception as e:
             logger.error(f"Error parsing audio/video: {str(e)}")
-            # Return empty list instead of crashing
-            return []
+            # Create a fallback chunk with error information
+            try:
+                # Try to extract at least one frame from the video
+                img_data = None
+                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
+                
+                if is_video:
+                    try:
+                        img_data = self._extract_video_frame(file_path, 0)
+                    except Exception as frame_error:
+                        logger.error(f"Could not extract fallback frame: {str(frame_error)}")
+                
+                # Create an error chunk
+                error_chunk = FileExtractChunk(
+                    text=f"Transcription failed. Error: {str(e)}",
+                    page=1,
+                    start_time=0,
+                    end_time=0,
+                    image_data=img_data,
+                    type='video_chunk' if is_video else 'audio_chunk'
+                )
+                chunks.append(error_chunk)
+            except Exception as fallback_error:
+                logger.error(f"Error creating fallback chunk: {str(fallback_error)}")
+                # Last resort - empty chunk
+                chunks.append(FileExtractChunk(
+                    text="Transcription failed with errors.",
+                    page=1,
+                    type='error'
+                ))
         
         return chunks
 
