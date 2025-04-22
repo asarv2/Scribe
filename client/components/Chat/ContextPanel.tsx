@@ -19,7 +19,7 @@ import { getFiles } from "@/utils/queries/get-files";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getClass } from "@/utils/queries/get-class";
-import { markFileIdle, updateProgress } from "@/utils/services/file";
+import { markFileIdle, updateFileStatus, updateProgress } from "@/utils/services/file";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
 import { Dropzone } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
@@ -805,6 +805,10 @@ export function ContextPanel({
                     storeFingerprintForResuming: true,
                     // Add metadata
                     metadata: metadata,
+                    onBeforeRequest() {
+                        // update the status to uploading in supabase
+                        updateFileStatus(fileId, 'uploading');
+                    },
                     // Called when upload progress changes
                     onProgress(bytesUploaded, bytesTotal) {
                         const percentage = (bytesUploaded / bytesTotal) * 100;

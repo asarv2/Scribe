@@ -68,23 +68,45 @@ class ModelManager:
             available_memory = self._get_gpu_memory()
             logger.info(f"Available GPU memory: {available_memory:.2f} GB")
         
-        # Load the model
-        whisper_model = whisper.load_model(
-            self.whisper_model_size, 
-            download_root=self.whisper_cache_dir
-        ).to(device)
-        
-        # Set model to evaluation mode
-        whisper_model.eval()
-        
-        load_time = time.time() - start_time
-        logger.info(f"Whisper model loaded in {load_time:.2f} seconds")
-        
-        # Store in global registry
-        MODEL_REGISTRY["whisper_model"] = whisper_model
-        MODEL_REGISTRY["whisper_initialized"] = True
-        
-        return whisper_model
+        try:
+            # Load the model
+            whisper_model = whisper.load_model(
+                self.whisper_model_size, 
+                download_root=self.whisper_cache_dir
+            )
+            
+            # Move to device after loading
+            whisper_model = whisper_model.to(device)
+            
+            # Set model to evaluation mode
+            whisper_model.eval()
+            
+            load_time = time.time() - start_time
+            logger.info(f"Whisper model loaded in {load_time:.2f} seconds")
+            
+            # Store in global registry
+            MODEL_REGISTRY["whisper_model"] = whisper_model
+            MODEL_REGISTRY["whisper_initialized"] = True
+            
+            return whisper_model
+        except Exception as e:
+            logger.error(f"Error initializing Whisper model: {e}")
+            # If CUDA error, try CPU fallback
+            if "CUDA" in str(e) and device == "cuda":
+                logger.info("CUDA error detected, falling back to CPU")
+                whisper_model = whisper.load_model(
+                    self.whisper_model_size, 
+                    download_root=self.whisper_cache_dir
+                ).to("cpu")
+                whisper_model.eval()
+                
+                # Store in global registry
+                MODEL_REGISTRY["whisper_model"] = whisper_model
+                MODEL_REGISTRY["whisper_initialized"] = True
+                
+                return whisper_model
+            else:
+                raise
     
     def unload_whisper_model(self):
         """Temporarily unload the Whisper model to free GPU memory"""

@@ -6,7 +6,7 @@
 
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
-import { ContentType, File, FileType } from "@/types";
+import { ContentType, File, FileType, ParseStatus } from "@/types";
 
 export const createFile = async (
     classId: string, 
@@ -162,6 +162,18 @@ export const updateProgress = async (fileId: string, progress: number) => {
     const { error } = await supabase
         .from("files")
         .update({upload_progress: progress})
+        .eq("id", fileId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
+
+export const updateFileStatus = async (fileId: string, status: ParseStatus) => {
+    const supabase = await useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("files")
+        .update({parse_status: status})
         .eq("id", fileId);
     if (error) {
         return { success: false, error: error.message };
