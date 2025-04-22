@@ -62,152 +62,134 @@ class FileExtractor:
     def extract_audio_or_video(self, file_path: str) -> List[FileExtractChunk]:
         chunks = []
         try:
-            # Get the Whisper model
-            whisper_model = model_manager.get_whisper_model()
+            # Determine if this is a video file
+            is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
             
-            # Clear CUDA cache before transcription
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-                logger.info("Cleared CUDA cache before transcription")
+            # Create a temporary directory for the chunks
+            import tempfile
+            import subprocess
+            import shutil
             
-            # Use a try-finally block to ensure CUDA cache is cleared
-            try:
-                # Transcribe the audio/video with explicit device placement
-                result = whisper_model.transcribe(file_path)
-                
-                # Get the segments from the result
-                segments = result.get("segments", [])
-                
-                # Determine if this is a video file
-                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
-                
-                # Merge segments into 30-second chunks
-                merged_segments = []
-                current_segment = None  # Start with None instead of an empty dict
-                
-                for segment in segments:
-                    # If this is the first segment or if adding this segment would exceed 30 seconds
-                    if current_segment is None or segment.get("end", 0) - current_segment["start"] > 30:
-                        # If we have text in the current segment, save it
-                        if current_segment and current_segment["text"]:
-                            merged_segments.append(current_segment)
+            with tempfile.TemporaryDirectory() as temp_dir:
+                try:
+                    # Get file duration using ffprobe
+                    duration_cmd = [
+                        "ffprobe", "-v", "error", "-show_entries", "format=duration",
+                        "-of", "default=noprint_wrappers=1:nokey=1", file_path
+                    ]
+                    duration = float(subprocess.check_output(duration_cmd).decode().strip())
+                    logger.info(f"File duration: {duration:.2f} seconds")
+                    
+                    # Calculate number of 30-second chunks
+                    chunk_duration = 30.0
+                    num_chunks = max(1, int(duration / chunk_duration) + (1 if duration % chunk_duration > 0 else 0))
+                    logger.info(f"Splitting into {num_chunks} chunks of {chunk_duration}s each")
+                    
+                    # Process each chunk
+                    for i in range(num_chunks):
+                        start_time = i * chunk_duration
+                        end_time = min((i + 1) * chunk_duration, duration)
                         
-                        # Start a new segment
-                        current_segment = {
-                            "text": segment.get("text", "").strip(),
-                            "start": segment.get("start", 0),
-                            "end": segment.get("end", 0),
-                            "words": segment.get("words", [])
-                        }
-                    else:
-                        # Append this segment to the current one
-                        current_segment["text"] += " " + segment.get("text", "").strip()
-                        current_segment["end"] = segment.get("end", 0)
-                        if "words" in segment:
-                            current_segment["words"].extend(segment.get("words", []))
-                
-                # Add the last segment if it has content
-                if current_segment and current_segment["text"]:
-                    merged_segments.append(current_segment)
-                
-                # Process each merged segment
-                for i, segment in enumerate(merged_segments):
-                    start_time = segment["start"]
-                    end_time = segment["end"]
-                    text = segment["text"].strip()
-                    
-                    # Extract frame for video segments or generate waveform for audio
-                    img_data = None
-                    if is_video:
-                        try:
-                            # Extract frame at the start time of this segment
-                            img_data = self._extract_video_frame(file_path, start_time)
-                        except Exception as e:
-                            logger.error(f"Warning: Could not extract frame at {start_time}s: {e}")
-                    else:
-                        # For audio files, generate a waveform visualization
-                        try:
-                            img_data = self._generate_audio_waveform(file_path, start_time, end_time)
-                        except Exception as e:
-                            logger.error(f"Warning: Could not generate waveform for segment at {start_time}s: {e}")
-                    
-                    # Create chunk with explicit start_time and end_time
-                    chunk = FileExtractChunk(
-                        text=text,
-                        page=i + 1,  # Use segment number as page
-                        start_time=start_time,
-                        end_time=end_time,
-                        image_data=img_data,
-                        type='video_chunk' if is_video else 'audio_chunk'
-                    )
-                    chunks.append(chunk)
-                    
-                # If no segments were found, create a single chunk with the full transcript
-                if not chunks and result.get("text"):
-                    img_data = None
-                    if is_video:
-                        try:
-                            # Extract the first frame for the entire video
-                            img_data = self._extract_video_frame(file_path, 0)
-                        except Exception as e:
-                            logger.error(f"Warning: Could not extract first frame: {e}")
-                    else:
-                        # For audio files, generate a waveform for the entire file
-                        try:
-                            duration = result.get("duration", 0)
-                            img_data = self._generate_audio_waveform(file_path, 0, duration)
-                        except Exception as e:
-                            logger.error(f"Warning: Could not generate waveform for audio: {e}")
+                        # Create a path for this chunk
+                        chunk_filename = f"chunk_{i:03d}.{'mp4' if is_video else 'wav'}"
+                        chunk_path = os.path.join(temp_dir, chunk_filename)
                         
-                    # For a single chunk, set start_time to 0 and end_time to the duration if available
-                    duration = result.get("duration", 0)
+                        try:
+                            # Extract the chunk using ffmpeg
+                            if is_video:
+                                cmd = [
+                                    "ffmpeg", "-y", "-ss", str(start_time), "-t", str(end_time - start_time),
+                                    "-i", file_path, "-c:v", "libx264", "-c:a", "aac", "-strict", "experimental",
+                                    "-b:a", "128k", "-movflags", "+faststart", chunk_path
+                                ]
+                            else:
+                                cmd = [
+                                    "ffmpeg", "-y", "-ss", str(start_time), "-t", str(end_time - start_time),
+                                    "-i", file_path, "-ac", "1", "-ar", "16000", chunk_path
+                                ]
+                            
+                            subprocess.run(cmd, check=True, capture_output=True, timeout=60)
+                            
+                            # Get the Whisper model
+                            whisper_model = model_manager.get_whisper_model()
+                            
+                            # Clear CUDA cache before transcription
+                            if torch.cuda.is_available():
+                                torch.cuda.empty_cache()
+                                logger.info(f"Cleared CUDA cache before transcribing chunk {i+1}/{num_chunks}")
+                            
+                            # Transcribe this chunk
+                            result = whisper_model.transcribe(chunk_path)
+                            text = result.get("text", "").strip()
+                            
+                            # Generate preview image for this chunk
+                            img_data = None
+                            if is_video:
+                                # Extract a frame from the video chunk
+                                img_data = self._extract_video_frame(chunk_path, 0)
+                            else:
+                                # Generate audio waveform for audio chunk
+                                img_data = self._generate_audio_waveform(chunk_path, 0, end_time - start_time)
+                            
+                            # Copy the chunk to a permanent location
+                            permanent_chunk_dir = os.path.join(os.path.dirname(file_path), "chunks")
+                            os.makedirs(permanent_chunk_dir, exist_ok=True)
+                            permanent_chunk_path = os.path.join(permanent_chunk_dir, chunk_filename)
+                            shutil.copy2(chunk_path, permanent_chunk_path)
+                            
+                            # Create chunk with both the path to the saved chunk file and the preview image
+                            chunk = FileExtractChunk(
+                                text=text,
+                                page=i + 1,
+                                start_time=start_time,
+                                end_time=end_time,
+                                image_data=img_data,
+                                video_chunk_path=permanent_chunk_path if is_video else None,
+                                audio_chunk_path=permanent_chunk_path if not is_video else None,
+                                type='video_chunk' if is_video else 'audio_chunk'
+                            )
+                            chunks.append(chunk)
+                            
+                            logger.info(f"Processed chunk {i+1}/{num_chunks}: {start_time}s to {end_time}s")
+                        except Exception as e:
+                            logger.error(f"Error processing chunk {i+1}/{num_chunks}: {str(e)}")
+                            # Continue with next chunk
+                    
+                    # If no chunks were processed successfully, create a fallback chunk
+                    if not chunks:
+                        logger.warning("No chunks were processed successfully")
+                        chunk = FileExtractChunk(
+                            text="Failed to process any segments of this file.",
+                            page=1,
+                            start_time=0,
+                            end_time=duration,
+                            type='video_chunk' if is_video else 'audio_chunk'
+                        )
+                        chunks.append(chunk)
+                
+                    logger.info(f"Extraction complete: {len(chunks)} chunks extracted")
+                
+                except Exception as e:
+                    logger.error(f"Error in chunked processing: {str(e)}")
+                    # Create a fallback chunk with error information
                     chunk = FileExtractChunk(
-                        text=result.get("text", "").strip(),
+                        text=f"Error processing file: {str(e)}",
                         page=1,
-                        start_time=0,  # Explicitly set start_time to 0
-                        end_time=duration,  # Set end_time to duration
-                        image_data=img_data,
+                        start_time=0,
+                        end_time=0,
                         type='video_chunk' if is_video else 'audio_chunk'
                     )
                     chunks.append(chunk)
-            finally:
-                # Clear CUDA cache after transcription
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-                    logger.info("Cleared CUDA cache after transcription")
         
         except Exception as e:
-            logger.error(f"Error parsing audio/video: {str(e)}")
-            # Create a fallback chunk with error information
-            try:
-                # Try to extract at least one frame from the video
-                img_data = None
-                is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
-                
-                if is_video:
-                    try:
-                        img_data = self._extract_video_frame(file_path, 0)
-                    except Exception as frame_error:
-                        logger.error(f"Could not extract fallback frame: {str(frame_error)}")
-                
-                # Create an error chunk
-                error_chunk = FileExtractChunk(
-                    text=f"Transcription failed. Error: {str(e)}",
-                    page=1,
-                    start_time=0,
-                    end_time=0,
-                    image_data=img_data,
-                    type='video_chunk' if is_video else 'audio_chunk'
-                )
-                chunks.append(error_chunk)
-            except Exception as fallback_error:
-                logger.error(f"Error creating fallback chunk: {str(fallback_error)}")
-                # Last resort - empty chunk
-                chunks.append(FileExtractChunk(
-                    text="Transcription failed with errors.",
-                    page=1,
-                    type='error'
-                ))
+            logger.error(f"Error in extract_audio_or_video: {str(e)}")
+            # Create a minimal error chunk
+            chunk = FileExtractChunk(
+                text=f"Transcription failed. Error: {str(e)}",
+                page=1,
+                type='error'
+            )
+            chunks.append(chunk)
         
         return chunks
 

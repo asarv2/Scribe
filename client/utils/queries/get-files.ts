@@ -1,10 +1,10 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getFiles(client: TypedSupabaseClient, classIds: string[]) {
+export async function getFiles(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
         .from("files")
         .select("*")
-        .in("class", classIds)
+        .eq("class", classId)
         .eq("deleted", false)
         .order("file_number", {ascending: false})
     

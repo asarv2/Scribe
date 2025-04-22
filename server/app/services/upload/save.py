@@ -104,8 +104,9 @@ class FileSaver:
             document_id = document_response.data[0]['id']
             logger.info(f"Document record created: {document_id}")
             
-            # Upload image to storage if provided
+            # Handle different types of media to upload
             if extract_chunk.image_data:
+                # Upload image to storage if provided
                 storage_path = f"{class_id}/{file_id}/{document_id}.png"
                 logger.info(f"Uploading image ({len(extract_chunk.image_data)} bytes) to {storage_path}")
                 
@@ -118,8 +119,40 @@ class FileSaver:
                     logger.info(f"Image upload successful: {upload_result}")
                 except Exception as upload_error:
                     logger.error(f"Image upload failed: {str(upload_error)}")
+            
+            # Upload video chunk if provided
+            if extract_chunk.video_chunk_path and os.path.exists(extract_chunk.video_chunk_path):
+                storage_path = f"{class_id}/{file_id}/{document_id}.mp4"
+                logger.info(f"Uploading video chunk from {extract_chunk.video_chunk_path} to {storage_path}")
+                
+                try:
+                    with open(extract_chunk.video_chunk_path, 'rb') as f:
+                        upload_result = self.supabase.storage.from_("files").upload(
+                            path=storage_path,
+                            file=f,
+                            file_options={"content-type": "video/mp4"}
+                        )
+                    logger.info(f"Video chunk upload successful: {upload_result}")
+                except Exception as upload_error:
+                    logger.error(f"Video chunk upload failed: {str(upload_error)}")
+            
+            # Upload audio chunk if provided
+            if extract_chunk.audio_chunk_path and os.path.exists(extract_chunk.audio_chunk_path):
+                storage_path = f"{class_id}/{file_id}/{document_id}.wav"
+                logger.info(f"Uploading audio chunk from {extract_chunk.audio_chunk_path} to {storage_path}")
+                
+                try:
+                    with open(extract_chunk.audio_chunk_path, 'rb') as f:
+                        upload_result = self.supabase.storage.from_("files").upload(
+                            path=storage_path,
+                            file=f,
+                            file_options={"content-type": "audio/wav"}
+                        )
+                    logger.info(f"Audio chunk upload successful: {upload_result}")
+                except Exception as upload_error:
+                    logger.error(f"Audio chunk upload failed: {str(upload_error)}")
             else:
-                logger.warning(f"No image data provided for document {document_id}")
+                logger.warning(f"No media data provided for document {document_id}")
             
             return document_id
             

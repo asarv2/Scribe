@@ -52,7 +52,7 @@ export const deleteFile = async (
         .from("files")
         .update({ deleted: true })
         .eq("id", fileId)
-        .select("extension")
+        .select("extension, type")
     if (error) {
         return { success: false, error: error.message };
     }
@@ -61,7 +61,7 @@ export const deleteFile = async (
     }
     
     const fileExtension = data[0].extension || '';
-    
+    const type = data[0].type || '';
     // Delete from Gemini
     if (deleteFromGemini) {
         const apiKey = process.env.GOOGLE_API_KEY;
@@ -124,6 +124,14 @@ export const deleteFile = async (
                 console.error("Error getting documents:", documentsError.message);
             } else if (documents && documents.length > 0) {
                 // Add all document images (they all end with .png)
+                if (type === 'video') {
+                    const documentVideos = documents.map(doc => `${classId}/${fileId}/${doc.id}.mp4`);
+                    filesToDelete.push(...documentVideos);
+                } else if (type === 'audio') {
+                    const documentAudios = documents.map(doc => `${classId}/${fileId}/${doc.id}.wav`);
+                    filesToDelete.push(...documentAudios);
+                }
+                // all documents have images
                 const documentImages = documents.map(doc => `${classId}/${fileId}/${doc.id}.png`);
                 filesToDelete.push(...documentImages);
             }

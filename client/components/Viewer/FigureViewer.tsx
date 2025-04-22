@@ -15,6 +15,7 @@ import { Document, Figure, ViewerMode } from '../../types';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
 import Latex from '../Latex';
 import styles from './FigureViewer.module.css';
+import PulseText from '../Chat/Canvas/PulseText';
 
 interface FigureViewerProps {
   figure: Figure;
@@ -41,92 +42,99 @@ export default function FigureViewer({
       case 'idle':
         return (
           <Center style={{ height: '100%' }}>
-            <Text>Waiting to generate figure...</Text>
+            <PulseText text="Waiting to generate figure..." />
           </Center>
         );
       case 'generating':
         return (
           <Center style={{ height: '100%' }}>
-            <Loader />
-            <Text ml="md">Generating figure...</Text>
+            <PulseText text="Generating figure..." />
+          </Center>
+        );
+      case 'error':
+        return (
+          <Center style={{ height: '100%' }}>
+            <PulseText text="Error generating figure" error={true} />
           </Center>
         );
       case 'complete':
         return (
-          <Box
-            pos="relative"
-            style={{
-              maxWidth: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              margin: '0',
-              padding: 0,
-              cursor: 'pointer'
-            }}
-            onClick={() => setModalOpen(true)}
-          >
-            {/* Download button overlay */}
-            <Tooltip label="Download Figure">
-              <ActionIcon
-                component="a"
-                href={getFigureUrl(classId, figure.id)}
-                download
-                pos="absolute"
-                top={10}
-                right={10}
-                variant="subtle"
-                style={{ zIndex: 10 }}
-                onClick={(e) => e.stopPropagation()} // Prevent modal from opening when clicking download
-              >
-                <IconDownload size={18} />
-              </ActionIcon>
-            </Tooltip>
-            {/* <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(figure.code, fileDocuments ?? [])}</Latex> */}
+          <Card p={0} w={full ? "100%" : viewerMode.open ? "70%" : "50%"} key={"figure-" + figure.id} shadow={"none"}>
+            <Box
+              pos="relative"
+              style={{
+                maxWidth: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                margin: '0',
+                padding: 0,
+                cursor: 'pointer'
+              }}
+              onClick={() => setModalOpen(true)}
+            >
+              {/* Download button overlay */}
+              <Tooltip label="Download Figure">
+                <ActionIcon
+                  component="a"
+                  href={getFigureUrl(classId, figure.id)}
+                  download
+                  pos="absolute"
+                  top={10}
+                  right={10}
+                  variant="subtle"
+                  style={{ zIndex: 10 }}
+                  onClick={(e) => e.stopPropagation()} // Prevent modal from opening when clicking download
+                >
+                  <IconDownload size={18} />
+                </ActionIcon>
+              </Tooltip>
+              {/* <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(figure.code, fileDocuments ?? [])}</Latex> */}
 
-            <Box style={{ width: '100%', position: 'relative' }}>
-              <Skeleton
-                visible={true}
-                height={"100%"}
-                radius={0}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  maxWidth: '100%',
-                  display: 'block',
-                  margin: 0
-                }}
-              />
-              <Image
-                src={getFigureUrl(classId, figure.id)}
-                alt="Figure"
-                width={800}
-                height={600}
-                className={styles.figureImage}
-                style={{
-                  maxWidth: '100%',
-                  height: 'auto',
-                  objectFit: 'contain',
-                  opacity: 0,
-                  borderRadius: '12px',
-                  transition: 'opacity 0.2s',
-                }}
-                onLoad={(e) => {
-                  const img = e.target as HTMLImageElement;
-                  const aspectRatio = img.naturalWidth / img.naturalHeight;
-                  if (aspectRatio > 1.5) {
-                    img.style.padding = '0.5rem';
-                  }
-                  img.style.opacity = '1';
-                  const skeleton = img.parentElement?.querySelector('.mantine-Skeleton-root');
-                  if (skeleton) {
-                    (skeleton as HTMLElement).style.display = 'none';
-                  }
-                }}
-                priority={false}
-              />
+              <Box style={{ width: '100%', position: 'relative' }}>
+                <Skeleton
+                  visible={true}
+                  height={"100%"}
+                  radius={0}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    maxWidth: '100%',
+                    display: 'block',
+                    margin: 0
+                  }}
+                />
+                <Image
+                  src={getFigureUrl(classId, figure.id)}
+                  alt="Figure"
+                  width={800}
+                  height={600}
+                  className={styles.figureImage}
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    opacity: 0,
+                    borderRadius: '12px',
+                    transition: 'opacity 0.2s',
+                  }}
+                  onLoad={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    const aspectRatio = img.naturalWidth / img.naturalHeight;
+                    if (aspectRatio > 1.5) {
+                      img.style.padding = '0.5rem';
+                    }
+                    img.style.opacity = '1';
+                    const skeleton = img.parentElement?.querySelector('.mantine-Skeleton-root');
+                    if (skeleton) {
+                      (skeleton as HTMLElement).style.display = 'none';
+                    }
+                  }}
+                  priority={false}
+                />
+              </Box>
             </Box>
-          </Box>
+          </Card>
         );
       default:
         return (
@@ -139,9 +147,7 @@ export default function FigureViewer({
 
   return (figure.generation_status === 'idle' || figure.generation_status === 'generating' || figure.generation_status === 'complete') && (
     <>
-      <Card p={0} w={full ? "100%" : viewerMode.open ? "70%" : "50%"} key={"figure-" + figure.id} shadow={"none"}>
-        {renderContent()}
-      </Card>
+      {renderContent()}
 
       {/* Full-screen modal for the figure */}
       <Modal

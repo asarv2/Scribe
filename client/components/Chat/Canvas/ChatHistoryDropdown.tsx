@@ -51,7 +51,7 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
     // Get files and documents for image references
     const { data: files } = useQuery({
         queryKey: ["files", classId],
-        queryFn: () => getFiles(supabase, [classId]),
+        queryFn: () => getFiles(supabase, classId!),
         enabled: !!messages && messages.length > 0
     })
 

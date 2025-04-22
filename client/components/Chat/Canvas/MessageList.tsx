@@ -33,6 +33,7 @@ import { getFigures } from "@/utils/queries/get-figures";
 import FigureViewer from "@/components/Viewer/FigureViewer";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
+import PulseText from "./PulseText";
 
 const CONTENT_COLORS = {
   lecture: 'blue',    // matches badge color
@@ -96,7 +97,7 @@ export const MessageList = memo(({
 
   const { data: files, isLoading: loadingFiles } = useQuery({
     queryKey: ["files", classId],
-    queryFn: () => getFiles(supabase, [classId]),
+    queryFn: () => getFiles(supabase, classId!),
     enabled: !!profile
   });
 
@@ -174,79 +175,6 @@ export const MessageList = memo(({
       scrollToBottom();
     }
   }, [messages]);
-
-  // realtime subscriptions for summaries and questions
-  // Add realtime subscriptions for course-specific data when viewing a course
-  useEffect(() => {
-    if (!user || !messages) return;
-
-    const figuresChannel = supabase
-      .channel('realtime-figures')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'prod',
-          table: 'figures',
-          filter: `message=in.(${messages.map(m => m.id).join(',')})`
-        },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ["figures"]
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["summaryFigures"]
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["questionFigures"]
-          });
-        }
-      )
-      .subscribe();
-
-    // Create channels for lectures, textbooks, and homeworks
-    const summariesChannel = supabase
-      .channel('realtime-summaries')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'prod',
-          table: 'summaries',
-          filter: `message=in.(${messages.map(m => m.id).join(',')})`
-        },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ["summaries"]
-          });
-        }
-      )
-      .subscribe();
-
-    const questionsChannel = supabase
-      .channel('realtime-questions')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'prod',
-          table: 'questions',
-          filter: `message=in.(${messages.map(m => m.id).join(',')})`
-        },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ["questions"]
-          });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(figuresChannel);
-      supabase.removeChannel(summariesChannel);
-      supabase.removeChannel(questionsChannel);
-    };
-  }, [user, queryClient, messages]);
 
   const renderWelcomeMessages = () => {
     return (
@@ -734,9 +662,7 @@ export const MessageList = memo(({
 
                   {/* Message container */}
                   {!message.response || message.response.trim() === '' ? (
-                    <Group justify="center">
-                      <Loader size="sm" />
-                    </Group>
+                    <PulseText key={index} text={message.status_text !== "" ? message.status_text : "Thinking..."} />
                   ) : (
                     <Stack gap="xs" style={{ width: "100%" }}>
                       <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>

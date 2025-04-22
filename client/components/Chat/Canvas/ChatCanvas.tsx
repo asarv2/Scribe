@@ -34,6 +34,7 @@ import { ContextPanel } from "../ContextPanel";
 import { useOs } from '@mantine/hooks';
 import PageDetailsModal from "../PageDetailsModal";
 import { useStudentMode } from "@/components/StudentModeContext";
+import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 export interface RecordedVideo {
     id: string;
@@ -43,7 +44,7 @@ export interface RecordedVideo {
     parseStatus?: string;
 }
 
-export default function ChatCanvas({ classId, chatId }: { classId: string, chatId: string }) {
+export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { classId: string, chatId: string, chatTitleUpdated: boolean }) {
     const queryClient = useQueryClient();
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
@@ -91,8 +92,14 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     const { data: files, isLoading: loadingFiles } = useQuery({
         queryKey: ["files", classId],
-        queryFn: () => getFiles(supabase, [classId]),
+        queryFn: () => getFiles(supabase, classId!),
         enabled: !!profile
+    });
+
+    const { data: fileDocuments } = useQuery({
+        queryKey: ["fileDocuments", classId],
+        queryFn: () => getFileDocuments(supabase, files!.map(f => f.id)),
+        enabled: !!files
     });
 
     const [activeChat, setActiveChat] = useState<ChatMessage>({
@@ -111,8 +118,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
 
     const [isWaitingForVideos, setIsWaitingForVideos] = useState(false);
 
-    // Add this state to track when we receive a realtime update
-    const [receivedRealtimeUpdate, setReceivedRealtimeUpdate] = useState(false);
+    const [shouldAnimateTitle, setShouldAnimateTitle] = useState<boolean>(false);
 
     const getContext = () => {
         const previousMessagesFiles = messages?.flatMap(message =>
@@ -147,6 +153,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             // Create the message
             const newMessage = {
                 chat: newChatId,
+                class: classId,
                 profile: profileId,
                 bare_question: activeChat.prompt,
                 question: activeChat.prompt,
@@ -158,6 +165,7 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
             if (!success) {
                 throw new Error(error);
             }
+            queryClient.invalidateQueries({ queryKey: ["messages", chatId] });
 
             const messageData = messagesData?.[0];
             if (!messageData) {
@@ -349,67 +357,6 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     }, [isWaitingForVideos, recordedVideos, files, sendMessage, loading]);
 
-    // Set up realtime subscription for messages
-    useEffect(() => {
-        if (chatId === "new") return;
-
-        const channel = supabase
-            .channel(`realtime-messages-${chatId}`)
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'messages',
-                    filter: `chat=eq.${chatId}`
-                },
-                async (payload) => {
-                    console.log("Received message update:", payload);
-                    // Immediately update the cache with the new data
-                    queryClient.setQueryData(
-                        ["messages", chatId],
-                        (oldData: any) => {
-                            if (!oldData) return [payload.new];
-
-                            // For INSERT, add the new message
-                            if (payload.eventType === 'INSERT') {
-                                // Check if this message already exists in our data
-                                const messageExists = oldData.some((msg: any) => msg.id === payload.new.id);
-                                if (messageExists) {
-                                    console.log("Message already exists in cache, not adding duplicate");
-                                    return oldData;
-                                }
-                                return [...oldData, payload.new];
-                            }
-
-                            // For UPDATE, update the existing message
-                            if (payload.eventType === 'UPDATE') {
-                                return oldData.map((message: any) =>
-                                    message.id === payload.new.id ? payload.new : message
-                                );
-                            }
-
-                            return oldData;
-                        }
-                    );
-
-                    // Then trigger a refetch to ensure we're in sync
-                    await queryClient.invalidateQueries({
-                        queryKey: ["messages", chatId],
-                        exact: true
-                    });
-                }
-            )
-            .subscribe();
-
-        console.log("Subscribed to channel:", `realtime-messages-${chatId}`);
-
-        return () => {
-            console.log("Unsubscribing from channel:", `realtime-messages-${chatId}`);
-            supabase.removeChannel(channel);
-        };
-    }, [chatId, queryClient, supabase]);
-
     useEffect(() => {
         if (profile) {
             setActiveChat(prev => ({
@@ -421,110 +368,12 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
         }
     }, [profile]);
 
-    // Set up realtime subscription for chat
+    // Use the chatTitleUpdated prop to trigger animation when title changes
     useEffect(() => {
-        const channel = supabase
-            .channel(`realtime-chats-${chatId}`)
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'chats',
-                    filter: `id=eq.${chatId}`
-                },
-                async (payload) => {
-                    console.log("Received chat update:", payload);
-
-                    // Set flag to indicate we received a realtime update
-                    if (payload.eventType === 'UPDATE' && payload.new.name !== existingChat?.name) {
-                        setReceivedRealtimeUpdate(true);
-                    }
-
-                    // Immediately update the cache with the new data
-                    queryClient.setQueryData(
-                        ["chat", chatId],
-                        (oldData: any) => {
-                            // The existing chat data is a single object, not an array
-                            if (!oldData) return payload.new;  // Return single object, not array
-
-                            // For UPDATE, just return the new data
-                            if (payload.eventType === 'UPDATE') {
-                                return payload.new;
-                            }
-
-                            return oldData;
-                        }
-                    );
-
-                    // Then trigger a refetch to ensure we're in sync
-                    await queryClient.invalidateQueries({
-                        queryKey: ["chat", chatId],
-                        exact: true
-                    });
-                }
-            )
-            .subscribe();
-
-        console.log("Subscribed to channel:", `realtime-chats-${chatId}`);
-
-        return () => {
-            console.log("Unsubscribing from channel:", `realtime-chats-${chatId}`);
-            supabase.removeChannel(channel);
-        };
-    }, [chatId, queryClient, supabase]);
-
-    // Add realtime subscriptions for files
-    useEffect(() => {
-        const channel = supabase
-            .channel('realtime-files')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'files',
-                    filter: `class=eq.${classId}`
-                },
-                () => {
-                    queryClient.invalidateQueries({
-                        queryKey: ["files", classId]
-                    });
-                }
-            )
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, [classId, supabase, queryClient]);
-
-    // Add realtime subscriptions for lecture documents
-    useEffect(() => {
-        if (!files || files.length === 0) return;
-
-        const channel = supabase
-            .channel('realtime-lecture-documents')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'prod',
-                    table: 'documents',
-                    filter: `file=in.(${files.map(file => file.id).join(',')})`
-                },
-                () => {
-                    queryClient.invalidateQueries({
-                        queryKey: ["fileDocuments", classId]
-                    });
-                }
-            )
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, [classId, supabase, files, queryClient]);
+        if (chatTitleUpdated && existingChat) {
+            setShouldAnimateTitle(true);
+        }
+    }, [chatTitleUpdated, existingChat]);
 
     // Add this function to handle chat selection
     const handleChatSelect = (selectedChatId: string) => {
@@ -613,22 +462,32 @@ export default function ChatCanvas({ classId, chatId }: { classId: string, chatI
                                     <Group gap="sm">
                                         <Text size="xl" fw={700} mb={6}>
                                             {existingChat ? (
-                                                <TypeAnimation
-                                                    key={`${existingChat.id}-${receivedRealtimeUpdate}`}
-                                                    sequence={[
-                                                        existingChat.name || '',
-                                                    ]}
-                                                    wrapper="span"
-                                                    cursor={false}
-                                                    repeat={0}
-                                                    speed={50}
-                                                    preRenderFirstString={!receivedRealtimeUpdate}
-                                                    style={{
+                                                shouldAnimateTitle ? (
+                                                    <TypeAnimation
+                                                        key={`${existingChat.id}-${existingChat.name}-animate`}
+                                                        sequence={[
+                                                            existingChat.name || '',
+                                                        ]}
+                                                        wrapper="span"
+                                                        cursor={false}
+                                                        repeat={0}
+                                                        speed={50}
+                                                        preRenderFirstString={false}
+                                                        style={{
+                                                            fontSize: '1.25rem',
+                                                            fontWeight: 700,
+                                                            display: 'inline-block',
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <span style={{
                                                         fontSize: '1.25rem',
                                                         fontWeight: 700,
                                                         display: 'inline-block',
-                                                    }}
-                                                />
+                                                    }}>
+                                                        {existingChat.name}
+                                                    </span>
+                                                )
                                             ) : (
                                                 activeChat.title
                                             )}

@@ -1,0 +1,22 @@
+/* PulseText.module.css */
+
+.thinkingAnimation {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.errorAnimation {
+  animation: pulse 1.5s infinite ease-in-out;
+  color: red;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}

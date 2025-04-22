@@ -232,6 +232,7 @@ export type Database = {
           description: string
           end_time: number | null
           exercise_number: number | null
+          extension: string
           file: string | null
           id: string
           page: number
@@ -249,6 +250,7 @@ export type Database = {
           description?: string
           end_time?: number | null
           exercise_number?: number | null
+          extension?: string
           file?: string | null
           id?: string
           page: number
@@ -266,6 +268,7 @@ export type Database = {
           description?: string
           end_time?: number | null
           exercise_number?: number | null
+          extension?: string
           file?: string | null
           id?: string
           page?: number

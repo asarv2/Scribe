@@ -348,19 +348,19 @@ class ChatProcessor(RunHooks):
         if from_agent.name == "Chat Agent":
             if to_agent.name == "Figure Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Generating figure..."
+                    "status_text": f"Creating a figure..."
                 }).eq("id", message_id).execute()
             elif to_agent.name == "Summary Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Generating summary..."
+                    "status_text": f"Creating summary..."
                 }).eq("id", message_id).execute()
             elif to_agent.name == "Question Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Generating question..."
+                    "status_text": f"Creating question..."
                 }).eq("id", message_id).execute()
             elif to_agent.name == "Grading Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Grading results..."
+                    "status_text": f"Getting ready to grade..."
                 }).eq("id", message_id).execute()
 
     async def on_agent_end(

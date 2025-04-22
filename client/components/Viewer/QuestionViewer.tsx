@@ -18,6 +18,7 @@ import { getQuestionDownloadUrl } from '@/utils/services/images';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
 import FigureViewer from './FigureViewer';
 import { getFigures } from '@/utils/queries/get-figures';
+import PulseText from '../Chat/Canvas/PulseText';
 
 
 interface QuestionViewerProps {
@@ -58,7 +59,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     });
 
     const { data: figures, isLoading: figuresLoading } = useQuery({
-        queryKey: ["questionFigures", ...questions.map(q => q.id)],
+        queryKey: ["questionFigures", chatId, ...questions.map(q => q.id)],
         queryFn: () => getFigures(supabase, questions.map(q => q.message).filter(Boolean) as string[])
     });
 
@@ -149,63 +150,63 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
     const handleDownload = (format: 'pdf' | 'latex') => {
         const downloadUrl = getQuestionDownloadUrl(chatId, questions.map(q => q.id), format);
-        
+
         setDownloadLoading(true);
-        
+
         // Fetch the file with the ngrok-skip-browser-warning header
         fetch(downloadUrl, {
             headers: {
                 'ngrok-skip-browser-warning': 'true'
             }
         })
-        .then(response => {
-            // Get filename from Content-Disposition header if available
-            const contentDisposition = response.headers.get('Content-Disposition');
-            console.log('Content-Disposition:', contentDisposition);
-            let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
-            
-            if (contentDisposition) {
-                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-                if (filenameMatch && filenameMatch[1]) {
-                    filename = filenameMatch[1].replace(/['"]/g, '');
+            .then(response => {
+                // Get filename from Content-Disposition header if available
+                const contentDisposition = response.headers.get('Content-Disposition');
+                console.log('Content-Disposition:', contentDisposition);
+                let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
+
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                    if (filenameMatch && filenameMatch[1]) {
+                        filename = filenameMatch[1].replace(/['"]/g, '');
+                    }
                 }
-            }
-            
-            return response.blob().then(blob => ({ blob, filename }));
-        })
-        .then(({ blob, filename }) => {
-            // Create a URL for the blob
-            const url = window.URL.createObjectURL(blob);
-            
-            // Create a hidden anchor element
-            const link = document.createElement('a');
-            link.style.display = 'none';
-            link.href = url;
-            link.download = filename;
-            
-            // Append to the document, click it, and remove it
-            document.body.appendChild(link);
-            link.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(link);
-            
-            notifications.show({
-                title: 'Download complete',
-                message: `${format.toUpperCase()} file has been downloaded`,
-                color: 'green',
+
+                return response.blob().then(blob => ({ blob, filename }));
+            })
+            .then(({ blob, filename }) => {
+                // Create a URL for the blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Create a hidden anchor element
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.href = url;
+                link.download = filename;
+
+                // Append to the document, click it, and remove it
+                document.body.appendChild(link);
+                link.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+
+                notifications.show({
+                    title: 'Download complete',
+                    message: `${format.toUpperCase()} file has been downloaded`,
+                    color: 'green',
+                });
+            })
+            .catch(error => {
+                console.error('Download failed:', error);
+                notifications.show({
+                    title: 'Download failed',
+                    message: 'Failed to download the questions',
+                    color: 'red',
+                });
+            })
+            .finally(() => {
+                setDownloadLoading(false);
             });
-        })
-        .catch(error => {
-            console.error('Download failed:', error);
-            notifications.show({
-                title: 'Download failed',
-                message: 'Failed to download the questions',
-                color: 'red',
-            });
-        })
-        .finally(() => {
-            setDownloadLoading(false);
-        });
     };
 
     const renderFigure = (figureId: string) => {
@@ -344,22 +345,21 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             case 'idle':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <Text>Waiting to generate question... {currentIndex + 1} of {questions.length}</Text>
+                        <PulseText text={`Waiting to generate question... ${currentIndex + 1} of ${questions.length}`} />
                     </Center>
                 );
             case 'generating':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <Loader />
-                        <Text ml="md">Generating question {currentIndex + 1} of {questions.length}...</Text>
+                        <PulseText text={`Generating question ${currentIndex + 1} of ${questions.length}...`} />
                     </Center>
                 );
             case 'complete':
                 return renderQuestion();
-            default:
+            case 'error':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <Text>Unknown status</Text>
+                        <PulseText text="Error generating question" error={true} />
                     </Center>
                 );
         }

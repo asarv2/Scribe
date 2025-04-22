@@ -90,7 +90,7 @@ export const ChatInput = memo(({
 
   const { data: files, isLoading: loadingFiles } = useQuery({
     queryKey: ["files", classId],
-    queryFn: () => getFiles(supabase, [classId]),
+    queryFn: () => getFiles(supabase, classId!),
     enabled: !!profile
   });
 
@@ -448,6 +448,9 @@ export const ChatInput = memo(({
                 size="lg"
                 color={"yellow"}
                 variant={activeChat.chatType === 'summary' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'summary' ? 'var(--mantine-color-yellow-filled)' : 'var(--mantine-color-yellow-outline)'}`
+                }}
               >
                 <IconReportAnalytics size={20} />
               </ActionIcon>
@@ -478,6 +481,9 @@ export const ChatInput = memo(({
                 size="lg"
                 color={"blue"}
                 variant={activeChat.chatType === 'question' ? "light" : "subtle"}
+                style={{
+                  border: `1px solid ${activeChat.chatType === 'question' ? 'var(--mantine-color-blue-filled)' : 'var(--mantine-color-blue-outline)'}`
+                }}
               >
                 <IconQuestionMark size={20} />
               </ActionIcon>

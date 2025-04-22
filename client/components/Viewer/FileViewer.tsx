@@ -50,7 +50,7 @@ export default function FileViewer({
 
     const { data: files, isLoading: loadingFiles } = useQuery({
         queryKey: ["files", classId],
-        queryFn: () => getFiles(supabase, [classId])
+        queryFn: () => getFiles(supabase, classId!)
     })
 
     const { data: documents, isLoading: loadingDocuments } = useQuery({

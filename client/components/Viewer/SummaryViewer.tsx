@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import FigureViewer from './FigureViewer';
 import { getFigures } from '@/utils/queries/get-figures';
+import PulseText from '../Chat/Canvas/PulseText';
 
 interface SummaryViewerProps {
     classId: string;
@@ -46,7 +47,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
     });
 
     const { data: figures, isLoading: figuresLoading } = useQuery({
-        queryKey: ["summaryFigures", summary.id],
+        queryKey: ["summaryFigures", chatId, summary.id],
         queryFn: () => getFigures(supabase, [summary.message].filter(Boolean) as string[]),
         enabled: !!summary.message
     });
@@ -134,19 +135,18 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
             case 'idle':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <Text>Waiting to generate summary...</Text>
+                        <PulseText text="Waiting to generate summary..." />
                     </Center>
                 );
             case 'generating':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <Loader />
-                        <Text ml="md">Generating summary...</Text>
+                        <PulseText text="Generating summary..." />
                     </Center>
                 );
             case 'complete':
                 return (
-                    <>
+                    <Card withBorder p="md" w={"100%"}>
                         <Group justify="space-between">
                             <Text c="dimmed">{summary.title}</Text>
                             {(profile?.admin || profile?.professor) ? <Menu position="bottom-end" shadow="md">
@@ -214,21 +214,25 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                                 </SimpleGrid>
                             </Box>
                         )}
-                    </>
+                    </Card>
+                );
+            case 'error':
+                return (
+                    <Center style={{ height: '100%' }}>
+                        <PulseText text="Error generating summary" error={true} />
+                    </Center>
                 );
             default:
                 return (
                     <Center style={{ height: '100%' }}>
-                        <Text>Unknown status</Text>
+                        <PulseText text="Unknown status" error={true} />
                     </Center>
                 );
         }
     };
 
-    return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete') && (
-        <Card withBorder p="md" w={"100%"}>
-            {renderContent()}
-        </Card>
+    return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete' || summary.generation_status === 'error') && ( 
+            renderContent()
     );
 };
 
