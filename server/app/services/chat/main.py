@@ -4,7 +4,7 @@ from datetime import datetime
 from app.extensions import get_supabase, get_gemini
 from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig
-from app.services.chat.tools import create_figure, create_figure_latex, create_summary, update_chat_title, create_frq_question, create_mcq_question, grade_results
+from app.services.chat.tools import create_figure, create_figure_matplotlib, create_summary, update_chat_title, create_frq_question, create_mcq_question, grade_results
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
@@ -82,7 +82,7 @@ class ChatProcessor(RunHooks):
                 temperature=0.0,
                 include_usage=True
             ),
-            tools=[create_figure_latex],
+            tools=[create_figure],
             handoff_description="Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch. Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
         )
 
@@ -241,7 +241,7 @@ class ChatProcessor(RunHooks):
     ) -> None:
         """Called before a tool is invoked."""
         message_id = wrapper.context.message_id
-        if tool.name == "create_figure_latex":
+        if tool.name == "create_figure":
             # create a figure in the database
             figure_response = self.supabase_client.table("figures").insert({
                 "generation_status": "generating",
@@ -343,7 +343,7 @@ class ChatProcessor(RunHooks):
     ) -> None:
         """Called when a handoff occurs."""
         logger.info(f"Handing off from {from_agent.name} to {to_agent.name}")
-        message_id = context.message_id
+        message_id = context.context.message_id
         # update supabase with the status_text
         if from_agent.name == "Chat Agent":
             if to_agent.name == "Figure Agent":

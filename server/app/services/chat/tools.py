@@ -4,8 +4,6 @@ from agents import function_tool, RunContextWrapper
 from app.services.chat.models import MultipleChoiceQuestion, FreeResponseQuestion, Documents, clean_references
 from app.extensions import get_supabase
 import logging
-import io, os, subprocess, hashlib, tempfile, shutil
-from pylatex import Document, Package, NoEscape
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +28,7 @@ async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -
 
 
 @function_tool
-async def create_figure(wrapper: RunContextWrapper[Documents], title: str, python_code: str, references: List[int]) -> int:
+async def create_figure_matplotlib(wrapper: RunContextWrapper[Documents], title: str, python_code: str, references: List[int]) -> int:
     """Generates a figure object given the python code that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
 
     The following imports are available:
@@ -249,7 +247,7 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, pytho
 
 
 @function_tool
-async def create_figure_latex(wrapper: RunContextWrapper[Documents], title: str, latex_code: str, references: List[int] = []) -> str:
+async def create_figure(wrapper: RunContextWrapper[Documents], title: str, latex_code: str, references: List[int] = []) -> str:
     """Generates a figure object given the latex code that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
 
     Args:
