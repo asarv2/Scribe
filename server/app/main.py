@@ -4,10 +4,6 @@ import asyncio
 import logging
 import colorlog
 from contextlib import asynccontextmanager
-import multiprocessing
-
-# Add this at the very top of the file, before any other imports
-multiprocessing.set_start_method('spawn', force=True)
 
 # Configure colored logging globally
 def setup_logging():
@@ -54,10 +50,19 @@ from app.extensions import UPLOAD_FOLDER, initialize_clients
 # Define lifespan context manager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Don't initialize Whisper model here - let workers do it
-    logger.info("Application startup")
+    
+    # In Docker environment with GPU, preload the Whisper model
+    if os.getenv('DOCKER_ENV'):
+        # Initialize clients
+        from app.extensions import initialize_clients
+        initialize_clients()
+
+        from app.config import model_manager
+        logger.info("Preloading Whisper model in main process...")
+        model_manager.initialize_whisper_model()
+        logger.info("Whisper model preloaded successfully")
+    
     yield
-    logger.info("Application shutdown")
     # Cleanup code (if any) goes here
 
 # Create FastAPI app with lifespan

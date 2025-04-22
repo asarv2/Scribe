@@ -5,6 +5,7 @@ import torch
 import gc
 import logging
 from app.extensions import MODEL_CACHE_DIR
+import threading
 
 # Get logger
 logger = logging.getLogger(__name__)
@@ -14,6 +15,9 @@ MODEL_REGISTRY = {
     "whisper_model": None,
     "whisper_initialized": False
 }
+
+# Add a lock for thread safety
+MODEL_LOCK = threading.Lock()
 
 class ModelManager:
     def __init__(self):
@@ -27,9 +31,6 @@ class ModelManager:
         
         # Whisper configuration - default to tiny.en model
         self.whisper_model_size = 'tiny.en'
-        
-        # Track if model is currently unloaded
-        self.model_unloaded = False
 
     def _get_gpu_memory(self) -> float:
         """Get available GPU memory in GB"""
@@ -47,36 +48,34 @@ class ModelManager:
         """Initialize a single Whisper model"""
         global MODEL_REGISTRY
         
-        # If model is already loaded in registry, return it
-        if MODEL_REGISTRY["whisper_initialized"]:
-            logger.info("Using already initialized Whisper model")
-            return MODEL_REGISTRY["whisper_model"]
-        
-        has_gpu = torch.cuda.is_available()
-        device = "cuda" if has_gpu else "cpu"
-        
-        # Import whisper here to avoid loading it unnecessarily
-        import whisper
-        
-        logger.info(f"Initializing Whisper {self.whisper_model_size} model on {device}...")
-        start_time = time.time()
-        
-        # Force garbage collection before loading model
-        gc.collect()
-        if has_gpu:
-            torch.cuda.empty_cache()
-            available_memory = self._get_gpu_memory()
-            logger.info(f"Available GPU memory: {available_memory:.2f} GB")
-        
-        try:
+        # Use lock for thread safety
+        with MODEL_LOCK:
+            # If model is already loaded in registry, return it
+            if MODEL_REGISTRY["whisper_initialized"]:
+                logger.info("Using already initialized Whisper model")
+                return MODEL_REGISTRY["whisper_model"]
+            
+            has_gpu = torch.cuda.is_available()
+            device = "cuda" if has_gpu else "cpu"
+            
+            # Import whisper here to avoid loading it unnecessarily
+            import whisper
+            
+            logger.info(f"Initializing Whisper {self.whisper_model_size} model on {device}...")
+            start_time = time.time()
+            
+            # Force garbage collection before loading model
+            gc.collect()
+            if has_gpu:
+                torch.cuda.empty_cache()
+                available_memory = self._get_gpu_memory()
+                logger.info(f"Available GPU memory: {available_memory:.2f} GB")
+            
             # Load the model
             whisper_model = whisper.load_model(
                 self.whisper_model_size, 
                 download_root=self.whisper_cache_dir
-            )
-            
-            # Move to device after loading
-            whisper_model = whisper_model.to(device)
+            ).to(device)
             
             # Set model to evaluation mode
             whisper_model.eval()
@@ -89,104 +88,28 @@ class ModelManager:
             MODEL_REGISTRY["whisper_initialized"] = True
             
             return whisper_model
-        except Exception as e:
-            logger.error(f"Error initializing Whisper model: {e}")
-            # If CUDA error, try CPU fallback
-            if "CUDA" in str(e) and device == "cuda":
-                logger.info("CUDA error detected, falling back to CPU")
-                whisper_model = whisper.load_model(
-                    self.whisper_model_size, 
-                    download_root=self.whisper_cache_dir
-                ).to("cpu")
-                whisper_model.eval()
-                
-                # Store in global registry
-                MODEL_REGISTRY["whisper_model"] = whisper_model
-                MODEL_REGISTRY["whisper_initialized"] = True
-                
-                return whisper_model
-            else:
-                raise
-    
-    def unload_whisper_model(self):
-        """Temporarily unload the Whisper model to free GPU memory"""
-        global MODEL_REGISTRY
-        
-        if not MODEL_REGISTRY["whisper_initialized"]:
-            logger.info("No Whisper model to unload")
-            return
-        
-        logger.info("Temporarily unloading Whisper model to free GPU memory")
-        
-        # Store the model in CPU memory if it was on GPU
-        if torch.cuda.is_available() and MODEL_REGISTRY["whisper_model"] is not None:
-            # Move model to CPU first
-            MODEL_REGISTRY["whisper_model"] = MODEL_REGISTRY["whisper_model"].to("cpu")
-            
-        # Force garbage collection
-        gc.collect()
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            available_memory = self._get_gpu_memory()
-            logger.info(f"Available GPU memory after unloading: {available_memory:.2f} GB")
-        
-        self.model_unloaded = True
-    
-    def reload_whisper_model(self):
-        """Reload the Whisper model if it was previously unloaded"""
-        global MODEL_REGISTRY
-        
-        if not self.model_unloaded:
-            return
-        
-        logger.info("Reloading Whisper model")
-        
-        # Force garbage collection before loading model
-        gc.collect()
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            available_memory = self._get_gpu_memory()
-            logger.info(f"Available GPU memory before reloading: {available_memory:.2f} GB")
-        
-        # If model exists but is on CPU, move it back to GPU
-        if MODEL_REGISTRY["whisper_model"] is not None and torch.cuda.is_available():
-            device = "cuda"
-            MODEL_REGISTRY["whisper_model"] = MODEL_REGISTRY["whisper_model"].to(device)
-            MODEL_REGISTRY["whisper_model"].eval()
-            logger.info(f"Whisper model moved back to {device}")
-        # If model doesn't exist, initialize it
-        elif MODEL_REGISTRY["whisper_model"] is None:
-            self.initialize_whisper_model()
-        
-        self.model_unloaded = False
     
     def get_whisper_model(self):
         """Get the global Whisper model instance"""
-        # If model was unloaded, reload it first
-        if self.model_unloaded:
-            self.reload_whisper_model()
+        with MODEL_LOCK:
+            if not MODEL_REGISTRY["whisper_initialized"]:
+                self.initialize_whisper_model()
             
-        if not MODEL_REGISTRY["whisper_initialized"]:
-            self.initialize_whisper_model()
-        
-        model = MODEL_REGISTRY["whisper_model"]
-        if not model:
-            raise RuntimeError("No Whisper model available")
-        
-        # Ensure model is in eval mode and on the correct device
-        model.eval()
-        
-        # Check if model is on the expected device
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        if next(model.parameters()).device.type != device:
-            logger.warning(f"Model was on {next(model.parameters()).device.type}, moving to {device}")
-            model = model.to(device)
-            MODEL_REGISTRY["whisper_model"] = model
-        
-        return model
+            model = MODEL_REGISTRY["whisper_model"]
+            if not model:
+                raise RuntimeError("No Whisper model available")
+            
+            # Ensure model is in eval mode
+            model.eval()
+            
+            # Check if model is on the expected device
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            if next(model.parameters()).device.type != device:
+                logger.warning(f"Model was on {next(model.parameters()).device.type}, moving to {device}")
+                model = model.to(device)
+                MODEL_REGISTRY["whisper_model"] = model
+            
+            return model
 
 # Initialize model manager
 model_manager = ModelManager()
-
-# Don't load model at startup - let each worker initialize it when needed
-# This prevents CUDA initialization issues with forked processes
