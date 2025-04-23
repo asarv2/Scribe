@@ -12,11 +12,8 @@ import Latex from "../Latex";
 interface MessageViewerProps {
   text: string;
   handleEnhancedDocumentClick?: (
-    contextType: 'lectures' | 'chapters' | 'homeworks' | 'files',
-    contextId: string,
-    documentId?: string,
-    textbookId?: string,
-    exerciseId?: string
+    fileId: string,
+    documentId?: string
   ) => void;
   classId?: string;
 }
