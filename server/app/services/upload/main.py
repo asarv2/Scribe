@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import List, Tuple
 import logging
 from dotenv import load_dotenv
@@ -11,6 +12,12 @@ from app.services.upload.save import FileSaver
 from app.services.upload.extract import FileExtractor
 from app.config import model_manager
 from app.services.upload.models import FileExtractChunk
+
+from pathlib import Path
+from app.extensions import CHUNKS_DIR
+PERSIST_ROOT = Path(CHUNKS_DIR)
+import shutil
+
 
 load_dotenv()
 
@@ -194,6 +201,13 @@ class FileProcessor:
             # Return error
             return False, f"Error processing file: {str(e)}"
         finally:
+            # Remove the persistent chunks
+            try:
+                persist_dir = PERSIST_ROOT / Path(compressed_file_path).stem
+                shutil.rmtree(persist_dir, ignore_errors=True)
+                logger.info(f"Removed persistent chunks: {persist_dir}")
+            except Exception as e:
+                logger.warning(f"Could not remove {persist_dir}: {e}")
             # Clear the current file ID
             self.current_file_id = None
 

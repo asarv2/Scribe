@@ -19,6 +19,7 @@ MODEL_CACHE_DIR = os.path.join(BASE_FOLDER, "model_cache")
 QUESTIONS_DIR = os.path.join(UPLOAD_FOLDER, 'questions')
 SUMMARIES_DIR = os.path.join(UPLOAD_FOLDER, 'summaries')
 GRADES_DIR = os.path.join(UPLOAD_FOLDER, 'grades')
+CHUNKS_DIR = os.path.join(UPLOAD_FOLDER, 'chunks')
 
 # Create directories without logging
 def create_directories():
@@ -27,6 +28,7 @@ def create_directories():
     os.makedirs(QUESTIONS_DIR, exist_ok=True)
     os.makedirs(SUMMARIES_DIR, exist_ok=True)
     os.makedirs(GRADES_DIR, exist_ok=True)
+    os.makedirs(CHUNKS_DIR, exist_ok=True)
 # Always create directories (this is safe and idempotent)
 create_directories()
 

@@ -8,6 +8,9 @@ from PIL import Image
 import io
 import torch
 import shutil
+from pathlib import Path
+from app.extensions import CHUNKS_DIR
+PERSIST_ROOT = Path(CHUNKS_DIR)
 
 logger = logging.getLogger(__name__)
 
@@ -141,6 +144,12 @@ class FileExtractor:
                             
                             subprocess.run(cmd, check=True, capture_output=True, timeout=60)
                             
+                            # 1. Create persistent location BEFORE transcription
+                            permanent_chunk_dir = PERSIST_ROOT / Path(file_path).stem
+                            permanent_chunk_dir.mkdir(parents=True, exist_ok=True)
+                            permanent_chunk_path = permanent_chunk_dir / chunk_filename
+                            shutil.copy2(chunk_path, permanent_chunk_path)
+                            
                             # Update progress - transcription phase (15-85%)
                             if progress_callback:
                                 progress = 15.0 + (i / num_chunks * 70.0)
@@ -154,8 +163,8 @@ class FileExtractor:
                                 torch.cuda.empty_cache()
                                 logger.info(f"Cleared CUDA cache before transcribing chunk {i+1}/{num_chunks}")
                             
-                            # Transcribe this chunk
-                            result = whisper_model.transcribe(chunk_path)
+                            # 2. Transcribe from the persistent copy
+                            result = whisper_model.transcribe(str(permanent_chunk_path))
                             text = result.get("text", "").strip()
                             
                             # Generate preview image for this chunk
@@ -167,21 +176,15 @@ class FileExtractor:
                                 # Generate audio waveform for audio chunk
                                 img_data = self._generate_audio_waveform(chunk_path, 0, end_time - start_time)
                             
-                            # Copy the chunk to a permanent location
-                            permanent_chunk_dir = os.path.join(os.path.dirname(file_path), "chunks")
-                            os.makedirs(permanent_chunk_dir, exist_ok=True)
-                            permanent_chunk_path = os.path.join(permanent_chunk_dir, chunk_filename)
-                            shutil.copy2(chunk_path, permanent_chunk_path)
-                            
-                            # Create chunk with both the path to the saved chunk file and the preview image
+                            # 3. Create chunk with the persistent path
                             chunk = FileExtractChunk(
                                 text=text,
                                 page=i + 1,
                                 start_time=start_time,
                                 end_time=end_time,
                                 image_data=img_data,
-                                video_chunk_path=permanent_chunk_path if is_video else None,
-                                audio_chunk_path=permanent_chunk_path if not is_video else None,
+                                video_chunk_path=str(permanent_chunk_path) if is_video else None,
+                                audio_chunk_path=str(permanent_chunk_path) if not is_video else None,
                                 type='video_chunk' if is_video else 'audio_chunk'
                             )
                             chunks.append(chunk)
