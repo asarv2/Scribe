@@ -71,6 +71,7 @@ export default function ItemCard({
                 return item.compression_progress ? item.compression_progress : 0;
 
             case 'extracting':
+                return item.extraction_progress ? item.extraction_progress : 0;
             case 'parsing':
                 // Get documents associated with this file
                 const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);

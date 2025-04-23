@@ -1,16 +1,10 @@
 import os
-import fitz  # PyMuPDF
-from typing import Dict, Any, List, Tuple, Optional
+from typing import List, Tuple
 import logging
 from dotenv import load_dotenv
-import whisper
 import torch
-from PIL import Image, ImageDraw
-import io
-import cv2  # For video frame extraction
 from datetime import datetime
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 
 from app.services.upload.compress import FileCompressor
 from app.services.upload.save import FileSaver
@@ -56,6 +50,9 @@ class FileProcessor:
             Tuple[bool, str] with processing results. First element is a boolean indicating success or failure, second element is a string with the error message if the first element is False.
         """
         try:
+            # Store the current file ID for progress callbacks
+            self.current_file_id = file_id
+
             # Update file status to processing
             logger.info(f"Starting to process file: {filename} (ID: {file_id}, Type: {os.path.splitext(filename)[1]})")
             self.saver.save_file_metadata(file_id, {
@@ -196,9 +193,26 @@ class FileProcessor:
             
             # Return error
             return False, f"Error processing file: {str(e)}"
+        finally:
+            # Clear the current file ID
+            self.current_file_id = None
 
     async def _extract_file_content(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
         """Isolate extraction in a separate method to better manage CUDA resources"""
+        # Track the highest progress value to prevent regression
+        self.current_extraction_progress = 0.0
+        
+        # Define a progress callback that updates the file metadata
+        def extraction_progress_callback(progress: float, status: str, message: str):
+            # Only update if the new progress is higher than the current progress
+            logger.info(f"Extraction progress: {progress:.1f}% - {status} {message}")
+            # Exception: allow updates when status is "error"
+            if progress > self.current_extraction_progress or status == "error":
+                self.current_extraction_progress = progress if status != "error" else self.current_extraction_progress
+                self.saver.save_file_metadata(self.current_file_id, {
+                    "extraction_progress": self.current_extraction_progress,
+                })
+        
         # For audio/video files that need special handling
         if file_type in ['audio', 'video']:
             logger.info("Running audio/video extraction with CUDA safeguards")
@@ -216,17 +230,19 @@ class FileProcessor:
                         try:
                             # Use a subprocess for complete isolation instead of a thread
                             # This ensures a clean CUDA context
-                            return await self._run_whisper_in_subprocess(file_path, file_type)
+                            return await self._run_whisper_in_subprocess(file_path, file_type, extraction_progress_callback)
                         except Exception as e:
                             logger.error(f"GPU transcription failed: {str(e)}, falling back to CPU")
-                            return await self._extract_with_cpu_fallback(file_path, file_type)
+                            return await self._extract_with_cpu_fallback(file_path, file_type, extraction_progress_callback)
                         finally:
                             logger.info("Released CUDA semaphore after transcription")
                 else:
                     # No GPU available, use CPU directly
-                    return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)
+                    return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type, extraction_progress_callback)
             except Exception as e:
                 logger.error(f"All transcription attempts failed: {str(e)}")
+                # Update progress to error state
+                extraction_progress_callback(0.0, "error", f"Transcription failed: {str(e)}")
                 # Return a minimal error chunk if all attempts fail
                 is_video = os.path.splitext(file_path)[1].lower() in ['.mp4', '.mov', '.avi', '.mkv', '.webm']
                 return [FileExtractChunk(
@@ -236,9 +252,9 @@ class FileProcessor:
                 )]
         else:
             # For other file types, we can use a separate thread as before
-            return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type)
+            return await asyncio.to_thread(self.extractor.extract_file, file_path, file_type, extraction_progress_callback)
 
-    async def _run_whisper_in_subprocess(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+    async def _run_whisper_in_subprocess(self, file_path: str, file_type: str, progress_callback=None) -> List[FileExtractChunk]:
         """Run Whisper in the main process with proper CUDA handling"""
         logger.info("Running Whisper transcription in main process")
         
@@ -252,11 +268,13 @@ class FileProcessor:
             return await asyncio.wait_for(
                 # Run directly in the main process, not in a thread
                 # This avoids CUDA context issues
-                self._run_extraction_directly(file_path, file_type),
+                self._run_extraction_directly(file_path, file_type, progress_callback),
                 timeout=300  # 5 minute timeout
             )
         except asyncio.TimeoutError:
             logger.error("Whisper transcription timed out")
+            if progress_callback:
+                progress_callback(self.current_extraction_progress, "error", "Transcription timed out after 5 minutes")
             raise
         finally:
             # Clear CUDA cache after transcription
@@ -264,10 +282,14 @@ class FileProcessor:
                 torch.cuda.empty_cache()
                 logger.info("Cleared CUDA cache after transcription")
 
-    async def _run_extraction_directly(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+    async def _run_extraction_directly(self, file_path: str, file_type: str, progress_callback=None) -> List[FileExtractChunk]:
         """Run extraction directly in the main process"""
         # This runs in the main process, not in a separate thread
         # We use asyncio.to_thread for CPU-bound work but keep CUDA ops in main thread
+        
+        # Initial progress update - only if we're still at 0%
+        if progress_callback and self.current_extraction_progress < 10.0:
+            progress_callback(10.0, "preparing", "Preparing for transcription")
         
         # Get the model in the main thread
         model = model_manager.get_whisper_model()
@@ -278,6 +300,10 @@ class FileProcessor:
         
         if is_video:
             try:
+                # Update progress - only if we're below this threshold
+                if progress_callback and self.current_extraction_progress < 15.0:
+                    progress_callback(15.0, "extracting_frame", "Extracting video frame")
+                    
                 # Extract frame in a separate thread (CPU operation)
                 img_data = await asyncio.to_thread(
                     self.extractor._extract_video_frame, file_path, 0
@@ -285,9 +311,17 @@ class FileProcessor:
             except Exception as e:
                 logger.error(f"Could not extract video frame: {str(e)}")
         
+        # Update progress before transcription - only if we're below this threshold
+        if progress_callback and self.current_extraction_progress < 20.0:
+            progress_callback(20.0, "transcribing", "Starting transcription")
+        
         # Transcribe directly in the main thread (GPU operation)
         # This is the critical part that needs to stay in the main thread
         result = model.transcribe(file_path)
+        
+        # Update progress after transcription - only if we're below this threshold
+        if progress_callback and self.current_extraction_progress < 80.0:
+            progress_callback(80.0, "processing", "Processing transcription results")
         
         # Process the result
         segments = result.get("segments", [])
@@ -352,11 +386,19 @@ class FileProcessor:
             )
             chunks.append(chunk)
         
+        # Final progress update - only if we're below 100%
+        if progress_callback and self.current_extraction_progress < 100.0:
+            progress_callback(100.0, "complete", f"Transcription complete: {len(chunks)} segments")
+        
         return chunks
 
-    async def _extract_with_cpu_fallback(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
+    async def _extract_with_cpu_fallback(self, file_path: str, file_type: str, progress_callback=None) -> List[FileExtractChunk]:
         """Fallback to CPU-only extraction when GPU fails"""
         logger.info("Attempting CPU-only transcription fallback")
+        
+        # Initial progress update - don't go backwards
+        if progress_callback and self.current_extraction_progress < 10.0:
+            progress_callback(10.0, "cpu_fallback", "Attempting CPU-only transcription")
         
         # Import here to avoid circular imports
         import whisper
@@ -386,6 +428,10 @@ class FileProcessor:
                     except Exception as e:
                         logger.error(f"Could not extract frame in CPU fallback: {str(e)}")
                 
+                # Final progress update - only if we're below 100%
+                if progress_callback and self.current_extraction_progress < 100.0:
+                    progress_callback(100.0, "complete", "CPU transcription complete")
+                
                 # Create and return a single chunk with the transcription
                 return [FileExtractChunk(
                     text=result.get("text", "CPU fallback transcription (limited quality)"),
@@ -408,3 +454,7 @@ class FileProcessor:
                 # Restore GPU visibility
                 if torch.cuda.is_available():
                     os.environ.pop("CUDA_VISIBLE_DEVICES", None)
+
+                # Final progress update
+                if progress_callback:
+                    progress_callback(100.0, "complete", "CPU transcription complete")

@@ -139,6 +139,8 @@ class FileSaver:
                     logger.info(f"Image upload successful: {upload_result}")
                 except Exception as upload_error:
                     logger.error(f"Image upload failed: {str(upload_error)}")
+            else:
+                logger.warning(f"No image provided for document {document_id}")
             
             # Upload video chunk if provided
             if extract_chunk.video_chunk_path and os.path.exists(extract_chunk.video_chunk_path):
@@ -155,6 +157,8 @@ class FileSaver:
                     logger.info(f"Video chunk upload successful: {upload_result}")
                 except Exception as upload_error:
                     logger.error(f"Video chunk upload failed: {str(upload_error)}")
+            else:
+                logger.warning(f"No video chunk provided for document {document_id}")
             
             # Upload audio chunk if provided
             if extract_chunk.audio_chunk_path and os.path.exists(extract_chunk.audio_chunk_path):
@@ -172,7 +176,7 @@ class FileSaver:
                 except Exception as upload_error:
                     logger.error(f"Audio chunk upload failed: {str(upload_error)}")
             else:
-                logger.warning(f"No media data provided for document {document_id}")
+                logger.warning(f"No audio chunk provided for document {document_id}")
             
             return document_id
             

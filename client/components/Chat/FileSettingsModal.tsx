@@ -108,21 +108,21 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
     const getSettingsMessage = (file: File) => {
         switch (file.content_type) {
             case 'lecture':
-                return `Lecture Settings`
+                return `Lecture`
             case 'homework':
-                return `Homework Settings`
+                return `Homework`
             case 'rubric':
-                return `Rubric Settings`
+                return `Rubric`
             case 'textbook':
-                return `Textbook Settings`
+                return `Textbook`
             default:
-                return `File Settings`
+                return `File`
         }
     }
 
     return file && profile && ((profile.admin || profile.professor) && !studentMode) && (
         <>
-            <Tooltip label={getSettingsMessage(file)}>
+            <Tooltip label={`${getSettingsMessage(file)} Settings`}>
                 <ActionIcon
                     size="lg"
                     variant="subtle"
@@ -138,12 +138,12 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
             <Modal
                 opened={opened}
                 onClose={close}
-                title="File Settings"
+                title={`${getSettingsMessage(file)} Settings`}
                 size="md"
             >
                 <Stack>
                     <TextInput
-                        label="File Title"
+                        label={`${getSettingsMessage(file)} Title`}
                         placeholder="Enter file title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
@@ -166,7 +166,7 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
                     />
 
                     <DatePickerInput
-                        label="File Date"
+                        label={`${getSettingsMessage(file)} Date`}
                         placeholder="Select a date"
                         value={fileDate}
                         onChange={setFileDate}

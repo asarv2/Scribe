@@ -17,7 +17,7 @@ MODEL_REGISTRY = {
 }
 
 # Add a lock for thread safety
-MODEL_LOCK = threading.Lock()
+MODEL_LOCK = threading.RLock()
 
 class ModelManager:
     def __init__(self):

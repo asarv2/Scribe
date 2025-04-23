@@ -112,41 +112,33 @@ export const deleteFile = async (
             const filesToDelete = [];
             
             // 1. Add the main file with its extension
-            filesToDelete.push(`${classId}/${fileId}${fileExtension}`);
+            filesToDelete.push(`${classId}/${fileId}.${fileExtension}`);
             
             // 2. Get all documents for this file to delete their images
             const { data: documents, error: documentsError } = await supabase
                 .from("documents")
-                .select("id")
+                .select("id, extension")
                 .eq("file", fileId);
                 
             if (documentsError) {
                 console.error("Error getting documents:", documentsError.message);
             } else if (documents && documents.length > 0) {
-                // Add all document images (they all end with .png)
-                if (type === 'video') {
-                    const documentVideos = documents.map(doc => `${classId}/${fileId}/${doc.id}.mp4`);
-                    filesToDelete.push(...documentVideos);
-                } else if (type === 'audio') {
-                    const documentAudios = documents.map(doc => `${classId}/${fileId}/${doc.id}.wav`);
-                    filesToDelete.push(...documentAudios);
-                }
-                // all documents have images
-                const documentImages = documents.map(doc => `${classId}/${fileId}/${doc.id}.png`);
-                filesToDelete.push(...documentImages);
+                filesToDelete.push(...documents.map(doc => `${classId}/${fileId}/${doc.id}.${doc.extension}`));
+                filesToDelete.push(...documents.map(doc => `${classId}/${fileId}/${doc.id}.png`)); // also add the image files
             }
             
             // Delete all files in a single operation
             if (filesToDelete.length > 0) {
+                const uniqueFilesToDelete = [...new Set(filesToDelete)];
                 const { error: deleteError } = await supabase
                     .storage
                     .from('files')
-                    .remove(filesToDelete);
+                    .remove(uniqueFilesToDelete);
                     
                 if (deleteError) {
                     console.error("Error deleting files from storage:", deleteError.message);
                 } else {
-                    console.log(`Successfully deleted ${filesToDelete.length} files from storage`);
+                    console.log(`Successfully deleted ${uniqueFilesToDelete.length} files from storage`);
                 }
             }
         } catch (storageError) {
@@ -219,9 +211,13 @@ export const updateFileName = async (fileId: string, fileName: string) => {
 
 export const updateFileContentType = async (fileId: string, contentType: ContentType) => {
     const supabase = await useSupabaseServer(cookies());
+    let newContentType = contentType;
+    if (newContentType == null || newContentType == undefined) {
+        newContentType = "other";
+    }
     const { error } = await supabase
         .from("files")
-        .update({content_type: contentType})
+        .update({content_type: newContentType})
         .eq("id", fileId);
     if (error) {
         return { success: false, error: error.message };

@@ -405,6 +405,7 @@ export type Database = {
           deleted: boolean
           expires: string | null
           extension: string
+          extraction_progress: number
           file_date: string | null
           file_names: string[]
           file_number: number
@@ -430,6 +431,7 @@ export type Database = {
           deleted?: boolean
           expires?: string | null
           extension?: string
+          extraction_progress?: number
           file_date?: string | null
           file_names?: string[]
           file_number?: number
@@ -455,6 +457,7 @@ export type Database = {
           deleted?: boolean
           expires?: string | null
           extension?: string
+          extraction_progress?: number
           file_date?: string | null
           file_names?: string[]
           file_number?: number

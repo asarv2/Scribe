@@ -119,7 +119,17 @@ export function ContextPanel({
         if (status === 'compressing' && file.compression_progress) {
             return Math.round(file.compression_progress);
         }
-        else if ((status === 'extracting' || status === 'parsing') && file.length) {
+        else if (status === 'extracting') {
+            // Use the extraction_progress field if available
+            if (file.extraction_progress !== undefined && file.extraction_progress !== null) {
+                return Math.round(file.extraction_progress);
+            }
+            // Fall back to the old calculation if extraction_progress is not available
+            else if (file.length && fileDocuments) {
+                const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
+                return Math.round((fileRelatedDocs.length / file.length) * 100);
+            }
+        } else if (status === 'parsing' && file.length) {
             // Get documents for this file
             if (fileDocuments) {
                 const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);

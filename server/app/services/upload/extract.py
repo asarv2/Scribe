@@ -15,26 +15,33 @@ class FileExtractor:
     def __init__(self):
         pass
 
-    def extract_file(self, file_path: str, file_type: Literal['pdf', 'audio', 'video', 'image', 'other']) -> List[FileExtractChunk]:
+    def extract_file(self, file_path: str, file_type: Literal['pdf', 'audio', 'video', 'image', 'other'], progress_callback=None) -> List[FileExtractChunk]:
         try:
             logger.info(f"Extracting content from: {file_path}")
             
             if file_type == 'pdf':
-                return self.extract_pdf(file_path)
+                return self.extract_pdf(file_path, progress_callback)
             elif file_type in ['audio', 'video']:
-                return self.extract_audio_or_video(file_path)
+                return self.extract_audio_or_video(file_path, progress_callback )
             else:
-                return self.extract_image_or_other(file_path)
+                return self.extract_image_or_other(file_path, progress_callback)
         except Exception as e:
             logger.error(f"Error extracting content: {str(e)}")
             # Return empty list instead of crashing
             return []
 
-    def extract_pdf(self, file_path: str) -> List[FileExtractChunk]:
+    def extract_pdf(self, file_path: str, progress_callback=None) -> List[FileExtractChunk]:
         chunks = []
         try:
             # Open the PDF file
             pdf_document = fitz.open(file_path)
+            
+            # Get total pages
+            total_pages = len(pdf_document)
+            
+            # Initial progress update
+            if progress_callback:
+                progress_callback(5.0, "analyzing", f"Analyzing {total_pages} page PDF")
             
             # Process each page
             for page_num, page in enumerate(pdf_document):
@@ -54,13 +61,27 @@ class FileExtractor:
                 )
                 chunks.append(chunk)
                 
+                # Update progress (5-95%)
+                if progress_callback:
+                    progress = 5.0 + ((page_num + 1) / total_pages * 90.0)
+                    progress_callback(progress, "processing", f"Processing page {page_num + 1}/{total_pages}")
+            
             pdf_document.close()
+            
+            # Final progress update
+            if progress_callback:
+                progress_callback(100.0, "complete", f"Extracted {len(chunks)} pages")
+                
         except Exception as e:
             logger.error(f"Error parsing PDF: {e}")
+            
+            # Error progress update
+            if progress_callback:
+                progress_callback(0.0, "error", f"Error: {str(e)}")
         
         return chunks
 
-    def extract_audio_or_video(self, file_path: str) -> List[FileExtractChunk]:
+    def extract_audio_or_video(self, file_path: str, progress_callback=None) -> List[FileExtractChunk]:
         chunks = []
         try:
             # Determine if this is a video file
@@ -81,6 +102,10 @@ class FileExtractor:
                     duration = float(subprocess.check_output(duration_cmd).decode().strip())
                     logger.info(f"File duration: {duration:.2f} seconds")
                     
+                    # Report initial progress
+                    if progress_callback:
+                        progress_callback(5.0, "analyzing", f"Analyzing {duration:.1f} second {'video' if is_video else 'audio'}")
+                    
                     # Calculate number of 30-second chunks
                     chunk_duration = 30.0
                     num_chunks = max(1, int(duration / chunk_duration) + (1 if duration % chunk_duration > 0 else 0))
@@ -90,6 +115,11 @@ class FileExtractor:
                     for i in range(num_chunks):
                         start_time = i * chunk_duration
                         end_time = min((i + 1) * chunk_duration, duration)
+                        
+                        # Update progress - splitting phase (5-15%)
+                        if progress_callback:
+                            progress = 5.0 + (i / num_chunks * 10.0)
+                            progress_callback(progress, "splitting", f"Splitting chunk {i+1}/{num_chunks}")
                         
                         # Create a path for this chunk
                         chunk_filename = f"chunk_{i:03d}.{'mp4' if is_video else 'wav'}"
@@ -110,6 +140,11 @@ class FileExtractor:
                                 ]
                             
                             subprocess.run(cmd, check=True, capture_output=True, timeout=60)
+                            
+                            # Update progress - transcription phase (15-85%)
+                            if progress_callback:
+                                progress = 15.0 + (i / num_chunks * 70.0)
+                                progress_callback(progress, "transcribing", f"Transcribing chunk {i+1}/{num_chunks}")
                             
                             # Get the Whisper model
                             whisper_model = model_manager.get_whisper_model()
@@ -156,6 +191,10 @@ class FileExtractor:
                             logger.error(f"Error processing chunk {i+1}/{num_chunks}: {str(e)}")
                             # Continue with next chunk
                     
+                    # Update progress - finalizing (85-100%)
+                    if progress_callback:
+                        progress_callback(85.0, "finalizing", "Finalizing extraction")
+                    
                     # If no chunks were processed successfully, create a fallback chunk
                     if not chunks:
                         logger.warning("No chunks were processed successfully")
@@ -169,6 +208,10 @@ class FileExtractor:
                         chunks.append(chunk)
                 
                     logger.info(f"Extraction complete: {len(chunks)} chunks extracted")
+                    
+                    # Final progress update
+                    if progress_callback:
+                        progress_callback(100.0, "complete", f"Extracted {len(chunks)} chunks")
                 
                 except Exception as e:
                     logger.error(f"Error in chunked processing: {str(e)}")
@@ -181,6 +224,10 @@ class FileExtractor:
                         type='video_chunk' if is_video else 'audio_chunk'
                     )
                     chunks.append(chunk)
+                    
+                    # Error progress update
+                    if progress_callback:
+                        progress_callback(0.0, "error", f"Error: {str(e)}")
         
         except Exception as e:
             logger.error(f"Error in extract_audio_or_video: {str(e)}")
@@ -191,6 +238,10 @@ class FileExtractor:
                 type='error'
             )
             chunks.append(chunk)
+            
+            # Error progress update
+            if progress_callback:
+                progress_callback(0.0, "error", f"Error: {str(e)}")
         
         return chunks
 
@@ -348,7 +399,7 @@ class FileExtractor:
                 except:
                     pass
 
-    def extract_image_or_other(self, file_path: str) -> List[FileExtractChunk]:
+    def extract_image_or_other(self, file_path: str, progress_callback=None) -> List[FileExtractChunk]:
         try:
             # Check if it's an image file by extension
             image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']
@@ -386,6 +437,9 @@ class FileExtractor:
                 
                 logger.info(f"Image data read: {len(img_data)} bytes")
                 
+                if progress_callback:
+                    progress_callback(100.0, "complete", f"Extracted {len(img_data)} bytes")
+                
                 # Create a single chunk for the image
                 chunk = FileExtractChunk(
                     text="",  # Empty text for images
@@ -405,6 +459,9 @@ class FileExtractor:
                     # Generate an image of the text
                     img_data = self._generate_text_image(text_content, os.path.basename(file_path))
                     
+                    if progress_callback:
+                        progress_callback(100.0, "complete", f"Extracted {len(img_data)} bytes")
+                    
                     # Create a chunk with both text and image
                     chunk = FileExtractChunk(
                         text=text_content,
@@ -412,6 +469,8 @@ class FileExtractor:
                         image_data=img_data,
                         type='text'
                     )
+                    
+                    logger.info(f"Created text chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
                     return [chunk]
                 except Exception as e:
                     logger.error(f"Error processing text file: {str(e)}")
@@ -425,6 +484,7 @@ class FileExtractor:
                             page=1,
                             type='text'
                         )
+                        logger.info(f"Created text chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
                         return [chunk]
                     except:
                         # If all else fails, return an empty chunk
@@ -433,6 +493,7 @@ class FileExtractor:
                             page=1,
                             type='text'
                         )
+                        logger.info(f"Created text chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
                         return [chunk]
             else:
                 logger.info("File not detected as image or text, creating 'other' chunk")
@@ -442,6 +503,7 @@ class FileExtractor:
                     page=1,
                     type='other'
                 )
+                logger.info(f"Created other chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
                 return [chunk]
                 
         except Exception as e:
@@ -452,6 +514,7 @@ class FileExtractor:
                 page=1,
                 type='other'
             )
+            logger.info(f"Created other chunk: type={chunk.type}, image_data_size={len(chunk.image_data) if chunk.image_data else 0}")
             return [chunk]
 
     def _generate_text_image(self, text_content: str, filename: str) -> bytes:

@@ -99,7 +99,7 @@ export default function FileViewer({
         const file = files?.find(f => document.file === f.id);
         if (!file) return { width: 1, height: 1 }; // Default square
         
-        if (file.type === 'pdf') {
+        if (file.type !== 'other' && file.type !== 'image') {
             if (file.content_type === 'lecture') {
                 return { width: 16, height: 9 }; // Landscape 16:9 for lectures
             } else {
