@@ -7,6 +7,7 @@ from app.config import model_manager
 from PIL import Image
 import io
 import torch
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -561,9 +562,9 @@ class FileExtractor:
             # Read the image data
             with open(temp_path, 'rb') as f:
                 img_data = f.read()
-            
-            # Clean up
-            os.unlink(temp_path)
+
+            # use shutil to remove temp folder
+            shutil.rmtree(temp_path)
             
             return img_data
         

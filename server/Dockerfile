@@ -19,16 +19,6 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     # More comprehensive LaTeX installation with TikZ support
     texlive-full \
-    # Ensure these specific packages are installed
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-fonts-recommended \
-    texlive-fonts-extra \
-    texlive-science \
-    texlive-pictures \
-    # Algorithm packages
-    texlive-algorithms \
-    # PGF/TikZ is included in texlive-pictures
     latexmk \
     libmagic1 \
     pdf2svg \
