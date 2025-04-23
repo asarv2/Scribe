@@ -32,8 +32,6 @@ RUN apt-get update && apt-get install -y \
     pdf2svg \
     poppler-utils \
     ghostscript \
-    # Add NVIDIA runtime libraries
-    nvidia-cuda-toolkit \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

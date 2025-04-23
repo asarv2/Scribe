@@ -449,13 +449,15 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, latex
                         
                         # Create a minimal standalone document
                         with open(simple_tex_path, 'w') as f:
-                            f.write("\\documentclass[tikz,border=10pt,transparent]{standalone}\n")
+                            f.write("\\documentclass[tikz,border=10pt]{standalone}\n")
                             f.write("\\usepackage{tikz}\n")
                             f.write("\\usepackage{amsmath,amssymb}\n")
                             f.write("\\usetikzlibrary{arrows.meta,positioning,shapes,calc}\n")
                             f.write("\\begin{document}\n")
-                            f.write(latex_code)
-                            f.write("\\end{document}\n")
+                            # Replace literal \n with actual newlines
+                            cleaned_latex_code = latex_code.replace('\\n', '\n').replace('\n\n', '\n')
+                            f.write(cleaned_latex_code)
+                            f.write("\n\\end{document}\n")
                         
                         # Compile with pdflatex
                         result = subprocess.run(
