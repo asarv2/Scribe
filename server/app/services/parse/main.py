@@ -1,7 +1,6 @@
 from agents import Agent, ModelSettings, OpenAIChatCompletionsModel, Runner
 from app.services.parse.models import ParseDocuments, SyllabusResponse
 from app.services.parse.prompts import get_syllabus_prompt
-from extensions import get_supabase
 from supabase import Client
 class FileParser:
     def __init__(self, supabase_client: Client, class_id: str, file_id: str):
