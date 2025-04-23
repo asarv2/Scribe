@@ -105,25 +105,31 @@ async def get_mapped_references(supabase, file_ids, document_ids, chat_reference
     
     if file_ids:
         file_documents = supabase.table("documents").select("*").in_("file", file_ids).execute().data or []
+    else:
+        file_documents = []
 
-        # get basic documents
+    if document_ids:
         basic_documents = supabase.table("documents").select("*").in_("id", document_ids).execute().data or []
+    else:
+        basic_documents = []
 
-        # get the documents that are in the chat_references
+    if chat_references:
         chat_documents = supabase.table("documents").select("*").in_("id", chat_references).execute().data or []
+    else:
+        chat_documents = []
 
-        # merge the file_documents and chat_documents
-        all_documents = file_documents + basic_documents + chat_documents
+    # merge the file_documents and chat_documents
+    all_documents = file_documents + basic_documents + chat_documents
 
-        references = {idx + 1: doc.get("id") for idx, doc in enumerate(all_documents)}
-        references_reverse = {v: k for k, v in references.items()}
-
+    references = {idx + 1: doc.get("id") for idx, doc in enumerate(all_documents)}
+    references_reverse = {v: k for k, v in references.items()}
 
     # get the files for the file_ids
     files = supabase.table("files").select("*").in_("id", file_ids).execute().data or []
 
     # get the files for the document_ids
-    document_file_ids = [document.get("file") for document in document_ids]
+    # First, find the file IDs for the documents in all_documents
+    document_file_ids = [doc.get("file") for doc in all_documents if doc.get("id") in document_ids]
     document_files = supabase.table("files").select("*").in_("id", document_file_ids).execute().data or []
 
     output = ""

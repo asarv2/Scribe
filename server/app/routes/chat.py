@@ -60,7 +60,6 @@ async def handle_chat(
 
         # get the mapped references
         mapped_references, text_description = await get_mapped_references(supabase_client, file_ids, document_ids, references)
-        logger.info(f"Mapped references: {mapped_references}")
         logger.info(f"Text description: {text_description}")
 
         # to call the agents
@@ -69,11 +68,8 @@ async def handle_chat(
         # Fetch google file ids
         google_files = GoogleFiles(file_ids, document_ids, supabase_client)
         google_file_ids = google_files.get_files()
-        logger.info(f"Google file IDs: {google_file_ids}")
         google_document_ids = google_files.get_documents()
-        logger.info(f"Google document IDs: {google_document_ids}")
         google_ids = google_file_ids + google_document_ids
-        logger.info(f"Google IDs: {google_ids}")
 
         total_response = ""
         async def update_callback(chunk: str):

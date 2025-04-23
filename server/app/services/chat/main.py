@@ -4,7 +4,11 @@ from datetime import datetime
 from app.extensions import get_supabase, get_gemini
 from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
 from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig
-from app.services.chat.tools import create_figure, create_summary, update_chat_title, create_frq_question, create_mcq_question, classify_grade_files, grade_results
+from app.services.chat.tools.create_figure import create_figure
+from app.services.chat.tools.create_summary import create_summary
+from app.services.chat.tools.update_chat_title import update_chat_title
+from app.services.chat.tools.create_question import create_frq_question, create_mcq_question
+from app.services.chat.tools.grade_results import classify_grade_files, grade_results
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
@@ -319,7 +323,7 @@ class ChatProcessor(RunHooks):
 
             # setting the trace id
             if not self.trace_id:
-                trace_id = result._trace.trace_id
+                trace_id = result.trace.trace_id
                 self.trace_id = trace_id
                 await self.update_trace_id(chat_id, trace_id)
 
@@ -369,6 +373,14 @@ class ChatProcessor(RunHooks):
                 self.supabase_client.table("messages").update({
                     "status_text": f"Getting ready to grade..."
                 }).eq("id", message_id).execute()
+
+    async def on_agent_start(
+        self, context: RunContextWrapper[Documents], agent: Agent[Documents]
+    ) -> None:
+        """Called before the agent is invoked. Called each time the current agent changes."""
+        logger.info(f"Starting agent: {agent.name}")
+        for tool in agent.tools:
+            logger.info(f"Tool: {tool.name}")
 
     async def on_agent_end(
         self,

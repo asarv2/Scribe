@@ -155,7 +155,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 bare_question: activeChat.prompt,
                 question: activeChat.prompt,
                 files: getContextFiles(),
-                documents: [], // TODO: LAUNCH
+                documents: getContextDocuments()
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -183,6 +183,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
             // Reset states
             setActiveChat({
                 ...activeChat,
+                prompt: "",
                 files: [],
                 documents: []
             });

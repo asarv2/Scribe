@@ -1,3 +1,4 @@
+import mimetypes
 import os
 import subprocess
 import logging
@@ -759,7 +760,40 @@ class FileCompressor:
             FileCompressionResult object
         """
         file_size = os.path.getsize(file_path) if os.path.exists(file_path) else 0
+        
+        # Extract extension and handle cases where it might be missing
         file_extension = os.path.splitext(file_path)[1].lower().lstrip('.')
+        
+        # If extension is empty, try to determine it from MIME type
+        if not file_extension and os.path.exists(file_path):
+            try:
+                # First try using magic to get MIME type
+                mime_type = self.mime.from_file(file_path)
+                
+                # Get extension from MIME type
+                guessed_extension = mimetypes.guess_extension(mime_type)
+                if guessed_extension:
+                    file_extension = guessed_extension.lstrip('.')
+                
+                # If still empty, use a fallback based on MIME type
+                if not file_extension:
+                    if mime_type.startswith('video/'):
+                        file_extension = 'mp4'
+                    elif mime_type.startswith('audio/'):
+                        file_extension = 'wav'
+                    elif mime_type.startswith('image/'):
+                        file_extension = 'jpg'
+                    elif mime_type == 'application/pdf':
+                        file_extension = 'pdf'
+                    else:
+                        file_extension = ''  # Binary file as fallback
+            except Exception as e:
+                logger.warning(f"Error determining file extension from MIME type: {e}")
+                file_extension = ''  # Default fallback
+        
+        # Final fallback if everything else failed
+        if not file_extension:
+            file_extension = ''
         
         return FileCompressionResult(
             file_path=file_path,

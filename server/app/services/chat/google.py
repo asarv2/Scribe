@@ -5,6 +5,7 @@ import datetime
 import logging
 from dateutil import parser
 import os
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -70,18 +71,15 @@ class GoogleFiles:
             return []
     
     def _fetch_documents_data(self, document_ids: List[str]) -> List[dict]:
-        """Fetch document data from Supabase for the given document IDs
-        
-        Returns:
-            List[dict] - The document data. This is different from the files since we are guaranteed to have all of the files exist in the google table.
-        """
+        """Fetch document data from Supabase for the given document IDs"""
         try:
             if not document_ids:
+                logger.info("No document IDs provided")
                 return []
 
-            # Get file information
+            # Get document information
             documents_response = self.supabase.table("documents").select(
-                "id", "class", "file"
+                "id", "class", "file", "extension"
             ).in_("id", document_ids).execute()
             
             if not documents_response.data:
@@ -94,53 +92,43 @@ class GoogleFiles:
                 "document", "google_id", "expires_at"
             ).in_("document", document_ids).eq("deleted", False).order("created_at", desc=True).limit(1).execute()
 
-            if google_response.data and len(google_response.data) > 0:
-                for document_id in document_ids:
-                    google_document = next((f for f in google_response.data if f["document"] == document_id), None)
-                    document_data = next((f for f in documents_response.data if f["id"] == document_id), None)
-                    
-                    if document_data:
-                        document_id = document_data["id"]
-                        file_id = document_data["file"]
-                        class_id = document_data["class"]
+            for document_id in document_ids:
+                google_document = next((f for f in google_response.data if f["document"] == document_id), None)
+                document_data = next((f for f in documents_response.data if f["id"] == document_id), None)
+                
+                if document_data:
+                    document_id = document_data["id"]
+                    file_id = document_data["file"]
+                    class_id = document_data["class"]
+                    extension = document_data["extension"]
 
-                        if google_document:
-                            google_id = google_document.get("google_id")
-                            expires_at = google_document.get("expires_at")
-                            if document_data:
-                                documents_data.append({
-                                    "file_id": file_id,
-                                    "document_id": document_id,
-                                    "class_id": class_id,
-                                    "google_id": google_id,
-                                    "expires_at": expires_at
+                    if google_document:
+                        google_id = google_document.get("google_id")
+                        expires_at = google_document.get("expires_at")
+                        documents_data.append({
+                            "file_id": file_id,
+                            "document_id": document_id,
+                            "class_id": class_id,
+                            "google_id": google_id,
+                            "expires_at": expires_at,
+                            "extension": extension
                         })
-                        else:
-                            documents_data.append({
-                                "file_id": file_id,
-                                "document_id": document_id,
-                                "class_id": class_id,
-                                "google_id": None,
-                                "expires_at": None
-                            })
+                    else:
+                        documents_data.append({
+                            "file_id": file_id,
+                            "document_id": document_id,
+                            "class_id": class_id,
+                            "google_id": None,
+                            "expires_at": None,
+                            "extension": extension
+                        })
+            
             return documents_data
 
         except Exception as e:
             logger.error(f"Error fetching document data: {str(e)}")
+            logger.error(traceback.format_exc())
             return []
-    
-    def _get_document_extension(self, file_id: str) -> str:
-        """Get default extension based on file type"""
-        file_data = self.supabase.table("files").select("type").eq("id", file_id).execute()
-        file_type = file_data.data[0]["type"]
-        type_to_extension = {
-            "pdf": ".pdf",
-            "image": ".png",
-            "audio": ".wav",
-            "video": ".mp4",
-            "other": ".txt"
-        }
-        return type_to_extension.get(file_type, "")
     
     def get_files(self) -> List[str]:
         """Get all files, re-uploading any that have expired"""
@@ -196,10 +184,12 @@ class GoogleFiles:
             document_id = document_data["document_id"]
             google_id = document_data["google_id"]
             expires_at = document_data["expires_at"]
+            extension = document_data["extension"]
             
             # Check if the document has expired or doesn't have a Google ID
             is_expired = False
             if not google_id:
+                logger.info(f"Document {document_id} has no Google ID, needs upload")
                 is_expired = True
             elif expires_at:
                 try:
@@ -211,35 +201,43 @@ class GoogleFiles:
                     is_expired = True  # Assume expired if we can't parse the date
             
             if is_expired:
-                logger.info(f"Document {document_id} has expired or needs uploading. Uploading from Supabase.")
                 if google_id:
                     # Mark the existing Google file as deleted
-                    self._mark_google_file_as_deleted(document_id)
+                    self._mark_google_file_as_deleted(document_id, is_document=True)
+                
                 
                 # Upload from Supabase
                 new_file = self._upload_document_from_supabase(
                     file_id, 
                     document_id,
                     class_id, 
-                    self._get_document_extension(file_id)
+                    extension
                 )
+                
                 if new_file:
                     # Add the new Google file ID to the list
                     google_document_ids.append(new_file.name)
+                else:
+                    logger.error(f"Failed to upload document {document_id} to Google")
             else:
                 google_document_ids.append(google_id)
+        
         return google_document_ids
         
 
-    def _mark_google_file_as_deleted(self, file_id: str) -> None:
-        """Mark Google file entries as deleted in the database"""
+    def _mark_google_file_as_deleted(self, id_value: str, is_document: bool = False) -> None:
+        """Mark Google file or document entries as deleted in the database"""
         try:
-            self.supabase.table("google").update(
-                {"deleted": True}
-            ).eq("file", file_id).execute()
-            logger.info(f"Marked Google files for file_id {file_id} as deleted")
+            if is_document:
+                self.supabase.table("google").update(
+                    {"deleted": True}
+                ).eq("document", id_value).execute()
+            else:
+                self.supabase.table("google").update(
+                    {"deleted": True}
+                ).eq("file", id_value).execute()
         except Exception as e:
-            logger.error(f"Error marking Google files as deleted: {str(e)}")
+            logger.error(f"Error marking Google entries as deleted: {str(e)}")
 
 
     def _upload_document_from_supabase(self, file_id: str, document_id: str, class_id: str, extension: str) -> Optional[File]:
@@ -249,42 +247,69 @@ class GoogleFiles:
             temp_dir = os.path.join(os.getcwd(), "temp")
             os.makedirs(temp_dir, exist_ok=True)
             
+            # Create the file_id subdirectory
+            file_dir = os.path.join(temp_dir, file_id)
+            os.makedirs(file_dir, exist_ok=True)
+            
             # Construct the storage path
-            storage_path = f"{class_id}/{file_id}/{document_id}{extension}"
-            local_path = os.path.join(temp_dir, f"{file_id}/{document_id}{extension}")
+            storage_path = f"{class_id}/{file_id}/{document_id}.{extension}"
+            local_path = os.path.join(temp_dir, f"{file_id}/{document_id}.{extension}")
             
             # Download the file from Supabase
-            logger.info(f"Downloading file from Supabase: {storage_path}")
-            with open(local_path, 'wb+') as f:
+            try:
                 res = self.supabase.storage.from_("files").download(storage_path)
-                f.write(res)
+                
+                with open(local_path, 'wb+') as f:
+                    f.write(res)
+                
+                # Check if file exists and has content
+                file_size = os.path.getsize(local_path)
+                if file_size == 0:
+                    logger.error("Downloaded file is empty!")
+                    
+            except Exception as download_error:
+                logger.error(f"Error downloading file: {str(download_error)}")
+                logger.error(traceback.format_exc())
+                return None
             
             # Determine MIME type based on extension
             mime_type = self._get_mime_type(extension)
             
             # Upload to Google
-            logger.info(f"Uploading file to Google: {local_path} ({mime_type})")
-            with open(local_path, 'rb') as f:
-                media_file = genai.upload_file(f, mime_type=mime_type)
+            try:
+                with open(local_path, 'rb') as f:
+                    media_file = genai.upload_file(f, mime_type=mime_type)
+            except Exception as upload_error:
+                logger.error(f"Error uploading to Google: {str(upload_error)}")
+                logger.error(traceback.format_exc())
+                return None
             
             # Extract file ID and expiration from response
             google_file_id = media_file.name
             expires_at = media_file.expiration_time
             
             # Save to the google table
-            self.supabase.table("google").insert({
-                "document": document_id,
-                "google_id": google_file_id,
-                "expires_at": expires_at.isoformat()
-            }).execute()
+            try:
+                insert_response = self.supabase.table("google").insert({
+                    "document": document_id,
+                    "google_id": google_file_id,
+                    "expires_at": expires_at.isoformat()
+                }).execute()
+            except Exception as db_error:
+                logger.error(f"Error saving to database: {str(db_error)}")
+                logger.error(traceback.format_exc())
             
             # Clean up the temporary file
-            os.remove(local_path)
+            try:
+                os.remove(local_path)
+            except Exception as cleanup_error:
+                logger.error(f"Error cleaning up file: {str(cleanup_error)}")
             
             return media_file
             
         except Exception as e:
-            logger.error(f"Error uploading file to Google: {str(e)}")
+            logger.error(f"Error in _upload_document_from_supabase: {str(e)}")
+            logger.error(traceback.format_exc())
             return None
     
     def _upload_file_from_supabase(self, file_id: str, class_id: str, extension: str) -> Optional[File]:
@@ -305,11 +330,10 @@ class GoogleFiles:
             os.makedirs(temp_dir, exist_ok=True)
             
             # Construct the storage path
-            storage_path = f"{class_id}/{file_id}{extension}"
-            local_path = os.path.join(temp_dir, f"{file_id}{extension}")
+            storage_path = f"{class_id}/{file_id}.{extension}"
+            local_path = os.path.join(temp_dir, f"{file_id}.{extension}")
             
             # Download the file from Supabase
-            logger.info(f"Downloading file from Supabase: {storage_path}")
             with open(local_path, 'wb+') as f:
                 res = self.supabase.storage.from_("files").download(storage_path)
                 f.write(res)
@@ -318,7 +342,6 @@ class GoogleFiles:
             mime_type = self._get_mime_type(extension)
             
             # Upload to Google
-            logger.info(f"Uploading file to Google: {local_path} ({mime_type})")
             with open(local_path, 'rb') as f:
                 media_file = genai.upload_file(f, mime_type=mime_type)
             
@@ -344,6 +367,10 @@ class GoogleFiles:
     
     def _get_mime_type(self, extension: str) -> str:
         """Determine MIME type based on file extension"""
+        # Make sure extension has a leading dot
+        if not extension.startswith('.'):
+            extension = f".{extension}"
+        
         extension = extension.lower()
         mime_types = {
             '.pdf': 'application/pdf',
@@ -359,4 +386,6 @@ class GoogleFiles:
             '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         }
-        return mime_types.get(extension, 'application/octet-stream')
+        
+        mime_type = mime_types.get(extension, 'application/octet-stream')
+        return mime_type

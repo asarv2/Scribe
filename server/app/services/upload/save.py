@@ -63,8 +63,10 @@ class FileSaver:
                     "file": file_id,
                     "text": extract_chunk.text,
                     "page": extract_chunk.page,
+                    "class": class_id,
+                    "extension": "png"
                 }
-            elif extract_chunk.type in ['audio_chunk', 'video_chunk']:
+            elif extract_chunk.type == 'audio_chunk':
                 # Ensure start_time and end_time are always included for audio/video
                 document_data = {
                     "file": file_id,
@@ -72,12 +74,26 @@ class FileSaver:
                     "page": extract_chunk.page,
                     "start_time": extract_chunk.start_time if extract_chunk.start_time is not None else 0,
                     "end_time": extract_chunk.end_time if extract_chunk.end_time is not None else 0,
+                    "class": class_id,
+                    "extension": "wav" # we upload audio chunks as wav, and also save the waveform image as a png
+                }
+            elif extract_chunk.type == 'video_chunk':
+                document_data = {
+                    "file": file_id,
+                    "text": extract_chunk.text,
+                    "page": extract_chunk.page,
+                    "start_time": extract_chunk.start_time if extract_chunk.start_time is not None else 0,
+                    "end_time": extract_chunk.end_time if extract_chunk.end_time is not None else 0,
+                    "class": class_id,
+                    "extension": "mp4" # we upload video chunks as mp4 and also save preview images as png
                 }
             elif extract_chunk.type == 'image':
                 document_data = {
                     "file": file_id,
                     "text": extract_chunk.text or "",
                     "page": extract_chunk.page or 1,
+                    "class": class_id,
+                    "extension": "png"
                 }
                 logger.info("Processing image document")
             elif extract_chunk.type == 'text':
@@ -85,12 +101,16 @@ class FileSaver:
                     "file": file_id,
                     "text": extract_chunk.text or "",
                     "page": extract_chunk.page or 1,
+                    "class": class_id,
+                    "extension": "png" # we upload text images as png
                 }
             else:
                 document_data = {
                     "file": file_id,
                     "text": extract_chunk.text or "",
                     "page": extract_chunk.page or 1,
+                    "class": class_id,
+                    "extension": "png" # we upload other files as png
                 }
 
             # Insert document record

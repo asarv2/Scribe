@@ -104,7 +104,7 @@ export default function ItemCard({
             case 'uploading':
                 // For uploading, we rely on the tus progress updates
                 // This is handled separately in the notifications
-                return item.upload_progress ? item.upload_progress * 100 : 0;
+                return item.upload_progress ? item.upload_progress : 0;
 
             case 'complete':
                 return 100;

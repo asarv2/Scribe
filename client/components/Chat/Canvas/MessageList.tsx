@@ -11,6 +11,7 @@ import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
 import {
+  getPageRanges,
   splitTextByDocuments,
   splitTextByTags,
 } from "@/utils/chat/chat-helpers";
@@ -81,11 +82,6 @@ export const MessageList = memo(({
     enabled: !!user?.id
   });
 
-  const { data: professor } = useQuery({
-    queryKey: ["professor", classId],
-    queryFn: () => getProfessor(supabase, classId),
-  });
-
   const { data: files, isLoading: loadingFiles } = useQuery({
     queryKey: ["files", classId],
     queryFn: () => getFiles(supabase, classId!),
@@ -143,13 +139,13 @@ export const MessageList = memo(({
           <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
             <Group gap="xs" align="center">
               <Avatar
-                src={(professor && !activeChat.teacher) ? getAvatarUrl(professor.id) : undefined}
+                src={undefined}
                 size="sm"
                 radius="xl"
                 alt="AI Assistant"
               />
               <Text size="sm" c="dimmed">
-                {(professor && !activeChat.teacher) ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                AI Assistant
               </Text>
             </Group>
 
@@ -319,15 +315,30 @@ export const MessageList = memo(({
     }));
   };
 
+  const getDocumentLabel = (
+    doc?: Document,
+    range?: string
+  ): string => {
+    const file = files?.find(f => f.id === doc?.file);
+    if (file?.type === 'video' || file?.type === 'audio') {
+      const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      };
+      return `${file?.title ?? 'File'} ${formatTime(doc?.start_time ?? 0)} - ${formatTime(doc?.end_time ?? 0)}`;
+    } else {
+      return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
+    }
+  };
+
+
   // Function to render context badges for user messages
   const renderMessageContext = (message: Message) => {
     // Check if this message has any context attached
-    const hasLectures = message.lectures && message.lectures.length > 0;
-    const hasChapters = message.chapters && message.chapters.length > 0;
-    const hasHomeworks = message.homeworks && message.homeworks.length > 0;
     const hasFiles = message.files && message.files.length > 0;
-
-    if (!hasLectures && !hasChapters && !hasHomeworks && !hasFiles) {
+    const hasDocuments = message.documents && message.documents.length > 0;
+    if (!hasFiles && !hasDocuments) {
       return null;
     }
 
@@ -339,11 +350,8 @@ export const MessageList = memo(({
       for (let i = 0; i < currentMsgIndex; i++) {
         const prevMsg = messages?.[i];
         if (!prevMsg) continue;
-
-        if (type === 'lecture' && prevMsg.lectures?.includes(id)) return true;
-        if (type === 'chapter' && prevMsg.chapters?.includes(id)) return true;
-        if (type === 'homework' && prevMsg.homeworks?.includes(id)) return true;
         if (type === 'file' && prevMsg.files?.includes(id)) return true;
+        if (type === 'document' && prevMsg.documents?.includes(id)) return true;
       }
       return false;
     };
@@ -382,6 +390,40 @@ export const MessageList = memo(({
               }}
             >
               ({file.title})
+            </Text>
+          );
+        })}
+
+        {hasDocuments && getPageRanges(message.documents.map(d => fileDocuments?.find(fd => fd.id === d)).filter(d => d !== undefined)).map(({ startDocument, endDocument, range }) => {
+          // find all documents with startDocument.page <= range <= endDocument.page
+          const documents = fileDocuments?.filter(d => startDocument && endDocument && d.page >= startDocument.page && d.page <= endDocument.page);
+          // Skip if this was already shown in a previous message's context
+          if (documents?.some(d => isPreviousContext('document', d.id, messageIndex))) return null;
+
+          const file = files?.find(f => f.id === startDocument?.file);
+          if (!startDocument || !endDocument || !file) return null;
+
+          return (
+            <Text
+              key={`document-${startDocument.id}-${endDocument.id}`}
+              size="sm"
+              c={CONTENT_COLORS[file.content_type ?? 'other']}
+              className="inline-reference document-reference"
+              style={{
+                cursor: 'pointer',
+                transition: 'text-decoration 0.2s ease',
+                '&:hover': {
+                  textDecoration: 'underline',
+                }
+              }}
+              onClick={() => {
+                const document = fileDocuments?.find(d => d.id === startDocument.id);
+                if (document && document.file) {
+                  handleEnhancedDocumentClick(document.file, document.id);
+                }
+              }}
+            >
+              ({getDocumentLabel(startDocument, range)})
             </Text>
           );
         })}
@@ -524,7 +566,7 @@ export const MessageList = memo(({
 
                     {/* Show auto-added context badges only for the first message */}
                   </Card>}
-                  {(message.lectures?.length > 0 || message.chapters?.length > 0 || message.homeworks?.length > 0 || message.files?.length > 0) &&
+                  {(message.files?.length > 0 || message.documents?.length > 0) &&
                     renderMessageContext(message)
                   }
                 </Stack>
@@ -536,13 +578,13 @@ export const MessageList = memo(({
                   {/* AI info container */}
                   <Group gap="xs" align="center">
                     <Avatar
-                      src={(professor && !activeChat.teacher) ? getAvatarUrl(professor.id) : undefined}
+                      src={undefined}
                       size="sm"
                       radius="xl"
                       alt="AI Assistant"
                     />
                     <Text size="sm" c="dimmed">
-                      {(professor && !activeChat.teacher) ? `${professor.first_name} ${professor.last_name} (AI)` : 'AI Assistant'}
+                      AI Assistant
                     </Text>
                   </Group>
 
