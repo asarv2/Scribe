@@ -832,11 +832,18 @@ export function ContextPanel({
                                 padding: 0,
                                 margin: 0,
                                 // Allow pointer events to pass through when not in active drop state
-                                pointerEvents: 'none'
+                                pointerEvents: 'none',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flex: 1
                             },
                             inner: {
                                 // This ensures the inner content receives pointer events
-                                pointerEvents: 'auto'
+                                pointerEvents: 'auto',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flex: 1,
+                                height: '100%'
                             }
                         }}
                         activateOnDrag={true}
@@ -862,7 +869,10 @@ export function ContextPanel({
                                 style={{
                                     height: "100%",
                                     overflow: 'auto',
-                                    position: 'relative'
+                                    position: 'relative',
+                                    flex: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column'
                                 }}
                             >
                                 {/* Add section marker divs for scrolling */}
@@ -924,8 +934,19 @@ export function ContextPanel({
                                         })}
                                     </div>
                                 ) : (
-                                    <Text c="dimmed" ta="center" py="md">
-                                        {localSearchQuery ? "No results found" : "No content available"}
+                                    <Text 
+                                        c="dimmed" 
+                                        ta="center" 
+                                        py="md"
+                                        style={{
+                                            flex: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '100%'
+                                        }}
+                                    >
+                                        {localSearchQuery ? "No results found" : "No content available. Drop a file to get started."}
                                     </Text>
                                 )}
                             </div>
