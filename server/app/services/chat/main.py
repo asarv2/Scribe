@@ -3,12 +3,12 @@ from agents import Agent
 from datetime import datetime
 from app.extensions import get_supabase, get_gemini
 from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
-from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig
+from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig, GuardrailFunctionOutput, input_guardrail, InputGuardrailTripwireTriggered
 from app.services.chat.tools.create_figure import create_figure
 from app.services.chat.tools.create_summary import create_summary
 from app.services.chat.tools.update_chat_title import update_chat_title
-from app.services.chat.tools.create_question import create_frq_question, create_mcq_question
-from app.services.chat.tools.grade_results import classify_grade_files, grade_results
+from app.services.chat.tools.create_question import create_mcq_question, create_frq_question
+from app.services.chat.tools.grade_results import classify_grades, grade_results
 from app.services.chat.models import Documents, process_special_tags, clean_references
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
@@ -134,7 +134,7 @@ class ChatProcessor(RunHooks):
                 temperature=0.0,
                 include_usage=True
             ),
-            tools=[classify_grade_files, grade_results],
+            tools=[classify_grades, grade_results],
         )
 
         
@@ -145,7 +145,9 @@ class ChatProcessor(RunHooks):
         When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
         The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
         
-        You should generally handoff the creation of summaries, and questions to the Summary Agent and Question Agent respectively. The Figure Agent can be used in a more special case, where you want to generate standalone figures. If necessary, you can use the create_figure tool to generate a figure (in the case that you then want to reference it in a summary or question). You can use the create_summary tool to generate a summary. You can use the create_mcq_question tool to generate a multiple choice question, and the create_frq_question tool to generate a free response question. Use these tools only if you explicity know what needs to be generated (for example, if the user asks to modify an existing figure, summary or question).
+        You should generally handoff the creation of summaries, and questions to the Summary Agent and Question Agent respectively. The Figure Agent can be used in a more special case, where you want to generate standalone figures. If necessary, you can use the create_figure tool to generate a figure (in the case that you then want to reference it in a summary or question). You can use the create_summary tool to generate a summary. You can use the create_mcq_question tool to generate a multiple choice question, and the create_frq_question tool to generate a free response question. Use these tools only if you explicity know what needs to be generated (for example, if the user asks to modify an existing figure, summary or question)
+        
+        CRITICAL: You should NOT merge tool names together to create new tools. For example, you should NOT do create_figurecreate_figure, create_figure_create_summary, create_figure_create_question, create_summary_create_figure, create_summary_create_summary, create_summary_create_question, create_question_create_figure, create_question_create_summary, create_question_create_question. You should ONLY use the tools individually. Remember to AVOID this mistake.
         """
         # defining the system prompt and starting agent
         match self.prompt_type:
@@ -318,7 +320,7 @@ class ChatProcessor(RunHooks):
             # need to add gemini files to context?
             result = Runner.run_streamed(self.starting_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
                 group_id=chat_id,
-                trace_id=self.trace_id
+                trace_id=self.trace_id,
             ))
 
             # setting the trace id
@@ -341,7 +343,6 @@ class ChatProcessor(RunHooks):
                 usage = response.usage
 
                 await self.update_chat_usage(documents.chat_id, documents.profile_id, usage.input_tokens, usage.output_tokens)
-
         except Exception as e:
             logger.error(f"Error in process_message: {str(e)}")
             raise
@@ -402,7 +403,7 @@ class ChatProcessor(RunHooks):
                 post_conversation_context.append({"role": "user", "content": "What is the topic of this chat?"})
                 await Runner.run(self.chat_title_agent, post_conversation_context, context=wrapper.context, run_config=RunConfig(
                     group_id=wrapper.context.chat_id,
-                    trace_id=self.trace_id
+                    trace_id=self.trace_id,
                 ), hooks=self)
         else:
             # updating the usage

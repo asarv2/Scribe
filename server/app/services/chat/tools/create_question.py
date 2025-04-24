@@ -5,7 +5,7 @@ from typing import List
 from app.extensions import get_supabase
 from app.services.chat.models import Documents
 
-@function_tool
+@function_tool()
 async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str = "", question: str = "", options: List[str] = [], explanations: List[str] = [], answer: str = "", references: List[int] = [], figures: List[int] = []) -> str:
     """Generates a question object given the MCQ question. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool. 
     
@@ -72,7 +72,7 @@ async def create_mcq_question(wrapper: RunContextWrapper[Documents], title: str 
 
         raise e
 
-@function_tool
+@function_tool()
 async def create_frq_question(wrapper: RunContextWrapper[Documents], title: str = "", question: str = "", answer: str = "", references: List[int] = [], figures: List[int] = []) -> str:
     """Generates a question object given the FRQ question. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool. 
     

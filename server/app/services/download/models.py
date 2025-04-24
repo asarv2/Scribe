@@ -8,6 +8,12 @@ class Grade(TypedDict):
     references: List[str]
     figures: List[str]
 
+class Figure(TypedDict):
+    id: str
+    title: str
+    code: str
+    references: List[str]
+
 class Summary(TypedDict):
     id: str
     title: str

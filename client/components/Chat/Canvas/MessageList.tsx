@@ -608,24 +608,18 @@ export const MessageList = memo(({
                                   classId={classId}
                                 />
                               )
-                            } else if (segment.figureId && figures) {
+                            } else if (segment.figureIds && figures) {
                               return (
-                                figures.find(f => f.id === segment.figureId) && (
-                                  <FigureViewer key={segment.figureId} figure={figures.find(f => f.id === segment.figureId)!} classId={classId} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
-                                )
+                                  <FigureViewer key={segment.figureIds?.join('-')} classId={classId} chatId={chatId} figures={figures.filter(f => segment.figureIds?.includes(f.id))} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
-                            } else if (segment.summaryId && summaries) {
+                            } else if (segment.summaryIds && summaries) {
                               return (
-                                summaries.find(s => s.id === segment.summaryId) && (
-                                  <SummaryViewer key={segment.summaryId} classId={classId} chatId={chatId} summary={summaries.find(s => s.id === segment.summaryId)!} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
-                                )
+                                  <SummaryViewer key={segment.summaryIds?.join('-')} classId={classId} chatId={chatId} summaries={summaries.filter(s => segment.summaryIds?.includes(s.id))} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
                             } else if (segment.questionIds && questions) {
                               return (
-                                questions.filter(q => segment.questionIds.includes(q.id)) && (
-                                  <QuestionViewer key={segment.questionIds.join('-')} classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                  <QuestionViewer key={segment.questionIds.join('-')} classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds?.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
-                              )
                             }
                           })}
                         </Stack>

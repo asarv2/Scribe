@@ -6,7 +6,7 @@ from app.extensions import get_supabase
 from app.services.chat.models import Documents
 from app.services.chat.models import clean_references
 
-@function_tool
+@function_tool()
 async def create_summary(wrapper: RunContextWrapper[Documents], title: str, preamble: str, body: str, conclusion: str, references: List[int] = [], figures: List[int] = []) -> str:
     """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via matplotlib beforehand, use the create_figure tool. This will return the number of the figure, which you can pass to this tool.
 

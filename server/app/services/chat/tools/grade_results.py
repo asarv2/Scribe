@@ -8,8 +8,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@function_tool
-async def classify_grade_files(wrapper: RunContextWrapper[Documents], prompts: List[Tuple[int, int | None]]) -> List[int]:
+@function_tool()
+async def classify_grades(wrapper: RunContextWrapper[Documents], prompts: List[Tuple[int, int | None]]) -> List[int]:
     """Used to classify the files into the correct grade category.
 
     Args:
@@ -50,7 +50,7 @@ async def classify_grade_files(wrapper: RunContextWrapper[Documents], prompts: L
     except Exception as e:  
         raise e
 
-@function_tool
+@function_tool()
 async def grade_results(wrapper: RunContextWrapper[Documents], grade_entry: int, results: List[Tuple[str, str]]) -> str:
     """Used to display the graded results of a given set of problems, with the results and feedback for each problem. You should aim to make the results have the format of the rubric if specified, otherwise just display the results in a nice format. The feedback should be detailed and specific to the problem, with actionable feedback for the user. 
 

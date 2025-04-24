@@ -13,15 +13,17 @@ export const getCourseImageUrl = (classId: string) => {
     return `${process.env.NEXT_PUBLIC_STORAGE_URL}/classes/home/${classId}.jpg`
 }
 
-export const getFigureUrl = (classId: string, figureId: string) => {
-    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${classId}/${figureId}.svg`
+export const getFigureUrl = (classId: string, figureId: string, format: 'svg' | 'png' = 'svg') => {
+    return `${process.env.NEXT_PUBLIC_STORAGE_URL}/figures/${classId}/${figureId}.${format}`
 }
 
-export const getSummaryDownloadUrl = (chatId: string, summaryId: string, format: 'pdf' | 'latex' | 'text') => {
+export const getSummaryDownloadUrl = (chatId: string, summaryIds: string[], format: 'pdf' | 'latex' | 'text') => {
     const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/summary`;
     const url = new URL(baseUrl, window.location.origin);
     url.searchParams.append('chat_id', chatId);
-    url.searchParams.append('summary_id', summaryId);
+    summaryIds.forEach(id => {
+        url.searchParams.append('summary_ids', id);
+    });
     url.searchParams.append('format', format);
     return url.toString();
 }
@@ -53,6 +55,17 @@ export const getQuestionDownloadUrl = (chatId: string, questionIds: string[], fo
     
     return url.toString();
 };
+
+export const getFigureDownloadUrl = (chatId: string, figureIds: string[], format: 'png' | 'pdf' | 'latex') => {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/figure`;
+    const url = new URL(baseUrl, window.location.origin);
+    url.searchParams.append('chat_id', chatId);
+    figureIds.forEach(id => {
+        url.searchParams.append('figure_ids', id);
+    });
+    url.searchParams.append('format', format);
+    return url.toString();
+}
 
 
 

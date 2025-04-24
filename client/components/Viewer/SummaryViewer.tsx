@@ -4,10 +4,10 @@
  * 03/20/2025
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Document, Summary } from '../../types';
-import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip, SimpleGrid } from '@mantine/core';
-import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile } from '@tabler/icons-react';
+import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip, SimpleGrid, Modal } from '@mantine/core';
+import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
 import Latex from '../Latex';
 import { getSummaryDownloadUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
@@ -24,16 +24,21 @@ import PulseText from '../Chat/Canvas/PulseText';
 interface SummaryViewerProps {
     classId: string;
     chatId: string;
-    summary: Summary;
+    summaries: Summary[];
     viewerMode: ViewerMode;
     fileDocuments: Document[],
     handleEnhancedDocumentClick: (fileId: string, documentId?: string) => void;
 }
 
-const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
-
+const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summaries, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
     const supabase = useSupabaseBrowser();
     const [downloadLoading, setDownloadLoading] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
+
+    // Get current summary
+    const summary = summaries[currentIndex] || {};
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -52,10 +57,66 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         enabled: !!summary.message
     });
 
-    const [loading, setLoading] = useState(false);
+    // Handle navigation between summaries
+    const handlePrevious = useCallback(() => {
+        if (currentIndex > 0) {
+            setCurrentIndex(prev => prev - 1);
+        }
+    }, [currentIndex]);
 
-    const handleDownload = (format: 'pdf' | 'latex' | 'text') => {
-        const downloadUrl = getSummaryDownloadUrl(chatId, summary.id, format);
+    const handleNext = useCallback(() => {
+        if (currentIndex < summaries.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+        }
+    }, [currentIndex, summaries.length]);
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowLeft') {
+                handlePrevious();
+            } else if (e.key === 'ArrowRight') {
+                handleNext();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handlePrevious, handleNext]);
+
+    // Touch swipe navigation
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStartX(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (touchStartX === null) return;
+
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+
+        // Swipe threshold (adjust as needed)
+        const threshold = 50;
+
+        if (diff > threshold) {
+            // Swiped left, go to next summary
+            handleNext();
+        } else if (diff < -threshold) {
+            // Swiped right, go to previous summary
+            handlePrevious();
+        }
+
+        setTouchStartX(null);
+    };
+
+    const handleDownload = (format: 'pdf' | 'latex' | 'text', downloadAll: boolean = false) => {
+        // If downloadAll is true, we need to modify the API call to get all summaries
+        // For now, we'll just use the current implementation for single summary
+        const downloadUrl = downloadAll 
+            ? getSummaryDownloadUrl(chatId, summaries.map(s => s.id), format) 
+            : getSummaryDownloadUrl(chatId, [summary.id], format);
         
         setDownloadLoading(true);
         
@@ -68,7 +129,9 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         .then(response => {
             // Get filename from Content-Disposition header if available
             const contentDisposition = response.headers.get('Content-Disposition');
-            let filename = `${summary.title}.${format === 'latex' ? 'tex' : format}`;
+            let filename = downloadAll 
+                ? `all-summaries-${chatId}.${format === 'latex' ? 'tex' : format}`
+                : `${summary.title || `summary-${currentIndex + 1}`}.${format === 'latex' ? 'tex' : format}`;
             
             if (contentDisposition) {
                 const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
@@ -114,39 +177,47 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
         });
     }
 
-    const renderFigure = (figureId: string) => {
-        const figure = figures?.find(f => f.id === figureId);
-        if (!figure) return null;
+    const renderFigures = () => {
+        if (!summary.figures || summary.figures.length === 0 || !figures) return null;
+        
+        const summaryFigures = figures.filter(f => summary.figures.includes(f.id));
+        if (summaryFigures.length === 0) return null;
+        
         return (
-            <FigureViewer
-                key={figureId}
-                figure={figure}
-                classId={classId}
-                viewerMode={viewerMode}
-                handleEnhancedDocumentClick={handleEnhancedDocumentClick}
-                fileDocuments={fileDocuments ?? []}
-                full={true}
-            />
+            <Box mt="md">
+                <Text fw={700}>Figures:</Text>
+                <SimpleGrid cols={3}>
+                    <FigureViewer
+                        figures={summaryFigures}
+                        classId={classId}
+                        chatId={chatId}
+                        viewerMode={viewerMode}
+                        handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                        fileDocuments={fileDocuments ?? []}
+                        full={true}
+                    />
+                </SimpleGrid>
+            </Box>
         );
-    }
+    };
 
     const renderContent = () => {
         switch (summary.generation_status) {
             case 'idle':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text="Waiting to generate summary..." />
+                        <PulseText text={`Waiting to generate summary ${currentIndex + 1} of ${summaries.length}...`} />
                     </Center>
                 );
             case 'generating':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text="Generating summary..." />
+                        <PulseText text={`Generating summary ${currentIndex + 1} of ${summaries.length}...`} />
                     </Center>
                 );
             case 'complete':
                 return (
-                    <Card withBorder p="md" w={"100%"}>
+                    <>
                         <Group justify="space-between">
                             <Text c="dimmed">{summary.title}</Text>
                             {(profile?.admin || profile?.professor) ? <Menu position="bottom-end" shadow="md">
@@ -162,28 +233,56 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                     <Menu.Label>Download as</Menu.Label>
-                                    <Menu.Item
-                                        leftSection={<IconFile size={14} />}
-                                        onClick={() => handleDownload('pdf')}
-                                        disabled={downloadLoading}
-                                    >
-                                        {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        leftSection={<IconFileTypography size={14} />}
-                                        onClick={() => handleDownload('latex')}
-                                        disabled={downloadLoading}
-                                    >
-                                        {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                                    </Menu.Item>
-                                    {/* <Menu.Item
-                                        leftSection={<IconFileText size={14} />}
-                                        component="a"
-                                        href={getSummaryDownloadUrl(chatId, summary.id, 'text')}
-                                        download
-                                    >
-                                        Plain Text
-                                    </Menu.Item> */}
+                                    {summaries.length > 1 ? (
+                                        <>
+                                            <Menu.Item
+                                                leftSection={<IconFile size={14} />}
+                                                onClick={() => handleDownload('pdf', false)}
+                                                disabled={downloadLoading}
+                                            >
+                                                {downloadLoading ? 'Downloading...' : 'Current Summary (PDF)'}
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                leftSection={<IconFileTypography size={14} />}
+                                                onClick={() => handleDownload('latex', false)}
+                                                disabled={downloadLoading}
+                                            >
+                                                {downloadLoading ? 'Downloading...' : 'Current Summary (LaTeX)'}
+                                            </Menu.Item>
+                                            <Menu.Divider />
+                                            <Menu.Item
+                                                leftSection={<IconFile size={14} />}
+                                                onClick={() => handleDownload('pdf', true)}
+                                                disabled={downloadLoading}
+                                            >
+                                                {downloadLoading ? 'Downloading...' : 'All Summaries (PDF)'}
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                leftSection={<IconFileTypography size={14} />}
+                                                onClick={() => handleDownload('latex', true)}
+                                                disabled={downloadLoading}
+                                            >
+                                                {downloadLoading ? 'Downloading...' : 'All Summaries (LaTeX)'}
+                                            </Menu.Item>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Menu.Item
+                                                leftSection={<IconFile size={14} />}
+                                                onClick={() => handleDownload('pdf')}
+                                                disabled={downloadLoading}
+                                            >
+                                                {downloadLoading ? 'Downloading...' : 'PDF Document'}
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                leftSection={<IconFileTypography size={14} />}
+                                                onClick={() => handleDownload('latex')}
+                                                disabled={downloadLoading}
+                                            >
+                                                {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
+                                            </Menu.Item>
+                                        </>
+                                    )}
                                 </Menu.Dropdown>
                             </Menu> : <Tooltip label={downloadLoading ? 'Downloading...' : 'Download PDF'}>
                                 <ActionIcon
@@ -204,23 +303,47 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summary,
                             <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(summary.conclusion, fileDocuments ?? [])}</Latex>
                         </Box>
                         
-                        {summary.figures && summary.figures.length > 0 && (
-                            <Box mt="md">
-                                <Text fw={700}>Figures:</Text>
-                                <SimpleGrid cols={3}>
-                                    {summary.figures.map((figureId) => (
-                                        renderFigure(figureId)
-                                    ))}
-                                </SimpleGrid>
-                            </Box>
-                        )}
-                    </Card>
+                        {renderFigures()}
+                    </>
                 );
         }
     };
 
-    return (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete' || summary.generation_status === 'error') && ( 
-            renderContent()
+    return (summaries.length > 0 && (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete' || summary.generation_status === 'error')) && (
+        <Card
+            withBorder
+            p="md"
+            w={"100%"}
+            ref={cardRef}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
+            {summaries.length > 1 && (
+                <Group justify="space-between" mb="md">
+                    <Group>
+                        <ActionIcon
+                            disabled={currentIndex === 0}
+                            onClick={handlePrevious}
+                            variant="subtle"
+                        >
+                            <IconChevronLeft size={20} />
+                        </ActionIcon>
+
+                        <Text size="sm">Summary {currentIndex + 1} of {summaries.length}</Text>
+
+                        <ActionIcon
+                            disabled={currentIndex === summaries.length - 1}
+                            onClick={handleNext}
+                            variant="subtle"
+                        >
+                            <IconChevronRight size={20} />
+                        </ActionIcon>
+                    </Group>
+                </Group>
+            )}
+
+            {renderContent()}
+        </Card>
     );
 };
 

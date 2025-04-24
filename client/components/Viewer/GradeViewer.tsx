@@ -120,7 +120,8 @@ const GradeViewer: React.FC<GradeViewerProps> = ({ classId, chatId, grade, viewe
         return (
             <FigureViewer
                 key={figureId}
-                figure={figure}
+                figures={[figure]}
+                chatId={chatId}
                 classId={classId}
                 viewerMode={viewerMode}
                 handleEnhancedDocumentClick={handleEnhancedDocumentClick}

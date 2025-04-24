@@ -145,10 +145,20 @@ export const splitTextByDocuments = (text: string, fileDocuments: Document[]): s
 };
 
 // Split text by figure references and other special tags
-export const splitTextByTags = (text: string): { text: string; figureId: string | null; summaryId: string | null; questionIds: string[] }[] => {
+export const splitTextByTags = (text: string): Array<{ 
+    text: string | null; 
+    figureIds: string[] | null; 
+    summaryIds: string[] | null; 
+    questionIds: string[] | null 
+}> => {
     if (!text) return [];
 
-    const result: { text: string; figureId: string | null; summaryId: string | null; questionIds: string[] }[] = [];
+    const result: Array<{ 
+        text: string | null; 
+        figureIds: string[] | null; 
+        summaryIds: string[] | null; 
+        questionIds: string[] | null 
+    }> = [];
     
     // Use regex to properly extract tags and content
     const tagPattern = /<(FIGURE|SUMMARY|QUESTION)>(.*?)<\/(FIGURE|SUMMARY|QUESTION)>/g;
@@ -195,59 +205,70 @@ export const splitTextByTags = (text: string): { text: string; figureId: string 
         });
     }
     
-    // Now process the segments to group consecutive questions if needed
+    // Collect all figures, summaries, and questions
+    const allFigureIds: string[] = [];
+    const allSummaryIds: string[] = [];
+    const allQuestionIds: string[] = [];
+    
+    // First pass: collect all IDs by type
+    segments.forEach(segment => {
+        if (segment.type === 'figure') {
+            allFigureIds.push(segment.content);
+        } else if (segment.type === 'summary') {
+            allSummaryIds.push(segment.content);
+        } else if (segment.type === 'question') {
+            allQuestionIds.push(segment.content);
+        }
+    });
+    
+    // Track if we've already added each type
+    let figuresAdded = false;
+    let summariesAdded = false;
+    let questionsAdded = false;
+    
+    // Second pass: create result objects
     for (let i = 0; i < segments.length; i++) {
         const segment = segments[i];
         
         if (segment.type === 'text') {
+            // Only add text segments if they contain non-whitespace content
+            if (segment.content.trim() !== '') {
+                result.push({
+                    text: segment.content,
+                    figureIds: null,
+                    summaryIds: null,
+                    questionIds: null
+                });
+            }
+        } else if (segment.type === 'figure' && !figuresAdded) {
+            // Add all figures at the first figure position
             result.push({
-                text: segment.content,
-                figureId: null,
-                summaryId: null,
-                questionIds: []
+                text: null,
+                figureIds: allFigureIds,
+                summaryIds: null,
+                questionIds: null
             });
-        } else if (segment.type === 'figure') {
-            result.push({ 
-                text: '', 
-                figureId: segment.content, 
-                summaryId: null, 
-                questionIds: [] 
+            figuresAdded = true;
+        } else if (segment.type === 'summary' && !summariesAdded) {
+            // Add all summaries at the first summary position
+            result.push({
+                text: null,
+                figureIds: null,
+                summaryIds: allSummaryIds,
+                questionIds: null
             });
-        } else if (segment.type === 'summary') {
-            result.push({ 
-                text: '', 
-                figureId: null, 
-                summaryId: segment.content, 
-                questionIds: [] 
+            summariesAdded = true;
+        } else if (segment.type === 'question' && !questionsAdded) {
+            // Add all questions at the first question position
+            result.push({
+                text: null,
+                figureIds: null,
+                summaryIds: null,
+                questionIds: allQuestionIds
             });
-        } else if (segment.type === 'question') {
-            // Check if there are consecutive questions
-            let questionIds = [segment.content];
-            let j = i + 1;
-            
-            // Skip any empty text segments between questions
-            while (j < segments.length && 
-                   ((segments[j].type === 'text' && segments[j].content.trim() === '') || 
-                    segments[j].type === 'question')) {
-                if (segments[j].type === 'question') {
-                    questionIds.push(segments[j].content);
-                }
-                j++;
-            }
-            
-            // If we found consecutive questions, skip them in the main loop
-            if (j > i + 1) {
-                i = j - 1;
-            }
-            
-            // Add the question(s) to the result
-            result.push({ 
-                text: '', 
-                figureId: null, 
-                summaryId: null, 
-                questionIds: questionIds 
-            });
+            questionsAdded = true;
         }
+        // Skip other occurrences of figures, summaries, and questions
     }
 
     return result;

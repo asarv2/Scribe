@@ -59,14 +59,14 @@ async def handle_chat(
         references = chat_context.get('references', [])
 
         # get the mapped references
-        mapped_references, text_description = await get_mapped_references(supabase_client, file_ids, document_ids, references)
+        mapped_references, text_description, ordered_file_ids, ordered_document_ids = await get_mapped_references(supabase_client, file_ids, document_ids, references)
         logger.info(f"Text description: {text_description}")
 
         # to call the agents
         documents = Documents(references=mapped_references, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
 
         # Fetch google file ids
-        google_files = GoogleFiles(file_ids, document_ids, supabase_client)
+        google_files = GoogleFiles(ordered_file_ids, ordered_document_ids, supabase_client)
         google_file_ids = google_files.get_files()
         google_document_ids = google_files.get_documents()
         google_ids = google_file_ids + google_document_ids

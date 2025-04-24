@@ -166,16 +166,18 @@ export default function FileViewer({
                         ))}
                     </Stack>
                 ) : (
-                    <Stack>
-                        {documents?.map((doc) => 
-                            activeChat.documents.includes(doc.id) ? (
-                                // Empty div with document ID for scrolling purposes
-                                <Box 
-                                    key={doc.id} 
-                                    id={`document-${doc.id}`} 
-                                    style={{ height: 0, margin: 0, padding: 0 }}
-                                />
-                            ) : (
+                    <>
+                        {/* Render empty divs outside the Stack for scrolling purposes */}
+                        {documents?.filter(doc => activeChat.documents.includes(doc.id)).map(doc => (
+                            <Box 
+                                key={doc.id} 
+                                id={`document-${doc.id}`} 
+                                style={{ height: 0, margin: 0, padding: 0 }}
+                            />
+                        ))}
+                        
+                        <Stack>
+                            {documents?.filter(doc => !activeChat.documents.includes(doc.id)).map((doc) => (
                                 <DraggableWrapper key={doc.id} item={doc} type={'document'} makeDraggable={true}>
                                     <Box
                                         id={`document-${doc.id}`}
@@ -277,9 +279,9 @@ export default function FileViewer({
                                         </Box>
                                     </Box>
                                 </DraggableWrapper>
-                            )
-                        )}
-                    </Stack>
+                            ))}
+                        </Stack>
+                    </>
                 )}
             </Box>
         </>

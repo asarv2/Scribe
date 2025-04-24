@@ -33,11 +33,9 @@ interface QuestionViewerProps {
 const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questions, viewerMode, fileDocuments, handleEnhancedDocumentClick }) => {
     const [loading, setLoading] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [modalOpen, setModalOpen] = useState(false);
     const supabase = useSupabaseBrowser();
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const cardRef = useRef<HTMLDivElement>(null);
-    const modalContentRef = useRef<HTMLDivElement>(null);
     const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string[]>>({});
     const [frqAnswers, setFrqAnswers] = useState<Record<string, string>>({});
     const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({});
@@ -148,8 +146,10 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         setCheckedAnswers(prev => ({ ...prev, [questionId]: false }));
     };
 
-    const handleDownload = (format: 'pdf' | 'latex') => {
-        const downloadUrl = getQuestionDownloadUrl(chatId, questions.map(q => q.id), format);
+    const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = true) => {
+        // If downloadAll is false, only download the current question
+        const questionIds = downloadAll ? questions.map(q => q.id) : [question.id];
+        const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format);
 
         setDownloadLoading(true);
 
@@ -164,6 +164,10 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 const contentDisposition = response.headers.get('Content-Disposition');
                 console.log('Content-Disposition:', contentDisposition);
                 let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
+                
+                if (!downloadAll) {
+                    filename = `question-${currentIndex + 1}-${chatId}.${format === 'latex' ? 'tex' : format}`;
+                }
 
                 if (contentDisposition) {
                     const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
@@ -215,8 +219,9 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         return (
             <FigureViewer
                 key={figureId}
-                figure={figure}
+                figures={[figure]}
                 classId={classId}
+                chatId={chatId}
                 viewerMode={viewerMode}
                 handleEnhancedDocumentClick={handleEnhancedDocumentClick}
                 fileDocuments={fileDocuments ?? []}
@@ -392,7 +397,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                         </Group>
                     ) : <div />}
                     <Group gap="xs">
-                        {(profile?.admin || profile?.professor) ? <Menu position="bottom-end" shadow="md">
+                        <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
                                 <Tooltip label="Download Questions">
                                     <ActionIcon
@@ -404,43 +409,63 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                 </Tooltip>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item
-                                    leftSection={<IconFile size={14} />}
-                                    onClick={() => handleDownload('pdf')}
-                                    disabled={downloadLoading}
-                                >
-                                    {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                                </Menu.Item>
-                                <Menu.Item
-                                    leftSection={<IconFileTypography size={14} />}
-                                    onClick={() => handleDownload('latex')}
-                                    disabled={downloadLoading}
-                                >
-                                    {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                                </Menu.Item>
+                                {questions.length > 1 ? (
+                                    <>
+                                        <Menu.Label>Download Options</Menu.Label>
+                                        <Menu.Item
+                                            leftSection={<IconFile size={14} />}
+                                            onClick={() => handleDownload('pdf', false)}
+                                            disabled={downloadLoading}
+                                        >
+                                            {downloadLoading ? 'Downloading...' : 'Current Question (PDF)'}
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            leftSection={<IconFileTypography size={14} />}
+                                            onClick={() => handleDownload('latex', false)}
+                                            disabled={downloadLoading}
+                                        >
+                                            {downloadLoading ? 'Downloading...' : 'Current Question (LaTeX)'}
+                                        </Menu.Item>
+                                        <Menu.Divider />
+                                        <Menu.Item
+                                            leftSection={<IconFile size={14} />}
+                                            onClick={() => handleDownload('pdf', true)}
+                                            disabled={downloadLoading}
+                                        >
+                                            {downloadLoading ? 'Downloading...' : 'All Questions (PDF)'}
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            leftSection={<IconFileTypography size={14} />}
+                                            onClick={() => handleDownload('latex', true)}
+                                            disabled={downloadLoading}
+                                        >
+                                            {downloadLoading ? 'Downloading...' : 'All Questions (LaTeX)'}
+                                        </Menu.Item>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Menu.Item
+                                            leftSection={<IconFile size={14} />}
+                                            onClick={() => handleDownload('pdf')}
+                                            disabled={downloadLoading}
+                                        >
+                                            {downloadLoading ? 'Downloading...' : 'PDF Document'}
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            leftSection={<IconFileTypography size={14} />}
+                                            onClick={() => handleDownload('latex')}
+                                            disabled={downloadLoading}
+                                        >
+                                            {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
+                                        </Menu.Item>
+                                    </>
+                                )}
                             </Menu.Dropdown>
-                        </Menu> :
-                            <Tooltip label={downloadLoading ? 'Downloading...' : 'Download PDF'}>
-                                <ActionIcon
-                                    variant="subtle"
-                                    size="md"
-                                    onClick={() => handleDownload('pdf')}
-                                    disabled={downloadLoading}
-                                    loading={downloadLoading}
-                                >
-                                    <IconDownload size={18} />
-                                </ActionIcon>
-                            </Tooltip>
-                        }
-                        <Tooltip label="Maximize">
-                            <ActionIcon variant="subtle" size="md" onClick={() => setModalOpen(true)}>
-                                <IconMaximize size={18} />
-                            </ActionIcon>
-                        </Tooltip>
+                        </Menu>
                     </Group>
                 </Group>
 
-                {!modalOpen && renderContent()}
+                {renderContent()}
 
                 {questions.length > 3 && (
                     <Pagination
@@ -452,48 +477,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     />
                 )}
             </Card>
-
-            <Modal
-                opened={modalOpen}
-                onClose={() => setModalOpen(false)}
-                title={`Question ${currentIndex + 1} of ${questions.length}`}
-                size="lg"
-                overlayProps={{
-                    backgroundOpacity: 0.55,
-                    blur: 3,
-                }}
-                centered
-            >
-                <Box
-                    p="md"
-                    ref={modalContentRef}
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={handleTouchEnd}
-                >
-                    {question.generation_status === 'complete' && renderQuestion()}
-                    {/* Navigation buttons in modal */}
-                    {questions.length > 1 && (
-                        <Group justify="space-between" mt="xl">
-                            <Button
-                                variant="subtle"
-                                leftSection={<IconChevronLeft size={16} />}
-                                onClick={handlePrevious}
-                                disabled={currentIndex === 0}
-                            >
-                                Previous
-                            </Button>
-                            <Button
-                                variant="subtle"
-                                rightSection={<IconChevronRight size={16} />}
-                                onClick={handleNext}
-                                disabled={currentIndex === questions.length - 1}
-                            >
-                                Next
-                            </Button>
-                        </Group>
-                    )}
-                </Box>
-            </Modal>
         </>
     );
 };

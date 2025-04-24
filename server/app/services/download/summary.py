@@ -9,62 +9,88 @@ import logging
 logger = logging.getLogger(__name__)
 
 class SummaryDownloader:
-    def __init__(self, summary: Summary):
-        self.summary = summary
+    def __init__(self, summaries):
+        # Can accept either a single summary or a list of summaries
+        if isinstance(summaries, list):
+            self.summaries = summaries
+        else:
+            self.summaries = [summaries]
+        
+        # Create a directory based on the first summary's ID
+        self.base_dir = os.path.join(SUMMARIES_DIR, self.summaries[0]['id'])
+        os.makedirs(self.base_dir, exist_ok=True)
 
-    def download_text(self):
-        """Download summary as text file"""
-        name = self.summary['title']
-        content = self.summary['preamble'] + "\n\n" + self._clean_content(self.summary['content']) + "\n\n" + self.summary['conclusion']
+    def download_text(self, combined_title=None):
+        """Download summaries as text file"""
+        if not combined_title:
+            combined_title = self._get_combined_title()
         
-        # Create directory if it doesn't exist
-        os.makedirs(os.path.join(SUMMARIES_DIR, self.summary['id']), exist_ok=True)
+        # Combine all summaries into one text file
+        content = ""
+        for i, summary in enumerate(self.summaries):
+            if i > 0:
+                content += "\n\n" + "-" * 50 + "\n\n"
+            
+            content += f"# {summary['title']}\n\n"
+            content += summary['preamble'] + "\n\n" 
+            content += self._clean_content(summary['content']) + "\n\n" 
+            content += summary['conclusion']
         
-        filename = f"{name}.txt"
-        filepath = os.path.join(SUMMARIES_DIR, self.summary['id'], filename)
+        # Create a safe filename
+        safe_name = re.sub(r'[^\w\-_\. ]', '_', combined_title)
+        safe_name = safe_name.replace(' ', '_')
+        filename = f"{safe_name}.txt"
+        filepath = os.path.join(self.base_dir, filename)
         
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
             
         return filepath
 
-    def download_pdf(self):
-        """Download summary as PDF file"""
-        name = self.summary['title']
-        content = self.summary['preamble'] + "\n\n" + self._clean_content(self.summary['content']) + "\n\n" + self.summary['conclusion']
+    def download_pdf(self, combined_title=None):
+        """Download summaries as PDF file"""
+        if not combined_title:
+            combined_title = self._get_combined_title()
         
-        # Create directory if it doesn't exist
-        summary_dir = os.path.join(SUMMARIES_DIR, self.summary['id'])
-        os.makedirs(summary_dir, exist_ok=True)
-        
-        # Create a safe filename for the base filename
-        safe_name = re.sub(r'[^\w\-_\. ]', '_', name)
+        # Create a safe filename
+        safe_name = re.sub(r'[^\w\-_\. ]', '_', combined_title)
         safe_name = safe_name.replace(' ', '_')
-        base_filename = safe_name
         
-        success = self.save(summary_dir, content, base_filename, title=self.summary['title'], pdf=True)
+        # Prepare content for each summary
+        success = self.save(self.base_dir, self.summaries, safe_name, combined_title, pdf=True)
         
         if success:
-            filepath = os.path.join(summary_dir, f"{base_filename}.pdf")
+            filepath = os.path.join(self.base_dir, f"{safe_name}.pdf")
             # Verify the file exists before returning
             if os.path.exists(filepath):
                 return filepath
         return None
 
-    def download_latex(self):
-        """Download summary as LaTeX file"""
-        name = self.summary['title']
-        content = self.summary['preamble'] + "\n\n" + self._clean_content(self.summary['content']) + "\n\n" + self.summary['conclusion']
+    def download_latex(self, combined_title=None):
+        """Download summaries as LaTeX file"""
+        if not combined_title:
+            combined_title = self._get_combined_title()
         
-        summary_dir = os.path.join(SUMMARIES_DIR, self.summary['id'])
-        os.makedirs(summary_dir, exist_ok=True)
+        # Create a safe filename
+        safe_name = re.sub(r'[^\w\-_\. ]', '_', combined_title)
+        safe_name = safe_name.replace(' ', '_')
         
-        base_filename = name  # Use title as the base filename
-        success = self.save(summary_dir, content, base_filename, title=self.summary['title'], pdf=False)
+        success = self.save(self.base_dir, self.summaries, safe_name, combined_title, pdf=False)
         
         if success:
-            return os.path.join(summary_dir, f"{base_filename}.tex")
+            return os.path.join(self.base_dir, f"{safe_name}.tex")
         return None
+    
+    def _get_combined_title(self):
+        """Generate a combined title from multiple summaries"""
+        titles = [summary['title'] for summary in self.summaries]
+        
+        if len(titles) == 1:
+            return titles[0]
+        elif len(titles) == 2:
+            return f"{titles[0]} and {titles[1]}"
+        else:
+            return f"{titles[0]}, {titles[1]} and more"
     
     def _clean_content(self, content):
         """Remove document tags from content"""
@@ -106,9 +132,9 @@ class SummaryDownloader:
 
         return "\n".join(new_lines)
 
-    def save(self, directory: str, summary: str, base_filename: str, title: str, pdf: bool = True):
+    def save(self, directory: str, summaries, base_filename: str, title: str, pdf: bool = True):
         """
-        Save processed summary to a LaTeX PDF file using PyLaTeX.
+        Save processed summaries to a LaTeX PDF file using PyLaTeX.
         """
         geometry_options = {
             "margin": "1in",
@@ -150,13 +176,14 @@ class SummaryDownloader:
         doc.preamble.append(Command('date', NoEscape(r'\today')))
         doc.append(NoEscape(r'\maketitle'))
 
-        # Questions Section
-        with doc.create(Section('Summary')):
-            doc.append(NoEscape(summary))
+        # Add each summary as a separate section
+        for summary in summaries:
+            with doc.create(Section(summary['title'])):
+                content = summary['preamble'] + "\n\n" + self._clean_content(summary['content']) + "\n\n" + summary['conclusion']
+                doc.append(NoEscape(content))
 
-        # Create a valid filename by removing invalid characters
+        # Create a valid filename
         safe_filename = re.sub(r'[^\w\-_\. ]', '_', base_filename)
-        # Replace spaces with underscores
         safe_filename = safe_filename.replace(' ', '_')
         
         # Full path to the output file (without extension)
