@@ -146,6 +146,18 @@ async def create_figure_matplotlib(wrapper: RunContextWrapper[Documents], title:
         # Execute user code
         exec(python_code, namespace)
         current_fig = plt.gcf()
+
+        # If user code added a legend, move it outside the plotting area
+        for ax in current_fig.axes:
+            handles, labels = ax.get_legend_handles_labels()
+            if handles:
+                ax.legend(handles, labels,
+                          loc='upper left',
+                          bbox_to_anchor=(1, 1),
+                          borderaxespad=0.)
+        # make room on the right for the legend
+        current_fig.subplots_adjust(right=0.75)
+
         plt.tight_layout()
 
         # Ensure there's plotted content
@@ -248,19 +260,48 @@ async def create_figure_matplotlib(wrapper: RunContextWrapper[Documents], title:
 
 @function_tool
 async def create_figure(wrapper: RunContextWrapper[Documents], title: str, latex_code: str, references: List[int] = []) -> str:
-    """Generates a figure object given the latex code that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
+    """Generates a figure object given the latex code that will produce the figure. This tool is ONLY for LaTeX/TikZ code, NOT for Python/matplotlib code.
+    
+    Make sure not to add the title to the plot, as this will be added separately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
 
+    You can provide either a standalone TikZ picture OR a complete LaTeX document. If you provide a complete document, the tool will extract the TikZ/PGFPlots content automatically.
+
+    Make sure if you have a legend it's not covering any words, or that any words aren't covering other features. The plot should be clean, and organized.
     Args:
         title: The title of the figure.
-        latex_code: The latex code that will produce the figure. Do not add the title to the plot, as this will be added seperately.
+        latex_code: The LaTeX/TikZ code that will produce the figure. Do not add the title to the plot, as this will be added seperately.
         references: List of number references that were used.
 
     Returns:
         The number of the figure.
+        
+    Example TikZ code:
+    ```latex
+    \\begin{tikzpicture}[scale=0.8]
+      % Axes
+      \\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+      \\draw[->] (0,-1) -- (0,8) node[above] {$y$};
+      % Functions
+      \\draw[domain=-2.5:2.5, smooth, thick, blue] plot (\\x,{\\x}) node[above right] {$y=x$};
+    \\end{tikzpicture}
+    ```
+    
+    Example PGFPlots code:
+    ```latex
+    \\begin{tikzpicture}
+      \\begin{axis}[
+        xlabel={$x$},
+        ylabel={$y$},
+        axis lines=middle
+      ]
+        \\addplot[domain=-2:2, samples=100, smooth, blue] {x^2};
+      \\end{axis}
+    \\end{tikzpicture}
+    ```
     """
     try:
         # Import subprocess at the beginning of the function to ensure it's available in all scopes
-        import subprocess, shutil, os, tempfile, hashlib, logging
+        import subprocess, shutil, os, tempfile, hashlib, logging, re
         from pylatex import Document, Package, NoEscape
         
         logger = logging.getLogger(__name__)
@@ -311,25 +352,32 @@ async def create_figure(wrapper: RunContextWrapper[Documents], title: str, latex
         else:
             # We need to render the LaTeX code to an image
             with tempfile.TemporaryDirectory() as tmpdir:
-                # Extract just the TikZ content if full LaTeX document is provided
-                if '\\documentclass' in latex_code and '\\begin{document}' in latex_code:
-                    # Extract just the tikzpicture environment
-                    import re
+                # Extract TikZ/PGFPlots content if a full LaTeX document is provided
+                if '\\documentclass' in latex_code:
+                    # First, look for tikzpicture environments
                     tikz_match = re.search(r'\\begin{tikzpicture}(.*?)\\end{tikzpicture}', latex_code, re.DOTALL)
                     if tikz_match:
-                        latex_code = tikz_match.group(0)
-                        logger.info(f"Extracted TikZ content: {latex_code}")
+                        tikz_content = tikz_match.group(0)
+                        logger.info(f"Extracted TikZ content: {tikz_content}")
+                        latex_code = tikz_content
                 
                 # Create a standalone document
                 doc_options = ['tikz', 'border=10pt']
                 doc_options.append('transparent')
                 
-                doc = Document(documentclass='standalone', document_options=doc_options)
-                
-                # Add necessary packages
-                doc.packages.append(Package('tikz'))
-                doc.packages.append(Package('amsmath'))
-                doc.packages.append(Package('amssymb'))
+                # Check if we need PGFPlots
+                if 'pgfplots' in latex_code or '\\begin{axis}' in latex_code:
+                    doc = Document(documentclass='standalone', document_options=doc_options)
+                    doc.packages.append(Package('tikz'))
+                    doc.packages.append(Package('pgfplots'))
+                    doc.packages.append(Package('amsmath'))
+                    doc.packages.append(Package('amssymb'))
+                    doc.preamble.append(NoEscape('\\pgfplotsset{compat=1.17}'))
+                else:
+                    doc = Document(documentclass='standalone', document_options=doc_options)
+                    doc.packages.append(Package('tikz'))
+                    doc.packages.append(Package('amsmath'))
+                    doc.packages.append(Package('amssymb'))
                 
                 # Add any additional TikZ libraries that might be needed
                 if '\\usetikzlibrary' not in latex_code:
