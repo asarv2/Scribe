@@ -1,29 +1,48 @@
+# --- web framework ---
 fastapi==0.110.0
 uvicorn[standard]==0.27.1
-python-multipart==0.0.9
 gunicorn==23.0.0
-openai-whisper==20240930
-torch==2.6.0
-google-generativeai==0.8.4
+python-multipart==0.0.9
 python-dotenv==1.0.1
-supabase==2.12.0
 requests>=2.31.0
-pypdf==4.0.2
-tqdm==4.66.2
-matplotlib==3.8.3
-scipy==1.12.0
-networkx==3.2.1
-PyMuPDF==1.21.1
-docx2txt==0.8
-aiofiles==23.2.1
-pylatex==1.4.2
-pydub==0.25.1
-opencv-python==4.8.1.78
-python-magic==0.4.27
-openai==1.70.0
-openai-agents==0.0.12
-seaborn==0.13.2
 colorlog==6.8.2
+tqdm==4.66.2
+aiofiles==23.2.1
+
+# --- core ML / ASR ---
+torch==2.6.0          # CUDA 12.6 is already baked into the runtime image
+openai-whisper==20240930
+
+# --- Google Gemini ---
+google-generativeai==0.8.4
+
+# --- Supabase ---
+supabase==2.12.0
+
+# --- document handling ---
+pypdf==4.0.2
+PyMuPDF==1.21.1
+pdf2image==1.16.3
+python-docx==0.8.11
+python-pptx==0.6.21
+docx2txt==0.8
+python-magic==0.4.27
+
+# --- plotting / LaTeX ---
+matplotlib==3.8.3
+seaborn==0.13.2
 tikzplotlib==0.10.1
 network2tikz==0.1.8
-pdf2image==1.16.3
+pylatex==1.4.2
+scipy==1.12.0
+networkx==3.2.1
+
+# --- media helpers ---
+opencv-python==4.8.1.78
+pydub==0.25.1
+
+# --- concurrency-safe file locking ---
+filelock==3.13.1
+
+openai==1.70.0
+openai-agents==0.0.12

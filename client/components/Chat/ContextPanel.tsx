@@ -21,7 +21,7 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getClass } from "@/utils/queries/get-class";
 import { markFileIdle, updateFileStatus, updateProgress, updateFileNumber } from "@/utils/services/file";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
-import { Dropzone } from "@mantine/dropzone";
+import { Dropzone, MS_WORD_MIME_TYPE, MS_POWERPOINT_MIME_TYPE } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
 import * as tus from 'tus-js-client';
 import { createFile } from "@/utils/services/file";
@@ -532,6 +532,12 @@ export function ContextPanel({
                 fileType = "video";
             } else if (file.type === "image/jpeg" || file.type === "image/png") {
                 fileType = "image";
+            } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || 
+                      file.type === "application/msword") {
+                fileType = "other"; // DOCX files will be converted to PDF on the server
+            } else if (file.type === "application/vnd.openxmlformats-officedocument.presentationml.presentation" || 
+                      file.type === "application/vnd.ms-powerpoint") {
+                fileType = "other"; // PPTX files will be converted to PDF on the server
             }
 
             // find the file number (1 more than the highest file number in the class)
@@ -818,11 +824,19 @@ export function ContextPanel({
                         onReject={(files) => {
                             notifications.show({
                                 title: 'Invalid file',
-                                message: 'Only PDF, video, audio, and image files are allowed.',
+                                message: 'Only PDF, Office documents, video, audio, and image files are allowed.',
                                 color: 'red',
                             });
                         }}
-                        accept={['application/pdf', 'video/*', 'audio/*', 'image/*', 'text/*']}
+                        accept={[
+                            'application/pdf', 
+                            'video/*', 
+                            'audio/*', 
+                            'image/*', 
+                            'text/*',
+                            ...MS_WORD_MIME_TYPE,
+                            ...MS_POWERPOINT_MIME_TYPE
+                        ]}
                         multiple={true}
                         styles={{
                             root: {

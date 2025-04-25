@@ -1,66 +1,149 @@
-import mimetypes
-import os
-import subprocess
-import logging
-import torch  # PyTorch for GPU detection
-import shutil
-import magic
+# app/services/upload/compress.py
+import os, mimetypes, subprocess, time, concurrent.futures, logging, shutil, torch
+import magic, fitz                           # PyMuPDF
+from pathlib import Path
+from typing import Literal
+from filelock import FileLock, Timeout       # <── new ❶
 from .models import FileCompressionResult
-import fitz
-import time
-import concurrent.futures
 
 logger = logging.getLogger(__name__)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Global LibreOffice lock so only one conversion runs per container
+# (re-use the same file name as FileExtractor to avoid two independent locks).
+_OFFICE_LOCK_PATH = Path("/tmp/libreoffice-convert.lock")
+_OFFICE_LOCK      = FileLock(str(_OFFICE_LOCK_PATH), timeout=180)      # 3 min
+# ──────────────────────────────────────────────────────────────────────────────
 
 class FileCompressor:
     def __init__(self):
         self.mime = magic.Magic(mime=True)
-    
-    def compress_file(self, input_path: str, output_dir: str, filename: str, 
-                     target_width: int = 240, gpu_id: int = 0, 
-                     quality: str = "ultrafast", progress_callback=None) -> FileCompressionResult:
+
+    # ────────────────────────────────────────────────────────────────────────
+    # NEW helper ─ DOCX / PPTX ➜ PDF  (runs before any other compression)
+    # ────────────────────────────────────────────────────────────────────────
+    def _convert_office_to_pdf(
+        self,
+        input_path: str,
+        output_dir: str,
+        progress_callback=None,
+        timeout: int = 600
+    ) -> str | None:
         """
-        Compress a file based on its detected MIME type
-        
-        Args:
-            input_path: Path to the input file
-            output_dir: Directory to save the compressed file
-            filename: Original filename
-            target_width: Target width for video compression (0 for original)
-            gpu_id: GPU ID to use for video compression
-            quality: Quality preset for video compression
-            progress_callback: Optional callback function for progress updates
-                               Function signature: callback(progress: float, stage: str, message: str = "")
-            
-        Returns:
-            FileCompressionResult with path and metadata
+        Convert DOCX or PPTX to PDF using **unoconv** (LibreOffice headless).
+        Returns the path of the produced PDF or *None* on failure.
         """
+
+        pdf_path = Path(output_dir) / (Path(input_path).stem + ".pdf")
+
+        if pdf_path.exists() and pdf_path.stat().st_size:
+            logger.info("Using existing converted PDF: %s", pdf_path)
+            return str(pdf_path)
+
+        if progress_callback:
+            progress_callback(5.0, "converting", "Waiting for LibreOffice lock")
+
         try:
-            # Create output directory if it doesn't exist
-            os.makedirs(output_dir, exist_ok=True)
-            
-            # Detect MIME type
-            mime_type = self.mime.from_file(input_path)
-            logger.info(f"Compressing file: {filename} ({mime_type})")
-            
-            # Report initial progress
-            if progress_callback:
-                progress_callback(0.0, "starting", f"Detected file type: {mime_type}")
-            
-            # Determine file type and compression method
-            if mime_type.startswith('video/'):
-                return self.compress_video_file(input_path, output_dir, filename, 
-                                               target_width, gpu_id, quality, progress_callback)
-            elif mime_type.startswith('audio/'):
-                return self.compress_audio_file(input_path, output_dir, filename, progress_callback)
-            elif mime_type == 'application/pdf':
-                return self.compress_pdf_file(input_path, output_dir, filename, progress_callback)
-            elif mime_type.startswith('image/'):
-                return self.compress_image_file(input_path, output_dir, filename, progress_callback)
-            else:
+            # one conversion at a time → prevents “cfgwk” crashes
+            with _OFFICE_LOCK:
                 if progress_callback:
-                    progress_callback(100.0, "complete", "No compression needed for this file type")
-                return self.compress_other_file(input_path, output_dir, filename)
+                    progress_callback(10.0, "converting", "LibreOffice lock acquired")
+
+                cmd = [
+                    "unoconv", "--no-launch",
+                    "-f", "pdf", "-o", str(pdf_path), str(input_path)
+                ]
+                logger.info("Running: %s", " ".join(cmd))
+                subprocess.run(cmd, check=True, capture_output=True, timeout=timeout)
+
+                if not (pdf_path.exists() and pdf_path.stat().st_size):
+                    raise RuntimeError("unoconv produced no output")
+
+                if progress_callback:
+                    progress_callback(20.0, "converted", "Office file converted → PDF")
+                return str(pdf_path)
+
+        except Timeout:
+            logger.error("LibreOffice lock timeout when converting %s", input_path)
+        except subprocess.CalledProcessError as e:
+            logger.error("unoconv failed: %s", e.stderr.decode() if e.stderr else e)
+        except Exception as e:
+            logger.error("Office-to-PDF conversion error: %s", e)
+
+        if progress_callback:
+            progress_callback(0.0, "error", "Office conversion failed")
+        return None
+    # ────────────────────────────────────────────────────────────────────────
+
+    # ────────────────────────────────────────────────────────────────────────
+    # PUBLIC ENTRY POINT
+    # ────────────────────────────────────────────────────────────────────────
+
+    def compress_file(
+        self,
+        input_path: str,
+        output_dir: str,
+        filename: str,
+        *,
+        target_width: int = 240,
+        gpu_id: int = 0,
+        quality: str = "ultrafast",
+        progress_callback=None,
+    ) -> FileCompressionResult:
+        
+        try:
+
+            os.makedirs(output_dir, exist_ok=True)
+
+            # ── MIME sniffing (don’t trust extension) ─────────────────────────
+            mime_type = self.mime.from_file(input_path)
+            logger.info("Compressing %s (%s)", filename, mime_type)
+            if progress_callback:
+                progress_callback(0.0, "start", f"Detected MIME: {mime_type}")
+
+            # ── NEW ❷  :  pre-convert Office files here ───────────────────────
+            if mime_type in (
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            ):
+                pdf_path = self._convert_office_to_pdf(
+                    input_path, output_dir, progress_callback
+                )
+                if pdf_path:
+                    # After conversion we simply fall through to the normal PDF path
+                    input_path  = pdf_path
+                    filename    = os.path.basename(pdf_path)
+                    mime_type   = "application/pdf"
+                else:
+                    # failed: treat like “other”
+                    mime_type = "application/octet-stream"
+
+            # ── Choose compression branch ─────────────────────────────────────
+            if mime_type.startswith("video/"):
+                return self.compress_video_file(
+                    input_path, output_dir, filename,
+                    target_width, gpu_id, quality, progress_callback
+                )
+
+            elif mime_type.startswith("audio/"):
+                return self.compress_audio_file(
+                    input_path, output_dir, filename, progress_callback
+                )
+
+            elif mime_type == "application/pdf":
+                return self.compress_pdf_file(
+                    input_path, output_dir, filename, progress_callback
+                )
+
+            elif mime_type.startswith("image/"):
+                return self.compress_image_file(
+                    input_path, output_dir, filename, progress_callback
+                )
+
+            # Fallback – nothing to do
+            if progress_callback:
+                progress_callback(100.0, "complete", "No compression needed")
+            return self.compress_other_file(input_path, output_dir, filename)
                 
         except Exception as e:
             logger.error(f"Error compressing file: {str(e)}")
@@ -82,7 +165,7 @@ class FileCompressor:
                 logger.info(f"Using existing compressed audio: {compressed_file_path}")
                 if progress_callback:
                     progress_callback(100.0, "complete", "Using existing compressed file")
-                return self._create_result(compressed_file_path, duration)
+                return self._create_result(compressed_file_path, duration, file_type="audio")
         
         # Report progress
         if progress_callback:
@@ -113,7 +196,7 @@ class FileCompressor:
             logger.error(f"FFmpeg audio compression error: {result.stderr}")
             if progress_callback:
                 progress_callback(0.0, "error", "Audio compression failed")
-            return self._create_result(input_path)
+            return self._create_result(input_path, file_type="audio")
         
         # Check compression results
         if os.path.exists(compressed_file_path):
@@ -128,16 +211,16 @@ class FileCompressor:
                 logger.warning("WAV conversion increased file size significantly, using original")
                 if progress_callback:
                     progress_callback(100.0, "complete", "Using original file (compressed version was larger)")
-                return self._create_result(input_path)
+                return self._create_result(input_path, file_type="audio")
             
             if progress_callback:
                 progress_callback(100.0, "complete", f"Audio compressed: {compressed_size/(1024*1024):.2f} MB")
-            return self._create_result(compressed_file_path, duration)
+            return self._create_result(compressed_file_path, duration, file_type="audio")
         else:
             logger.error("Compressed audio file not created")
             if progress_callback:
                 progress_callback(0.0, "error", "Compressed file not created")
-            return self._create_result(input_path)
+            return self._create_result(input_path, file_type="audio")
 
     def compress_video_file(self, input_path: str, output_dir: str, filename: str, 
                             target_width: int = 0, gpu_id: int = 0, 
@@ -165,7 +248,7 @@ class FileCompressor:
             if progress_callback:
                 progress_callback(100.0, "complete", "Large video compression complete")
             
-            return self._create_result(compressed_path, duration)
+            return self._create_result(compressed_path, duration, file_type="video")
         else:
             if progress_callback:
                 progress_callback(5.0, "analyzing", "Standard video detected")
@@ -177,7 +260,7 @@ class FileCompressor:
             if progress_callback:
                 progress_callback(100.0, "complete", "Video compression complete")
             
-            return self._create_result(compressed_path, duration)
+            return self._create_result(compressed_path, duration, file_type="video")
 
     def compress_video_to_webm(self, input_path: str, output_dir: str, filename: str, 
                               target_width: int = 0, gpu_id: int = 0, 
@@ -287,6 +370,8 @@ class FileCompressor:
 
         # Get total duration for progress calculation
         total_duration = self.get_media_duration(input_path)
+        if total_duration <= 0:
+            total_duration = None      # sentinel for “unknown”
 
         # Build FFmpeg command with structured progress output
         cmd = [
@@ -313,21 +398,22 @@ class FileCompressor:
             for line in proc.stdout:
                 if line.startswith("out_time_ms="):
                     out_ms = int(line.strip().split("=", 1)[1])
-                    percent = min(out_ms / 1000 / total_duration, 1.0)
-                    
-                    # Update progress at most once per second
-                    current_time = time.time()
-                    if current_time - last_update_time >= 1.0:
-                        logger.info(f"Progress: {percent*100:5.1f}% (ETA: {(1-percent)*total_duration/60:.1f}m)")
-                        last_update_time = current_time
-                    
-                    # Call progress callback at most once every 3 seconds to avoid overwhelming the system
-                    if progress_callback and current_time - last_callback_time >= 3.0:
-                        # Scale percent from 0-1 to 20-90 (reserving 0-20 for setup and 90-100 for finalization)
-                        callback_percent = 20.0 + (percent * 70.0)
-                        progress_callback(callback_percent, "encoding", 
-                                         f"{percent*100:.1f}% (ETA: {(1-percent)*total_duration/60:.1f}m)")
-                        last_callback_time = current_time
+                    if total_duration:
+                        percent = min(out_ms / 1000 / total_duration, 1.0)
+                        
+                        # Update progress at most once per second
+                        current_time = time.time()
+                        if current_time - last_update_time >= 1.0:
+                            logger.info(f"Progress: {percent*100:5.1f}% (ETA: {(1-percent)*total_duration/60:.1f}m)")
+                            last_update_time = current_time
+                        
+                        # Call progress callback at most once every 3 seconds to avoid overwhelming the system
+                        if progress_callback and current_time - last_callback_time >= 3.0:
+                            # Scale percent from 0-1 to 20-90 (reserving 0-20 for setup and 90-100 for finalization)
+                            callback_percent = 20.0 + (percent * 70.0)
+                            progress_callback(callback_percent, "encoding", 
+                                            f"{percent*100:.1f}% (ETA: {(1-percent)*total_duration/60:.1f}m)")
+                            last_callback_time = current_time
                     
                 elif line.startswith("progress=") and line.strip().endswith("end"):
                     logger.info("Progress: 100.0%")
@@ -403,10 +489,17 @@ class FileCompressor:
             logger.info(f"Splitting video into {num_segments} segments of {segment_duration:.1f}s each")
             if progress_callback:
                 progress_callback(10.0, "splitting", f"Splitting video into {num_segments} segments")
+
+            num_gpus = max(1, torch.cuda.device_count())
+            workers_per_gpu = 8 if torch.cuda.is_available() else 4
+            total_workers = num_gpus * workers_per_gpu
+            max_workers = min(total_workers, num_segments)   # <-- move here, after total_workers
+            
+            logger.info(f"Using {num_gpus} {'GPUs' if torch.cuda.is_available() else 'CPU threads'} with {workers_per_gpu} workers per device ({total_workers} total workers)")
             
             # Extract segments in parallel with more workers
             segments = []
-            with concurrent.futures.ThreadPoolExecutor(max_workers=64) as executor:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
                 futures = []
                 for i in range(num_segments):
                     start_time = i * segment_duration
@@ -445,13 +538,6 @@ class FileCompressor:
             
             # Process segments in parallel using a multi-strategy approach
             compressed_segments = []
-            num_gpus = max(1, torch.cuda.device_count())  # Ensure at least 1 "GPU" (CPU in this case)
-            
-            # Use fewer workers on CPU to avoid overloading
-            workers_per_gpu = 8 if torch.cuda.is_available() else 4
-            total_workers = num_gpus * workers_per_gpu
-            
-            logger.info(f"Using {num_gpus} {'GPUs' if torch.cuda.is_available() else 'CPU threads'} with {workers_per_gpu} workers per device ({total_workers} total workers)")
             
             # Create a thread-safe result collection
             results_lock = threading.Lock()
@@ -709,7 +795,7 @@ class FileCompressor:
             
         # For now, just return the original file
         # Could implement PDF compression in the future
-        return self._create_result(input_path, file_length=page_count)
+        return self._create_result(input_path, file_length=page_count, file_type="pdf") # in case we convert from docx/pptx
 
     def compress_image_file(self, input_path: str, output_dir: str, filename: str,
                            progress_callback=None) -> FileCompressionResult:
@@ -720,11 +806,11 @@ class FileCompressor:
             progress_callback(100.0, "complete", "Image processing complete")
             
         # Could implement image compression in the future
-        return self._create_result(input_path, file_length=1)
+        return self._create_result(input_path, file_length=1, file_type="image")
 
     def compress_other_file(self, input_path: str, output_dir: str, filename: str) -> FileCompressionResult:
         """Handle other file types - just return the original path"""
-        return self._create_result(input_path, file_length=1)
+        return self._create_result(input_path, file_length=1, file_type="other")
 
     def get_media_duration(self, file_path: str) -> float:
         """
@@ -748,7 +834,7 @@ class FileCompressor:
             logger.error(f"Error getting media duration: {str(e)}")
             return 0.0
             
-    def _create_result(self, file_path: str, file_length: float = 0.0) -> FileCompressionResult:
+    def _create_result(self, file_path: str, file_length: float = 0.0, file_type: Literal['pdf', 'audio', 'video', 'image', 'other'] | None = None) -> FileCompressionResult:
         """
         Create a FileCompressionResult object with file metadata
         
@@ -799,7 +885,8 @@ class FileCompressor:
             file_path=file_path,
             file_length=int(file_length),
             file_size=file_size,
-            file_extension=file_extension
+            file_extension=file_extension,
+            file_type=file_type
         )
 
     def get_pdf_page_count(self, file_path: str) -> int:

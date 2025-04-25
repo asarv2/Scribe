@@ -123,12 +123,16 @@ class FileProcessor:
                 progress_callback=compression_progress_callback  # Add progress callback
             )
 
+            file_type = compression_result.file_type or file_type
+
             # update metadata from compression result
             logger.info(f"Compression result: path={compression_result.file_path}, size={compression_result.file_size}, length={compression_result.file_length}")
+
             self.saver.save_file_metadata(file_id, {
-                "length": compression_result.file_length,
+                "type": file_type,
                 "file_size": compression_result.file_size,
-                "extension": compression_result.file_extension
+                "extension": compression_result.file_extension,
+                "length": compression_result.file_length
             })
 
             compressed_file_path = compression_result.file_path

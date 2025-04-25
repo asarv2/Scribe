@@ -6,6 +6,7 @@ class FileCompressionResult(BaseModel):
     file_length: int
     file_size: int
     file_extension: str
+    file_type: Literal['pdf', 'audio', 'video', 'image', 'other'] | None
 
 class FileExtractChunk:
     def __init__(self, text: str, page: int, start_time: float = None, end_time: float = None, 
