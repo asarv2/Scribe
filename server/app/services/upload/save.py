@@ -197,7 +197,7 @@ class FileSaver:
                     if progress_callback:
                         progress_callback(70.0, "warning", f"Video upload failed: {str(upload_error)}")
             else:
-                logger.warning(f"No video chunk provided for document {document_id} or path doesn't exist")
+                logger.warning(f"No video chunk provided for document {document_id} or path: {extract_chunk.video_chunk_path} doesn't exist")
                 if progress_callback:
                     progress_callback(80.0, "processing", f"No video chunk to upload, continuing")
             
@@ -236,7 +236,7 @@ class FileSaver:
                     if progress_callback:
                         progress_callback(90.0, "warning", f"Audio upload failed: {str(upload_error)}")
             else:
-                logger.warning(f"No audio chunk provided for document {document_id} or path doesn't exist")
+                logger.warning(f"No audio chunk provided for document {document_id} or path: {extract_chunk.audio_chunk_path} doesn't exist")
                 if progress_callback:
                     progress_callback(95.0, "processing", f"No audio chunk to upload, continuing")
             
