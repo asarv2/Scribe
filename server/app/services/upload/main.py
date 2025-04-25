@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import torch
 from datetime import datetime
 import asyncio
+import traceback
 
 from app.services.upload.compress import FileCompressor
 from app.services.upload.save import FileSaver
@@ -86,6 +87,20 @@ class FileProcessor:
             persist_dir = PERSIST_ROOT / Path(file_path).stem
             persist_dir.mkdir(parents=True, exist_ok=True)
             logger.info(f"Created persistent directory: {persist_dir}")
+            
+            # Before starting multiprocessing
+            file_dir = os.path.join(PERSIST_ROOT, "file")
+            compressed_dir = os.path.join(PERSIST_ROOT, "file_compressed")
+            os.makedirs(file_dir, exist_ok=True)
+            try:
+                os.makedirs(compressed_dir, exist_ok=True)
+                logger.info(f"Created persistent directory: {compressed_dir}")
+            except Exception as e:
+                logger.error(f"Failed to create directory: {str(e)}")
+                logger.error(traceback.format_exc())
+            logger.info(f"Created persistent directories for processing")
+            
+            # Pass these absolute paths to worker processes
             
             # Compress the file
             compressed_dir = os.path.join(os.path.dirname(file_path), "compressed")
