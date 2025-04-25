@@ -6,6 +6,7 @@ import logging
 from dateutil import parser
 import os
 import traceback
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -279,6 +280,13 @@ class GoogleFiles:
             try:
                 with open(local_path, 'rb') as f:
                     media_file = genai.upload_file(f, mime_type=mime_type)
+                    
+                # Wait for the file to become active
+                media_file = self._wait_for_file_activation(media_file)
+                if not media_file:
+                    logger.error(f"File {document_id} failed to activate within timeout period")
+                    return None
+                
             except Exception as upload_error:
                 logger.error(f"Error uploading to Google: {str(upload_error)}")
                 logger.error(traceback.format_exc())
@@ -344,6 +352,12 @@ class GoogleFiles:
             # Upload to Google
             with open(local_path, 'rb') as f:
                 media_file = genai.upload_file(f, mime_type=mime_type)
+                
+            # Wait for the file to become active
+            media_file = self._wait_for_file_activation(media_file)
+            if not media_file:
+                logger.error(f"File {file_id} failed to activate within timeout period")
+                return None
             
             # Extract file ID and expiration from response
             google_file_id = media_file.name
@@ -389,3 +403,56 @@ class GoogleFiles:
         
         mime_type = mime_types.get(extension, 'application/octet-stream')
         return mime_type
+
+    def _wait_for_file_activation(self, file: File, max_attempts: int = 10, base_delay: float = 0.5) -> Optional[File]:
+        """
+        Poll until the Google file becomes active
+        
+        Args:
+            file: The Google File object
+            max_attempts: Maximum number of polling attempts
+            base_delay: Base delay for exponential backoff in seconds
+            
+        Returns:
+            The active File object or None if activation failed
+        """
+        import time
+        
+        file_id = file.name
+        logger.info(f"Waiting for Google file {file_id} to become active...")
+        
+        for attempt in range(max_attempts):
+            try:
+                # Calculate backoff with exponential increase
+                backoff = base_delay * (2 ** attempt)
+                
+                # Check if the file is active by getting its details
+                file_info = genai.get_file(file_id)
+                
+                # Check for FAILED state first to abort early
+                if hasattr(file_info, 'state'):
+                    if file_info.state == 'FAILED' or getattr(file_info.state, 'name', '') == 'FAILED':
+                        logger.error(f"Google file {file_id} failed to process")
+                        return None
+                    
+                    # Check for ACTIVE state
+                    if file_info.state == 'ACTIVE' or getattr(file_info.state, 'name', '') == 'ACTIVE':
+                        logger.info(f"Google file {file_id} is now active (attempt {attempt+1})")
+                        return file_info
+                    
+                    # Still processing
+                    logger.info(f"Google file {file_id} not yet active, current state: {getattr(file_info.state, 'name', str(file_info.state))} (attempt {attempt+1})")
+                else:
+                    logger.warning(f"Google file {file_id} has no state attribute (attempt {attempt+1})")
+                
+                # Wait with exponential backoff before next attempt
+                logger.info(f"Waiting {backoff:.2f}s before next check...")
+                time.sleep(backoff)
+                
+            except Exception as e:
+                logger.warning(f"Error checking file status: {str(e)} (attempt {attempt+1})")
+                # Still use backoff on errors
+                time.sleep(backoff)
+        
+        logger.error(f"Google file {file_id} failed to become active after {max_attempts} attempts")
+        return None

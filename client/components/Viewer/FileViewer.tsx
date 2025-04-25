@@ -5,7 +5,7 @@
  * @AshokSaravanan222
  * 02.05.2025
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getClass } from "@/utils/queries/get-class";;
@@ -36,6 +36,7 @@ export default function FileViewer({
     setViewerMode
 }: FileViewerProps) {
     const [activeDocumentId, setActiveDocumentId] = useState<string | null>(viewerMode.documentId ?? null);
+    const viewerRef = useRef<HTMLDivElement | null>(null);
 
     const fileId = viewerMode.fileId;
 
@@ -119,7 +120,10 @@ export default function FileViewer({
     };
 
     useEffect(() => {
-        if (filteredDocuments && filteredDocuments.length > 0) {
+        // Update activeDocumentId when viewerMode.documentId changes
+        if (viewerMode.documentId && viewerMode.documentId !== activeDocumentId) {
+            setActiveDocumentId(viewerMode.documentId);
+        } else if (filteredDocuments && filteredDocuments.length > 0) {
             let newActiveId = null;
             
             if (activeDocumentId && filteredDocuments.some(doc => doc.id === activeDocumentId)) {
@@ -137,31 +141,25 @@ export default function FileViewer({
             }
             setActiveDocumentId(newActiveId);
         }
-    }, [filteredDocuments, page]);
+    }, [filteredDocuments, page, viewerMode.documentId]);
 
-    // Scroll to the active document when it changes
+    // Replace the problematic scroll effect with a more reliable approach
     useEffect(() => {
-        if (activeDocumentId) {
-            const element = document.getElementById(`document-${activeDocumentId}`);
-            const container = document.querySelector('[data-viewer-container="true"]');
-            
-            if (element && container) {
-                // Cast to HTMLElement to access offsetTop property
-                const htmlElement = element as HTMLElement;
-                const htmlContainer = container as HTMLElement;
-                
-                // Only scroll within the container, not the whole page
-                htmlContainer.scrollTo({
-                    top: htmlElement.offsetTop - htmlContainer.offsetTop,
-                    behavior: 'smooth'
-                });
+        if (!activeDocumentId) return;
+        
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            const el = document.getElementById(`document-${activeDocumentId}`);
+            if (el) {
+                el.scrollIntoView({ block: 'start', behavior: 'smooth' });
             }
-        }
+        }, 100);
     }, [activeDocumentId]);
 
     return (
         <>
             <Box
+                ref={viewerRef}
                 data-viewer-container="true"
                 style={{
                     height: '100%',

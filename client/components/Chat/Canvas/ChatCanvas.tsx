@@ -53,7 +53,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         showPageDetails: false,
     });
     const [loading, setLoading] = useState(false);
-    const os = useOs();
 
     // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
@@ -295,14 +294,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
     ], []
     );
 
-    const getShortcutText = () => {
-        if (os === 'macos') {
-            return '⌘M';  // Command symbol + M for macOS
-        } else {
-            return 'Ctrl+M';  // Ctrl + M for Windows/Linux/others
-        }
-    };
-
     return (
         <Container fluid>
             <Grid p={0}>
@@ -440,6 +431,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                         />
 
                         <ChatInput
+                            viewerMode={viewerMode}
                             activeChat={activeChat}
                             setActiveChat={setActiveChat}
                             loading={loading}

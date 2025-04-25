@@ -140,7 +140,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                 <>
                     <Box style={{ flex: 1, overflow: 'hidden' }}>
                         <FileViewer
-                            key={`${viewerMode.fileId}-${viewerMode.documentId}`}
+                            key={`${viewerMode.fileId}`}
                             classId={classId}
                             addDocumentToChat={addDocumentToChat}
                             activeChat={activeChat}

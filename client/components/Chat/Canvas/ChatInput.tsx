@@ -14,12 +14,13 @@ import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import * as tus from 'tus-js-client';
 import { RecordedVideo } from "./ChatCanvas";
-import { useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery, useOs } from "@mantine/hooks";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
+  viewerMode: ViewerMode;
   loading: boolean;
   isInitializing?: boolean;
   chatId: string;
@@ -33,6 +34,7 @@ interface ChatInputProps {
 
 export const ChatInput = memo(({
   activeChat,
+  viewerMode,
   loading,
   chatId,
   classId,
@@ -56,6 +58,7 @@ export const ChatInput = memo(({
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const recordPluginRef = useRef<any>(null);
 
+  const os = useOs();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: user } = useQuery({
@@ -86,6 +89,14 @@ export const ChatInput = memo(({
       if (!loading && activeChat.prompt.trim()) {
         onSend();
       }
+    }
+  };
+
+  const getShortcutText = () => {
+    if (os === 'macos') {
+      return '⌘M';  // Command symbol + M for macOS
+    } else {
+      return 'Ctrl+M';  // Ctrl + M for Windows/Linux/others
     }
   };
 
@@ -636,23 +647,74 @@ export const ChatInput = memo(({
             <Skeleton height={60} />
           </Box>
         ) : !recordingMode ? (
-          <Textarea
-            ref={textareaRef}
-            value={activeChat.prompt}
-            onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
-            onKeyDown={handleKeyDown}
-            placeholder={activeChat.teacher ? "Add context and start creating..." : "Add context and start learning..."}
-            autosize
-            minRows={1}
-            maxRows={4}
-            size={"md"}
-            classNames={{
-              root: classes.textarea,
-              input: classes.textareaInput,
-              wrapper: classes.textareaWrapper
-            }}
-            disabled={isInitializing}
-          />
+          <Box style={{ position: 'relative' }}>
+            <Textarea
+              ref={textareaRef}
+              value={activeChat.prompt}
+              onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
+              onKeyDown={handleKeyDown}
+              placeholder="" // Empty placeholder since we're using custom one
+              autosize
+              minRows={1}
+              maxRows={4}
+              size={"md"}
+              classNames={{
+                root: classes.textarea,
+                input: classes.textareaInput,
+                wrapper: classes.textareaWrapper
+              }}
+              disabled={isInitializing}
+            />
+            {!activeChat.prompt && (
+              <Box
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  left: 14,
+                  pointerEvents: 'none',
+                  color: 'var(--mantine-color-gray-6)',
+                  zIndex: 1
+                }}
+              >
+                {activeChat.teacher ? "Start creating and " : "Start learning and "}
+                <Tooltip
+                  label={viewerMode.open ? `Close menu (${getShortcutText()})` : `Open menu (${getShortcutText()})`}
+                  position="top"
+                  withArrow
+                  openDelay={500}
+                  transitionProps={{
+                    transition: 'slide-up',
+                    duration: 300
+                  }}
+                  styles={{
+                    tooltip: {
+                      background: 'linear-gradient(45deg, #4DABF7 0%, #228BE6 100%)',
+                      animation: 'gradient 3s ease infinite',
+                      backgroundSize: '200% 200%',
+                    }
+                  }}
+                >
+                  <Text
+                    component="span"
+                    c="blue"
+                    style={{
+                      cursor: 'pointer',
+                      pointerEvents: 'auto',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (setViewerMode) {
+                        setViewerMode(prev => ({ ...prev, open: !prev.open }))
+                      }
+
+                    }}
+                  >
+                    add context
+                  </Text>
+                </Tooltip>
+              </Box>
+            )}
+          </Box>
         ) : (
           <Box
             style={{

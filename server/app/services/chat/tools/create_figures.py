@@ -1,15 +1,150 @@
 # tools/create_figure.py
 from agents.tool import function_tool, FunctionTool
 from agents.run_context import RunContextWrapper
-from typing import List
+from typing import List, Optional, Tuple
 from app.extensions import get_supabase
 from app.services.chat.models import Documents, Figure, CreateFigureResponse
-import subprocess, shutil, os, tempfile, hashlib, logging, re
+import subprocess, shutil, os, tempfile, hashlib, logging, re, time
 
 logger = logging.getLogger(__name__)
 
+def upload_with_retry(supabase_client, bucket: str, path_on_bucket: str, local_file: str, mime: str):
+    """Helper function to upload a file to Supabase storage with retry logic."""
+    try:
+        with open(local_file, "rb") as f:
+            file_data = f.read()
+            supabase_client.storage.from_(bucket).upload(
+                path_on_bucket, file_data, {"content-type": mime}
+            )
+        logger.info(f"Uploaded file to {path_on_bucket}")
+    except Exception as upload_error:
+        logger.error(f"Error uploading file: {str(upload_error)}")
+        # Try to delete if it exists and upload again
+        try:
+            supabase_client.storage.from_(bucket).remove([path_on_bucket])
+            supabase_client.storage.from_(bucket).upload(
+                path_on_bucket, file_data, {"content-type": mime}
+            )
+            logger.info(f"Successfully re-uploaded file after deletion")
+        except Exception as retry_error:
+            logger.error(f"Failed to re-upload file after deletion: {str(retry_error)}")
+            raise retry_error
+
+def run_cmd(cmd: List[str], cwd: Optional[str] = None, timeout: int = 60) -> subprocess.CompletedProcess:
+    """Run a command with timeout and capture output.
+    
+    Args:
+        cmd: Command and arguments to run
+        cwd: Working directory
+        timeout: Timeout in seconds
+        
+    Returns:
+        CompletedProcess object
+        
+    Raises:
+        subprocess.CalledProcessError: If command returns non-zero exit code
+        subprocess.TimeoutExpired: If command times out
+    """
+    proc = subprocess.run(
+        cmd, 
+        capture_output=True, 
+        text=True, 
+        timeout=timeout, 
+        cwd=cwd
+    )
+    return proc
+
+def convert_pdf_to_images(pdf_file: str, output_dir: str, timeout: int = 30) -> Tuple[Optional[str], Optional[str]]:
+    """Convert PDF to SVG and PNG formats with fallback mechanisms.
+    
+    Args:
+        pdf_file: Path to the PDF file
+        output_dir: Directory to save output files
+        timeout: Timeout in seconds for conversion processes
+        
+    Returns:
+        Tuple of (svg_file_path, png_file_path), either may be None if conversion failed
+    """
+    svg_file = os.path.join(output_dir, "figure.svg")
+    png_file = os.path.join(output_dir, "figure.png")
+    
+    # Convert PDF to SVG
+    logger.info(f"Converting PDF to SVG: {pdf_file} -> {svg_file}")
+    try:
+        pdf2svg_result = run_cmd(
+            ["pdf2svg", pdf_file, svg_file],
+            timeout=timeout
+        )
+        logger.info("PDF to SVG conversion successful")
+    except Exception as e:
+        logger.warning(f"PDF to SVG conversion failed: {str(e)}")
+        svg_file = None
+    
+    # Convert PDF to PNG with transparent background
+    logger.info(f"Converting PDF to PNG: {pdf_file} -> {png_file}")
+    try:
+        pdf2png_result = run_cmd(
+            ["convert", "-density", "300", "-background", "transparent", pdf_file, png_file],
+            timeout=timeout
+        )
+        logger.info("PDF to PNG conversion successful")
+    except Exception as e:
+        logger.warning(f"Primary PNG conversion failed: {str(e)}, trying alternative method")
+        # Try alternative method
+        try:
+            pdf2png_alt_result = run_cmd(
+                ["pdftoppm", "-png", "-r", "300", "-transp", pdf_file, os.path.join(output_dir, "figure")],
+                timeout=timeout
+            )
+            
+            # Find the generated PNG file (pdftoppm adds -1 suffix)
+            png_files = [f for f in os.listdir(output_dir) if f.startswith("figure-") and f.endswith(".png")]
+            if png_files:
+                shutil.move(os.path.join(output_dir, png_files[0]), png_file)
+                logger.info("Alternative PNG conversion successful")
+            else:
+                logger.error("Alternative PNG conversion failed to produce output files")
+                png_file = None
+        except Exception as alt_e:
+            logger.error(f"Alternative PNG conversion also failed: {str(alt_e)}")
+            png_file = None
+    
+    # Verify files exist
+    if svg_file and not os.path.exists(svg_file):
+        logger.error(f"SVG file not created: {svg_file}")
+        svg_file = None
+    
+    if png_file and not os.path.exists(png_file):
+        logger.error(f"PNG file not created: {png_file}")
+        png_file = None
+        
+    return svg_file, png_file
+
+# Check for required external tools at module load time
+def check_external_tools():
+    """Check if all required external tools are available."""
+    required_tools = ["latexmk", "pdf2svg", "convert", "pdftoppm"]
+    missing_tools = []
+    
+    for tool in required_tools:
+        if shutil.which(tool) is None:
+            missing_tools.append(tool)
+    
+    if missing_tools:
+        error_msg = f"Missing required external tools: {', '.join(missing_tools)}"
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
+
+# Run the check at module load time
+try:
+    check_external_tools()
+except RuntimeError as e:
+    logger.error(f"External tool check failed: {str(e)}")
+    # We don't want to crash the entire application, but we'll log the error
+    # and the function will fail when called
+
 async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Figure]) -> List[CreateFigureResponse]:
-    """Generates figure objects given the latex codes that will produce the figure. Make sure not to add the title to the plot, as this will be added seperately. This will return the ids of the figures, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created.
+    """Generates figure objects given the latex codes that will produce the figure. Make sure not to add the title to the plot, as this will be added separately. This will return the ids of the figures, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created.
 
     Args:
         figures: The figures to create. Each figure has a title, latex code, and references.
@@ -96,13 +231,19 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
     ```
     """
     responses = []
+    start_time = time.perf_counter()
 
     # get the message id and class id
     message_id = wrapper.context.message_id
     class_id = wrapper.context.class_id
     logger.info(f"Message ID: {message_id}, Class ID: {class_id}")
     
+    # Version tag for cache invalidation when build flags change
+    cache_version = "v1"
+    
     for figure in figures:
+        figure_id: str | None = None
+        figure_start_time = time.perf_counter()
         try:
             # get the title, latex code, and references
             title = figure.title
@@ -130,7 +271,7 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
             logger.info(f"Created figure ID: {figure_id}")
 
             # Create a hash of the latex code and settings for caching
-            cache_key = f"{latex_code}"
+            cache_key = f"{cache_version}:{latex_code}"
             code_hash = hashlib.sha256(cache_key.encode()).hexdigest()
             cache_folder = f"cache/figures/{class_id}"
             os.makedirs(cache_folder, exist_ok=True)
@@ -147,52 +288,22 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                 # Upload cached files
                 
                 # Upload SVG file
-                try:
-                    with open(svg_output_path, 'rb') as f:
-                        supabase_client.storage.from_('figures').upload(
-                            f"{class_id}/{figure_id}.svg", 
-                            f.read(), 
-                            {'content-type': 'image/svg+xml'}
-                        )
-                    logger.info(f"Uploaded cached SVG to {class_id}/{figure_id}.svg")
-                except Exception as upload_error:
-                    logger.error(f"Error uploading cached SVG: {str(upload_error)}")
-                    # Try to delete if it exists and upload again
-                    try:
-                        supabase_client.storage.from_('figures').remove([f"{class_id}/{figure_id}.svg"])
-                        with open(svg_output_path, 'rb') as f2:
-                            supabase_client.storage.from_('figures').upload(
-                                f"{class_id}/{figure_id}.svg", 
-                                f2.read(), 
-                                {'content-type': 'image/svg+xml'}
-                            )
-                        logger.info(f"Successfully re-uploaded cached SVG after deletion")
-                    except Exception as retry_error:
-                        logger.error(f"Failed to re-upload SVG after deletion: {str(retry_error)}")
+                upload_with_retry(
+                    supabase_client, 
+                    'figures', 
+                    f"{class_id}/{figure_id}.svg", 
+                    svg_output_path, 
+                    'image/svg+xml'
+                )
                 
                 # Upload PNG file
-                try:
-                    with open(png_output_path, 'rb') as f:
-                        supabase_client.storage.from_('figures').upload(
-                            f"{class_id}/{figure_id}.png", 
-                            f.read(), 
-                            {'content-type': 'image/png'}
-                        )
-                    logger.info(f"Uploaded cached PNG to {class_id}/{figure_id}.png")
-                except Exception as upload_error:
-                    logger.error(f"Error uploading cached PNG: {str(upload_error)}")
-                    # Try to delete if it exists and upload again
-                    try:
-                        supabase_client.storage.from_('figures').remove([f"{class_id}/{figure_id}.png"])
-                        with open(png_output_path, 'rb') as f2:
-                            supabase_client.storage.from_('figures').upload(
-                                f"{class_id}/{figure_id}.png", 
-                                f2.read(), 
-                                {'content-type': 'image/png'}
-                            )
-                        logger.info(f"Successfully re-uploaded cached PNG after deletion")
-                    except Exception as retry_error:
-                        logger.error(f"Failed to re-upload PNG after deletion: {str(retry_error)}")
+                upload_with_retry(
+                    supabase_client, 
+                    'figures', 
+                    f"{class_id}/{figure_id}.png", 
+                    png_output_path, 
+                    'image/png'
+                )
                 
                 # Update DB record
                 try:
@@ -209,6 +320,7 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                     figure_id=figure_id,
                     error=None
                 ))
+                continue  # Skip to the next figure
             
             # If not cached, generate the figure
             with tempfile.TemporaryDirectory() as tmpdir:
@@ -218,8 +330,9 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                 has_tikz = "\\begin{tikzpicture}" in latex_code
                 has_pgfplots = "\\begin{axis}" in latex_code or "\\begin{semilogxaxis}" in latex_code or "\\begin{semilogyaxis}" in latex_code or "\\begin{loglogaxis}" in latex_code
                 has_algorithm = "\\begin{algorithm}" in latex_code
+                has_forest = "\\begin{forest}" in latex_code
                 
-                logger.info(f"LaTeX content detection: tikz={has_tikz}, pgfplots={has_pgfplots}, algorithm={has_algorithm}")
+                logger.info(f"LaTeX content detection: tikz={has_tikz}, pgfplots={has_pgfplots}, algorithm={has_algorithm}, forest={has_forest}")
                 
                 # Clean the LaTeX code - extract tikzpicture content if needed
                 cleaned_latex_code = latex_code
@@ -232,20 +345,18 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                         tikz_start = cleaned_latex_code.find("\\begin{tikzpicture}")
                         tikz_end = cleaned_latex_code.find("\\end{tikzpicture}") + len("\\end{tikzpicture}")
                         
-                        if tikz_start != -1 and tikz_end != -1:
-                            # Get just the tikzpicture content
-                            tikz_content = cleaned_latex_code[tikz_start:tikz_end]
-                            logger.info(f"Extracted tikzpicture content: {tikz_content[:100]}...")
-                            cleaned_latex_code = tikz_content
+                        if tikz_start >= 0 and tikz_end > tikz_start:
+                            cleaned_latex_code = cleaned_latex_code[tikz_start:tikz_end]
+                            logger.info(f"Extracted tikzpicture content: {cleaned_latex_code[:50]}...")
                         else:
-                            logger.warning("Could not find tikzpicture environment in the LaTeX code")
-                            raise Exception("Could not find tikzpicture environment in your LaTeX code. Please ensure your code contains a complete \\begin{tikzpicture}...\\end{tikzpicture} environment.")
+                            logger.warning("Could not extract tikzpicture content, using full code")
                     except Exception as extract_error:
                         logger.error(f"Error extracting tikzpicture content: {str(extract_error)}")
-                        raise Exception(f"Error processing your LaTeX code: {str(extract_error)}. Please provide only the TikZ content without document class declarations.")
                 
-                # Create the LaTeX document
+                # Create the LaTeX file
                 tex_file = os.path.join(tmpdir, "figure.tex")
+                logger.info(f"Creating LaTeX file: {tex_file}")
+                
                 with open(tex_file, 'w') as f:
                     f.write("\\documentclass[tikz,border=10pt]{standalone}\n")
                     
@@ -256,6 +367,10 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                     if has_pgfplots:
                         f.write("\\usepackage{pgfplots}\n")
                         f.write("\\pgfplotsset{compat=1.18}\n")
+
+                    if has_forest:
+                        f.write("\\usepackage{forest}\n")
+                        f.write("\\forestset{l sep=0.5cm,s sep=0.3cm}\n")
                     
                     if has_algorithm:
                         f.write("\\usepackage{algorithm}\n")
@@ -275,13 +390,18 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                 logger.info(f"Saved debug copy of LaTeX file to {debug_tex_path}")
                 
                 # Compile the LaTeX file to PDF
+                compile_start_time = time.perf_counter()
                 logger.info("Attempting primary LaTeX compilation")
-                pdf_file = os.path.join(tmpdir, "figure.pdf")
-                latex_result = subprocess.run(
-                    ["pdflatex", "-interaction=nonstopmode", "-output-directory", tmpdir, tex_file],
-                    capture_output=True,
-                    text=True
+                latex_result = run_cmd(
+                    ["latexmk", "-pdf", "-shell-escape", "-interaction=nonstopmode", "figure.tex"],
+                    cwd=tmpdir, timeout=60
                 )
+                compile_time = time.perf_counter() - compile_start_time
+                logger.info(f"LaTeX compilation took {compile_time:.2f} seconds")
+                
+                pdf_file = os.path.join(tmpdir, "figure.pdf")
+                log = latex_result.stdout + latex_result.stderr
+                error_match = re.search(r'! (.*?)\n', log, re.DOTALL)
                 
                 # Save the LaTeX output for debugging
                 with open(os.path.join(cache_folder, f"{code_hash}_latex_stdout.log"), 'w') as f:
@@ -290,7 +410,7 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                     f.write(latex_result.stderr)
                 
                 # Check for LaTeX errors
-                error_match = re.search(r'!(.*?)(?=\n\s*\n|\n\s*l\.)', latex_result.stdout, re.DOTALL)
+                latex_error = None
                 if error_match:
                     latex_error = error_match.group(1).strip()
                     logger.error(f"LaTeX error message: {latex_error}")
@@ -309,6 +429,10 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                         if has_pgfplots:
                             f.write("\\usepackage{pgfplots}\n")
                             f.write("\\pgfplotsset{compat=1.18}\n")
+
+                        if has_forest:
+                            f.write("\\usepackage{forest}\n")
+                            f.write("\\forestset{l sep=0.5cm,s sep=0.3cm}\n")
                         
                         if has_algorithm:
                             f.write("\\usepackage{algorithm}\n")
@@ -328,31 +452,43 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                     logger.info(f"Saved debug copy of alternative LaTeX file to {alt_debug_tex_path}")
                     
                     # Compile the alternative LaTeX file
-                    alt_pdf_file = os.path.join(tmpdir, "alt_figure.pdf")
-                    alt_latex_result = subprocess.run(
-                        ["pdflatex", "-interaction=nonstopmode", "-output-directory", tmpdir, alt_tex_file],
-                        capture_output=True,
-                        text=True
-                    )
-                    
-                    # Save the alternative LaTeX output for debugging
-                    with open(os.path.join(cache_folder, f"{code_hash}_alt_latex_stdout.log"), 'w') as f:
-                        f.write(alt_latex_result.stdout)
-                    with open(os.path.join(cache_folder, f"{code_hash}_alt_latex_stderr.log"), 'w') as f:
-                        f.write(alt_latex_result.stderr)
-                    
-                    # Check for alternative LaTeX errors
-                    alt_error_match = re.search(r'!(.*?)(?=\n\s*\n|\n\s*l\.)', alt_latex_result.stdout, re.DOTALL)
-                    if alt_error_match:
-                        alt_latex_error = alt_error_match.group(1).strip()
-                        logger.error(f"Alternative LaTeX error message: {alt_latex_error}")
-                    
-                    if alt_latex_result.returncode != 0 or not os.path.exists(alt_pdf_file):
-                        logger.error(f"Alternative LaTeX compilation also failed with return code {alt_latex_result.returncode}")
+                    alt_compile_start_time = time.perf_counter()
+                    try:
+                        alt_latex_result = run_cmd(
+                            ["latexmk", "-pdf", "-shell-escape", "-interaction=nonstopmode", "alt_figure.tex"],
+                            cwd=tmpdir, timeout=60
+                        )
+                        alt_compile_time = time.perf_counter() - alt_compile_start_time
+                        logger.info(f"Alternative LaTeX compilation took {alt_compile_time:.2f} seconds")
+                        
+                        alt_pdf_file = os.path.join(tmpdir, "alt_figure.pdf")
+                        alt_log = alt_latex_result.stdout + alt_latex_result.stderr
+                        alt_error_match = re.search(r'! (.*?)\n', alt_log, re.DOTALL)
+                        
+                        # Save the alternative LaTeX output for debugging
+                        with open(os.path.join(cache_folder, f"{code_hash}_alt_latex_stdout.log"), 'w') as f:
+                            f.write(alt_latex_result.stdout)
+                        with open(os.path.join(cache_folder, f"{code_hash}_alt_latex_stderr.log"), 'w') as f:
+                            f.write(alt_latex_result.stderr)
+                        
+                        # Check for alternative LaTeX errors
+                        alt_latex_error = None
+                        if alt_error_match:
+                            alt_latex_error = alt_error_match.group(1).strip()
+                            logger.error(f"Alternative LaTeX error message: {alt_latex_error}")
+                        
+                        if alt_latex_result.returncode != 0 or not os.path.exists(alt_pdf_file):
+                            raise subprocess.CalledProcessError(alt_latex_result.returncode, "latexmk")
+                        
+                        # If alternative compilation succeeded, use that PDF
+                        pdf_file = alt_pdf_file
+                        
+                    except Exception as alt_compile_error:
+                        logger.error(f"Alternative LaTeX compilation also failed: {str(alt_compile_error)}")
                         
                         # Create a more helpful error message
-                        error_details = latex_error if 'latex_error' in locals() else 'Unknown error'
-                        alt_error_details = alt_latex_error if 'alt_latex_error' in locals() else 'Unknown error'
+                        error_details = latex_error if latex_error else 'Unknown error'
+                        alt_error_details = alt_latex_error if alt_latex_error else 'Unknown error'
                         
                         # Extract the most useful part of the error message
                         if 'Undefined control sequence' in error_details or 'Undefined control sequence' in alt_error_details:
@@ -381,114 +517,73 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                             figure_id=figure_id,
                             error=error_msg
                         ))
+                        continue  # Skip to the next figure since compilation failed
+                
+                # Convert PDF to images
+                convert_start_time = time.perf_counter()
+                svg_file, png_file = convert_pdf_to_images(pdf_file, tmpdir)
+                convert_time = time.perf_counter() - convert_start_time
+                logger.info(f"PDF conversion took {convert_time:.2f} seconds")
+                
+                # Check if conversion failed
+                if svg_file is None and png_file is None:
+                    error_msg = "Failed to convert PDF to images"
+                    logger.error(error_msg)
                     
-                    # If alternative compilation succeeded, use that PDF
-                    pdf_file = alt_pdf_file
-                
-                # Convert PDF to SVG
-                svg_file = os.path.join(tmpdir, "figure.svg")
-                logger.info(f"Converting PDF to SVG: {pdf_file} -> {svg_file}")
-                pdf2svg_result = subprocess.run(
-                    ["pdf2svg", pdf_file, svg_file],
-                    capture_output=True,
-                    text=True
-                )
-                
-                # Convert PDF to PNG with transparent background
-                png_file = os.path.join(tmpdir, "figure.png")
-                logger.info(f"Converting PDF to PNG: {pdf_file} -> {png_file}")
-                pdf2png_result = subprocess.run(
-                    ["convert", "-density", "300", "-background", "transparent", pdf_file, png_file],
-                    capture_output=True,
-                    text=True
-                )
-                
-                # Check if PNG conversion failed, try alternative method
-                if pdf2png_result.returncode != 0 or not os.path.exists(png_file):
-                    logger.warning(f"Primary PNG conversion failed, trying alternative method")
-                    pdf2png_alt_result = subprocess.run(
-                        ["pdftoppm", "-png", "-r", "300", "-transp", pdf_file, os.path.join(tmpdir, "figure")],
-                        capture_output=True,
-                        text=True
-                    )
-                    # Find the generated PNG file (pdftoppm adds -1 suffix)
-                    png_files = [f for f in os.listdir(tmpdir) if f.startswith("figure-") and f.endswith(".png")]
-                    if png_files:
-                        shutil.move(os.path.join(tmpdir, png_files[0]), png_file)
-                    else:
-                        logger.error("Alternative PNG conversion also failed")
+                    # Update DB with error status
+                    supabase_client.table('figures').update({
+                        "generation_status": "error",
+                        "generation_error": error_msg
+                    }).eq("id", figure_id).execute()
+                    
+                    # Add error response
+                    responses.append(CreateFigureResponse(
+                        success=False,
+                        figure_id=figure_id,
+                        error=error_msg
+                    ))
+                    continue  # Skip to the next figure
                 
                 # Cache the files
                 shutil.copy(tex_file, tex_path)
-                if os.path.exists(svg_file):
+                if svg_file:
                     shutil.copy(svg_file, svg_output_path)
-                if os.path.exists(png_file):
+                if png_file:
                     shutil.copy(png_file, png_output_path)
                 
                 # Upload the SVG file
-                if os.path.exists(svg_file):
+                if svg_file:
                     logger.info(f"Uploading SVG to Supabase storage: {class_id}/{figure_id}.svg")
-                    try:
-                        with open(svg_file, "rb") as f:
-                            svg_data = f.read()
-                            supabase_client.storage.from_('figures').upload(
-                                f"{class_id}/{figure_id}.svg", 
-                                svg_data, 
-                                {'content-type': 'image/svg+xml'}
-                            )
-                    except Exception as upload_error:
-                        logger.error(f"Error uploading SVG: {str(upload_error)}")
-                        # Try to delete if it exists and upload again
-                        try:
-                            supabase_client.storage.from_('figures').remove([f"{class_id}/{figure_id}.svg"])
-                            with open(svg_file, "rb") as f:
-                                svg_data = f.read()
-                                supabase_client.storage.from_('figures').upload(
-                                    f"{class_id}/{figure_id}.svg", 
-                                    svg_data, 
-                                    {'content-type': 'image/svg+xml'}
-                                )
-                            logger.info(f"Successfully re-uploaded SVG after deletion")
-                        except Exception as retry_error:
-                            logger.error(f"Failed to re-upload SVG after deletion: {str(retry_error)}")
+                    upload_with_retry(
+                        supabase_client,
+                        'figures',
+                        f"{class_id}/{figure_id}.svg",
+                        svg_file,
+                        'image/svg+xml'
+                    )
                 else:
-                    logger.error(f"SVG file was not created: {svg_file}")
+                    logger.warning("No SVG file to upload")
                 
                 # Upload the PNG file
-                if os.path.exists(png_file):
+                if png_file:
                     logger.info(f"Uploading PNG to Supabase storage: {class_id}/{figure_id}.png")
-                    try:
-                        with open(png_file, "rb") as f:
-                            png_data = f.read()
-                            supabase_client.storage.from_('figures').upload(
-                                f"{class_id}/{figure_id}.png", 
-                                png_data, 
-                                {'content-type': 'image/png'}
-                            )
-                    except Exception as upload_error:
-                        logger.error(f"Error uploading PNG: {str(upload_error)}")
-                        # Try to delete if it exists and upload again
-                        try:
-                            supabase_client.storage.from_('figures').remove([f"{class_id}/{figure_id}.png"])
-                            with open(png_file, "rb") as f:
-                                png_data = f.read()
-                                supabase_client.storage.from_('figures').upload(
-                                    f"{class_id}/{figure_id}.png", 
-                                    png_data, 
-                                    {'content-type': 'image/png'}
-                                )
-                            logger.info(f"Successfully re-uploaded PNG after deletion")
-                        except Exception as retry_error:
-                            logger.error(f"Failed to re-upload PNG after deletion: {str(retry_error)}")
+                    upload_with_retry(
+                        supabase_client,
+                        'figures',
+                        f"{class_id}/{figure_id}.png",
+                        png_file,
+                        'image/png'
+                    )
                 else:
-                    logger.error(f"PNG file was not created: {png_file}")
+                    logger.warning("No PNG file to upload")
                 
                 # Update DB record
                 supabase_client.table('figures').update({
                     'generation_status': 'complete'
                 }).eq('id', figure_id).execute()
                 
-                logger.info(f"Figure generation completed successfully")
+                figure_time = time.perf_counter() - figure_start_time
+                logger.info(f"Figure generation completed successfully in {figure_time:.2f} seconds")
                 responses.append(CreateFigureResponse(
                     success=True,
                     figure_id=figure_id,
@@ -516,4 +611,7 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                 figure_id=figure_id,
                 error=str(e)
             ))
+    
+    total_time = time.perf_counter() - start_time
+    logger.info(f"Processed {len(figures)} figures in {total_time:.2f} seconds")
     return responses
