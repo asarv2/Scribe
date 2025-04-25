@@ -1,8 +1,8 @@
 # creating the output types
 import re
 from collections import defaultdict
-from typing import Dict, List, Tuple, Set
-from pydantic import BaseModel
+from typing import Dict, List, Tuple, Set, Optional, Literal
+from pydantic import BaseModel, Field
 import google.generativeai as genai
 from google.generativeai.types import File
 import json
@@ -10,15 +10,43 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class MultipleChoiceQuestion(BaseModel):
-    question: str
-    options: List[str]
-    explanations: List[str]
-    answer: str
+class Figure(BaseModel):
+    title: str = Field(default="")
+    latex_code: str = Field(default="")
+    references: List[int] = Field(default=[])
 
-class FreeResponseQuestion(BaseModel):
-    question: str
-    answer: str
+class CreateFigureResponse(BaseModel):
+    success: bool = Field(default=False)
+    error: Optional[str] = Field(default="")
+    figure_id: str = Field(default="")
+
+class Question(BaseModel):
+    title: str = Field(default="")
+    question_type: Literal["mcq", "frq"] = "mcq"
+    question: str = Field(default="")
+    options: List[str] = Field(default_factory=list)
+    answer: str = Field(default="")
+    explanations: List[str] = Field(default_factory=list)
+    references: List[int] = Field(default_factory=list)
+    figures: List[Figure] = Field(default_factory=list)
+
+class CreateQuestionResponse(BaseModel):
+    success: bool = Field(default=False)
+    error: Optional[str] = Field(default="")
+    question_id: str = Field(default="")
+
+class Summary(BaseModel):
+    title: str = Field(default="")
+    preamble: str = Field(default="")
+    body: str = Field(default="")
+    conclusion: str = Field(default="")
+    references: List[int] = Field(default=[])
+    figures: List[Figure] = Field(default=[])
+
+class CreateSummaryResponse(BaseModel):
+    success: bool = Field(default=False)
+    error: Optional[str] = Field(default="")
+    summary_id: str = Field(default="") 
 
 class Documents(BaseModel):
     class_id: str
@@ -197,12 +225,10 @@ async def process_special_tags(message, supabase_client, documents: Documents):
     Process special tags in a message and replace them with the corresponding content.
     
     Supported tags:
-    Replace these with function calls and corresponding outputs
-    - <QUESTION>question_id</QUESTION>
-    - <SUMMARY>summary_id</SUMMARY>
-    - <FIGURE>figure_id</FIGURE>
-
-    - <DOCUMENT>document_id</DOCUMENT> replaces with the document reference
+    - <FIGURE_GENERATING> - Replace with create_figures tool call
+    - <QUESTION_GENERATING> - Replace with create_questions tool call
+    - <SUMMARY_GENERATING> - Replace with create_summaries tool call
+    - <DOCUMENT>document_id</DOCUMENT> - Replace with the document reference
     
     Args:
         message (str): The message containing special tags
@@ -214,11 +240,19 @@ async def process_special_tags(message, supabase_client, documents: Documents):
     import re
 
     references_reverse = {v: k for k, v in documents.references.items()}
-    figures_reverse = {v: k + 1 for k, v in enumerate(documents.figures)}
-    
-    # Track all figure IDs that need to be included
-    all_figure_ids = []
     content_parts = []
+
+    # get the chat from supabase
+    chat = supabase_client.table("chats").select("*").eq("id", documents.chat_id).execute().data[0]
+
+    # get all the messages in the chat
+    messages = supabase_client.table("messages").select("*").eq("chat", documents.chat_id).execute().data or []
+    message_ids = [message.get("id") for message in messages]
+
+    # get all the questions, summaries, and figures for the messages
+    questions = supabase_client.table("questions").select("*").in_("message", message_ids).execute().data or []
+    summaries = supabase_client.table("summaries").select("*").in_("message", message_ids).execute().data or []
+    figures = supabase_client.table("figures").select("*").in_("message", message_ids).execute().data or []
     
     # Helper function to process document tags in a text
     def process_document_tags(text):
@@ -243,37 +277,31 @@ async def process_special_tags(message, supabase_client, documents: Documents):
     # Find all special tags and their positions
     tag_positions = []
     
-    # Find question tags
-    question_pattern = r'<QUESTION>(.*?)</QUESTION>'
-    for match in re.finditer(question_pattern, message):
-        question_id = match.group(1)
+    # Find figure generating tags
+    figure_pattern = r'<FIGURE_GENERATING>'
+    for match in re.finditer(figure_pattern, message):
         tag_positions.append({
             'start': match.start(),
             'end': match.end(),
-            'id': question_id,
+            'type': 'figure'
+        })
+    
+    # Find question generating tags
+    question_pattern = r'<QUESTION_GENERATING>'
+    for match in re.finditer(question_pattern, message):
+        tag_positions.append({
+            'start': match.start(),
+            'end': match.end(),
             'type': 'question'
         })
     
-    # Find summary tags
-    summary_pattern = r'<SUMMARY>(.*?)</SUMMARY>'
+    # Find summary generating tags
+    summary_pattern = r'<SUMMARY_GENERATING>'
     for match in re.finditer(summary_pattern, message):
-        summary_id = match.group(1)
         tag_positions.append({
             'start': match.start(),
             'end': match.end(),
-            'id': summary_id,
             'type': 'summary'
-        })
-    
-    # Find figure tags
-    figure_pattern = r'<FIGURE>(.*?)</FIGURE>'
-    for match in re.finditer(figure_pattern, message):
-        figure_id = match.group(1)
-        tag_positions.append({
-            'start': match.start(),
-            'end': match.end(),
-            'id': figure_id,
-            'type': 'figure'
         })
     
     # Sort positions by start index
@@ -292,185 +320,213 @@ async def process_special_tags(message, supabase_client, documents: Documents):
                 })
         
         # Process the tag based on its type
-        if pos['type'] == 'question':
-            question_id = pos['id']
-            question_response = supabase_client.table("questions").select("*").eq("id", question_id).execute()
-            
-            if not question_response.data:
-                # Add error message
-                content_parts.append({
-                    "role": "assistant",
-                    "content": f"[Error fetching question {question_id}: Question not found]"
-                })
-                last_end = pos['end']
-                continue
+        if pos['type'] == 'figure':
+            # Convert database figures to Figure model objects
+            figure_objects = []
+            for fig in figures:
+                # Map references to reference numbers
+                fig_references = []
+                if "references" in fig and fig["references"]:
+                    fig_references = [
+                        references_reverse[ref] for ref in fig["references"] 
+                        if ref in references_reverse
+                    ]
                 
-            question = question_response.data[0]
+                figure_objects.append({
+                    "title": fig.get("title", ""),
+                    "latex_code": fig.get("code", ""),
+                    "references": fig_references
+                })
             
-            # Add function call part
-            tool_name = "create_frq_question" if question.get("frq", False) else "create_mcq_question"
-
-            # map question.references to the reference number, in references_reverse
-            question_references = [references_reverse[ref] for ref in question.get("references", [])]
-            question_figures = [figures_reverse[fig] for fig in question.get("figures", [])]
-            
-            if question.get("frq", False):
-                function_call = {
-                    "arguments": json.dumps({
-                        "title": question.get("title", ""),
-                        "question": question.get("problem", ""),
-                        "answer": question.get("solution", ""),
-                        "references": question_references,
-                        "figures": question_figures
-                    }),
-                    "call_id": question_id,
-                    "name": tool_name,
-                    "type": "function_call",
-                    "id": question_id,
-                    "status": "completed"
-                }
-            else:
-                function_call = {
-                    "arguments": json.dumps({
-                        "title": question.get("title", ""),
-                        "question": question.get("problem", ""),
-                        "options": question.get("options", []),
-                        "explanations": question.get("explanations", []),
-                        "answer": question.get("answers", [""])[0] if question.get("answers") else "",
-                        "references": question_references,
-                        "figures": question_figures
-                    }),
-                    "call_id": question_id,
-                    "name": tool_name,
-                    "type": "function_call",
-                    "id": question_id,
-                    "status": "completed"
-                }
+            # Create a function call for create_figures
+            call_id = f"figures_{documents.message_id}"
+            function_call = {
+                "arguments": json.dumps({
+                    "figures": figure_objects
+                }),
+                "call_id": call_id,
+                "name": "create_figures",
+                "type": "function_call",
+                "id": call_id,
+                "status": "completed"
+            }
             
             content_parts.append(function_call)
             
-            # Add function output part
+            # Format the output as requested
+            figure_responses = []
+            for fig in figures:
+                figure_responses.append(f"CreateFigureResponse(success=True, error=None, figure_id='{fig.get('id', '')}')")
+            
+            # Format as a list string
+            output_str = f"[{', '.join(figure_responses)}]"
+            
             function_output = {
-                "call_id": question_id,
-                "output": question_id,
+                "call_id": call_id,
+                "output": output_str,
                 "type": "function_call_output",
-                "id": question_id,
+                "id": call_id,
                 "status": "completed"
             }
             
             content_parts.append(function_output)
             
-            # Add any figures associated with this question
-            if "figures" in question and question["figures"]:
-                all_figure_ids.extend(question["figures"])
+        elif pos['type'] == 'question':
+            # Convert database questions to Question model objects
+            question_objects = []
+            for q in questions:
+                # Map references to reference numbers
+                q_references = []
+                if "references" in q and q["references"]:
+                    q_references = [
+                        references_reverse[ref] for ref in q["references"] 
+                        if ref in references_reverse
+                    ]
                 
-        elif pos['type'] == 'summary':
-            summary_id = pos['id']
-            summary_response = supabase_client.table("summaries").select("*").eq("id", summary_id).execute()
-            
-            if not summary_response.data:
-                # Add error message
-                content_parts.append({
-                    "role": "assistant",
-                    "content": f"[Error fetching summary {summary_id}: Summary not found]"
+                # Process figures if any
+                q_figures = []
+                if "figures" in q and q["figures"]:
+                    for fig_id in q["figures"]:
+                        # Find the figure in our figures list
+                        for fig in figures:
+                            if fig.get("id") == fig_id:
+                                fig_references = []
+                                if "references" in fig and fig["references"]:
+                                    fig_references = [
+                                        references_reverse[ref] for ref in fig["references"] 
+                                        if ref in references_reverse
+                                    ]
+                                
+                                q_figures.append({
+                                    "title": fig.get("title", ""),
+                                    "latex_code": fig.get("code", ""),
+                                    "references": fig_references
+                                })
+                                break
+                
+                question_objects.append({
+                    "title": q.get("title", ""),
+                    "question_type": "frq" if q.get("frq", False) else "mcq",
+                    "question": q.get("question", ""),
+                    "options": q.get("options", []),
+                    "answer": q.get("answers", [""])[0] if q.get("answers") else "",
+                    "explanations": q.get("explanations", []),
+                    "references": q_references,
+                    "figures": q_figures
                 })
-                last_end = pos['end']
-                continue
-                
-            summary = summary_response.data[0]
             
-            # Process document tags in summary content
-            preamble = process_document_tags(summary.get("preamble", ""))
-            body = process_document_tags(summary.get("body", ""))
-            conclusion = process_document_tags(summary.get("conclusion", ""))
-
-            # map summary.references to the reference number, in references_reverse
-            summary_references = [references_reverse[ref] for ref in summary.get("references", [])]
-            summary_figures = [figures_reverse[fig] for fig in summary.get("figures", [])]
-            
-            # Add function call part
+            # Create a function call for create_questions
+            call_id = f"questions_{documents.message_id}"
             function_call = {
                 "arguments": json.dumps({
-                    "title": summary.get("title", ""),
+                    "questions": question_objects
+                }),
+                "call_id": call_id,
+                "name": "create_questions",
+                "type": "function_call",
+                "id": call_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_call)
+            
+            # Format the output as requested
+            question_responses = []
+            for q in questions:
+                question_responses.append(f"CreateQuestionResponse(success=True, error=None, question_id='{q.get('id', '')}')")
+            
+            # Format as a list string
+            output_str = f"[{', '.join(question_responses)}]"
+            
+            function_output = {
+                "call_id": call_id,
+                "output": output_str,
+                "type": "function_call_output",
+                "id": call_id,
+                "status": "completed"
+            }
+            
+            content_parts.append(function_output)
+            
+        elif pos['type'] == 'summary':
+            # Convert database summaries to Summary model objects
+            summary_objects = []
+            for s in summaries:
+                # Process document tags in summary content
+                preamble = process_document_tags(s.get("preamble", ""))
+                body = process_document_tags(s.get("body", ""))
+                conclusion = process_document_tags(s.get("conclusion", ""))
+                
+                # Map references to reference numbers
+                s_references = []
+                if "references" in s and s["references"]:
+                    s_references = [
+                        references_reverse[ref] for ref in s["references"] 
+                        if ref in references_reverse
+                    ]
+                
+                # Process figures if any
+                s_figures = []
+                if "figures" in s and s["figures"]:
+                    for fig_id in s["figures"]:
+                        # Find the figure in our figures list
+                        for fig in figures:
+                            if fig.get("id") == fig_id:
+                                fig_references = []
+                                if "references" in fig and fig["references"]:
+                                    fig_references = [
+                                        references_reverse[ref] for ref in fig["references"] 
+                                        if ref in references_reverse
+                                    ]
+                                
+                                s_figures.append({
+                                    "title": fig.get("title", ""),
+                                    "latex_code": fig.get("code", ""),
+                                    "references": fig_references
+                                })
+                                break
+                
+                summary_objects.append({
+                    "title": s.get("title", ""),
                     "preamble": preamble,
                     "body": body,
                     "conclusion": conclusion,
-                    "references": summary_references,
-                    "figures": summary_figures
-                }),
-                "call_id": summary_id,
-                "name": "create_summary",
-                "type": "function_call",
-                "id": summary_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_call)
-            
-            # Add function output part
-            function_output = {
-                "call_id": summary_id,
-                "output": summary_id,
-                "type": "function_call_output",
-                "id": summary_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_output)
-            
-            # Add any figures associated with this summary
-            if "figures" in summary and summary["figures"]:
-                all_figure_ids.extend(summary["figures"])
-                
-        elif pos['type'] == 'figure':
-            figure_id = pos['id']
-            figure_response = supabase_client.table("figures").select("*").eq("id", figure_id).execute()
-            
-            if not figure_response.data:
-                # Add error message
-                content_parts.append({
-                    "role": "assistant",
-                    "content": f"[Error fetching figure {figure_id}: Figure not found]"
+                    "references": s_references,
+                    "figures": s_figures
                 })
-                last_end = pos['end']
-                continue
-                
-            figure = figure_response.data[0]
-
-            # map figure.references to the reference number, in references_reverse
-            figure_references = [references_reverse[ref] for ref in figure.get("references", [])]
             
-            # Add function call part
+            # Create a function call for create_summaries
+            call_id = f"summaries_{documents.message_id}"
             function_call = {
                 "arguments": json.dumps({
-                    "title": figure.get("title", ""),
-                    "python_code": figure.get("code", ""),
-                    "references": figure_references
+                    "summaries": summary_objects
                 }),
-                "call_id": figure_id,
-                "name": "create_figure",
+                "call_id": call_id,
+                "name": "create_summaries",
                 "type": "function_call",
-                "id": figure_id,
+                "id": call_id,
                 "status": "completed"
             }
             
             content_parts.append(function_call)
             
-            # Add function output part
-            figure_number = str(figures_reverse[figure_id])
+            # Format the output as requested
+            summary_responses = []
+            for s in summaries:
+                summary_responses.append(f"CreateSummaryResponse(success=True, error=None, summary_id='{s.get('id', '')}')")
+            
+            # Format as a list string
+            output_str = f"[{', '.join(summary_responses)}]"
+            
             function_output = {
-                "call_id": figure_id,
-                "output": figure_number,
+                "call_id": call_id,
+                "output": output_str,
                 "type": "function_call_output",
-                "id": figure_id,
+                "id": call_id,
                 "status": "completed"
             }
             
             content_parts.append(function_output)
-            
-            # Add this figure ID to our list
-            if figure_id not in all_figure_ids:
-                all_figure_ids.append(figure_id)
         
         last_end = pos['end']
     

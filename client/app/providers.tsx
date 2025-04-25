@@ -50,6 +50,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
             }
           }}
           defaultColorScheme="dark"
+          withNormalizeCSS
+          withGlobalStyles
+          withCSSVariables
         >
           <Notifications />
           <HealthCheck />

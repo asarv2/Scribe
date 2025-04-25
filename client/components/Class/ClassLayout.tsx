@@ -21,6 +21,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useMediaQuery } from "@mantine/hooks";
 import { useStudentMode } from "../StudentModeContext";
+import { useMantineColorScheme } from "@mantine/core";
 
 
 interface ClassLayoutProps {
@@ -34,6 +35,7 @@ interface ClassLayoutProps {
 export function ClassLayout({ children, classId, showHeader = true, showClasses = true, showNavbar = true }: ClassLayoutProps) {
     const supabase = useSupabaseBrowser();
     const { studentMode } = useStudentMode();
+    const { colorScheme } = useMantineColorScheme();
 
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -65,7 +67,6 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
     })
 
     return (
-
         <DndProvider backend={HTML5Backend}>
             <AppShell
                 header={{ height: showHeader ? 60 : 0 }}

@@ -71,12 +71,16 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
 
     return (
         <Card
-            shadow="sm"
-            padding="lg"
-            radius="md"
-            withBorder
-            h="calc(100vh - 100px)"
-            style={{ position: 'relative', paddingTop: '30px' }}
+            bg="transparent"
+            // shadow="sm"
+            // padding="lg"
+            // radius="md"
+            // withBorder
+            h="calc(100vh - 75px)"
+            p="xs"
+            pt="35px"
+            style={{ position: 'relative' }}
+
         >
             {/* Horizontal minimize bar at the top */}
             <Tooltip label="Close viewer" openDelay={500}>

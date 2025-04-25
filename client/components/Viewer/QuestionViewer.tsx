@@ -164,7 +164,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 const contentDisposition = response.headers.get('Content-Disposition');
                 console.log('Content-Disposition:', contentDisposition);
                 let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
-                
+
                 if (!downloadAll) {
                     filename = `question-${currentIndex + 1}-${chatId}.${format === 'latex' ? 'tex' : format}`;
                 }
@@ -225,6 +225,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 viewerMode={viewerMode}
                 handleEnhancedDocumentClick={handleEnhancedDocumentClick}
                 fileDocuments={fileDocuments ?? []}
+                showDownloadMenu={false}
             />
         );
     }
@@ -377,23 +378,26 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 <Group justify="space-between" mb="md">
                     {questions.length > 1 ? (
                         <Group>
-                            <ActionIcon
-                                disabled={currentIndex === 0}
-                                onClick={handlePrevious}
-                                variant="subtle"
-                            >
-                                <IconChevronLeft size={20} />
-                            </ActionIcon>
+                            <Group>
+                                <ActionIcon
+                                    disabled={currentIndex === 0}
+                                    onClick={handlePrevious}
+                                    variant="subtle"
+                                >
+                                    <IconChevronLeft size={20} />
+                                </ActionIcon>
 
-                            <Text size="sm">Question {currentIndex + 1} of {questions.length}</Text>
+                                <Text size="sm">Question {currentIndex + 1} of {questions.length}</Text>
 
-                            <ActionIcon
-                                disabled={currentIndex === questions.length - 1}
-                                onClick={handleNext}
-                                variant="subtle"
-                            >
-                                <IconChevronRight size={20} />
-                            </ActionIcon>
+                                <ActionIcon
+                                    disabled={currentIndex === questions.length - 1}
+                                    onClick={handleNext}
+                                    variant="subtle"
+                                >
+                                    <IconChevronRight size={20} />
+                                </ActionIcon>
+                            </Group>
+                            <Text size="sm" c="dimmed">{question.title}</Text>
                         </Group>
                     ) : <div />}
                     <Group gap="xs">

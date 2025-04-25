@@ -96,10 +96,56 @@ class FigureDownloader:
         """Create a zip file containing PNG images for all figures
         
         Uses chat title for naming if provided, otherwise uses figure titles
+        If only one figure, returns the PNG directly instead of a zip
         """
         if not self.figures:
-            return None
+            logger.error("No figures provided for PNG zip creation")
+            return None, None
+        
+        # If there's only one figure, download it directly as PNG
+        if len(self.figures) == 1:
+            figure = self.figures[0]
+            figure_id = figure['id']
+            title = figure['title']
             
+            # Create a safe filename
+            safe_name = re.sub(r'[^\w\-_\. ]', '_', title)
+            safe_name = safe_name.replace(' ', '_')
+            filename = f"{safe_name}.png"
+            
+            # Construct the storage URL
+            storage_url = f"https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/figures/{class_id}/{figure_id}.png"
+            
+            logger.info(f"Fetching single PNG for figure {figure_id} from {storage_url}")
+            
+            try:
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.get(storage_url)
+                    if response.status_code == 200:
+                        # Verify content is a valid PNG
+                        content = response.content
+                        if len(content) > 8 and content.startswith(b'\x89PNG\r\n\x1a\n'):
+                            # Save the PNG to disk
+                            figure_dir = os.path.join(FIGURES_DIR, figure_id)
+                            os.makedirs(figure_dir, exist_ok=True)
+                            
+                            png_path = os.path.join(figure_dir, filename)
+                            with open(png_path, 'wb') as f:
+                                f.write(content)
+                            
+                            logger.info(f"Saved single PNG file at {png_path} ({len(content)} bytes)")
+                            return png_path, filename
+                        else:
+                            logger.error(f"Invalid PNG data for figure {figure_id}: doesn't have PNG signature")
+                            logger.error(f"Content starts with: {content[:20]}")
+                    else:
+                        logger.error(f"Failed to fetch PNG for figure {figure_id}: HTTP {response.status_code}")
+            except Exception as e:
+                logger.error(f"Error fetching PNG for figure {figure_id}: {str(e)}")
+            
+            return None, None
+        
+        # For multiple figures, create a zip file
         # Create a BytesIO object to store the zip file
         zip_buffer = BytesIO()
         
@@ -109,18 +155,18 @@ class FigureDownloader:
             safe_chat_title = re.sub(r'[^\w\-_\. ]', '_', chat_title)
             safe_chat_title = safe_chat_title.replace(' ', '_')
             zip_filename = f"{safe_chat_title}_figures.zip"
-        elif len(self.figures) == 1:
-            # Use single figure title
-            safe_name = re.sub(r'[^\w\-_\. ]', '_', self.figures[0]['title'])
-            safe_name = safe_name.replace(' ', '_')
-            zip_filename = f"{safe_name}.zip"
         else:
             # Default for multiple figures
             zip_filename = f"figures_{len(self.figures)}.zip"
         
+        logger.info(f"Creating PNG zip file: {zip_filename} for {len(self.figures)} figures")
+        
+        # Track successful downloads
+        successful_downloads = 0
+        
         # Create a zip file
         with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(timeout=30.0) as client:  # Add timeout
                 for figure in self.figures:
                     figure_id = figure['id']
                     title = figure['title']
@@ -133,30 +179,47 @@ class FigureDownloader:
                     # Construct the storage URL
                     storage_url = f"https://hmdqtnywfebxjugxzlvc.supabase.co/storage/v1/object/public/figures/{class_id}/{figure_id}.png"
                     
+                    logger.info(f"Fetching PNG for figure {figure_id} from {storage_url}")
+                    
                     try:
                         # Fetch the PNG from storage
                         response = await client.get(storage_url)
                         if response.status_code == 200:
-                            # Add the PNG to the zip file
-                            zip_file.writestr(filename, response.content)
+                            # Verify content is a valid PNG
+                            content = response.content
+                            if len(content) > 8 and content.startswith(b'\x89PNG\r\n\x1a\n'):
+                                # Add the PNG to the zip file
+                                zip_file.writestr(filename, content)
+                                successful_downloads += 1
+                                logger.info(f"Successfully added {filename} to zip (size: {len(content)} bytes)")
+                            else:
+                                logger.error(f"Invalid PNG data for figure {figure_id}: doesn't have PNG signature")
+                                logger.error(f"Content starts with: {content[:20]}")
                         else:
-                            logger.error(f"Failed to fetch PNG for figure {figure_id}: {response.status_code}")
+                            logger.error(f"Failed to fetch PNG for figure {figure_id}: HTTP {response.status_code}")
+                            if response.status_code == 404:
+                                logger.error("Figure PNG not found in storage")
                     except Exception as e:
                         logger.error(f"Error fetching PNG for figure {figure_id}: {str(e)}")
+        
+        # Check if we successfully downloaded any figures
+        if successful_downloads == 0:
+            logger.error("No figures were successfully downloaded for the zip file")
+            return None, None
         
         # Reset the buffer position to the beginning
         zip_buffer.seek(0)
         
-        # Create a temporary file to store the zip
+        # Save the zip file to disk
         first_figure_id = self.figures[0]['id']
         figure_dir = os.path.join(FIGURES_DIR, first_figure_id)
         os.makedirs(figure_dir, exist_ok=True)
         
         zip_path = os.path.join(figure_dir, zip_filename)
-        
-        # Write the zip file to disk
         with open(zip_path, 'wb') as f:
             f.write(zip_buffer.getvalue())
+        
+        logger.info(f"Created zip file at {zip_path} with {successful_downloads} figures")
         
         return zip_path, zip_filename
     

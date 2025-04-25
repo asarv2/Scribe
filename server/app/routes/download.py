@@ -76,18 +76,21 @@ async def download_figure_get(
             combined_title = f"{figure_titles[0]}, {figure_titles[1]} and more"
         
         if format == 'png':
-            # For PNG, create a zip file with all figures
+            # For PNG, create a zip file with all figures or return single PNG
             zip_result = await downloader.create_png_zip(class_id, chat_id, combined_title)
             
             if not zip_result or not os.path.exists(zip_result[0]):
-                raise HTTPException(status_code=500, detail="Failed to create PNG zip file")
+                raise HTTPException(status_code=500, detail="Failed to create PNG file")
             
             zip_path, filename = zip_result
+            
+            # Determine media type based on filename extension
+            media_type = 'application/zip' if filename.endswith('.zip') else 'image/png'
             
             return FileResponse(
                 path=zip_path,
                 filename=filename,
-                media_type='application/zip',
+                media_type=media_type,
                 headers={"Content-Disposition": f"attachment; filename={filename}"}
             )
         

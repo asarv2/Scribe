@@ -3,17 +3,19 @@ from agents import Agent
 from datetime import datetime
 from app.extensions import get_supabase, get_gemini
 from app.services.chat.prompts import get_learn_prompt, get_homework_prompt, get_test_prompt, get_student_prompt, get_teacher_prompt, get_grading_prompt, get_figure_prompt, get_question_prompt, get_summary_prompt, get_chat_title_prompt
-from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig, GuardrailFunctionOutput, input_guardrail, InputGuardrailTripwireTriggered
-from app.services.chat.tools.create_figure import create_figure
-from app.services.chat.tools.create_summary import create_summary
+from agents import Agent, Runner, OpenAIChatCompletionsModel, trace, ModelSettings, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig, ModelBehaviorError, function_tool
+from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
 from app.services.chat.tools.update_chat_title import update_chat_title
-from app.services.chat.tools.create_question import create_mcq_question, create_frq_question
+from app.services.chat.tools.create_figures import create_figures
+from app.services.chat.tools.create_summaries import create_summaries
+from app.services.chat.tools.create_questions import create_questions
 from app.services.chat.tools.grade_results import classify_grades, grade_results
-from app.services.chat.models import Documents, process_special_tags, clean_references
+from app.services.chat.models import Documents, process_special_tags, clean_references, CreateFigureResponse, CreateQuestionResponse, CreateSummaryResponse
 from agents.items import TResponseInputItem
 from openai.types.responses import ResponseTextDeltaEvent
 import json
 import logging
+import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,6 @@ class ChatProcessor(RunHooks):
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
         trace_id: str | None = None,
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None,
-        remove_callback: Optional[Callable[[str], Awaitable[None]]] = None,
         update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None,
         update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None,
     ):
@@ -45,7 +46,6 @@ class ChatProcessor(RunHooks):
 
         # set the stream callback. Will be used to update the chat.
         self.stream_callback = stream_callback
-        self.remove_callback = remove_callback
         self.update_trace_id = update_trace_id
         self.update_chat_usage = update_chat_usage
 
@@ -62,7 +62,23 @@ class ChatProcessor(RunHooks):
                 tool_choice="required",
                 include_usage=True
             ),
-            tools=[update_chat_title]
+            tools=[function_tool(update_chat_title)]
+        )
+
+        self.grading_system_prompt = get_grading_prompt(self.course_title)
+        self.grading_agent = Agent[Documents](
+            name="Grading Agent",
+            instructions=self.grading_system_prompt,
+            model=OpenAIChatCompletionsModel(
+                model="gemini-2.0-flash",
+                openai_client=self.gemini_client,
+            ),
+            model_settings=ModelSettings(
+                tool_choice="required",
+                temperature=0.0,
+                include_usage=True
+            ),
+            tools=[function_tool(classify_grades), function_tool(grade_results)],
         )
 
         # empty starting agent
@@ -72,7 +88,6 @@ class ChatProcessor(RunHooks):
         self.figure_system_prompt = get_figure_prompt(self.course_title)
         self.question_system_prompt = get_question_prompt(self.course_title)
         self.summary_system_prompt = get_summary_prompt(self.course_title)
-        self.grading_system_prompt = get_grading_prompt(self.course_title)
 
         self.figure_agent = Agent[Documents](
             name="Figure Agent",
@@ -86,8 +101,8 @@ class ChatProcessor(RunHooks):
                 temperature=0.0,
                 include_usage=True
             ),
-            tools=[create_figure],
-            handoff_description="Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch. Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt."
+            tools=[function_tool(create_figures)],
+            handoff_description=prompt_with_handoff_instructions("Do not hand off if you would like to make a figure for a question or summary, since the Summary Agent and Question Agent will be used to generate the figure. Used when the user asks for figure, plot, graph, visualization or something similar. Even if the user doesn't ask for it, if the LLM thinks it's possible to incoporate it into the conversation. This can be used in the general case, where the user will not give you any specific information. Can come up with complex visualizations from scratch. Create visualizations to support explanations. For 'concept' mode, create visualizations immediately without asking questions. For 'review' mode, include visualizations with the initial summary. Always follow the exact behavior specified in the base system prompt.")
         )
 
         self.summary_agent = Agent[Documents](
@@ -102,8 +117,8 @@ class ChatProcessor(RunHooks):
                 temperature=0.0,
                 include_usage=True
             ),
-            tools=[create_figure, create_summary],
-            handoff_description="Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch.For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt."
+            tools=[function_tool(create_summaries)],
+            handoff_description=prompt_with_handoff_instructions("Used when the user asks to generate a summary of the lecture. This can be used in the general case, where the user will not give you any specific information. Can come up with complex summaries from scratch.For 'review' mode, proactively create summaries at the start of the interaction without being asked. For other modes, only create summaries when explicitly requested. Always follow the exact behavior specified in the base system prompt.")
         )
 
         self.question_agent = Agent[Documents](
@@ -118,25 +133,9 @@ class ChatProcessor(RunHooks):
                 temperature=0.0,
                 include_usage=True
             ),
-            tools=[create_figure, create_mcq_question, create_frq_question],
-            handoff_description="Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch. For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt."
+            tools=[function_tool(create_questions)],
+            handoff_description=prompt_with_handoff_instructions("Used when the user asks to generate a practice question or exercise. This can be used in the general case, where the user will not give you any specific information. Can come up with complex problems from scratch. For 'review' mode, create practice questions after presenting the summary when the student confirms understanding. For 'concept' mode, create practice questions after explanation if appropriate. Always follow the exact behavior specified in the base system prompt.")
         )
-
-        self.grading_agent = Agent[Documents](
-            name="Grading Agent",
-            instructions=self.grading_system_prompt,
-            model=OpenAIChatCompletionsModel(
-                model="gemini-2.0-flash",
-                openai_client=self.gemini_client,
-            ),
-            model_settings=ModelSettings(
-                tool_choice="required",
-                temperature=0.0,
-                include_usage=True
-            ),
-            tools=[classify_grades, grade_results],
-        )
-
         
         system_prompt = ""
         additional_system_prompt = """
@@ -145,9 +144,15 @@ class ChatProcessor(RunHooks):
         When citing references, cite the reference number in the text, enclosed in square brackets, like the following example: [1][2] etc. For example, you might respond like this: 
         The definition of simplex method is a mathematical procedure for solving linear programming problems.[1][2]
         
-        You should generally handoff the creation of summaries, and questions to the Summary Agent and Question Agent respectively. The Figure Agent can be used in a more special case, where you want to generate standalone figures. If necessary, you can use the create_figure tool to generate a figure (in the case that you then want to reference it in a summary or question). You can use the create_summary tool to generate a summary. You can use the create_mcq_question tool to generate a multiple choice question, and the create_frq_question tool to generate a free response question. Use these tools only if you explicity know what needs to be generated (for example, if the user asks to modify an existing figure, summary or question)
-        
-        CRITICAL: You should NOT merge tool names together to create new tools. For example, you should NOT do create_figurecreate_figure, create_figure_create_summary, create_figure_create_question, create_summary_create_figure, create_summary_create_summary, create_summary_create_question, create_question_create_figure, create_question_create_summary, create_question_create_question. You should ONLY use the tools individually. Remember to AVOID this mistake.
+        The following tool calls are allowed:
+        - create_figures
+        - create_summaries
+        - create_questions
+
+        The following handoffs are allowed:
+        - Figure Agent
+        - Summary Agent
+        - Question Agent
         """
         # defining the system prompt and starting agent
         match self.prompt_type:
@@ -186,16 +191,14 @@ class ChatProcessor(RunHooks):
                 include_usage=True
             ),
             tools=[
-                create_figure,
-                create_summary,
-                create_mcq_question,
-                create_frq_question,
+                function_tool(create_figures),
+                function_tool(create_summaries),
+                function_tool(create_questions),
             ],
             handoffs=[
                 self.figure_agent,
                 self.summary_agent,
-                self.question_agent,
-                self.grading_agent
+                self.question_agent
             ]
         )
 
@@ -205,6 +208,7 @@ class ChatProcessor(RunHooks):
 
     async def format_conversation(self, google_file_ids: List[str], reference_description: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
+
         initial_context = [{"type": "input_text", "text": f"The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class. Use the following reference description to help you with your responses: {reference_description}"}]
 
         # for each google_file_id, we add a message to the context
@@ -248,52 +252,52 @@ class ChatProcessor(RunHooks):
     ) -> None:
         """Called before a tool is invoked."""
         message_id = wrapper.context.message_id
-        if tool.name == "create_figure":
-            # create a figure in the database
-            figure_response = self.supabase_client.table("figures").insert({
-                "generation_status": "generating",
-                "message": message_id,
-                "last_generation_attempt": datetime.now().isoformat()
-            }).execute()
-            figure_id = figure_response.data[0]['id']
-            # we will add this to the response text for now
-            if agent.name == "Figure Agent" or agent.name == "Chat Agent":
-                await self.stream_callback(f"<FIGURE>{figure_id}</FIGURE>")
-            
-            # adding the figure id to the context
-            wrapper.context.figures.append(figure_id)
-        elif tool.name == "create_summary":
-            summary_response = self.supabase_client.table("summaries").insert({
-                "generation_status": "generating",
-                "message": message_id,
-                "last_generation_attempt": datetime.now().isoformat()
-            }).execute()
-            summary_id = summary_response.data[0]['id']
-            # we will add this to the response text for now
-            await self.stream_callback(f"<SUMMARY>{summary_id}</SUMMARY>")
-            # adding the summary id to the context
-            wrapper.context.summaries.append(summary_id)
-        elif tool.name == "create_mcq_question" or tool.name == "create_frq_question":
-            question_response = self.supabase_client.table("questions").insert({
-                "generation_status": "generating",
-                "message": message_id,
-                "last_generation_attempt": datetime.now().isoformat()
-            }).execute()
-            question_id = question_response.data[0]['id']
-            # we will add this to the response text for now
-            await self.stream_callback(f"<QUESTION>{question_id}</QUESTION>")
-            # adding the question id to the context
-            wrapper.context.questions.append(question_id)
+        if tool.name == "create_figures":
+            # update the status text in the database to be creating figures
+            self.supabase_client.table("messages").update({
+                "status_text": "Creating figures..."
+            }).eq("id", message_id).execute()
+            # add placeholder to the response text
+            await self.stream_callback(f"<FIGURE_GENERATING>")
+        elif tool.name == "create_summaries":
+            # update the status text in the database to be creating summaries
+            self.supabase_client.table("messages").update({
+                "status_text": "Creating summaries..."
+            }).eq("id", message_id).execute()
+            # add placeholder to the response text
+            await self.stream_callback(f"<SUMMARY_GENERATING>")
+        elif tool.name == "create_questions":
+            # update the status text in the database to be creating questions
+            self.supabase_client.table("messages").update({
+                "status_text": "Creating questions..."
+            }).eq("id", message_id).execute()
+            # add placeholder to the response text
+            await self.stream_callback(f"<QUESTION_GENERATING>")
     
     async def on_tool_end(
         self,
         context: RunContextWrapper[Documents],
         agent: Agent[Documents],
         tool: Tool,
-        result: str,
+        result: Any,
     ) -> None:
         """Called after a tool is invoked."""
-        if tool.name == "update_chat_title":
+        if tool.name == "create_figures":
+            # update the status text in the database to be creating figures
+            self.supabase_client.table("messages").update({
+                "status_text": "Loading figures..."
+            }).eq("id", context.context.message_id).execute()
+        elif tool.name == "create_summaries":
+            # update the status text in the database to be creating summaries
+            self.supabase_client.table("messages").update({
+                "status_text": "Loading summaries..."
+            }).eq("id", context.context.message_id).execute()
+        elif tool.name == "create_questions":
+            # update the status text in the database to be creating questions
+            self.supabase_client.table("messages").update({
+                "status_text": "Loading questions..."
+            }).eq("id", context.context.message_id).execute()
+        elif tool.name == "update_chat_title":
             if self.trace_id:
                 chat_title = result
                 with trace(workflow_name=chat_title, trace_id=self.trace_id):
@@ -301,10 +305,10 @@ class ChatProcessor(RunHooks):
             else:
                 logger.warning("No trace id found while updating chat title")
         elif tool.name == "classify_grade_files":
-            grade_ids = json.loads(result)
             # we can add all of the grade ids to the message
-            for grade_id in grade_ids:
-                await self.stream_callback(f"<GRADE>{grade_id}</GRADE>")
+            if isinstance(result, list):
+                for grade_id in result:
+                    await self.stream_callback(f"<GRADE>{grade_id}</GRADE>")
   
     async def process_message(
         self,
@@ -314,38 +318,100 @@ class ChatProcessor(RunHooks):
         reference_description: str,
     ) -> None:
         """Process a single message with streaming"""
-        try:
-            conversation_context = await self.format_conversation(google_ids, reference_description, documents=documents)
+        retry_number = 0
+        retry_errors = []
+        
+        while retry_number < 3:  # Limit to 3 retries
+            try:
+                # Update status for retry attempts
+                if retry_number > 0:
+                    logger.info(f"Retry attempt {retry_number}/3")
+                    self.supabase_client.table("messages").update({
+                        "status_text": f"Retrying... (Attempt {retry_number}/3)"
+                    }).eq("id", documents.message_id).execute()
 
-            # need to add gemini files to context?
-            result = Runner.run_streamed(self.starting_agent, input=conversation_context, context=documents, hooks=self, max_turns=15, run_config=RunConfig(
-                group_id=chat_id,
-                trace_id=self.trace_id,
-            ))
+                    
+                    # Add a delay between retries (increasing with each retry)
+                    await asyncio.sleep(1 * retry_number)
+                
+                conversation_context = await self.format_conversation(
+                    google_ids, 
+                    reference_description, 
+                    documents=documents,
+                )
 
-            # setting the trace id
-            if not self.trace_id:
-                trace_id = result.trace.trace_id
-                self.trace_id = trace_id
-                await self.update_trace_id(chat_id, trace_id)
+                # Create a new run configuration for each attempt
+                run_config = RunConfig(
+                    group_id=chat_id,
+                    trace_id=self.trace_id,
+                )
+                
+                # Run the agent with the current context
+                result = Runner.run_streamed(
+                    self.starting_agent, 
+                    input=conversation_context, 
+                    context=documents, 
+                    hooks=self, 
+                    max_turns=15, 
+                    run_config=run_config
+                )
 
-            async for event in result.stream_events():
-                if event.type == "raw_response_event" and isinstance(event, RawResponsesStreamEvent):
-                    if isinstance(event.data, ResponseTextDeltaEvent):
-                        chunk = event.data.delta
-                        # we need to extract the references from the chunk
-                        cleaned_chunk = clean_references(chunk, documents.references)
-                        await self.stream_callback(cleaned_chunk)
+                # Set trace ID if not already set
+                if not self.trace_id:
+                    trace_id = result.trace.trace_id
+                    self.trace_id = trace_id
+                    await self.update_trace_id(chat_id, trace_id)
 
-            # updating the usage
-            raw_responses = result.raw_responses
-            for response in raw_responses:
-                usage = response.usage
+                # Process streaming events
+                async for event in result.stream_events():
+                    if event.type == "raw_response_event" and isinstance(event, RawResponsesStreamEvent):
+                        if isinstance(event.data, ResponseTextDeltaEvent):
+                            chunk = event.data.delta
+                            cleaned_chunk = clean_references(chunk, documents.references)
+                            await self.stream_callback(cleaned_chunk)
 
-                await self.update_chat_usage(documents.chat_id, documents.profile_id, usage.input_tokens, usage.output_tokens)
-        except Exception as e:
-            logger.error(f"Error in process_message: {str(e)}")
-            raise
+                # Update usage statistics
+                raw_responses = result.raw_responses
+                for response in raw_responses:
+                    usage = response.usage
+                    await self.update_chat_usage(
+                        documents.chat_id, 
+                        documents.profile_id, 
+                        usage.input_tokens, 
+                        usage.output_tokens
+                    )
+                
+                # If we get here, processing was successful
+                return
+                
+            except ModelBehaviorError as e:
+                # Handle model behavior errors (like the tool not found error)
+                error_msg = str(e)
+                logger.error(f"ModelBehaviorError in process_message: {error_msg}")
+                retry_number += 1
+                retry_errors.append(error_msg)
+                
+                # If this was our last retry, send an error message to the user
+                if retry_number >= 3:
+                    await self.stream_callback("\n\nI'm sorry, I encountered an error while processing your request. Please try again with a different question or in a new chat.")
+                    
+            except Exception as e:
+                # Handle other exceptions, including the 499 client closed error
+                error_msg = str(e)
+                logger.error(f"Error in process_message: {error_msg}")
+                
+                # Check if it's a client closed error (499)
+                if "499" in error_msg and "cancelled" in error_msg.lower():
+                    logger.info("Client connection was closed, retrying...")
+                    retry_number += 1
+                    retry_errors.append("Connection was interrupted")
+                    
+                    # If this was our last retry, we'll just let it fail
+                    if retry_number >= 3:
+                        raise
+                else:
+                    # For other errors, just raise them
+                    raise
 
     async def on_handoff(
         self,
@@ -360,28 +426,20 @@ class ChatProcessor(RunHooks):
         if from_agent.name == "Chat Agent":
             if to_agent.name == "Figure Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Creating a figure..."
+                    "status_text": f"Getting ready to create figures..."
                 }).eq("id", message_id).execute()
             elif to_agent.name == "Summary Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Creating summary..."
+                    "status_text": f"Getting ready to create summaries..."
                 }).eq("id", message_id).execute()
             elif to_agent.name == "Question Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Creating question..."
+                    "status_text": f"Getting ready to create questions..."
                 }).eq("id", message_id).execute()
             elif to_agent.name == "Grading Agent":
                 self.supabase_client.table("messages").update({
-                    "status_text": f"Getting ready to grade..."
+                    "status_text": f"Getting ready to grade results..."
                 }).eq("id", message_id).execute()
-
-    async def on_agent_start(
-        self, context: RunContextWrapper[Documents], agent: Agent[Documents]
-    ) -> None:
-        """Called before the agent is invoked. Called each time the current agent changes."""
-        logger.info(f"Starting agent: {agent.name}")
-        for tool in agent.tools:
-            logger.info(f"Tool: {tool.name}")
 
     async def on_agent_end(
         self,

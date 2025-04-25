@@ -13,6 +13,7 @@ import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
 import {
   getPageRanges,
   splitTextByDocuments,
+  splitTextByGenerationTags,
   splitTextByTags,
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -491,12 +492,11 @@ export const MessageList = memo(({
         flex: 1,
         overflowY: "auto",
         marginBottom: "1rem",
-        maxHeight: "calc(100vh - 100px)",
+        // maxHeight: "calc(100vh - 100px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
         transition: "all 0.2s ease-in-out",
         border: isOver ? `2px dashed ${canDrop ? '#228be6' : '#fa5252'}` : '2px solid transparent',
-        backgroundColor: isOver && canDrop ? (colorScheme === "dark" ? 'rgba(34, 139, 230, 0.1)' : 'rgba(34, 139, 230, 0.05)') : 'transparent',
         padding: isOver ? '8px' : '10px',
         display: 'flex',
         flexDirection: 'column',
@@ -595,7 +595,7 @@ export const MessageList = memo(({
                     <Stack gap="xs" style={{ width: "100%" }}>
                       <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
                         <Stack>
-                          {splitTextByTags(splitTextByDocuments(
+                          {splitTextByGenerationTags(splitTextByDocuments(
                             message.response,
                             fileDocuments ?? [],
                           )).map((segment, figIndex) => {
@@ -608,17 +608,17 @@ export const MessageList = memo(({
                                   classId={classId}
                                 />
                               )
-                            } else if (segment.figureIds && figures) {
+                            } else if (segment.figure && figures) {
                               return (
-                                  <FigureViewer key={segment.figureIds?.join('-')} classId={classId} chatId={chatId} figures={figures.filter(f => segment.figureIds?.includes(f.id))} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                  <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
-                            } else if (segment.summaryIds && summaries) {
+                            } else if (segment.summary && summaries) {
                               return (
-                                  <SummaryViewer key={segment.summaryIds?.join('-')} classId={classId} chatId={chatId} summaries={summaries.filter(s => segment.summaryIds?.includes(s.id))} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                  <SummaryViewer key={`summaries-${message.id}`} classId={classId} chatId={chatId} summaries={summaries.filter(s => s.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
-                            } else if (segment.questionIds && questions) {
+                            } else if (segment.question && questions) {
                               return (
-                                  <QuestionViewer key={segment.questionIds.join('-')} classId={classId} chatId={chatId} questions={questions.filter(q => segment.questionIds?.includes(q.id)) ?? []} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                  <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                                 )
                             }
                           })}

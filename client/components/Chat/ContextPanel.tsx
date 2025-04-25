@@ -81,6 +81,10 @@ export function ContextPanel({
     // Initialize lastProgressUpdate state with null
     const [lastProgressUpdate, setLastProgressUpdate] = useState<number | null>(null);
 
+    // Add a state to track if measurements are stable
+    const [measurementsStable, setMeasurementsStable] = useState(false);
+    const measurementCountRef = useRef(0);
+
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
         queryFn: () => getUser(supabase),
@@ -473,13 +477,34 @@ export function ContextPanel({
     const firstChapterItem = allContentItems.find(item => item.type === 'textbooks');
     const firstHomeworkItem = allContentItems.find(item => item.type === 'homeworks');
     const firstOtherItem = allContentItems.find(item => item.type === 'other');
-    // Virtualized list setup
+    // Virtualized list setup with improved measurement
     const rowVirtualizer = useVirtualizer({
         count: allContentItems.length,
         getScrollElement: () => containerRef.current,
-        estimateSize: () => 70, // Approximate height of each item
-        overscan: 5, // Number of items to render outside of the visible area
+        estimateSize: () => 75, // Reduced from 78px to 72px (or even smaller if needed)
+        overscan: 5,
+        measureElement: (element) => {
+            // Get the actual height of the element
+            const height = element.getBoundingClientRect().height;
+            
+            // Track measurement count to determine stability
+            measurementCountRef.current += 1;
+            if (measurementCountRef.current >= allContentItems.length && !measurementsStable) {
+                setMeasurementsStable(true);
+            }
+            
+            return height;
+        },
     });
+
+    // Force a remeasurement when items change
+    useEffect(() => {
+        if (allContentItems.length > 0) {
+            rowVirtualizer.measure();
+            setMeasurementsStable(false);
+            measurementCountRef.current = 0;
+        }
+    }, [allContentItems.length]);
 
     // Connect observer to virtualized items
     useEffect(() => {
@@ -700,16 +725,15 @@ export function ContextPanel({
 
     return (
         <Card
-            shadow="sm"
-            padding="lg"
-            radius="md"
-            withBorder
+            bg="transparent"
             style={{
-                height: "calc(100vh - 100px)",
-                overflowY: "auto"
+                height: "calc(100vh - 90px)",
+                display: "flex",
+                flexDirection: "column"
             }}
+            p="xs"
         >
-            <Stack style={{ height: '100%' }}>
+            <Stack style={{ height: '100%', flex: 1 }}>
                 {isInitializing ? (
                     // Skeleton for search bar and upload button when initializing
                     <Flex justify="space-between" align="center" gap="md">
@@ -717,7 +741,7 @@ export function ContextPanel({
                         <Skeleton height={36} width={36} radius="md" />
                     </Flex>
                 ) : (
-                    <Flex justify="space-between" align="center" gap="md">
+                    <Flex justify="space-between" align="center" gap="md" pt={2}>
                         <TextInput
                             placeholder="Search context..."
                             value={localSearchQuery}
@@ -841,14 +865,12 @@ export function ContextPanel({
                                 height: '100%',
                                 padding: 0,
                                 margin: 0,
-                                // Allow pointer events to pass through when not in active drop state
                                 pointerEvents: 'none',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 flex: 1
                             },
                             inner: {
-                                // This ensures the inner content receives pointer events
                                 pointerEvents: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -881,8 +903,7 @@ export function ContextPanel({
                                     overflow: 'auto',
                                     position: 'relative',
                                     flex: 1,
-                                    display: 'flex',
-                                    flexDirection: 'column'
+                                    paddingBottom: '16px', // Add padding at the bottom of the scroll container
                                 }}
                             >
                                 {/* Add section marker divs for scrolling */}
@@ -892,57 +913,63 @@ export function ContextPanel({
                                 <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
 
                                 {allContentItems.length > 0 ? (
-                                    <div
-                                        style={{
-                                            height: `${rowVirtualizer.getTotalSize()}px`,
-                                            width: '100%',
-                                            position: 'relative'
-                                        }}
-                                    >
-                                        {rowVirtualizer.getVirtualItems().map(virtualRow => {
-                                            const item = allContentItems[virtualRow.index];
-                                            const itemId = `${item.type}-${item.id}`;
-                                            const isItemVisible = visibleItems.has(itemId);
+                                    <>
+                                        <div
+                                            style={{
+                                                height: `${rowVirtualizer.getTotalSize()}px`,
+                                                width: '100%',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                                                const item = allContentItems[virtualRow.index];
+                                                const itemId = `${item.type}-${item.id}`;
+                                                const isItemVisible = visibleItems.has(itemId);
 
-                                            // Add section-specific IDs to the first item of each type
-                                            const isFirstOfType =
-                                                (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
-                                                (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
-                                                (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
-                                                (item.type === 'other' && item.id === firstOtherItem?.id);
+                                                // Add section-specific IDs to the first item of each type
+                                                const isFirstOfType =
+                                                    (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
+                                                    (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
+                                                    (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
+                                                    (item.type === 'other' && item.id === firstOtherItem?.id);
 
-                                            return (
-                                                <div
-                                                    key={itemId}
-                                                    data-id={itemId}
-                                                    id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: `${virtualRow.size}px`,
-                                                        transform: `translateY(${virtualRow.start}px)`,
-                                                    }}
-                                                >
-                                                    <ItemCard
-                                                        item={item}
-                                                        classId={classId}
-                                                        profileId={profile?.id ?? ""}
-                                                        color={item.color}
-                                                        contextType={item.type}
-                                                        addFileToChat={addFileToChat}
-                                                        isVisible={isItemVisible || localSearchQuery.length > 0}
-                                                        makeDraggable={makeDraggable}
-                                                        setViewerMode={setViewerMode}
-                                                        fileDocuments={fileDocuments}
-                                                        onFileDelete={onFileDelete}
-                                                        onReorder={handleReorderFiles}
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                                return (
+                                                    <div
+                                                        key={itemId}
+                                                        data-id={itemId}
+                                                        id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            left: 0,
+                                                            width: '100%',
+                                                            height: `${virtualRow.size}px`,
+                                                            transform: `translateY(${virtualRow.start}px)`,
+                                                            padding: '0 0 2px 0',
+                                                            boxSizing: 'border-box',
+                                                        }}
+                                                    >
+                                                        <ItemCard
+                                                            item={item}
+                                                            classId={classId}
+                                                            profileId={profile?.id ?? ""}
+                                                            color={item.color}
+                                                            contextType={item.type}
+                                                            addFileToChat={addFileToChat}
+                                                            isVisible={isItemVisible || localSearchQuery.length > 0}
+                                                            makeDraggable={makeDraggable}
+                                                            setViewerMode={setViewerMode}
+                                                            fileDocuments={fileDocuments}
+                                                            onFileDelete={onFileDelete}
+                                                            onReorder={handleReorderFiles}
+                                                        />
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        {/* Add a bottom spacer */}
+                                        <div style={{ height: '16px' }} />
+                                    </>
                                 ) : (
                                     <Text 
                                         c="dimmed" 
@@ -964,97 +991,81 @@ export function ContextPanel({
                     </Dropzone>
                 ) : (
                     // Regular non-dropzone version when uploads aren't allowed
-                    <Stack>
-                        {isLoading || isInitializing ? (
-                            // Always show 10 skeleton items when loading or initializing
-                            <Stack>
-                                {Array(10).fill(0).map((_, i) => (
-                                    <Card key={i} shadow="xs" p="xs" radius="md" withBorder>
-                                        <Group>
-                                            <Skeleton width={40} height={40} radius="md" />
-                                            <Stack style={{ flex: 1 }}>
-                                                <Skeleton height={12} width="60%" />
-                                                <Skeleton height={8} width="40%" />
-                                            </Stack>
-                                        </Group>
-                                    </Card>
-                                ))}
-                            </Stack>
-                        ) : (
+                    <div
+                        ref={containerRef}
+                        style={{
+                            height: "100%",
+                            overflow: 'auto',
+                            position: 'relative',
+                            flex: 1
+                        }}
+                    >
+                        {/* Add section marker divs for scrolling */}
+                        <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+
+                        {allContentItems.length > 0 ? (
                             <div
-                                ref={containerRef}
                                 style={{
-                                    height: "calc(100vh - 100px)",
-                                    overflow: 'auto',
+                                    height: `${rowVirtualizer.getTotalSize()}px`,
+                                    width: '100%',
                                     position: 'relative'
                                 }}
                             >
-                                {/* Add section marker divs for scrolling */}
-                                <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                                <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                                <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
-                                <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                                {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                                    const item = allContentItems[virtualRow.index];
+                                    const itemId = `${item.type}-${item.id}`;
+                                    const isItemVisible = visibleItems.has(itemId);
 
-                                {allContentItems.length > 0 ? (
-                                    <div
-                                        style={{
-                                            height: `${rowVirtualizer.getTotalSize()}px`,
-                                            width: '100%',
-                                            position: 'relative'
-                                        }}
-                                    >
-                                        {rowVirtualizer.getVirtualItems().map(virtualRow => {
-                                            const item = allContentItems[virtualRow.index];
-                                            const itemId = `${item.type}-${item.id}`;
-                                            const isItemVisible = visibleItems.has(itemId);
+                                    // Add section-specific IDs to the first item of each type
+                                    const isFirstOfType =
+                                        (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
+                                        (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
+                                        (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
+                                        (item.type === 'other' && item.id === firstOtherItem?.id);
 
-                                            // Add section-specific IDs to the first item of each type
-                                            const isFirstOfType =
-                                                (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
-                                                (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
-                                                (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
-                                                (item.type === 'other' && item.id === firstOtherItem?.id);
-
-                                            return (
-                                                <div
-                                                    key={itemId}
-                                                    data-id={itemId}
-                                                    id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: `${virtualRow.size}px`,
-                                                        transform: `translateY(${virtualRow.start}px)`,
-                                                    }}
-                                                >
-                                                    <ItemCard
-                                                        item={item}
-                                                        classId={classId}
-                                                        profileId={profile?.id ?? ""}
-                                                        color={item.color}
-                                                        contextType={item.type}
-                                                        addFileToChat={addFileToChat}
-                                                        isVisible={isItemVisible || localSearchQuery.length > 0}
-                                                        makeDraggable={makeDraggable}
-                                                        setViewerMode={setViewerMode}
-                                                        fileDocuments={fileDocuments}
-                                                        onFileDelete={onFileDelete}
-                                                        onReorder={handleReorderFiles}
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                ) : (
-                                    <Text c="dimmed" ta="center" py="md">
-                                        {localSearchQuery ? "No results found" : "No content available"}
-                                    </Text>
-                                )}
+                                    return (
+                                        <div
+                                            key={itemId}
+                                            data-id={itemId}
+                                            id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: `${virtualRow.size}px`,
+                                                transform: `translateY(${virtualRow.start}px)`,
+                                                padding: '0 0 2px 0',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        >
+                                            <ItemCard
+                                                item={item}
+                                                classId={classId}
+                                                profileId={profile?.id ?? ""}
+                                                color={item.color}
+                                                contextType={item.type}
+                                                addFileToChat={addFileToChat}
+                                                isVisible={isItemVisible || localSearchQuery.length > 0}
+                                                makeDraggable={makeDraggable}
+                                                setViewerMode={setViewerMode}
+                                                fileDocuments={fileDocuments}
+                                                onFileDelete={onFileDelete}
+                                                onReorder={handleReorderFiles}
+                                            />
+                                        </div>
+                                    );
+                                })}
                             </div>
+                        ) : (
+                            <Text c="dimmed" ta="center" py="md">
+                                {localSearchQuery ? "No results found" : "No content available"}
+                            </Text>
                         )}
-                    </Stack>
+                    </div>
                 )}
             </Stack>
 

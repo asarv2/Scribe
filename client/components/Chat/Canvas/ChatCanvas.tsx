@@ -305,23 +305,22 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
 
     return (
         <Container fluid>
-            <Grid>
+            <Grid p={0}>
                 <Grid.Col
                     span={isMobile ? 12 : viewerMode.open ? 8 : 12}
                     style={{
                         transition: 'width 300ms ease-in-out, flex 300ms ease-in-out',
                     }}
+                    p={0}
                 >
                     <Card
-                        shadow={"md"}
-                        withBorder
-                        padding={"lg"}
-                        radius={"md"}
-                        h="calc(100vh - 100px)"
-                        style={{ position: 'relative' }}
+                        h="calc(100vh - 75px)"
+                        style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}
+                        p="xs"
+                        bg="transparent"
                     >
                         {/* Replace the ActionIcon with a direct icon that sits on the border */}
-                        <Tooltip label={viewerMode.open ? `Close menu (${getShortcutText()})` : `Open menu (${getShortcutText()})`} openDelay={500}>
+                        {/* <Tooltip label={viewerMode.open ? `Close menu (${getShortcutText()})` : `Open menu (${getShortcutText()})`} openDelay={500}>
                             <Box
                                 onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
                                 style={{
@@ -349,7 +348,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                     <IconChevronLeft size={18} style={{ position: 'relative', right: '-2px' }} />
                                 }
                             </Box>
-                        </Tooltip>
+                        </Tooltip> */}
                         {/* Show controls only when not in immersive mode */}
                         <Flex justify="space-between" align="center" mb={10}>
                             {isInitializing ? (
@@ -461,6 +460,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                         transition: 'width 300ms ease-in-out, flex 300ms ease-in-out',
 
                     }}
+                    p={0}
                 >
                     {viewerMode.active ? (
                         <ViewerPanel

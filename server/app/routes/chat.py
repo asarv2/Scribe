@@ -85,18 +85,6 @@ async def handle_chat(
             
             return chunk
         
-        async def remove_callback(chunk: str):
-            total_response = total_response.replace(chunk, '')
-
-            # Update Supabase with the sanitized version
-            supabase_client.table("messages").update({
-                "bare_response": total_response,
-                "response": total_response,
-                "generation_status": "generating"
-            }).eq("id", message_id).execute()
-
-            return chunk
-        
         async def update_trace_id(chat_id: str, trace_id: str):
             supabase_client.table("chats").update({
                 "trace": trace_id
@@ -118,7 +106,6 @@ async def handle_chat(
             past_messages=past_messages,
             trace_id=trace_id,
             stream_callback=update_callback,
-            remove_callback=remove_callback,
             update_trace_id=update_trace_id,
             update_chat_usage=update_chat_usage
         )

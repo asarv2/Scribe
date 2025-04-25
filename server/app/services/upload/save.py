@@ -57,6 +57,12 @@ class FileSaver:
         try:
             logger.info(f"Saving document: type={extract_chunk.type}, has_image={bool(extract_chunk.image_data)}, start_time={extract_chunk.start_time}, end_time={extract_chunk.end_time}")
             
+            # Check if video/audio chunk paths exist
+            if extract_chunk.video_chunk_path and not os.path.exists(extract_chunk.video_chunk_path):
+                logger.error(f"Video chunk path does not exist: {extract_chunk.video_chunk_path}")
+            if extract_chunk.audio_chunk_path and not os.path.exists(extract_chunk.audio_chunk_path):
+                logger.error(f"Audio chunk path does not exist: {extract_chunk.audio_chunk_path}")
+            
             # construct document data, depending on the type of file
             if extract_chunk.type == 'pdf_page':
                 document_data = {
@@ -149,16 +155,18 @@ class FileSaver:
                 
                 try:
                     with open(extract_chunk.video_chunk_path, 'rb') as f:
-                        upload_result = self.supabase.storage.from_("files").upload(
-                            path=storage_path,
-                            file=f,
-                            file_options={"content-type": "video/mp4"}
-                        )
+                        video_data = f.read()  # Read into memory first
+                        
+                    upload_result = self.supabase.storage.from_("files").upload(
+                        path=storage_path,
+                        file=video_data,
+                        file_options={"content-type": "video/mp4"}
+                    )
                     logger.info(f"Video chunk upload successful: {upload_result}")
                 except Exception as upload_error:
                     logger.error(f"Video chunk upload failed: {str(upload_error)}")
             else:
-                logger.warning(f"No video chunk provided for document {document_id}")
+                logger.warning(f"No video chunk provided for document {document_id} or path doesn't exist")
             
             # Upload audio chunk if provided
             if extract_chunk.audio_chunk_path and os.path.exists(extract_chunk.audio_chunk_path):
@@ -167,16 +175,18 @@ class FileSaver:
                 
                 try:
                     with open(extract_chunk.audio_chunk_path, 'rb') as f:
-                        upload_result = self.supabase.storage.from_("files").upload(
-                            path=storage_path,
-                            file=f,
-                            file_options={"content-type": "audio/wav"}
-                        )
+                        audio_data = f.read()  # Read into memory first
+                        
+                    upload_result = self.supabase.storage.from_("files").upload(
+                        path=storage_path,
+                        file=audio_data,
+                        file_options={"content-type": "audio/wav"}
+                    )
                     logger.info(f"Audio chunk upload successful: {upload_result}")
                 except Exception as upload_error:
                     logger.error(f"Audio chunk upload failed: {str(upload_error)}")
             else:
-                logger.warning(f"No audio chunk provided for document {document_id}")
+                logger.warning(f"No audio chunk provided for document {document_id} or path doesn't exist")
             
             return document_id
             

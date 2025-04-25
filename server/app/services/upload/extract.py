@@ -114,6 +114,11 @@ class FileExtractor:
                     num_chunks = max(1, int(duration / chunk_duration) + (1 if duration % chunk_duration > 0 else 0))
                     logger.info(f"Splitting into {num_chunks} chunks of {chunk_duration}s each")
                     
+                    # Create persistent directory BEFORE processing any chunks
+                    permanent_chunk_dir = PERSIST_ROOT / Path(file_path).stem
+                    permanent_chunk_dir.mkdir(parents=True, exist_ok=True)
+                    logger.info(f"Created persistent directory: {permanent_chunk_dir}")
+                    
                     # Process each chunk
                     for i in range(num_chunks):
                         start_time = i * chunk_duration
@@ -127,6 +132,7 @@ class FileExtractor:
                         # Create a path for this chunk
                         chunk_filename = f"chunk_{i:03d}.{'mp4' if is_video else 'wav'}"
                         chunk_path = os.path.join(temp_dir, chunk_filename)
+                        permanent_chunk_path = permanent_chunk_dir / chunk_filename
                         
                         try:
                             # Extract the chunk using ffmpeg
@@ -134,21 +140,17 @@ class FileExtractor:
                                 cmd = [
                                     "ffmpeg", "-y", "-ss", str(start_time), "-t", str(end_time - start_time),
                                     "-i", file_path, "-c:v", "libx264", "-c:a", "aac", "-strict", "experimental",
-                                    "-b:a", "128k", "-movflags", "+faststart", chunk_path
+                                    "-b:a", "128k", "-movflags", "+faststart", str(permanent_chunk_path)
                                 ]
                             else:
                                 cmd = [
                                     "ffmpeg", "-y", "-ss", str(start_time), "-t", str(end_time - start_time),
-                                    "-i", file_path, "-ac", "1", "-ar", "16000", chunk_path
+                                    "-i", file_path, "-ac", "1", "-ar", "16000", str(permanent_chunk_path)
                                 ]
                             
+                            # Write directly to the permanent path instead of copying later
                             subprocess.run(cmd, check=True, capture_output=True, timeout=60)
-                            
-                            # 1. Create persistent location BEFORE transcription
-                            permanent_chunk_dir = PERSIST_ROOT / Path(file_path).stem
-                            permanent_chunk_dir.mkdir(parents=True, exist_ok=True)
-                            permanent_chunk_path = permanent_chunk_dir / chunk_filename
-                            shutil.copy2(chunk_path, permanent_chunk_path)
+                            logger.info(f"Created chunk directly at permanent path: {permanent_chunk_path}")
                             
                             # Update progress - transcription phase (15-85%)
                             if progress_callback:
@@ -163,7 +165,7 @@ class FileExtractor:
                                 torch.cuda.empty_cache()
                                 logger.info(f"Cleared CUDA cache before transcribing chunk {i+1}/{num_chunks}")
                             
-                            # 2. Transcribe from the persistent copy
+                            # Transcribe from the permanent path
                             result = whisper_model.transcribe(str(permanent_chunk_path))
                             text = result.get("text", "").strip()
                             
@@ -171,12 +173,12 @@ class FileExtractor:
                             img_data = None
                             if is_video:
                                 # Extract a frame from the video chunk
-                                img_data = self._extract_video_frame(chunk_path, 0)
+                                img_data = self._extract_video_frame(str(permanent_chunk_path), 0)
                             else:
                                 # Generate audio waveform for audio chunk
-                                img_data = self._generate_audio_waveform(chunk_path, 0, end_time - start_time)
+                                img_data = self._generate_audio_waveform(str(permanent_chunk_path), 0, end_time - start_time)
                             
-                            # 3. Create chunk with the persistent path
+                            # Create chunk with the persistent path
                             chunk = FileExtractChunk(
                                 text=text,
                                 page=i + 1,

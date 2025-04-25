@@ -126,7 +126,7 @@ const GradeViewer: React.FC<GradeViewerProps> = ({ classId, chatId, grade, viewe
                 viewerMode={viewerMode}
                 handleEnhancedDocumentClick={handleEnhancedDocumentClick}
                 fileDocuments={fileDocuments ?? []}
-                full={true}
+                showDownloadMenu={false}
             />
         );
     }

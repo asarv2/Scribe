@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@function_tool()
+
 async def update_chat_title(wrapper: RunContextWrapper[Documents], title: str) -> str:
     """Update the chat title. Will return a True as boolean if it was able to sucessfully update the chat title and the string will contain the id of the updated chat title. If unsuccessful, the boolean will be false adn the string will contain the error message.
 

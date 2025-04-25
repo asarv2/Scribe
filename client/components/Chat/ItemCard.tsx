@@ -167,11 +167,12 @@ export default function ItemCard({
             radius="md"
             withBorder
             style={{
-                marginBottom: '8px',
                 cursor: makeDraggable ? 'grab' : 'pointer',
                 transition: 'all 0.2s ease',
                 borderLeft: `3px solid var(--mantine-color-${color}-filled)`,
                 backgroundColor: isOver ? 'var(--mantine-color-blue-light)' : undefined,
+                boxSizing: 'border-box',
+                width: '100%',
             }}
             onClick={(e) => {
                 e.stopPropagation();

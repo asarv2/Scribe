@@ -143,8 +143,18 @@ export default function FileViewer({
     useEffect(() => {
         if (activeDocumentId) {
             const element = document.getElementById(`document-${activeDocumentId}`);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const container = document.querySelector('[data-viewer-container="true"]');
+            
+            if (element && container) {
+                // Cast to HTMLElement to access offsetTop property
+                const htmlElement = element as HTMLElement;
+                const htmlContainer = container as HTMLElement;
+                
+                // Only scroll within the container, not the whole page
+                htmlContainer.scrollTo({
+                    top: htmlElement.offsetTop - htmlContainer.offsetTop,
+                    behavior: 'smooth'
+                });
             }
         }
     }, [activeDocumentId]);
@@ -152,6 +162,7 @@ export default function FileViewer({
     return (
         <>
             <Box
+                data-viewer-container="true"
                 style={{
                     height: '100%',
                     width: '100%',

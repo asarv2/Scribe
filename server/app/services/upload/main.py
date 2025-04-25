@@ -82,6 +82,11 @@ class FileProcessor:
             file_type = file_data.get("type")
             logger.info(f"File type from database: {file_type}")
             
+            # Create persistent directory for this file early
+            persist_dir = PERSIST_ROOT / Path(file_path).stem
+            persist_dir.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Created persistent directory: {persist_dir}")
+            
             # Compress the file
             compressed_dir = os.path.join(os.path.dirname(file_path), "compressed")
             logger.info(f"Compressing file: {file_path} -> {compressed_dir}")
@@ -143,6 +148,13 @@ class FileProcessor:
             # Save each chunk as a document
             for i, result in enumerate(results):
                 logger.info(f"Saving document {i+1}/{len(results)}: type={result.type}, has_image={bool(result.image_data)}")
+                
+                # Verify paths exist before saving
+                if result.video_chunk_path and not os.path.exists(result.video_chunk_path):
+                    logger.error(f"Video chunk path does not exist: {result.video_chunk_path}")
+                if result.audio_chunk_path and not os.path.exists(result.audio_chunk_path):
+                    logger.error(f"Audio chunk path does not exist: {result.audio_chunk_path}")
+                    
                 doc_id = self.saver.save_document(class_id, file_id, result)
                 if doc_id:
                     logger.info(f"Document saved successfully: {doc_id}")
@@ -201,13 +213,18 @@ class FileProcessor:
             # Return error
             return False, f"Error processing file: {str(e)}"
         finally:
-            # Remove the persistent chunks
+            # Only remove the persistent chunks if processing was successful
             try:
                 persist_dir = PERSIST_ROOT / Path(compressed_file_path).stem
-                shutil.rmtree(persist_dir, ignore_errors=True)
-                logger.info(f"Removed persistent chunks: {persist_dir}")
+                if os.path.exists(persist_dir):
+                    # Don't delete immediately - wait until after documents are saved
+                    # Only uncomment this if you're sure you want to delete the chunks
+                    # shutil.rmtree(persist_dir, ignore_errors=True)
+                    logger.info(f"Note: Keeping persistent chunks at: {persist_dir}")
+                else:
+                    logger.warning(f"Persistent directory not found: {persist_dir}")
             except Exception as e:
-                logger.warning(f"Could not remove {persist_dir}: {e}")
+                logger.warning(f"Could not handle {persist_dir}: {e}")
             # Clear the current file ID
             self.current_file_id = None
 

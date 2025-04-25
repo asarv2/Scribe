@@ -24,7 +24,7 @@ interface FigureViewerProps {
   viewerMode: ViewerMode;
   fileDocuments: Document[],
   handleEnhancedDocumentClick: (fileId: string, documentId?: string) => void;
-  full?: boolean;
+  showDownloadMenu?: boolean;
 }
 
 export default function FigureViewer({
@@ -34,9 +34,10 @@ export default function FigureViewer({
   viewerMode,
   handleEnhancedDocumentClick,
   fileDocuments,
-  full = false
+  showDownloadMenu = true
 }: FigureViewerProps) {
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadFormat, setDownloadFormat] = useState<'png' | 'pdf' | 'latex' | null>(null);
   const [svgFailed, setSvgFailed] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
@@ -100,143 +101,97 @@ export default function FigureViewer({
   };
 
   const handleDownload = (format: 'png' | 'pdf' | 'latex', downloadAll: boolean = false) => {
-    // If downloadAll is true, we need to download all figures
-    if (downloadAll) {
-      // We'll download figures one by one
-      setDownloadLoading(true);
-      
-      // Create a promise for each figure download
-      const downloadPromises = getValidFigures(figures).map((fig, index) => {
-        return new Promise((resolve, reject) => {
-          const downloadUrl = getFigureDownloadUrl(chatId, [fig.id], format);
-          
-          fetch(downloadUrl, {
-            headers: {
-              'ngrok-skip-browser-warning': 'true'
-            }
-          })
-          .then(response => {
-            const contentDisposition = response.headers.get('Content-Disposition');
-            let filename = `figure-${index + 1}.${format === 'latex' ? 'tex' : format}`;
-            
-            if (fig.title) {
-              filename = `${fig.title}.${format === 'latex' ? 'tex' : format}`;
-            }
-            
-            if (contentDisposition) {
-              const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-              if (filenameMatch && filenameMatch[1]) {
-                filename = filenameMatch[1].replace(/['"]/g, '');
-              }
-            }
-            
-            return response.blob().then(blob => ({ blob, filename }));
-          })
-          .then(({ blob, filename }) => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.style.display = 'none';
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(link);
-            resolve(true);
-          })
-          .catch(error => {
-            console.error(`Download failed for figure ${index + 1}:`, error);
-            reject(error);
-          });
-        });
-      });
-      
-      // Wait for all downloads to complete
-      Promise.allSettled(downloadPromises)
-        .then(results => {
-          const successful = results.filter(r => r.status === 'fulfilled').length;
-          const failed = results.filter(r => r.status === 'rejected').length;
-          
-          if (failed === 0) {
-            notifications.show({
-              title: 'Download complete',
-              message: `All ${successful} figures have been downloaded as ${format.toUpperCase()}`,
-              color: 'green',
-            });
-          } else {
-            notifications.show({
-              title: 'Download partially complete',
-              message: `${successful} figures downloaded, ${failed} failed`,
-              color: 'yellow',
-            });
-          }
-        })
-        .finally(() => {
-          setDownloadLoading(false);
-        });
-      
-      return;
-    }
-    
-    // Single figure download (existing code)
-    const downloadUrl = getFigureDownloadUrl(chatId, [figure.id], format);
-    
+    setDownloadFormat(format);
     setDownloadLoading(true);
-    
-    // Fetch the file with the ngrok-skip-browser-warning header
+
+    // If downloadAll is true or we have multiple figures, download all figures
+    const figureIds = downloadAll ?
+      getValidFigures(figures).map(fig => fig.id) :
+      [getValidFigures(figures)[currentIndex].id];
+
+    const downloadUrl = getFigureDownloadUrl(chatId, figureIds, format);
+    console.log(`Downloading from URL: ${downloadUrl}`);
+    console.log(`Format: ${format}, Download All: ${downloadAll}, Figure IDs: ${figureIds.join(', ')}`);
+
     fetch(downloadUrl, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
     })
-    .then(response => {
-      // Get filename from Content-Disposition header if available
-      const contentDisposition = response.headers.get('Content-Disposition');
-      let filename = `${figure.title || 'figure'}.${format === 'latex' ? 'tex' : format}`;
-      
-      if (contentDisposition) {
-        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-        if (filenameMatch && filenameMatch[1]) {
-          filename = filenameMatch[1].replace(/['"]/g, '');
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
         }
-      }
-      
-      return response.blob().then(blob => ({ blob, filename }));
-    })
-    .then(({ blob, filename }) => {
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
-      
-      // Create a hidden anchor element
-      const link = document.createElement('a');
-      link.style.display = 'none';
-      link.href = url;
-      link.download = filename;
-      
-      // Append to the document, click it, and remove it
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-      
-      notifications.show({
-        title: 'Download complete',
-        message: `${format.toUpperCase()} file has been downloaded`,
-        color: 'green',
+
+        // Get filename from Content-Disposition header if available
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const contentType = response.headers.get('Content-Type');
+        console.log(`Content-Type: ${contentType}`);
+        console.log(`Content-Disposition: ${contentDisposition}`);
+        
+        let filename = `figure.${format === 'latex' ? 'tex' : format}`;
+        if (downloadAll && format === 'png') {
+          filename = 'figures.zip';  // Ensure zip extension for multiple PNGs
+        }
+
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+          if (filenameMatch && filenameMatch[1]) {
+            filename = filenameMatch[1].replace(/['"]/g, '');
+            console.log(`Extracted filename: ${filename}`);
+          }
+        }
+
+        return response.blob().then(blob => {
+          console.log(`Blob type: ${blob.type}, size: ${blob.size} bytes`);
+          return { blob, filename };
+        });
+      })
+      .then(({ blob, filename }) => {
+        // For zip files, ensure the correct extension
+        if (blob.type === 'application/zip' || 
+            (downloadAll && format === 'png') || 
+            filename.endsWith('.zip')) {
+          if (!filename.endsWith('.zip')) {
+            filename = `${filename}.zip`;
+          }
+        }
+        
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a hidden anchor element
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = url;
+        link.download = filename;
+        console.log(`Downloading as: ${filename}`);
+
+        // Append to the document, click it, and remove it
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+
+        notifications.show({
+          title: 'Download complete',
+          message: `${format.toUpperCase()}${downloadAll ? ' (all figures)' : ''} has been downloaded`,
+          color: 'green',
+        });
+      })
+      .catch(error => {
+        console.error('Download failed:', error);
+        notifications.show({
+          title: 'Download failed',
+          message: `Failed to download the figure: ${error.message}`,
+          color: 'red',
+        });
+      })
+      .finally(() => {
+        setDownloadLoading(false);
+        setDownloadFormat(null);
       });
-    })
-    .catch(error => {
-      console.error('Download failed:', error);
-      notifications.show({
-        title: 'Download failed',
-        message: 'Failed to download the figure',
-        color: 'red',
-      });
-    })
-    .finally(() => {
-      setDownloadLoading(false);
-    });
-  }
+  };
 
   const renderContent = () => {
     switch (figure.generation_status) {
@@ -332,36 +287,105 @@ export default function FigureViewer({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       shadow='none'
+      style={{ position: 'relative' }}
     >
-      {getValidFigures(figures).length > 1 && (
+      {getValidFigures(figures).length > 1 ? (
         <Group justify="space-between" mb="md">
           <Group>
-            <ActionIcon
-              disabled={currentIndex === 0}
-              onClick={handlePrevious}
-              variant="subtle"
-            >
-              <IconChevronLeft size={20} />
-            </ActionIcon>
+            <Group>
+              <ActionIcon
+                disabled={currentIndex === 0}
+                onClick={handlePrevious}
+                variant="subtle"
+              >
+                <IconChevronLeft size={20} />
+              </ActionIcon>
 
-            <Text size="sm">Figure {currentIndex + 1} of {getValidFigures(figures).length}</Text>
+              <Text size="sm">Figure {currentIndex + 1} of {getValidFigures(figures).length}</Text>
 
-            <ActionIcon
-              disabled={currentIndex === getValidFigures(figures).length - 1}
-              onClick={handleNext}
-              variant="subtle"
-            >
-              <IconChevronRight size={20} />
-            </ActionIcon>
+              <ActionIcon
+                disabled={currentIndex === getValidFigures(figures).length - 1}
+                onClick={handleNext}
+                variant="subtle"
+              >
+                <IconChevronRight size={20} />
+              </ActionIcon>
+            </Group>
+            <Text size="sm" c="dimmed">{figure.title}</Text>
           </Group>
-          
-          {/* Download menu moved here to match SummaryViewer layout */}
-          <Menu position="bottom-end" shadow="md">
+
+          {showDownloadMenu && <Menu position="bottom-end" shadow="md">
             <Menu.Target>
-              <Tooltip label="Download Figure">
+              <Tooltip label={downloadLoading ? `Downloading ${downloadFormat?.toUpperCase()}...` : "Download Figure"}>
                 <ActionIcon
                   variant="subtle"
                   size="md"
+                  loading={downloadLoading}
+                >
+                  <IconDownload size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>Current Figure</Menu.Label>
+              <Menu.Item
+                leftSection={<IconFile size={14} />}
+                onClick={() => handleDownload('png', false)}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 'PNG Image'}
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconFileTypePdf size={14} />}
+                onClick={() => handleDownload('pdf', false)}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'PDF Document'}
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconFileTypography size={14} />}
+                onClick={() => handleDownload('latex', false)}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'LaTeX Source'}
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Label>All Figures</Menu.Label>
+              <Menu.Item
+                leftSection={<IconFile size={14} />}
+                onClick={() => handleDownload('png', true)}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 
+                 figures.length > 1 ? 'PNG Images (ZIP)' : 'PNG Image'}
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconFileTypePdf size={14} />}
+                onClick={() => handleDownload('pdf', true)}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'Combined PDF'}
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconFileTypography size={14} />}
+                onClick={() => handleDownload('latex', true)}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'Combined LaTeX'}
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>}
+        </Group>
+      ) : (
+        /* Download menu for single figure */
+        <Box style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10 }}>
+          {showDownloadMenu  && <Menu position="bottom-end" shadow="md">
+            <Menu.Target>
+              <Tooltip label={downloadLoading ? `Downloading ${downloadFormat?.toUpperCase()}...` : "Download Figure"}>
+                <ActionIcon
+                  variant="subtle"
+                  size="md"
+                  loading={downloadLoading}
                 >
                   <IconDownload size={18} />
                 </ActionIcon>
@@ -369,100 +393,30 @@ export default function FigureViewer({
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>Download as</Menu.Label>
-              {getValidFigures(figures).length > 1 ? (
-                <>
-                  <Menu.Label>Current Figure</Menu.Label>
-                  <Menu.Item
-                    leftSection={<IconFile size={14} />}
-                    onClick={() => {
-                      handleDownload('png', false);
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'PNG Image'}
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFileTypePdf size={14} />}
-                    onClick={() => {
-                      handleDownload('pdf', false);
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFileTypography size={14} />}
-                    onClick={() => {
-                      handleDownload('latex', false);
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Label>All Figures</Menu.Label>
-                  <Menu.Item
-                    leftSection={<IconFile size={14} />}
-                    onClick={() => {
-                      handleDownload('png', true);
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'PNG Images'}
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFileTypePdf size={14} />}
-                    onClick={() => {
-                      handleDownload('pdf', true);
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'PDF Documents'}
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFileTypography size={14} />}
-                    onClick={() => {
-                      handleDownload('latex', true);
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'LaTeX Sources'}
-                  </Menu.Item>
-                </>
-              ) : (
-                <>
-                  <Menu.Item
-                    leftSection={<IconFile size={14} />}
-                    onClick={() => {
-                      handleDownload('png');
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'PNG Image'}
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFileTypePdf size={14} />}
-                    onClick={() => {
-                      handleDownload('pdf');
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFileTypography size={14} />}
-                    onClick={() => {
-                      handleDownload('latex');
-                    }}
-                    disabled={downloadLoading}
-                  >
-                    {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                  </Menu.Item>
-                </>
-              )}
+              <Menu.Item
+                leftSection={<IconFile size={14} />}
+                onClick={() => handleDownload('png')}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 'PNG Image'}
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconFileTypePdf size={14} />}
+                onClick={() => handleDownload('pdf')}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'PDF Document'}
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconFileTypography size={14} />}
+                onClick={() => handleDownload('latex')}
+                disabled={downloadLoading}
+              >
+                {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'LaTeX Source'}
+              </Menu.Item>
             </Menu.Dropdown>
-          </Menu>
-        </Group>
+          </Menu>}
+        </Box>
       )}
 
       {renderContent()}

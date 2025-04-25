@@ -150,7 +150,7 @@ class QuestionsDownloader:
         """
         geometry_options = {
             "margin": "1in",
-            "headheight": "14pt",
+            "headheight": "15pt",  # Increased from 14pt to fix fancyhdr warning
             "headsep": "25pt"
         }
         doc = Document(geometry_options=geometry_options, document_options=["12pt"])
@@ -161,6 +161,20 @@ class QuestionsDownloader:
         
         # Add xcolor package with dvipsnames option for additional colors
         doc.packages.append(Package('xcolor', options=['dvipsnames']))
+        
+        # Add caption package for captionof command
+        doc.packages.append(Package('caption'))
+        
+        # Add tikz and pgfplots for figures
+        doc.packages.append(Package('tikz'))
+        doc.packages.append(Package('pgfplots'))
+        doc.preamble.append(NoEscape(r'\pgfplotsset{compat=1.18}'))
+        
+        # Add graphicx package for images
+        doc.packages.append(Package('graphicx'))
+        
+        # Add minipage support
+        doc.packages.append(Package('float'))
 
         # Use the chat title as the document title
         doc.preamble.append(Command('title', self.chat_title))
@@ -318,7 +332,28 @@ class QuestionsDownloader:
 
     def _process_question_part(self, doc, part):
         """Process a single question part with proper LaTeX formatting"""
-        # Process the question text for LaTeX compatibility
+        # First, check if there are any figures to include
+        if 'figures' in part and part['figures']:
+            # Process each figure before the question text
+            for figure_id in part['figures']:
+                try:
+                    from app.extensions import get_supabase
+                    supabase_client = get_supabase()
+                    figure_response = supabase_client.table("figures").select("*").eq("id", figure_id).execute()
+                    
+                    if figure_response.data:
+                        figure = figure_response.data[0]
+                        figure_code = figure.get('code', '')
+                        figure_title = figure.get('title', 'Figure')
+                        
+                        # Add the figure code directly to the document
+                        doc.append(NoEscape(figure_code))
+                        doc.append(NoEscape(r'\captionof{figure}{' + figure_title + '}'))
+                        doc.append(NoEscape(r'\vspace{1em}'))
+                except Exception as e:
+                    logger.error(f"Error including figure {figure_id}: {str(e)}")
+        
+        # Add the question text after any figures with the item command
         doc.append(NoEscape(f'\\item {self._clean_content(part["question"])}'))
         
         # Only process options for MCQ questions
@@ -334,7 +369,28 @@ class QuestionsDownloader:
 
     def _process_answer_part(self, doc, part):
         """Process a single answer part with proper LaTeX formatting"""
-        # Process the question text for LaTeX compatibility
+        # First, check if there are any figures to include
+        if 'figures' in part and part['figures']:
+            # Process each figure before the question text
+            for figure_id in part['figures']:
+                try:
+                    from app.extensions import get_supabase
+                    supabase_client = get_supabase()
+                    figure_response = supabase_client.table("figures").select("*").eq("id", figure_id).execute()
+                    
+                    if figure_response.data:
+                        figure = figure_response.data[0]
+                        figure_code = figure.get('code', '')
+                        figure_title = figure.get('title', 'Figure')
+                        
+                        # Add the figure code directly to the document
+                        doc.append(NoEscape(figure_code))
+                        doc.append(NoEscape(r'\captionof{figure}{' + figure_title + '}'))
+                        doc.append(NoEscape(r'\vspace{1em}'))
+                except Exception as e:
+                    logger.error(f"Error including figure {figure_id}: {str(e)}")
+        
+        # Add the question text after any figures with the item command
         doc.append(NoEscape(f'\\item {self._clean_content(part["question"])}'))
         
         if part.get("question_type") == "mcq" and "options" in part:
@@ -342,13 +398,13 @@ class QuestionsDownloader:
             
             for idx, option_text in enumerate(part['options']):
                 explanation = part['explanations'][idx] if idx < len(part.get('explanations', [])) else ""
-                is_correct = part['options'][idx] in part.get('answers', [])
+                is_correct = str(idx) in part['answers']
                 
                 if is_correct:
                     doc.append(NoEscape(f'\\item \\correct{{{self._clean_content(explanation)}}}'))
                 else:
                     doc.append(NoEscape(f'\\item \\incorrect{{{self._clean_content(explanation)}}}'))
-            
+        
             doc.append(NoEscape(r'\end{enumerate}'))
         elif part.get("question_type") == "frq" and "solution" in part:
             doc.append(NoEscape(f'Solution: {self._clean_content(part["solution"])}'))

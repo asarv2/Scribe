@@ -323,3 +323,105 @@ export const getPageRanges = (documents: Document[]): { startDocument: Document 
 
     return pageRanges;
 };
+
+// Split text by generation placeholder tags
+export const splitTextByGenerationTags = (text: string): Array<{ 
+    text: string | null; 
+    figure: boolean; 
+    summary: boolean; 
+    question: boolean 
+}> => {
+    if (!text) return [];
+
+    const result: Array<{ 
+        text: string | null; 
+        figure: boolean; 
+        summary: boolean; 
+        question: boolean 
+    }> = [];
+    
+    // Use regex to extract generation placeholder tags
+    const tagPattern = /<(FIGURE|SUMMARY|QUESTION)_GENERATING>/g;
+    let lastIndex = 0;
+    let match;
+    
+    // First, collect all text segments and tags in order
+    const segments: Array<{
+        type: 'text' | 'figure' | 'summary' | 'question';
+        index: number;
+    }> = [];
+    
+    while ((match = tagPattern.exec(text)) !== null) {
+        const [fullMatch, tagType] = match;
+        const startIndex = match.index;
+        
+        // Add text before the tag if there is any
+        if (startIndex > lastIndex) {
+            segments.push({
+                type: 'text',
+                index: lastIndex
+            });
+        }
+        
+        // Add the tag type
+        segments.push({
+            type: tagType === 'FIGURE' ? 'figure' : 
+                  tagType === 'SUMMARY' ? 'summary' : 'question',
+            index: startIndex
+        });
+        
+        lastIndex = startIndex + fullMatch.length;
+    }
+    
+    // Add any remaining text after the last tag
+    if (lastIndex < text.length) {
+        segments.push({
+            type: 'text',
+            index: lastIndex
+        });
+    }
+    
+    // Process segments to create result objects
+    for (let i = 0; i < segments.length; i++) {
+        const segment = segments[i];
+        
+        if (segment.type === 'text') {
+            // Get the text content from the original string
+            const nextIndex = i + 1 < segments.length ? segments[i + 1].index : text.length;
+            const content = text.slice(segment.index, nextIndex);
+            
+            // Only add text segments if they contain non-whitespace content
+            if (content.trim() !== '') {
+                result.push({
+                    text: content,
+                    figure: false,
+                    summary: false,
+                    question: false
+                });
+            }
+        } else if (segment.type === 'figure') {
+            result.push({
+                text: null,
+                figure: true,
+                summary: false,
+                question: false
+            });
+        } else if (segment.type === 'summary') {
+            result.push({
+                text: null,
+                figure: false,
+                summary: true,
+                question: false
+            });
+        } else if (segment.type === 'question') {
+            result.push({
+                text: null,
+                figure: false,
+                summary: false,
+                question: true
+            });
+        }
+    }
+
+    return result;
+};

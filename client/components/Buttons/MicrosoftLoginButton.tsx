@@ -1,5 +1,5 @@
 import { Button } from "@mantine/core";
-import { signInWithMicrosoft, signInWithMicrosoftProfessor } from "@/utils/services/auth";
+import { signInWithMicrosoft } from "@/utils/services/auth";
 import { notifications } from "@mantine/notifications";
 import MicrosoftIcon from "../Icons/MicrosoftIcon";
 import { useState } from "react";
