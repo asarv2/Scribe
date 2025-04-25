@@ -415,6 +415,7 @@ export type Database = {
           length: number
           parse_error: string
           parse_status: Database["prod"]["Enums"]["parse_status"]
+          processing_progress: number
           profile: string | null
           response_url: string
           title: string
@@ -441,6 +442,7 @@ export type Database = {
           length?: number
           parse_error?: string
           parse_status?: Database["prod"]["Enums"]["parse_status"]
+          processing_progress?: number
           profile?: string | null
           response_url?: string
           title?: string
@@ -467,6 +469,7 @@ export type Database = {
           length?: number
           parse_error?: string
           parse_status?: Database["prod"]["Enums"]["parse_status"]
+          processing_progress?: number
           profile?: string | null
           response_url?: string
           title?: string

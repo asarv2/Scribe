@@ -146,16 +146,28 @@ class FileProcessor:
                 logger.info("Cleared CUDA cache after extraction")
             
             # Save each chunk as a document
+            total_chunks = len(results)
             for i, result in enumerate(results):
-                logger.info(f"Saving document {i+1}/{len(results)}: type={result.type}, has_image={bool(result.image_data)}")
+                logger.info(f"Saving document {i+1}/{total_chunks}: type={result.type}, has_image={bool(result.image_data)}")
                 
                 # Verify paths exist before saving
                 if result.video_chunk_path and not os.path.exists(result.video_chunk_path):
                     logger.error(f"Video chunk path does not exist: {result.video_chunk_path}")
                 if result.audio_chunk_path and not os.path.exists(result.audio_chunk_path):
                     logger.error(f"Audio chunk path does not exist: {result.audio_chunk_path}")
-                    
-                doc_id = self.saver.save_document(class_id, file_id, result)
+                
+                # Create a document-specific progress callback that scales within the overall process
+                # Processing stage is from 80-90% of overall progress
+                def document_progress_callback(progress, stage, message):
+                    if self.current_file_id == file_id:  # Only update if we're still processing the same file
+                        # Scale progress to fit within the processing stage (80-90%)
+                        overall_progress = 80.0 + (progress / 100.0 * 10.0 / total_chunks) + (i / total_chunks * 10.0)
+                        self.saver.save_file_metadata(file_id, {
+                            "processing_progress": overall_progress,
+                        })
+                        logger.info(f"Document processing progress: {overall_progress:.1f}% - {stage} {message}")
+                
+                doc_id = self.saver.save_document(class_id, file_id, result, progress_callback=document_progress_callback)
                 if doc_id:
                     logger.info(f"Document saved successfully: {doc_id}")
                 else:

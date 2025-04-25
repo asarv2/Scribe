@@ -125,32 +125,9 @@ export function ContextPanel({
         }
         else if (status === 'extracting') {
             // Use the extraction_progress field if available
-            if (file.extraction_progress !== undefined && file.extraction_progress !== null) {
-                return Math.round(file.extraction_progress);
-            }
-            // Fall back to the old calculation if extraction_progress is not available
-            else if (file.length && fileDocuments) {
-                const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
-                return Math.round((fileRelatedDocs.length / file.length) * 100);
-            }
-        } else if (status === 'parsing' && file.length) {
-            // Get documents for this file
-            if (fileDocuments) {
-                const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
-                return Math.round((fileRelatedDocs.length / file.length) * 100);
-            }
-        }
-        else if (status === 'processing' && file.file_size && file.last_parse_attempt) {
-            // Calculate time-based progress for processing
-            const startTime = new Date(file.last_parse_attempt).getTime();
-            const currentTime = new Date().getTime();
-            const elapsedSeconds = (currentTime - startTime) / 1000;
-
-            // Estimate total processing time based on file size (KB)
-            const fileSizeKB = file.file_size / 1024;
-            const estimatedTotalSeconds = (fileSizeKB / 100) * 10;
-
-            return Math.min(Math.round((elapsedSeconds / estimatedTotalSeconds) * 100), 95);
+            return Math.round(file.extraction_progress);
+        } else if (status === 'processing') {
+            return Math.round(file.processing_progress);
         } else if (status === 'uploading') {
             return Math.round(file.upload_progress);
         } else if (status === 'complete') {
@@ -169,8 +146,6 @@ export function ContextPanel({
                 return 'yellow';
             case 'extracting':
                 return 'violet';
-            case 'parsing':
-                return 'indigo';
             case 'processing':
                 return 'green';
             case 'error':
@@ -213,15 +188,6 @@ export function ContextPanel({
                         id: `upload-${file.id}`,
                         title: 'Extracting content',
                         message: `Extracting ${file.title}... ${progress}%`,
-                        color: statusColor,
-                        loading: true,
-                        autoClose: false
-                    });
-                } else if (status === 'parsing') {
-                    notifications.update({
-                        id: `upload-${file.id}`,
-                        title: 'Parsing content',
-                        message: `Parsing ${file.title}... ${progress}%`,
                         color: statusColor,
                         loading: true,
                         autoClose: false

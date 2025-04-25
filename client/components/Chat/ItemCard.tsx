@@ -46,8 +46,6 @@ export default function ItemCard({
                 return 'yellow';
             case 'extracting':
                 return 'violet';
-            case 'parsing':
-                return 'indigo';
             case 'processing':
                 return 'green';
             case 'error':
@@ -69,44 +67,14 @@ export default function ItemCard({
             case 'compressing':
                 // Use compression_progress (0-100) for compressing state
                 return item.compression_progress ? item.compression_progress : 0;
-
             case 'extracting':
                 return item.extraction_progress ? item.extraction_progress : 0;
-            case 'parsing':
-                // Get documents associated with this file
-                const fileRelatedDocs = fileDocuments.filter(doc => doc.file === fileId);
-
-                // If no documents or file has no length property, return 0
-                if (fileRelatedDocs.length === 0 || !item.length) return 0;
-
-                // Calculate percentage based on document count vs expected length
-                return (fileRelatedDocs.length / item.length) * 100;
-
             case 'processing':
-                // Use file size and time-based heuristic for processing
-                if (!item.file_size || !item.last_parse_attempt) return 50; // Default to 50% if missing data
-
-                // Calculate time elapsed since processing started
-                const startTime = new Date(item.last_parse_attempt).getTime();
-                const currentTime = new Date().getTime();
-                const elapsedSeconds = (currentTime - startTime) / 1000;
-
-                // Estimate total processing time based on file size (KB)
-                // Assuming ~1MB per 10 seconds processing time as a rough heuristic
-                const fileSizeKB = item.file_size / 1024;
-                const estimatedTotalSeconds = (fileSizeKB / 100) * 10;
-
-                // Calculate progress percentage
-                let progressPercentage = (elapsedSeconds / estimatedTotalSeconds) * 100;
-
-                // Cap at 95% until complete
-                return Math.min(progressPercentage, 95);
-
+                return item.processing_progress ? item.processing_progress : 0;
             case 'uploading':
                 // For uploading, we rely on the tus progress updates
                 // This is handled separately in the notifications
                 return item.upload_progress ? item.upload_progress : 0;
-
             case 'complete':
                 return 100;
 
@@ -124,8 +92,6 @@ export default function ItemCard({
                 return `Compressing: ${progress}%`;
             case 'extracting':
                 return `Extracting: ${progress}%`;
-            case 'parsing':
-                return `Parsing: ${progress}%`;
             case 'processing':
                 return `Processing: ${progress}%`;
             case 'uploading':
@@ -177,7 +143,7 @@ export default function ItemCard({
             onClick={(e) => {
                 e.stopPropagation();
                 // Only allow clicking if the file is complete or in processing stages
-                if (item.parse_status === 'complete' || item.parse_status === 'parsing' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
+                if (item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
                     addFileToChat(item.id);
                 }
             }}
@@ -241,7 +207,7 @@ export default function ItemCard({
                                     </ActionIcon>
                                 </Tooltip>
                             ) : (item.parse_status === 'uploading' || item.parse_status === 'compressing' ||
-                                item.parse_status === 'parsing' || item.parse_status === 'extracting' ||
+                                item.parse_status === 'extracting' ||
                                 item.parse_status === 'processing') ? (
                                 <Tooltip label={getProgressLabel()}>
                                     <RingProgress

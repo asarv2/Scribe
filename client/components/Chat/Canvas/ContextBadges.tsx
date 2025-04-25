@@ -62,7 +62,7 @@ export const ContextBadges = memo(({
 
         // Check if this is a video file (starts with "video-")
         const isProcessingVideo = file.id.startsWith('video-') &&
-            ['extracting', 'uploading', 'processing', 'parsing'].includes(file.parse_status || '');
+            ['extracting', 'uploading', 'processing'].includes(file.parse_status || '');
 
         // Display title - show processing state for videos
         const displayTitle = isProcessingVideo

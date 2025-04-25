@@ -4,6 +4,7 @@ import asyncio
 import logging
 import colorlog
 from contextlib import asynccontextmanager
+import torch
 
 # Configure colored logging globally
 def setup_logging():
@@ -56,6 +57,12 @@ async def lifespan(app: FastAPI):
         # Initialize clients
         from app.extensions import initialize_clients
         initialize_clients()
+
+        # Set CUDA memory fraction if specified
+        if os.getenv('CUDA_MEMORY_FRACTION') and torch.cuda.is_available():
+            memory_fraction = float(os.getenv('CUDA_MEMORY_FRACTION', '0.8'))
+            torch.cuda.set_per_process_memory_fraction(memory_fraction)
+            logger.info(f"Set CUDA memory fraction to {memory_fraction}")
 
         from app.config import model_manager
         logger.info("Preloading Whisper model in main process...")

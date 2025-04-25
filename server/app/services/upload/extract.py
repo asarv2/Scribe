@@ -95,6 +95,11 @@ class FileExtractor:
             import subprocess
             import shutil
             
+            # Create persistent directory BEFORE processing any chunks
+            permanent_chunk_dir = PERSIST_ROOT / Path(file_path).stem
+            permanent_chunk_dir.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Created persistent directory: {permanent_chunk_dir}")
+            
             with tempfile.TemporaryDirectory() as temp_dir:
                 try:
                     # Get file duration using ffprobe
@@ -114,11 +119,6 @@ class FileExtractor:
                     num_chunks = max(1, int(duration / chunk_duration) + (1 if duration % chunk_duration > 0 else 0))
                     logger.info(f"Splitting into {num_chunks} chunks of {chunk_duration}s each")
                     
-                    # Create persistent directory BEFORE processing any chunks
-                    permanent_chunk_dir = PERSIST_ROOT / Path(file_path).stem
-                    permanent_chunk_dir.mkdir(parents=True, exist_ok=True)
-                    logger.info(f"Created persistent directory: {permanent_chunk_dir}")
-                    
                     # Process each chunk
                     for i in range(num_chunks):
                         start_time = i * chunk_duration
@@ -131,11 +131,10 @@ class FileExtractor:
                         
                         # Create a path for this chunk
                         chunk_filename = f"chunk_{i:03d}.{'mp4' if is_video else 'wav'}"
-                        chunk_path = os.path.join(temp_dir, chunk_filename)
                         permanent_chunk_path = permanent_chunk_dir / chunk_filename
                         
                         try:
-                            # Extract the chunk using ffmpeg
+                            # Extract the chunk using ffmpeg directly to permanent path
                             if is_video:
                                 cmd = [
                                     "ffmpeg", "-y", "-ss", str(start_time), "-t", str(end_time - start_time),
@@ -148,10 +147,16 @@ class FileExtractor:
                                     "-i", file_path, "-ac", "1", "-ar", "16000", str(permanent_chunk_path)
                                 ]
                             
-                            # Write directly to the permanent path instead of copying later
-                            subprocess.run(cmd, check=True, capture_output=True, timeout=60)
+                            # Write directly to the permanent path
+                            subprocess.run(cmd, check=True, capture_output=True, timeout=120)  # Increased timeout
                             logger.info(f"Created chunk directly at permanent path: {permanent_chunk_path}")
                             
+                            # Verify the file exists and has content
+                            if os.path.exists(permanent_chunk_path) and os.path.getsize(permanent_chunk_path) > 0:
+                                logger.info(f"Verified chunk file exists: {permanent_chunk_path} ({os.path.getsize(permanent_chunk_path)} bytes)")
+                            else:
+                                logger.error(f"Chunk file missing or empty: {permanent_chunk_path}")
+                                
                             # Update progress - transcription phase (15-85%)
                             if progress_callback:
                                 progress = 15.0 + (i / num_chunks * 70.0)
@@ -172,52 +177,28 @@ class FileExtractor:
                             # Generate preview image for this chunk
                             img_data = None
                             if is_video:
-                                # Extract a frame from the video chunk
                                 img_data = self._extract_video_frame(str(permanent_chunk_path), 0)
-                            else:
-                                # Generate audio waveform for audio chunk
-                                img_data = self._generate_audio_waveform(str(permanent_chunk_path), 0, end_time - start_time)
                             
-                            # Create chunk with the persistent path
+                            # Create a chunk with the transcription and paths
                             chunk = FileExtractChunk(
                                 text=text,
                                 page=i + 1,
                                 start_time=start_time,
                                 end_time=end_time,
                                 image_data=img_data,
+                                type='video_chunk' if is_video else 'audio_chunk',
                                 video_chunk_path=str(permanent_chunk_path) if is_video else None,
-                                audio_chunk_path=str(permanent_chunk_path) if not is_video else None,
-                                type='video_chunk' if is_video else 'audio_chunk'
+                                audio_chunk_path=str(permanent_chunk_path) if not is_video else None
                             )
                             chunks.append(chunk)
                             
-                            logger.info(f"Processed chunk {i+1}/{num_chunks}: {start_time}s to {end_time}s")
                         except Exception as e:
                             logger.error(f"Error processing chunk {i+1}/{num_chunks}: {str(e)}")
-                            # Continue with next chunk
-                    
-                    # Update progress - finalizing (85-100%)
-                    if progress_callback:
-                        progress_callback(85.0, "finalizing", "Finalizing extraction")
-                    
-                    # If no chunks were processed successfully, create a fallback chunk
-                    if not chunks:
-                        logger.warning("No chunks were processed successfully")
-                        chunk = FileExtractChunk(
-                            text="Failed to process any segments of this file.",
-                            page=1,
-                            start_time=0,
-                            end_time=duration,
-                            type='video_chunk' if is_video else 'audio_chunk'
-                        )
-                        chunks.append(chunk)
-                
-                    logger.info(f"Extraction complete: {len(chunks)} chunks extracted")
                     
                     # Final progress update
                     if progress_callback:
                         progress_callback(100.0, "complete", f"Extracted {len(chunks)} chunks")
-                
+                    
                 except Exception as e:
                     logger.error(f"Error in chunked processing: {str(e)}")
                     # Create a fallback chunk with error information
