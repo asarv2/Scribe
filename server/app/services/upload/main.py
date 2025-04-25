@@ -240,20 +240,23 @@ class FileProcessor:
             # Return error
             return False, f"Error processing file: {str(e)}"
         finally:
-            # Only remove the persistent chunks if processing was successful
             try:
-                persist_dir = PERSIST_ROOT / Path(compressed_file_path).stem
-                if os.path.exists(persist_dir):
-                    # Don't delete immediately - wait until after documents are saved
-                    # Only uncomment this if you're sure you want to delete the chunks
-                    # shutil.rmtree(persist_dir, ignore_errors=True)
-                    logger.info(f"Note: Keeping persistent chunks at: {persist_dir}")
+                # Only run the cleanup if the variable was set successfully
+                if 'compressed_file_path' in locals():
+                    persist_dir = PERSIST_ROOT / Path(compressed_file_path).stem
+                    if os.path.exists(persist_dir):
+                        # NOTE: keep-or-delete logic lives here
+                        # shutil.rmtree(persist_dir, ignore_errors=True)
+                        logger.info("Note: keeping persistent chunks at %s", persist_dir)
                 else:
-                    logger.warning(f"Persistent directory not found: {persist_dir}")
+                    logger.debug(
+                        "compressed_file_path was never set (compression failed early); "
+                        "skipping chunk-cleanup logic"
+                    )
             except Exception as e:
-                logger.warning(f"Could not handle {persist_dir}: {e}")
-            # Clear the current file ID
-            self.current_file_id = None
+                logger.warning("Could not handle persist-dir cleanup: %s", e)
+            finally:
+                self.current_file_id = None
 
     async def _extract_file_content(self, file_path: str, file_type: str) -> List[FileExtractChunk]:
         """Isolate extraction in a separate method to better manage CUDA resources"""
@@ -422,28 +425,72 @@ class FileProcessor:
                         )
                     except Exception as e:
                         logger.error(f"Could not extract frame at {timestamp}s: {str(e)}")
-                
+
+                segment_path = None
+                if is_video:
+                    segment_path = self.extractor._write_video_slice(
+                        src=file_path, start=segment["start"], end=segment["end"],
+                        dest_dir=PERSIST_ROOT / Path(file_path).stem, index=i)
+                    audio_path = None
+                    preview_img = segment_img_data
+                else:
+                    segment_path = self.extractor._write_audio_slice(
+                        src=file_path, start=segment["start"], end=segment["end"],
+                        dest_dir=PERSIST_ROOT / Path(file_path).stem, index=i)
+                    audio_path = segment_path
+                    preview_img = await asyncio.to_thread(
+                        self.extractor._generate_audio_waveform,
+                        segment_path, 0, segment["end"] - segment["start"])
+
                 chunk = FileExtractChunk(
-                    text=segment["text"],
-                    page=i+1,
+                    text=segment["text"].strip(),
+                    page=i + 1,
                     start_time=segment["start"],
                     end_time=segment["end"],
-                    image_data=segment_img_data,
-                    type='video_chunk' if is_video else 'audio_chunk'
+                    image_data=preview_img,
+                    type='video_chunk' if is_video else 'audio_chunk',
+                    video_chunk_path=str(segment_path) if is_video else None,
+                    audio_chunk_path=str(audio_path) if not is_video else None,
                 )
                 chunks.append(chunk)
-        else:
-            # No segments, create a single chunk with the full transcription
+        else:  # <-- still inside `_run_extraction_directly`
+            if is_video:
+                segment_path = self.extractor._write_video_slice(
+                    src=file_path,
+                    start=0,
+                    end=result.get("duration", 0),
+                    dest_dir=PERSIST_ROOT / Path(file_path).stem,
+                    index=0,
+                )
+                audio_path  = None
+                preview_img = img_data          # first frame
+            else:
+                segment_path = self.extractor._write_audio_slice(
+                    src=file_path,
+                    start=0,
+                    end=result.get("duration", 0),
+                    dest_dir=PERSIST_ROOT / Path(file_path).stem,
+                    index=0,
+                )
+                audio_path  = segment_path
+                preview_img = await asyncio.to_thread(
+                    self.extractor._generate_audio_waveform,
+                    segment_path,
+                    0,
+                    result.get("duration", 0),
+                )
+
             chunk = FileExtractChunk(
                 text=result.get("text", "").strip(),
                 page=1,
                 start_time=0,
                 end_time=result.get("duration", 0),
-                image_data=img_data,
-                type='video_chunk' if is_video else 'audio_chunk'
+                image_data=preview_img,
+                type="video_chunk" if is_video else "audio_chunk",
+                video_chunk_path=str(segment_path) if is_video else None,
+                audio_chunk_path=str(audio_path) if not is_video else None,
             )
             chunks.append(chunk)
-        
         # Final progress update - only if we're below 100%
         if progress_callback and self.current_extraction_progress < 100.0:
             progress_callback(100.0, "complete", f"Transcription complete: {len(chunks)} segments")

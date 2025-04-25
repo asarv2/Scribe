@@ -10,6 +10,9 @@ import torch
 import shutil
 from pathlib import Path
 from app.extensions import CHUNKS_DIR
+import subprocess
+import numpy as np
+
 PERSIST_ROOT = Path(CHUNKS_DIR)
 
 logger = logging.getLogger(__name__)
@@ -119,6 +122,9 @@ class FileExtractor:
                     num_chunks = max(1, int(duration / chunk_duration) + (1 if duration % chunk_duration > 0 else 0))
                     logger.info(f"Splitting into {num_chunks} chunks of {chunk_duration}s each")
                     
+                    # Get the Whisper model
+                    whisper_model = model_manager.get_whisper_model()
+                    
                     # Process each chunk
                     for i in range(num_chunks):
                         start_time = i * chunk_duration
@@ -161,9 +167,6 @@ class FileExtractor:
                             if progress_callback:
                                 progress = 15.0 + (i / num_chunks * 70.0)
                                 progress_callback(progress, "transcribing", f"Transcribing chunk {i+1}/{num_chunks}")
-                            
-                            # Get the Whisper model
-                            whisper_model = model_manager.get_whisper_model()
                             
                             # Clear CUDA cache before transcription
                             if torch.cuda.is_available():
@@ -279,6 +282,58 @@ class FileExtractor:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
+    def _write_audio_slice(
+        self,
+        src: str,
+        start: float,
+        end: float,
+        dest_dir: Path,
+        index: int
+    ) -> Path:
+        """
+        Cut a [start,end) slice out of *src* (WAV/MP3/etc.)
+        and write it to *dest_dir* as WAV (16-kHz mono).
+        """
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        out_path = dest_dir / f"chunk_{index:03d}.wav"
+
+        duration = max(end - start, 0.01)
+        cmd = [
+            "ffmpeg", "-y",
+            "-ss", str(start), "-t", str(duration),
+            "-i", src,
+            "-ac", "1", "-ar", "16000",     # ASR-friendly WAV
+            out_path.as_posix()
+        ]
+        subprocess.run(cmd, check=True, capture_output=True, timeout=60)
+        return out_path
+
+    def _write_video_slice(
+        self,
+        src: str,
+        start: float,
+        end: float,
+        dest_dir: Path,
+        index: int
+    ) -> Path:
+        """
+        Cut a [start,end) slice out of *src* and write it to *dest_dir*.
+        Returns the Path of the created file.
+        """
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        out_path = dest_dir / f"chunk_{index:03d}.mp4"
+
+        duration = max(end - start, 0.01)   # ffmpeg needs >0
+        cmd = [
+            "ffmpeg", "-y",
+            "-ss", str(start), "-t", str(duration),
+            "-i", src,
+            "-c", "copy",                    # copy streams, no re-encode
+            str(out_path)
+        ]
+        subprocess.run(cmd, check=True, capture_output=True, timeout=60)
+        return out_path
+
     def _generate_audio_waveform(self, audio_path: str, start_time: float, end_time: float) -> bytes:
         """
         Generate a waveform visualization for an audio segment using PIL instead of matplotlib.
@@ -293,7 +348,6 @@ class FileExtractor:
         """
         import subprocess
         import tempfile
-        import numpy as np
         from PIL import Image, ImageDraw, ImageFont
         import io
         
@@ -612,8 +666,7 @@ class FileExtractor:
             with open(temp_path, 'rb') as f:
                 img_data = f.read()
 
-            # use shutil to remove temp folder
-            shutil.rmtree(temp_path)
+            os.unlink(temp_path) # delete temp file
             
             return img_data
         
