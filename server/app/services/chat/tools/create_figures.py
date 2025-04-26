@@ -144,15 +144,44 @@ except RuntimeError as e:
     # and the function will fail when called
 
 async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Figure]) -> List[CreateFigureResponse]:
-    """Generates figure objects given the latex codes that will produce the figure. Make sure not to add the title to the plot, as this will be added separately. This will return the ids of the figures, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created.
+    """Generates a figure object given the latex code that will produce the figure. This tool is ONLY for LaTeX/TikZ code, NOT for Python/matplotlib code.
+    
+    Make sure not to add the title to the plot, as this will be added separately. This will return the number of the figure, which will then be replaced by the actual figure of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the figure number itself, as this is unknown to the user.
+
+    You can provide either a standalone TikZ picture OR a complete LaTeX document. If you provide a complete document, the tool will extract the TikZ/PGFPlots content automatically.
+
+    Make sure if you have a legend it's not covering any words, or that any words aren't covering other features. The plot should be clean, and organized.
 
     Args:
         figures: The figures to create. Each figure has a title, latex code, and references.
 
     Returns:
         A list of CreateFigureResponse objects. Each object will have a success field, which will be true if the figure was created successfully, and false if there was an error. If there was an error, the error field will contain the error message describing the issue. If the figure was created successfully, the figure_id field will contain the id of the figure.
-    
 
+    Example TikZ code:
+    ```latex
+    \\begin{tikzpicture}[scale=0.8]
+      % Axes
+      \\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+      \\draw[->] (0,-1) -- (0,8) node[above] {$y$};
+      % Functions
+      \\draw[domain=-2.5:2.5, smooth, thick, blue] plot (\\x,{\\x}) node[above right] {$y=x$};
+    \\end{tikzpicture}
+    ```
+    
+    Example PGFPlots code:
+    ```latex
+    \\begin{tikzpicture}
+      \\begin{axis}[
+        xlabel={$x$},
+        ylabel={$y$},
+        axis lines=middle
+      ]
+        \\addplot[domain=-2:2, samples=100, smooth, blue] {x^2};
+      \\end{axis}
+    \\end{tikzpicture}
+    ```
+    
     Example 1: Sample weighted graph
     ```
     \\begin{tikzpicture}[scale=0.8]
