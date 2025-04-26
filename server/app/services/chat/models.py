@@ -7,6 +7,9 @@ import google.generativeai as genai
 from google.generativeai.types import File
 import json
 import logging
+from collections import defaultdict
+from typing import Dict, List, Tuple, Set
+import math
 
 logger = logging.getLogger(__name__)
 
@@ -108,57 +111,86 @@ async def fetch_chat_context(supabase, chat_id):
         "references": list(set(references))
     }
 
-from collections import defaultdict
-from typing import Dict, List, Tuple, Set
+# ------------------------------------------------------------
+# helpers
+# ------------------------------------------------------------
+def format_ts(seconds: float | int | None) -> str:
+    """
+    Convert seconds → "MM:SS".
+    • Pads minutes and seconds with leading zeros (00 - 99).
+    • If seconds is None, returns "??:??".
+    """
+    if seconds is None:
+        return "??:??"
+    seconds = int(math.floor(seconds))
+    m, s = divmod(seconds, 60)
+    return f"{m:02d}:{s:02d}"
 
 
+def doc_label(doc: dict, parent_type: str, ref_num: int) -> str:
+    """
+    Build the left-hand label before '-> REFERENCE n'
+    using the *new* MM:SS format for A/V files.
+    """
+    if parent_type in {"audio", "video"} and doc.get("start_time") is not None:
+        start = format_ts(doc["start_time"])
+        end   = (
+            f"-{format_ts(doc['end_time'])}"
+            if doc.get("end_time") is not None
+            else ""
+        )
+        return f"{start}{end} -> REFERENCE {ref_num}"
+
+    # fallback for PDFs, images, etc.
+    return f"Page {doc['page']} -> REFERENCE {ref_num}"
+
+# ------------------------------------------------------------
+# main
+# ------------------------------------------------------------
 async def get_mapped_references(
     supabase,
-    file_ids: List[int] | None,
-    document_ids: List[int] | None,
-    chat_references: List[int] | None,
-) -> Tuple[Dict[int, str], str, List[int], List[int]]:      # ➊ new return type
-    """
-    returns: (references_map, description_str,
-              ordered_file_ids, ordered_document_ids)
-    """
-    logger.info(f"Fetching mapped references for file_ids: {file_ids}, document_ids: {document_ids}, chat_references: {chat_references}")
+    file_ids: List[str] | None,
+    document_ids: List[str] | None,
+    chat_references: List[str] | None,
+) -> Tuple[Dict[int, str], str, List[str], List[str]]:
+
+    logger.info(
+        "Fetching mapped references for file_ids: %s, document_ids: %s, chat_refs: %s",
+        file_ids,
+        document_ids,
+        chat_references,
+    )
+
     # ---------- 1. normalise ----------
-    orig_file_ids: List[int]      = file_ids or []          # keep originals
-    orig_document_ids: List[int]  = document_ids or []
+    orig_file_ids        = file_ids or []
+    orig_document_ids    = document_ids or []
 
-    file_ids: Set[int]            = set(orig_file_ids)      # same as before
-    direct_doc_ids: Set[int]      = set(orig_document_ids)  #  ← rename for clarity
-    chat_doc_ids: Set[int]        = set(chat_references or [])
+    file_ids_set         = set(orig_file_ids)
+    direct_doc_ids       = set(orig_document_ids)
+    chat_doc_ids         = set(chat_references or [])
+    wanted_doc_ids       = direct_doc_ids | chat_doc_ids
 
-    wanted_doc_ids = direct_doc_ids | chat_doc_ids
+    if not (file_ids_set or wanted_doc_ids):
+        return {}, "", [], []                     # nothing to do
 
     # ---------- 2. pull docs ----------
-    # We form a single OR clause so we hit the DB once.
-    wanted_doc_ids = direct_doc_ids | chat_doc_ids
     or_parts = []
     if wanted_doc_ids:
-        or_parts.append(f"id.in.({','.join(map(str, wanted_doc_ids))})")
-    if file_ids:
-        or_parts.append(f"file.in.({','.join(map(str, file_ids))})")
+        or_parts.append(f"id.in.({','.join(wanted_doc_ids)})")
+    if file_ids_set:
+        or_parts.append(f"file.in.({','.join(file_ids_set)})")
 
     docs_query = supabase.table("documents").select("*")
-    if or_parts:  # safeguard in case *everything* is empty
+    if or_parts:
         docs_query = docs_query.or_(",".join(or_parts))
     all_docs: List[dict] = docs_query.execute().data or []
 
-    # Bucket by file for fast look-ups
-    docs_by_file: Dict[int, List[dict]] = defaultdict(list)
+    docs_by_file: Dict[str, List[dict]] = defaultdict(list)
     for d in all_docs:
         docs_by_file[d["file"]].append(d)
 
-    # ---------- 3. Fetch every file we will mention ----------
-    all_file_ids = set(docs_by_file) | file_ids
-    all_file_ids = {fid for fid in all_file_ids if fid is not None}   # 🚑 strip NULLs
-
-    if not (file_ids or direct_doc_ids or chat_doc_ids):
-        return {}, "", [], []                                         # (empty result)
-
+    # ---------- 3. fetch files we will mention ----------
+    all_file_ids = {fid for fid in (docs_by_file.keys() | file_ids_set) if fid}
     file_rows = (
         supabase.table("files")
         .select("*")
@@ -169,47 +201,71 @@ async def get_mapped_references(
     )
     file_meta = {f["id"]: f for f in file_rows}
 
-    # ---------- 4. build description + order trackers ----------
+    # ---------- 4. build output ----------
     description_lines: List[str] = []
     ref_map: Dict[int, str] = {}
     ref_lookup: Dict[str, int] = {}
     next_ref = 1
 
-    ordered_file_ids: List[int]     = []   # ➋ collecting order
-    ordered_document_ids: List[int] = []
+    ordered_file_ids: List[str]     = []
+    ordered_document_ids: List[str] = []
 
-    # ----- 4a. files supplied explicitly
-    for fid in sorted(file_ids, key=lambda _id: file_meta[_id]["title"]):
-        ordered_file_ids.append(fid)       # ➌ remember effective order
+    # 4a. files supplied explicitly
+    for fid in sorted(file_ids_set, key=lambda _id: file_meta[_id]["title"]):
+        ordered_file_ids.append(fid)
+        f_type = file_meta[fid]["type"]
         description_lines.append(file_meta[fid]["title"])
-        for doc in sorted(docs_by_file.get(fid, []), key=lambda d: d["page"]):
+
+        # choose sort key based on type
+        if f_type in {"audio", "video"}:
+            key_fn = lambda d: (d.get("start_time") or 0.0)
+        else:
+            key_fn = lambda d: d.get("page", 0)
+
+        for doc in sorted(docs_by_file.get(fid, []), key=key_fn):
             if doc["id"] not in ref_lookup:
                 ref_lookup[doc["id"]] = next_ref
                 ref_map[next_ref] = doc["id"]
                 next_ref += 1
-                if doc["id"] in direct_doc_ids:          # 💡 only originals
+                if doc["id"] in direct_doc_ids:
                     ordered_document_ids.append(doc["id"])
-            description_lines.append(
-                f"Page {doc['page']} -> REFERENCE {ref_lookup[doc['id']]}"
-            )
-        description_lines.append("")  # blank line after each file block
 
-    # ----- 4b. stray docs
+            description_lines.append(
+                doc_label(doc, f_type, ref_lookup[doc["id"]])
+            )
+        description_lines.append("")  # blank line
+
+    # 4b. stray docs
     stray_docs = [
-        d for d in all_docs if d["file"] not in file_ids
+        d for d in all_docs if d["file"] not in file_ids_set
     ]
-    stray_docs.sort(key=lambda d: (file_meta[d["file"]]["title"], d["page"]))
+    # sort across files: (title, start/page)
+    stray_docs.sort(
+        key=lambda d: (
+            file_meta[d["file"]]["title"],
+            d.get("start_time") if file_meta[d["file"]]["type"] in {"audio", "video"} else d.get("page", 0),
+        )
+    )
 
     for doc in stray_docs:
+        fid   = doc["file"]
+        ftype = file_meta[fid]["type"]
+        title = file_meta[fid]["title"]
+
+        if fid not in ordered_file_ids:
+            # we don't push fid itself to ordered_file_ids because the caller asked
+            # that this list reflect only originals – not ‘discovered’ files.
+            pass
+
         if doc["id"] not in ref_lookup:
             ref_lookup[doc["id"]] = next_ref
             ref_map[next_ref] = doc["id"]
             next_ref += 1
-            if doc["id"] in direct_doc_ids:          # 💡 only originals
+            if doc["id"] in direct_doc_ids:
                 ordered_document_ids.append(doc["id"])
-        title = file_meta[doc["file"]]["title"]
+
         description_lines.append(
-            f"{title}, Page {doc['page']} -> REFERENCE {ref_lookup[doc['id']]}"
+            f"{title}, {doc_label(doc, ftype, ref_lookup[doc['id']])}"
         )
 
     # ---------- 5. finalise ----------
@@ -217,8 +273,8 @@ async def get_mapped_references(
         description_lines.pop()
     description = "\n".join(description_lines)
 
-    # ➏ new values included in the tuple
     return ref_map, description, ordered_file_ids, ordered_document_ids
+
 
 async def process_special_tags(message, supabase_client, documents: Documents):
     """

@@ -44,5 +44,5 @@ pydub==0.25.1
 # --- concurrency-safe file locking ---
 filelock==3.13.1
 
-openai==1.70.0
-openai-agents==0.0.12
+openai==1.76.0
+openai-agents==0.0.13

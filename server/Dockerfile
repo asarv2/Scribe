@@ -3,39 +3,35 @@
 # ────────────────────────────────────────────────────────────────
 FROM pytorch/pytorch:2.6.0-cuda12.6-cudnn9-runtime
 
-# ---- Environment -------------------------------------------------
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
-    DOCKER_ENV=true
+    DOCKER_ENV=true \
+    UNO_PATH=/usr/lib/libreoffice/program
 
 # ────────────────────────────────────────────────────────────────
 # System packages
 # ────────────────────────────────────────────────────────────────
 RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | \
-        debconf-set-selections \
- && apt-get update \
- && apt-get install -y --no-install-recommends \
-    # --------------- core build toolchain ---------------
-    python3 python3-pip python3-dev build-essential swig curl \
-    # --------------- media helpers ----------------------
-    ffmpeg libmupdf-dev libmagic1 \
-    # --------------- LaTeX stack (≈ 1.5 GB) -------------
-    texlive-latex-base \
-    texlive-latex-recommended \
-    texlive-latex-extra \
-    texlive-pictures \        
-    texlive-science \
-    texlive-fonts-recommended \
-    latexmk \
-    # --------------- graphics converters ---------------
-    pdf2svg poppler-utils imagemagick ghostscript \
-    # --------------- office → PDF pipeline -------------
-    libreoffice-core libreoffice-writer libreoffice-impress \
-    unoconv python3-uno pandoc \
-    # --------------- fonts ------------------------------
-    fonts-dejavu fonts-liberation ttf-mscorefonts-installer \
- && apt-get clean && rm -rf /var/lib/apt/lists/*
+        debconf-set-selections && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        # --- core build toolchain ----
+        python3 python3-pip python3-dev build-essential swig curl \
+        # --- media helpers ----------
+        ffmpeg libmupdf-dev libmagic1 \
+        # --- LaTeX stack (≈1.5 GB) --
+        texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+        texlive-pictures texlive-science texlive-fonts-recommended latexmk \
+        # --- graphics converters ----
+        pdf2svg poppler-utils imagemagick ghostscript \
+        # --- office → PDF pipeline --
+        libreoffice-core libreoffice-writer libreoffice-impress \
+        libreoffice-script-provider-python \
+        unoconv python3-uno pandoc \
+        # --- fonts -------------------
+        fonts-dejavu fonts-liberation ttf-mscorefonts-installer && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ────────────────────────────────────────────────────────────────
 # Workdir & caches

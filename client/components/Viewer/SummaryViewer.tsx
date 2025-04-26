@@ -4,7 +4,7 @@
  * 03/20/2025
  */
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Document, Summary } from '../../types';
 import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip, SimpleGrid, Modal } from '@mantine/core';
 import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
@@ -37,8 +37,20 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const cardRef = useRef<HTMLDivElement>(null);
 
+    // Filter out summaries with error status
+    const validSummaries = useMemo(() => {
+        return summaries.filter(s => s.generation_status !== 'error');
+    }, [summaries]);
+
+    // Initialize currentIndex to first valid summary if needed
+    useEffect(() => {
+        if (validSummaries.length > 0 && currentIndex >= validSummaries.length) {
+            setCurrentIndex(0);
+        }
+    }, [validSummaries, currentIndex]);
+
     // Get current summary
-    const summary = summaries[currentIndex] || {};
+    const summary = validSummaries[currentIndex] || {};
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -65,10 +77,10 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     }, [currentIndex]);
 
     const handleNext = useCallback(() => {
-        if (currentIndex < summaries.length - 1) {
+        if (currentIndex < validSummaries.length - 1) {
             setCurrentIndex(prev => prev + 1);
         }
-    }, [currentIndex, summaries.length]);
+    }, [currentIndex, validSummaries.length]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -113,9 +125,8 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
 
     const handleDownload = (format: 'pdf' | 'latex' | 'text', downloadAll: boolean = false) => {
         // If downloadAll is true, we need to modify the API call to get all summaries
-        // For now, we'll just use the current implementation for single summary
         const downloadUrl = downloadAll
-            ? getSummaryDownloadUrl(chatId, summaries.map(s => s.id), format)
+            ? getSummaryDownloadUrl(chatId, validSummaries.map(s => s.id), format)
             : getSummaryDownloadUrl(chatId, [summary.id], format);
 
         setDownloadLoading(true);
@@ -206,13 +217,13 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
             case 'idle':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text={`Waiting to generate summary ${currentIndex + 1} of ${summaries.length}...`} />
+                        <PulseText text={`Waiting to generate summary ${currentIndex + 1} of ${validSummaries.length}...`} />
                     </Center>
                 );
             case 'generating':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text={`Generating summary ${currentIndex + 1} of ${summaries.length}...`} />
+                        <PulseText text={`Generating summary ${currentIndex + 1} of ${validSummaries.length}...`} />
                     </Center>
                 );
             case 'complete':
@@ -230,7 +241,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
         }
     };
 
-    return (summaries.length > 0 && (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete' || summary.generation_status === 'error')) && (
+    return (validSummaries.length > 0 && (summary.generation_status === 'idle' || summary.generation_status === 'generating' || summary.generation_status === 'complete')) && (
         <Card
             withBorder
             p="md"
@@ -239,9 +250,10 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
         >
-            {summaries.length > 1 && (
-                <Group justify="space-between" mb="md">
-                    <Group>
+            {/* Always show header with title and download button */}
+            <Group justify="space-between" mb="md">
+                <Group>
+                    {validSummaries.length > 1 ? (
                         <Group>
                             <ActionIcon
                                 disabled={currentIndex === 0}
@@ -251,100 +263,100 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                                 <IconChevronLeft size={20} />
                             </ActionIcon>
 
-                            <Text size="sm">Summary {currentIndex + 1} of {summaries.length}</Text>
+                            <Text size="sm">Summary {currentIndex + 1} of {validSummaries.length}</Text>
 
                             <ActionIcon
-                                disabled={currentIndex === summaries.length - 1}
+                                disabled={currentIndex === validSummaries.length - 1}
                                 onClick={handleNext}
                                 variant="subtle"
                             >
                                 <IconChevronRight size={20} />
                             </ActionIcon>
                         </Group>
-                        <Text size="sm" c="dimmed">{summary.title}</Text>
-                    </Group>
-                    {(profile?.admin || profile?.professor) ? (
-                        <Menu position="bottom-end" shadow="md">
-                            <Menu.Target>
-                                <Tooltip label={downloadLoading ? 'Downloading...' : 'Download Summary'}>
-                                    <ActionIcon
-                                        variant="subtle"
-                                        size="md"
-                                        loading={downloadLoading}
-                                    >
-                                        <IconDownload size={18} />
-                                    </ActionIcon>
-                                </Tooltip>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Label>Download as</Menu.Label>
-                                {summaries.length > 1 ? (
-                                    <>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf', false)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'Current Summary (PDF)'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex', false)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'Current Summary (LaTeX)'}
-                                        </Menu.Item>
-                                        <Menu.Divider />
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf', true)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'All Summaries (PDF)'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex', true)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'All Summaries (LaTeX)'}
-                                        </Menu.Item>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf')}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex')}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                                        </Menu.Item>
-                                    </>
-                                )}
-                            </Menu.Dropdown>
-                        </Menu>
-                    ) : (
-                        <Tooltip label={downloadLoading ? 'Downloading...' : 'Download PDF'}>
-                            <ActionIcon
-                                variant="subtle"
-                                size="md"
-                                onClick={() => handleDownload('pdf')}
-                                disabled={downloadLoading}
-                                loading={downloadLoading}
-                            >
-                                <IconDownload size={18} />
-                            </ActionIcon>
-                        </Tooltip>
-                    )}
+                    ) : null}
+                    <Text size="sm" c="dimmed">{summary.title}</Text>
                 </Group>
-            )}
+                {(profile?.admin || profile?.professor) ? (
+                    <Menu position="bottom-end" shadow="md">
+                        <Menu.Target>
+                            <Tooltip label={downloadLoading ? 'Downloading...' : 'Download Summary'}>
+                                <ActionIcon
+                                    variant="subtle"
+                                    size="md"
+                                    loading={downloadLoading}
+                                >
+                                    <IconDownload size={18} />
+                                </ActionIcon>
+                            </Tooltip>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>Download as</Menu.Label>
+                            {validSummaries.length > 1 ? (
+                                <>
+                                    <Menu.Item
+                                        leftSection={<IconFile size={14} />}
+                                        onClick={() => handleDownload('pdf', false)}
+                                        disabled={downloadLoading}
+                                    >
+                                        {downloadLoading ? 'Downloading...' : 'Current Summary (PDF)'}
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        leftSection={<IconFileTypography size={14} />}
+                                        onClick={() => handleDownload('latex', false)}
+                                        disabled={downloadLoading}
+                                    >
+                                        {downloadLoading ? 'Downloading...' : 'Current Summary (LaTeX)'}
+                                    </Menu.Item>
+                                    <Menu.Divider />
+                                    <Menu.Item
+                                        leftSection={<IconFile size={14} />}
+                                        onClick={() => handleDownload('pdf', true)}
+                                        disabled={downloadLoading}
+                                    >
+                                        {downloadLoading ? 'Downloading...' : 'All Summaries (PDF)'}
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        leftSection={<IconFileTypography size={14} />}
+                                        onClick={() => handleDownload('latex', true)}
+                                        disabled={downloadLoading}
+                                    >
+                                        {downloadLoading ? 'Downloading...' : 'All Summaries (LaTeX)'}
+                                    </Menu.Item>
+                                </>
+                            ) : (
+                                <>
+                                    <Menu.Item
+                                        leftSection={<IconFile size={14} />}
+                                        onClick={() => handleDownload('pdf')}
+                                        disabled={downloadLoading}
+                                    >
+                                        {downloadLoading ? 'Downloading...' : 'PDF Document'}
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        leftSection={<IconFileTypography size={14} />}
+                                        onClick={() => handleDownload('latex')}
+                                        disabled={downloadLoading}
+                                    >
+                                        {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
+                                    </Menu.Item>
+                                </>
+                            )}
+                        </Menu.Dropdown>
+                    </Menu>
+                ) : (
+                    <Tooltip label={downloadLoading ? 'Downloading...' : 'Download PDF'}>
+                        <ActionIcon
+                            variant="subtle"
+                            size="md"
+                            onClick={() => handleDownload('pdf')}
+                            disabled={downloadLoading}
+                            loading={downloadLoading}
+                        >
+                            <IconDownload size={18} />
+                        </ActionIcon>
+                    </Tooltip>
+                )}
+            </Group>
 
             {renderContent()}
         </Card>

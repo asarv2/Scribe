@@ -4,7 +4,7 @@
  * 03/20/2025
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Document, Question, ViewerMode } from '../../types';
 import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Stack, Radio, RadioGroup, Switch, Pagination, Tooltip, Modal, Textarea } from '@mantine/core';
 import { IconDownload, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconEye, IconMaximize, IconEyeOff } from '@tabler/icons-react';
@@ -63,8 +63,20 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
     const isStudent = profile && !profile.professor && !profile.admin;
 
+    // Filter out questions with error status
+    const validQuestions = useMemo(() => {
+        return questions.filter(q => q.generation_status !== 'error');
+    }, [questions]);
+
+    // Initialize currentIndex to first valid question if needed
+    useEffect(() => {
+        if (validQuestions.length > 0 && currentIndex >= validQuestions.length) {
+            setCurrentIndex(0);
+        }
+    }, [validQuestions, currentIndex]);
+
     // Get current question
-    const question = questions[currentIndex] || {};
+    const question = validQuestions[currentIndex] || {};
 
     // Handle navigation between questions
     const handlePrevious = useCallback(() => {
@@ -74,10 +86,10 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     }, [currentIndex]);
 
     const handleNext = useCallback(() => {
-        if (currentIndex < questions.length - 1) {
+        if (currentIndex < validQuestions.length - 1) {
             setCurrentIndex(prev => prev + 1);
         }
-    }, [currentIndex, questions.length]);
+    }, [currentIndex, validQuestions.length]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -122,7 +134,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
     useEffect(() => {
         // Only reset the current index if the question IDs have changed
-        const newQuestionIds = questions.map(q => q.id);
+        const newQuestionIds = validQuestions.map(q => q.id);
         const questionIdsChanged = JSON.stringify(questionIdsRef.current) !== JSON.stringify(newQuestionIds);
 
         if (questionIdsChanged) {
@@ -130,7 +142,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             // Update the ref with new question IDs
             questionIdsRef.current = newQuestionIds;
         }
-    }, [questions]);
+    }, [validQuestions]);
 
     // Handle answer selection for multiple choice
     const handleAnswerSelect = (questionId: string, value: string) => {
@@ -148,7 +160,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
     const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = true) => {
         // If downloadAll is false, only download the current question
-        const questionIds = downloadAll ? questions.map(q => q.id) : [question.id];
+        const questionIds = downloadAll ? validQuestions.map(q => q.id) : [question.id];
         const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format);
 
         setDownloadLoading(true);
@@ -351,13 +363,13 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             case 'idle':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text={`Waiting to generate question... ${currentIndex + 1} of ${questions.length}`} />
+                        <PulseText text={`Waiting to generate question... ${currentIndex + 1} of ${validQuestions.length}`} />
                     </Center>
                 );
             case 'generating':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text={`Generating question ${currentIndex + 1} of ${questions.length}...`} />
+                        <PulseText text={`Generating question ${currentIndex + 1} of ${validQuestions.length}...`} />
                     </Center>
                 );
             case 'complete':
@@ -365,7 +377,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         }
     };
 
-    return (question.generation_status === 'idle' || question.generation_status === 'generating' || question.generation_status === 'error' || question.generation_status === 'complete') && (
+    return (question.generation_status === 'idle' || question.generation_status === 'generating' || question.generation_status === 'complete') && (
         <>
             <Card
                 withBorder
@@ -376,8 +388,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 onTouchEnd={handleTouchEnd}
             >
                 <Group justify="space-between" mb="md">
-                    {questions.length > 1 ? (
-                        <Group>
+                    <Group>
+                        {validQuestions.length > 1 ? (
                             <Group>
                                 <ActionIcon
                                     disabled={currentIndex === 0}
@@ -387,19 +399,19 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                     <IconChevronLeft size={20} />
                                 </ActionIcon>
 
-                                <Text size="sm">Question {currentIndex + 1} of {questions.length}</Text>
+                                <Text size="sm">Question {currentIndex + 1} of {validQuestions.length}</Text>
 
                                 <ActionIcon
-                                    disabled={currentIndex === questions.length - 1}
+                                    disabled={currentIndex === validQuestions.length - 1}
                                     onClick={handleNext}
                                     variant="subtle"
                                 >
                                     <IconChevronRight size={20} />
                                 </ActionIcon>
                             </Group>
-                            <Text size="sm" c="dimmed">{question.title}</Text>
-                        </Group>
-                    ) : <div />}
+                        ) : null}
+                        <Text size="sm" c="dimmed">{question.title}</Text>
+                    </Group>
                     <Group gap="xs">
                         <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
@@ -413,7 +425,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                 </Tooltip>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                {questions.length > 1 ? (
+                                {validQuestions.length > 1 ? (
                                     <>
                                         <Menu.Label>Download Options</Menu.Label>
                                         <Menu.Item
@@ -471,9 +483,9 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
                 {renderContent()}
 
-                {questions.length > 3 && (
+                {validQuestions.length > 3 && (
                     <Pagination
-                        total={questions.length}
+                        total={validQuestions.length}
                         value={currentIndex + 1}
                         onChange={(page) => setCurrentIndex(page - 1)}
                         mt="md"
