@@ -49,6 +49,7 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
 
     responses = []
     for summary in summaries:
+        summary_id: str | None = None
         try:
             title = summary.title
             preamble = summary.preamble
@@ -98,6 +99,9 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
                     "generation_status": "complete"
                 }
 
+                if summary_id is None:
+                    raise Exception("Failed to create summary: No ID returned from database")
+
                 # Insert the question into the database
                 summary_update_response = supabase_client.table('summaries').update(summary_update_data).eq("id", summary_id).execute()
 
@@ -107,11 +111,12 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
                 responses.append(CreateSummaryResponse(success=True, summary_id=summary_id))
         
         except Exception as e:
-            # update the summary into the database
-            summary_update_response = supabase_client.table('summaries').update({
-                "generation_status": "error",
-                "generation_error": str(e)
-            }).eq("id", summary_id).execute()
+            if summary_id is not None:
+                # update the summary into the database
+                summary_update_response = supabase_client.table('summaries').update({
+                    "generation_status": "error",
+                    "generation_error": str(e)
+                }).eq("id", summary_id).execute()
 
             responses.append(CreateSummaryResponse(success=False, error=str(e)))
 
