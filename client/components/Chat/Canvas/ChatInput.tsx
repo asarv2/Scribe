@@ -1,8 +1,8 @@
-import React, { memo, useRef, useState, useEffect } from "react";
-import { ChatMessage, Document, File, ViewerMode } from "@/types";
-import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton } from "@mantine/core";
+import React, { memo, useRef, useState, useEffect, useCallback } from "react"; // Import useCallback
+import { ChatMessage, Document, File, ViewerMode, CONTENT_COLORS } from "@/types"; // Import CONTENT_COLORS
+import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton, Popover, UnstyledButton } from "@mantine/core"; // Import Badge
 import { ContextBadges } from "./ContextBadges";
-import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash, IconMessage, IconChartInfographic, IconReportAnalytics, IconQuestionMark } from "@tabler/icons-react";
+import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash, IconClipboardText, IconChartInfographic, IconReportAnalytics, IconQuestionMark, IconChevronDown } from "@tabler/icons-react";
 import classes from './ChatInput.module.css';
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js';
@@ -30,7 +30,28 @@ interface ChatInputProps {
   onRemoveDocument: (documentId: string) => void;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>
+  files?: File[];
+  fileDocuments?: Document[];
+  onAddFileContext: (fileId: string) => void;
+  onAddDocumentContext: (documentId: string) => void;
+  onAnimateContextAdd: () => void; // Prop to trigger animation in parent
+  isAnimating: boolean; // Prop to know if animation is running
 }
+
+// Helper function to get mode details
+const getModeDetails = (chatType: ChatMessage['chatType'], isTeacher: boolean) => {
+  switch (chatType) {
+    case 'learn': return { label: 'Learn', icon: IconBook, color: 'green' };
+    case 'homework': return { label: 'Homework', icon: IconFile, color: 'indigo' };
+    case 'test': return { label: 'Test-Prep', icon: IconPencil, color: 'cyan' };
+    case 'figure': return { label: 'Figure', icon: IconChartInfographic, color: 'grape' };
+    case 'summary': return { label: 'Summary', icon: IconReportAnalytics, color: 'yellow' };
+    case 'question': return { label: 'Question', icon: IconQuestionMark, color: 'blue' };
+    case 'grade': return { label: 'Grade', icon: IconPresentation, color: 'orange' };
+    default: return { label: 'General', icon: IconClipboardText, color: 'orange' }; // Changed icon to IconClipboardText
+  }
+};
+
 
 export const ChatInput = memo(({
   activeChat,
@@ -43,11 +64,18 @@ export const ChatInput = memo(({
   onRemoveDocument,
   setViewerMode,
   setActiveChat,
-  isInitializing = false
+  isInitializing = false,
+  files,
+  fileDocuments,
+  onAddFileContext,
+  onAddDocumentContext,
+  onAnimateContextAdd, // Receive animation trigger
+  isAnimating, // Receive animation status
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
 
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const [modePopoverOpened, setModePopoverOpened] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
@@ -62,22 +90,26 @@ export const ChatInput = memo(({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => getUser(supabase)
+      queryKey: ["user"],
+      queryFn: () => getUser(supabase)
   });
 
   const { data: profile } = useQuery({
-    queryKey: ["profile", user?.id],
-    queryFn: () => getProfile(supabase, user!.id),
-    enabled: !!user?.id
+      queryKey: ["profile", user?.id],
+      queryFn: () => getProfile(supabase, user!.id),
+      enabled: !!user?.id
   });
 
 
-  const { data: files, isLoading: loadingFiles } = useQuery({
-    queryKey: ["files", classId],
-    queryFn: () => getFiles(supabase, classId!),
-    enabled: !!profile
+  const { data: filesData, isLoading: loadingFiles } = useQuery({
+      queryKey: ["files", classId],
+      // Use the 'files' prop if available, otherwise fetch (or adjust logic as needed)
+      queryFn: () => files ?? getFiles(supabase, classId!),
+      enabled: !!profile && !files // Only fetch if files prop isn't provided
   });
+
+  // Use fileDocuments prop if available
+  const documentsData = fileDocuments;
 
 
   // Add state to track if Enter was pressed during recording
@@ -560,16 +592,18 @@ export const ChatInput = memo(({
   // Modify the useEffect to ensure WaveSurfer is initialized properly
   useEffect(() => {
     // Initialize wavesurfer when the component mounts and waveformRef is available
-    if (waveformRef.current) {
+    if (waveformRef.current && recordingMode) { // Only init if needed
       initWaveSurfer();
     }
 
     return () => {
       if (wavesurferRef.current) {
         wavesurferRef.current.destroy();
+        wavesurferRef.current = null;
+        recordPluginRef.current = null;
       }
     };
-  }, []);
+  }, [recordingMode]); // Re-run if recordingMode changes
 
   // Add back the useEffect for automatically focusing the chat
   useEffect(() => {
@@ -619,180 +653,287 @@ export const ChatInput = memo(({
     }
   }, [enterPressedDuringRecording, transcribing, isRecording, recordingMode, loading, activeChat.prompt, onSend]);
 
-  return (
-    <Stack gap={"md"}>
-      {!isRecording && <Box
-        style={{
-          position: 'absolute',
-          left: '25px',
-          right: '25px',
-          zIndex: 10,
-          transform: 'translateY(-100%)',
-          pointerEvents: 'auto'
-        }}
-      >
-        <ContextBadges
-          activeChat={activeChat}
-          classId={classId}
-          onRemoveFile={onRemoveFile}
-          onRemoveDocument={onRemoveDocument}
-          setViewerMode={setViewerMode}
-        />
-      </Box>}
 
+  // Function to render mode options in the popover
+  const renderModeOptions = () => {
+    const studentModes: ChatMessage['chatType'][] = ['learn', 'homework', 'test'];
+    const teacherModes: ChatMessage['chatType'][] = ['figure', 'summary', 'question'];
+    const commonModes: ChatMessage['chatType'][] = ['grade']; // Add grade if needed later
 
-      <Box className={classes.inputBox}>
-        {isInitializing ? (
-          <Box p={"xs"}>
-            <Skeleton height={60} />
-          </Box>
-        ) : !recordingMode ? (
-          <Box style={{ position: 'relative' }}>
-            <Textarea
-              ref={textareaRef}
-              value={activeChat.prompt}
-              onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
-              onKeyDown={handleKeyDown}
-              placeholder="" // Empty placeholder since we're using custom one
-              autosize
-              minRows={1}
-              maxRows={4}
-              size={"md"}
-              classNames={{
-                root: classes.textarea,
-                input: classes.textareaInput,
-                wrapper: classes.textareaWrapper
+    const availableModes = activeChat.teacher ? teacherModes : studentModes;
+    const defaultType = activeChat.teacher ? 'professor' : 'student';
+
+    return (
+      <Stack gap="xs">
+        {/* General Option */}
+        <Button
+          variant={activeChat.chatType === defaultType ? "light" : "subtle"}
+          color="orange"
+          size="sm"
+          leftSection={<IconClipboardText size={16} />} // Changed icon to IconClipboardText
+          onClick={() => {
+            setActiveChat((prev) => ({ ...prev, chatType: defaultType }));
+            setModePopoverOpened(false);
+          }}
+          fullWidth
+          justify="flex-start"
+        >
+          General
+        </Button>
+        {/* Specific Mode Options */}
+        {availableModes.map((mode) => {
+          // Special check for homework mode availability
+          if (mode === 'homework' && !(files && files.some(file => file.content_type === 'homework'))) {
+            return null;
+          }
+          const details = getModeDetails(mode, activeChat.teacher);
+          return (
+            <Button
+              key={mode}
+              variant={activeChat.chatType === mode ? "light" : "subtle"}
+              color={details.color}
+              size="sm"
+              leftSection={<details.icon size={16} />}
+              onClick={() => {
+                setActiveChat((prev) => ({ ...prev, chatType: mode }));
+                setModePopoverOpened(false);
               }}
-              disabled={isInitializing}
-            />
-            {!activeChat.prompt && (
-              <Box
-                style={{
-                  position: 'absolute',
-                  top: '8px',
-                  left: 14,
-                  pointerEvents: 'none',
-                  color: 'var(--mantine-color-gray-6)',
-                  zIndex: 1
-                }}
-              >
-                {activeChat.teacher ? "Start creating and " : "Start learning and "}
-                <Tooltip
-                  label={viewerMode.open ? `Close menu (${getShortcutText()})` : `Open menu (${getShortcutText()})`}
-                  position="top"
-                  withArrow
-                  openDelay={500}
-                  transitionProps={{
-                    transition: 'slide-up',
-                    duration: 300
-                  }}
-                  styles={{
-                    tooltip: {
-                      background: 'linear-gradient(45deg, #4DABF7 0%, #228BE6 100%)',
-                      animation: 'gradient 3s ease infinite',
-                      backgroundSize: '200% 200%',
-                    }
-                  }}
-                >
-                  <Text
-                    component="span"
-                    c="blue"
-                    style={{
-                      cursor: 'pointer',
-                      pointerEvents: 'auto',
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (setViewerMode) {
-                        setViewerMode(prev => ({ ...prev, open: !prev.open }))
-                      }
+              fullWidth
+              justify="flex-start"
+            >
+              {details.label}
+            </Button>
+          );
+        })}
+      </Stack>
+    );
+  };
 
-                    }}
-                  >
-                    add context
-                  </Text>
-                </Tooltip>
-              </Box>
-            )}
-          </Box>
-        ) : (
-          <Box
-            style={{
-              padding: '16px',
-              minHeight: '80px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            {isRecording ? (
-              <>
-                <Text size="lg" fw={500}>Recording... {formatTime(recordingTime)}</Text>
-                <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
-              </>
-            ) : transcribing ? (
-              <Text size="lg" fw={500}>Transcribing...</Text>
-            ) : (
-              <>
-                <Text size="lg" fw={500}>Initializing...</Text>
-                <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
-              </>
-            )}
-          </Box>
-        )}
 
-        {/* Controls */}
-        {!recordingMode && (
-          <Box className={classes.controlsBackground}>
-            {isMobile ? (
-              <>
-                <Group gap={4}>
-                  {/* {renderFileUpload()} */}
-                  {renderLeftChatIcons()}
-                </Group>
-                <Group gap={4}>
-                  {renderRightChatIcons()}
-                </Group>
-              </>
-            ) : (
-              <>
-                <Group gap={"xs"}>
-                  {/* {renderFileUpload()} */}
-                  {renderLeftChatIcons()}
-                </Group>
-                <Group gap={8}>
-                  {renderRightChatIcons()}
-                </Group>
-              </>
-            )}
-          </Box>
-        )}
+  const currentModeDetails = getModeDetails(activeChat.chatType, activeChat.teacher);
+  const ModeIcon = currentModeDetails.icon;
+  const hasContext = activeChat.files.length > 0 || activeChat.documents.length > 0;
 
-        {/* Recording mode controls */}
-        {recordingMode && (
-          <Group gap={8} style={{
+  // Handler for clicking the "Add context" span using useCallback
+  const handleAddContextClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isAnimating) { // Only trigger if not already animating
+        console.log("Add context clicked, calling onAnimateContextAdd");
+        onAnimateContextAdd(); // Call the handler passed from ChatCanvas
+    }
+
+    // Focus textarea regardless (might need adjustment if animation blocks focus)
+    textareaRef.current?.focus();
+  }, [isAnimating, onAnimateContextAdd]); // Add dependencies
+
+
+  return (
+    // Wrap the main Stack in a Box with relative positioning
+    <Box style={{ position: 'relative', width: '100%' }}>
+      {/* Conditionally render ContextBadges */}
+      {!recordingMode && hasContext && (
+        <Box
+          style={{
             position: 'absolute',
-            right: '8px',
-            bottom: '8px',
-            zIndex: 10
-          }}>
-            <Tooltip label="Stop Recording">
+            left: '0px',
+            right: '0px',
+            top: '0',
+            zIndex: 10,
+            transform: 'translateY(-100%)',
+            pointerEvents: 'auto',
+            paddingBottom: '8px',
+          }}
+        >
+          <ContextBadges
+            activeChat={activeChat}
+            classId={classId}
+            onRemoveFile={onRemoveFile}
+            onRemoveDocument={onRemoveDocument}
+            setViewerMode={setViewerMode}
+          />
+        </Box>
+      )}
+
+      <Stack gap={"md"}>
+
+      {isInitializing ? (
+        <Box p={"xs"}>
+          <Skeleton height={60} />
+        </Box>
+      ) : recordingMode ? (
+        // Recording UI
+        <Box
+          className={classes.recordingBox}
+        >
+          {isRecording ? (
+            <>
+              <Text size="lg" fw={500}>Recording... {formatTime(recordingTime)}</Text>
+              <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
               <ActionIcon
-                onClick={() => handleToggleRecording()}
+                onClick={handleToggleRecording}
                 size="lg"
-                color="green"
-                loading={transcribing}
-                variant="subtle"
+                color="red"
+                variant="filled"
+                className={classes.stopRecordButton}
               >
                 <IconPlayerStop size={20} />
               </ActionIcon>
-            </Tooltip>
+            </>
+          ) : transcribing ? (
+            <Group>
+              <Text size="lg" fw={500}>Transcribing...</Text>
+              {/* Optional: Add a loader here */}
+            </Group>
+          ) : (
+             <>
+                <Text size="lg" fw={500}>Initializing...</Text>
+                <div ref={waveformRef} style={{ width: '100%', height: '60px' }} />
+              </>
+          )}
+        </Box>
+      ) : (
+        // Normal Input UI - Wrap Popover and Input Group
+        <Group wrap="nowrap" align="center" gap="5" className={classes.outerInputGroup}>
+          {/* Mode Selector Popover (Moved outside inputGroup) */}
+          {chatId === "new" && (
+            <Popover
+              opened={modePopoverOpened}
+              onChange={setModePopoverOpened}
+              position="top-start"
+              withArrow={false} // Removed arrow
+              shadow="md"
+              offset={5}
+              // arrowOffset={15} // No longer needed
+            >
+              <Popover.Target>
+                {/* Disable tooltip when popover is open */}
+                <Tooltip label="Select Chat Mode" openDelay={500} disabled={modePopoverOpened}>
+                  <UnstyledButton
+                    className={classes.modeSelectorButton}
+                    onClick={() => setModePopoverOpened((o) => !o)}
+                    data-active={modePopoverOpened || undefined}
+                  >
+                    {/* Increased icon size again */}
+                    <ModeIcon size={28} color={currentModeDetails.color} />
+                  </UnstyledButton>
+                </Tooltip>
+              </Popover.Target>
+              {/* Add style to remove border */}
+              <Popover.Dropdown className={classes.modePopoverDropdown} style={{ border: 'none' }}>
+                {renderModeOptions()}
+              </Popover.Dropdown>
+            </Popover>
+          )}
+
+          {/* Vertical Separator */}
+          {chatId === "new" && (
+             <Box
+                style={(theme) => ({
+                  width: '1px',
+                  height: '33px', 
+                  backgroundColor: "cyan",
+                  alignSelf: 'center',
+                  margin: 'auto 0',
+                })}
+              />
+          )}
+
+
+          {/* Inner Group containing Textarea and Action Button */}
+          <Group wrap="nowrap" align="flex-end" gap="xs" style={(theme) => ({ flexGrow: 1, marginLeft: 4 })}>
+            {/* Textarea and Action Button Container */}
+            <Box className={classes.textareaContainer} style={{ position: 'relative' }}>
+              <Textarea
+                ref={textareaRef}
+                value={activeChat.prompt}
+                onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
+                onKeyDown={handleKeyDown}
+                placeholder=" " // Use a space or empty string as placeholder
+                autosize
+                minRows={1}
+                maxRows={6}
+                size={"md"}
+                classNames={{
+                  root: classes.textareaRoot,
+                  input: classes.textareaInput,
+                  wrapper: classes.textareaWrapper
+                }}
+                disabled={isInitializing || loading || isAnimating} // Disable input during animation
+                pr={45} // Add padding to avoid text overlapping button
+              />
+              {/* Conditionally render the clickable placeholder text */}
+              {!activeChat.prompt && !isInitializing && !loading && ( // Keep hidden if loading
+                <Box
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    padding: 'var(--mantine-spacing-md)',
+                    paddingLeft: '4px', // Reduced from var(--mantine-spacing-md) to move closer to divider
+                    paddingTop: '7px',
+                    pointerEvents: 'none',
+                    lineHeight: '1.55',
+                    fontSize: 'var(--mantine-font-size-md)',
+                    color: 'var(--mantine-color-placeholder)',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: 'calc(100% - 45px)',
+                    opacity: isAnimating ? 0.5 : 1, // Dim if animating
+                  }}
+                >
+                  <span
+                    style={{
+                        color: 'var(--mantine-color-blue-filled)',
+                        cursor: isAnimating ? 'default' : 'pointer', // Change cursor if animating
+                        textDecoration: isAnimating ? 'none' : 'underline',
+                        pointerEvents: isAnimating ? 'none' : 'auto' // Disable click if animating
+                    }}
+                    onClick={handleAddContextClick}
+                  >
+                    Add context
+                  </span>
+                  {' '}and start chatting . . .
+                </Box>
+              )}
+              <Box className={classes.actionButtonContainer}>
+                {activeChat.prompt.trim() ? (
+                  <Tooltip label="Send Message (Enter)">
+                    <ActionIcon
+                      onClick={onSend}
+                      size="lg"
+                      loading={loading}
+                      disabled={!activeChat.prompt.trim() || loading}
+                      variant="subtle"
+                      color="blue"
+                      className={classes.sendButton} // Use specific class
+                    >
+                      <IconSend size={20} />
+                    </ActionIcon>
+                  </Tooltip>
+                ) : (
+                  <Tooltip label="Record Audio">
+                    <ActionIcon
+                      onClick={handleToggleRecording}
+                      size="lg"
+                      color="blue" // Or gray
+                      variant="subtle"
+                      className={classes.micButton} // Use specific class
+                      disabled={loading} // Disable mic if main send is loading
+                    >
+                      <IconMicrophone size={20} />
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </Box>
+            </Box>
           </Group>
-        )}
-      </Box>
+        </Group>
+      )}
     </Stack>
+    </Box>
   );
 });
 

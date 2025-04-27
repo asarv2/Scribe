@@ -3,6 +3,7 @@
  * This component is for chatting with the AI.
  */
 
+// Ensure necessary Mantine components are imported, remove Paper if not used elsewhere
 import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip, Box } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
@@ -35,6 +36,13 @@ import { useOs } from '@mantine/hooks';
 import PageDetailsModal from "../PageDetailsModal";
 import { useStudentMode } from "@/components/StudentModeContext";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
+// Import types and components needed for animation
+import { CONTENT_COLORS, File as SupabaseFile, Document as SupabaseDocument } from "@/types";
+import ItemCard from "../ItemCard"; // Re-import ItemCard
+import classes from './ChatCanvas.module.css'; // Import the CSS module
+// Remove imports only needed for placeholder if they aren't used elsewhere
+// import { Paper } from "@mantine/core";
+
 
 export interface RecordedVideo {
     id: string;
@@ -53,6 +61,10 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         showPageDetails: false,
     });
     const [loading, setLoading] = useState(false);
+
+    // Update state for animation
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [animatingItemId, setAnimatingItemId] = useState<string | null>(null);
 
     // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
@@ -92,6 +104,14 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         enabled: !!profile
     });
 
+    // Fetch file documents based on files data
+    const { data: fileDocuments, isLoading: loadingFileDocuments } = useQuery({
+        queryKey: ["fileDocuments", files?.map(f => f.id) ?? []],
+        queryFn: () => getFileDocuments(supabase, files?.map(f => f.id) ?? []),
+        enabled: !!files && files.length > 0 // Ensure files are loaded
+    });
+
+
     const [activeChat, setActiveChat] = useState<ChatMessage>({
         id: 1,
         title: "Office Hours",
@@ -103,8 +123,9 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         rating: null
     });
 
-    // Combine all loading states
-    const isInitializing = !user || !profile || !files;
+    // Combine all loading states, including fileDocuments
+    const isInitializing = !user || !profile || loadingFiles || loadingFileDocuments;
+
 
     const [shouldAnimateTitle, setShouldAnimateTitle] = useState<boolean>(false);
 
@@ -126,6 +147,88 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         const allDocuments = Array.from(new Set([...(activeChat.documents ?? []), ...previousMessagesDocuments]));
         return allDocuments;
     }
+
+    // MOVED: Define these functions BEFORE handleAnimateContextAdd
+    const addFileToChat = (fileId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            files: [...prev.files, fileId]
+        }));
+    };
+
+    const addDocumentToChat = (documentId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            documents: [...prev.documents, documentId]
+        }));
+    };
+
+    const removeFileFromChat = (fileId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            files: prev.files.filter((id: string) => id !== fileId)
+        }));
+    };
+
+    const removeDocumentFromChat = (documentId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            documents: prev.documents.filter((id: string) => id !== documentId)
+        }));
+    };
+
+    // AFTER function definitions, now we can use them in useCallback
+    const handleAnimateContextAdd = useCallback(() => {
+        if (isAnimating || isInitializing || !files || !profile || !fileDocuments) return;
+
+        // --- Replicate filtering/sorting logic from ContextPanel ---
+        const contentTypeOrder = { 'homework': 1, 'lecture': 2, 'rubric': 3, 'textbook': 4, 'other': 5 };
+        const visibleFiles = files.filter(f => {
+            if ((profile.professor || profile.admin) && !studentMode) return true;
+            return f.file_date !== null;
+        });
+
+        const sortedFiles = [...visibleFiles].sort((a, b) => {
+            const typeOrderDiff = contentTypeOrder[a.content_type as keyof typeof contentTypeOrder] - contentTypeOrder[b.content_type as keyof typeof contentTypeOrder];
+            if (typeOrderDiff !== 0) return typeOrderDiff;
+            if (a.file_number !== b.file_number) return b.file_number - a.file_number;
+            const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+            const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+            return dateA - dateB;
+        });
+
+        // Find the first available file not already in context
+        const topItem = sortedFiles.find(f => !activeChat.files.includes(f.id));
+
+        if (topItem) {
+            // Clear any existing animation state
+            setAnimatingItemId(null);
+            setIsAnimating(false);
+            
+            // Use requestAnimationFrame to ensure DOM has updated
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    // Set animating item ID 
+                    setAnimatingItemId(topItem.id);
+                    setIsAnimating(true);
+                    
+                    // Add context after animation duration
+                    setTimeout(() => {
+                        console.log("Animation finished, adding item to context:", topItem.id);
+                        addFileToChat(topItem.id);
+                        setIsAnimating(false);
+                        setAnimatingItemId(null);
+                    }, 1200); // Match CSS animation duration
+                });
+            });
+        } else {
+            notifications.show({
+                title: "No Context Available",
+                message: "There are no more items to add to the chat context.",
+                color: "yellow",
+            });
+        }
+    }, [isAnimating, isInitializing, files, fileDocuments, profile, studentMode, activeChat.files]);
 
     // Define sendMessage with useCallback
     const sendMessage = useCallback(async () => {
@@ -198,7 +301,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         activeChat,
         router,
         getContextFiles,
-        getContextDocuments
+        getContextDocuments,
+        fileDocuments // Add fileDocuments if used inside
     ]);
 
     const handleChat = async () => {
@@ -213,35 +317,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 color: "red"
             });
         }
-    };
-
-    // Modify addContextToChat to remove drag-related state updates
-    const addFileToChat = (fileId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            files: [...prev.files, fileId]
-        }));
-    };
-
-    const addDocumentToChat = (documentId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            documents: [...prev.documents, documentId]
-        }));
-    };
-
-    const removeFileFromChat = (fileId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            files: prev.files.filter((id: string) => id !== fileId)
-        }));
-    };
-
-    const removeDocumentFromChat = (documentId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            documents: prev.documents.filter((id: string) => id !== documentId)
-        }));
     };
 
     const handleFileDelete = () => {
@@ -301,6 +376,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                     span={isMobile ? 12 : viewerMode.open ? 8 : 12}
                     style={{
                         transition: 'width 300ms ease-in-out, flex 300ms ease-in-out',
+                        position: 'relative', // Needed for absolute positioning
                     }}
                     p={0}
                 >
@@ -310,36 +386,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                         p="xs"
                         bg="transparent"
                     >
-                        {/* Replace the ActionIcon with a direct icon that sits on the border */}
-                        {/* <Tooltip label={viewerMode.open ? `Close menu (${getShortcutText()})` : `Open menu (${getShortcutText()})`} openDelay={500}>
-                            <Box
-                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                style={{
-                                    position: 'absolute',
-                                    right: '0',
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                    zIndex: 100,
-                                    cursor: 'pointer',
-                                    width: '16px',
-                                    height: '40px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'var(--mantine-color-blue-light)',
-                                    color: 'var(--mantine-color-blue-filled)',
-                                    borderTopLeftRadius: '4px',
-                                    borderBottomLeftRadius: '4px',
-                                    boxShadow: '0 0 5px rgba(0,0,0,0.1)'
-                                }}
-                            >
-                                {viewerMode.open ?
-
-                                    <IconChevronRight size={18} style={{ position: 'relative', right: '-2px' }} /> :
-                                    <IconChevronLeft size={18} style={{ position: 'relative', right: '-2px' }} />
-                                }
-                            </Box>
-                        </Tooltip> */}
                         {/* Show controls only when not in immersive mode */}
                         <Flex justify="space-between" align="center" mb={10}>
                             {isInitializing ? (
@@ -354,8 +400,9 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                 </>
                             ) : (
                                 <>
-                                    <Group gap="sm">
-                                        <Text size="xl" fw={700} mb={6}>
+                                    {/* Reduce gap further */}
+                                    <Group gap={0} align="center"> 
+                                        <Text size="xl" fw={700} mb={0}> 
                                             {existingChat ? (
                                                 shouldAnimateTitle ? (
                                                     <TypeAnimation
@@ -387,6 +434,12 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                                 activeChat.title
                                             )}
                                         </Text>
+                                        {/* Moved ChatHistoryDropdown here */}
+                                        <ChatHistoryDropdown
+                                            currentChatId={chatId}
+                                            onChatSelect={handleChatSelect}
+                                            classId={classId}
+                                        />
                                         {existingChat?.chat_type === "grade" && <Badge color="orange" variant="light">Grade</Badge>}
                                         {existingChat?.chat_type === "test" && <Badge color="cyan" variant="light">Test-Prep</Badge>}
                                         {existingChat?.chat_type === "homework" && <Badge color="indigo" variant="light">Homework</Badge>}
@@ -407,11 +460,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                                 <IconPlus size={20} />
                                             </ActionIcon>
                                         </Tooltip>}
-                                        <ChatHistoryDropdown
-                                            currentChatId={chatId}
-                                            onChatSelect={handleChatSelect}
-                                            classId={classId}
-                                        />
+                                        {/* Removed ChatHistoryDropdown from here */}
                                     </Group>
                                 </>
                             )}
@@ -442,7 +491,42 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                             onRemoveFile={removeFileFromChat}
                             onRemoveDocument={removeDocumentFromChat}
                             setViewerMode={setViewerMode}
+                            files={files}
+                            fileDocuments={fileDocuments} // Pass fetched fileDocuments
+                            onAddFileContext={addFileToChat}
+                            onAddDocumentContext={addDocumentToChat}
+                            // Pass animation handler and state
+                            onAnimateContextAdd={handleAnimateContextAdd}
+                            isAnimating={isAnimating}
                         />
+                        
+                        {/* Add toggle button for context panel - only chevron visible */}
+                        {!isMobile && (
+                            <ActionIcon
+                                variant="transparent"
+                                color="blue"
+                                radius="xl"
+                                size="lg"
+                                style={{
+                                    position: 'absolute',
+                                    right: -14,
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    zIndex: 1000,
+                                    border: 'none',
+                                    backgroundColor: 'transparent',
+                                    width: 36,
+                                    height: 36,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                              }}
+                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
+                                title={viewerMode.open ? "Close context panel" : "Open context panel"}
+                            >
+                                {viewerMode.open ? <IconChevronRight size={24} stroke={2.5} /> : <IconChevronLeft size={24} stroke={2.5} />}
+                            </ActionIcon>
+                        )}
                     </Card>
                 </Grid.Col>
                 <Grid.Col
@@ -476,6 +560,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                             setViewerMode={setViewerMode}
                             onFileDelete={handleFileDelete}
                             isInitializing={isInitializing}
+                            isAnimating={isAnimating}
+                            animatingItemId={animatingItemId} // Pass the ID of item being animated
                         />
                     )}
                 </Grid.Col>

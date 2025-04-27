@@ -1,0 +1,61 @@
+@keyframes moveContextItem {
+  0% {
+    /* Start position */
+    transform: translate(0, 0);
+    opacity: 1;
+    position: absolute;
+    right: 20px; /* Adjust */
+    top: 60px;  /* Adjust */
+    z-index: 1000;
+  }
+  100% {
+    /* End position */
+    transform: translate(-350px, 550px); /* Adjust X and Y */
+    opacity: 1; /* Keep visible */
+    position: absolute; /* Maintain absolute positioning */
+    right: 20px; /* Adjust */
+    top: 60px;  /* Adjust */
+    z-index: 1000;
+  }
+}
+
+.animatingItem {
+  /* Apply the animation */
+  animation: moveContextItem 3s ease-in-out forwards;
+  pointer-events: none;
+
+  /* Initial state */
+  position: absolute;
+  right: 20px; /* Match keyframe 0% */
+  top: 60px;  /* Match keyframe 0% */
+  z-index: 1000;
+  /* Explicitly set the width */
+  width: 280px; /* Adjust this value if needed */
+  transform: translate(0, 0);
+  opacity: 1;
+  box-sizing: border-box;
+  /* Ensure the inner Box/ItemCard can fill this container */
+  display: flex; /* Optional: Might help ItemCard layout */
+  justify-content: center; /* Optional: Might help ItemCard layout */
+  align-items: center; /* Optional: Might help ItemCard layout */
+}
+
+/* Animation for the flying item card */
+.flyingItemCard {
+  /* Increased duration from 1.2s to 1.7s for slower animation */
+  animation: flyToChat 1.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  transform-origin: left center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+@keyframes flyToChat {
+  0% {
+    transform: translateX(0) translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    /* Single end state - moving primarily to the left */
+    transform: translateX(calc(var(--fly-x) * 2)) translateY(calc(var(--fly-y) * 0.2)) scale(0.8);
+    opacity: 1; /* Keep fully visible instead of fading out */
+  }
+}

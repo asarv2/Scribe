@@ -1,179 +1,120 @@
-import { useState, useRef, useEffect } from 'react';
-import { IconCalendarStats, IconChevronRight } from '@tabler/icons-react';
-import { Box, Collapse, Flex, Group, ThemeIcon, UnstyledButton, Skeleton } from '@mantine/core';
+import { useState } from 'react';
+import { Group, Box, Collapse, Text, UnstyledButton, rem, Skeleton } from '@mantine/core';
+import { IconChevronRight } from '@tabler/icons-react';
+import classes from './ClassNavbarLinksGroup.module.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import classes from './ClassNavbarLinksGroup.module.css';
-import { MenuLink } from '@/utils/menu/menuConfig';
-interface ClassLinksGroupProps {
-  icon: React.FC<any>;
-  label: string;
-  link?: string;
-  links?: MenuLink[];
-  isExpanded: boolean;
-  isLoading?: boolean;
+
+interface LinksGroupProps {
+    icon: React.FC<any>;
+    label: string;
+    initiallyOpened?: boolean;
+    link?: string; // Make link optional
+    isLink?: boolean; // Add isLink prop
+    links?: { label: string; link: string }[];
+    isExpanded: boolean; // Keep isExpanded, might be used for styling or sub-link visibility
+    isLoading: boolean;
 }
 
 export function ClassNavbarLinksGroup({
-  icon: Icon,
-  label,
-  links,
-  link,
-  isExpanded,
-  isLoading
-}: ClassLinksGroupProps) {
-  const hasLinks = Array.isArray(links);
-  const pathname = usePathname();
-  const [opened, setOpened] = useState(false);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
+    icon: Icon,
+    label,
+    initiallyOpened,
+    link,
+    isLink,
+    links,
+    isExpanded,
+    isLoading
+}: LinksGroupProps) {
+    const pathname = usePathname();
+    const hasLinks = Array.isArray(links);
+    const [opened, setOpened] = useState(initiallyOpened || false);
 
-  // Normalize paths by removing trailing slashes
-  const normalizedPathname = pathname?.replace(/\/$/, '');
-  const normalizedLink = link?.replace(/\/$/, '');
-
-  // More exact path matching with normalized paths
-  const isActiveGroup = hasLinks 
-    ? links.some(item => normalizedPathname === item.link?.replace(/\/$/, ''))
-    : normalizedPathname === normalizedLink;
-
-  // For home/index routes, also check if we're at the root of the class
-  const isActiveLink = !hasLinks && (
-    normalizedPathname === normalizedLink || 
-    (label === 'Home' && normalizedPathname === normalizedLink?.replace(/\/+$/, ''))
-  );
-
-  const handleMouseEnter = () => {
-    // Clear any existing timeout
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-    
-    // Only open after a short delay and if the menu isn't already expanded
-    hoverTimeoutRef.current = setTimeout(() => {
-      if (!opened) {
-        setOpened(true);
-      }
-    }, 100); // 100ms delay before opening
-  };
-
-  const handleClick = () => {
-    // Clear any pending hover timeout
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-    setOpened(!opened);
-  };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
+    // Updated active link check logic
+    const isLinkActive = (linkPath: string) => {
+        // Handle main class page specially for home link
+        if (linkPath.endsWith('/')) {
+            // If link ends with '/', it's likely the home link
+            const baseClassPath = linkPath.slice(0, -1); // Remove trailing slash
+            return pathname === baseClassPath || pathname === linkPath;
+        }
+        return pathname === linkPath;
     };
-  }, []);
 
-  useEffect(() => {
-    if (!isExpanded) {
-      // Add a small delay before closing to allow for smoother transitions
-      setTimeout(() => {
-        setOpened(false);
-      }, 150); // 150ms delay before closing
+    // Determine if the main link or any sublink is active
+    const isActive = (link && isLinkActive(link)) || links?.some(item => isLinkActive(item.link));
+
+    const items = (hasLinks ? links : []).map((item) => (
+        <Link href={item.link} key={item.label} passHref legacyBehavior>
+            <Text<'a'>
+                component="a"
+                className={classes.link}
+                href={item.link}
+                data-active={isLinkActive(item.link) || undefined}
+            >
+                {item.label}
+            </Text>
+        </Link>
+    ));
+
+    if (isLoading) {
+        return (
+            <>
+                <Skeleton height={30} mt="sm" width="80%" radius="sm" />
+                {hasLinks && (
+                    <Box ml="xl" mt="sm">
+                        <Skeleton height={20} mt="xs" width="70%" radius="sm" />
+                        <Skeleton height={20} mt="xs" width="70%" radius="sm" />
+                    </Box>
+                )}
+            </>
+        );
     }
-  }, [isExpanded]);
 
-  const items = (hasLinks ? links : []).map((link) => (
-    <Link
-      href={link.link}
-      key={link.label}
-      className={classes.link}
-      data-active={pathname === link.link} // Exact match instead of startsWith
-      style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-    >
-      {link.label}
-    </Link>
-  ));
+    // Render as a direct link if isLink is true and link exists
+    if (isLink && link) {
+        return (
+            <Link href={link} passHref legacyBehavior>
+                <UnstyledButton
+                    component="a"
+                    href={link}
+                    className={classes.control}
+                    data-active={isActive || undefined}
+                >
+                    <Group justify="space-between" gap={0}>
+                        <Box style={{ display: 'flex', alignItems: 'center' }}>
+                            <Icon style={{ width: rem(18), height: rem(18) }} />
+                            <Box ml="md">{label}</Box>
+                        </Box>
+                    </Group>
+                </UnstyledButton>
+            </Link>
+        );
+    }
 
-  if (isLoading) {
+    // Render as a collapsible group if it has sublinks
     return (
-      <div className={classes.control}>
-        <Flex justify="space-between" gap={0} style={{ width: '100%' }}>
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <Skeleton height={36} width={36} radius="md" />
-            {isExpanded && (
-              <Skeleton height={20} width={100} radius="sm" ml="md" />
-            )}
-          </Box>
-          {isExpanded && hasLinks && (
-            <Skeleton height={16} width={16} radius="sm" />
-          )}
-        </Flex>
-        {isExpanded && hasLinks && opened && (
-          <Box ml={50} mt="xs">
-            {Array(3).fill(0).map((_, i) => (
-              <Skeleton key={i} height={24} width="80%" radius="sm" mb="xs" />
-            ))}
-          </Box>
-        )}
-      </div>
+        <>
+            <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control} data-active={isActive || undefined}>
+                <Group justify="space-between" gap={0}>
+                    <Box style={{ display: 'flex', alignItems: 'center' }}>
+                        <Icon style={{ width: rem(18), height: rem(18) }} />
+                        <Box ml="md">{label}</Box>
+                    </Box>
+                    {hasLinks && (
+                        <IconChevronRight
+                            className={classes.chevron}
+                            stroke={1.5}
+                            style={{
+                                width: rem(16),
+                                height: rem(16),
+                                transform: opened ? 'rotate(90deg)' : 'none',
+                            }}
+                        />
+                    )}
+                </Group>
+            </UnstyledButton>
+            {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
+        </>
     );
-  }
-
-  if (!hasLinks && link) {
-    return (
-      <Link
-        href={link}
-        className={classes.control}
-        data-active={isActiveLink}
-      >
-        <Group justify="space-between" gap={0}>
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ThemeIcon variant="light" size={36} className={isActiveLink ? classes.activeIcon : ''}>
-              <Icon size={20} />
-            </ThemeIcon>
-            {isExpanded && <Box ml="md" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</Box>}
-          </Box>
-        </Group>
-      </Link>
-    );
-  }
-
-  return (
-    <div 
-      onMouseEnter={handleMouseEnter}
-    >
-      <UnstyledButton 
-        className={classes.control}
-        onClick={handleClick}
-        data-active={isActiveGroup}
-      >
-        <Flex justify="space-between" gap={0}>
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ThemeIcon variant="light" size={36} className={isActiveGroup ? classes.activeIcon : ''}>
-              <Icon size={20} />
-            </ThemeIcon>
-            {isExpanded && <Box ml="md" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</Box>}
-          </Box>
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
-            {hasLinks && isExpanded && (
-              <IconChevronRight
-                className={classes.chevron}
-                stroke={1.5}
-                size={16}
-                style={{
-                  transform: opened ? 'rotate(90deg)' : 'none',
-                  transition: 'transform 300ms ease',
-                }}
-              />
-            )}
-          </Box>
-        </Flex>
-      </UnstyledButton>
-      {hasLinks && isExpanded ? (
-        <Collapse in={opened} transitionDuration={300} transitionTimingFunction="ease">
-          {items}
-        </Collapse>
-      ) : null}
-    </div>
-  );
 }

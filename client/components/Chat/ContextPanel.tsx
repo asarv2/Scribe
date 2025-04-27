@@ -46,6 +46,8 @@ interface ContextPanelProps {
     viewerMode: ViewerMode;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
     onFileDelete?: () => void;
+    isAnimating?: boolean; // Add animation props
+    animatingItemId?: string | null;
 }
 
 export function ContextPanel({
@@ -59,7 +61,9 @@ export function ContextPanel({
     makeDraggable = false,
     viewerMode,
     setViewerMode,
-    onFileDelete
+    onFileDelete,
+    isAnimating = false,
+    animatingItemId = null
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
@@ -699,9 +703,10 @@ export function ContextPanel({
         <Card
             bg="transparent"
             style={{
+                // width: "80", // This seems incorrect, removing or adjusting if needed
                 height: "calc(100vh - 90px)",
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
             }}
             p="xs"
         >
@@ -710,7 +715,6 @@ export function ContextPanel({
                     // Skeleton for search bar and upload button when initializing
                     <Flex justify="space-between" align="center" gap="md">
                         <Skeleton height={36} radius="md" style={{ flex: 1 }} />
-                        <Skeleton height={36} width={36} radius="md" />
                     </Flex>
                 ) : (
                     <Flex justify="space-between" align="center" gap="md" pt={2}>
@@ -719,99 +723,109 @@ export function ContextPanel({
                             value={localSearchQuery}
                             onChange={(e) => setLocalSearchQuery(e.target.value)}
                             leftSection={<IconSearch size={16} />}
+                            rightSection={
+                                <>
+                                    {profile && ((profile.admin || profile.professor) && !studentMode) ? (
+                                        <Menu
+                                            openDelay={100}
+                                            closeDelay={200}
+                                            width={200}
+                                            shadow="md"
+                                            trigger="click-hover"
+                                            transitionProps={{ transition: 'fade', duration: 200 }}
+                                            position="bottom-end"
+                                        >
+                                            <Menu.Target>
+                                                <ActionIcon 
+                                                    size={30} 
+                                                    aria-label="Upload content" 
+                                                    variant="transparent"
+                                                    style={{ marginRight: 13 }} // Increased margin to move it more to the left
+                                                >
+                                                    <IconUpload size={18} />
+                                                </ActionIcon>
+                                            </Menu.Target>
+                                            <Menu.Dropdown>
+                                                <Menu.Label>Upload Content</Menu.Label>
+                                                <Menu.Item
+                                                    leftSection={<IconFileTypePpt size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'lecture';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Lecture
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    leftSection={<IconBookDownload size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'textbook';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Textbook
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    leftSection={<IconFileExcel size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'homework';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Homework
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    leftSection={<IconFileCheck size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'rubric';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Rubric
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    leftSection={<IconFile size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'other';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Other
+                                                </Menu.Item>
+                                            </Menu.Dropdown>
+                                        </Menu>
+                                    ) : classData?.files_enabled ? (
+                                        <Tooltip label={"Upload files"}>
+                                            <ActionIcon 
+                                                size={30} 
+                                                aria-label="Upload files" 
+                                                variant="transparent"
+                                                style={{ marginRight: 20 }} // Increased margin to move it more to the left
+                                                onClick={() => {
+                                                    contentTypeRef.current = 'other';
+                                                    if (openRef.current) {
+                                                        openRef.current.click();
+                                                    }
+                                                }}
+                                            >
+                                                <IconUpload size={18} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    ) : null}
+                                </>
+                            }
                             style={{ flex: 1 }}
                         />
-                        <>
-                            {profile && ((profile.admin || profile.professor) && !studentMode) ?
-                                <Menu
-                                    openDelay={100}
-                                    closeDelay={200}
-                                    width={200}
-                                    shadow="md"
-                                    trigger="click-hover"
-                                    transitionProps={{ transition: 'fade', duration: 200 }}
-                                >
-                                    <Menu.Target>
-                                        <ActionIcon size={30} aria-label="Upload content">
-                                            <IconUpload size={18} />
-                                        </ActionIcon>
-                                    </Menu.Target>
-                                    <Menu.Dropdown>
-                                        <Menu.Label>Upload Content</Menu.Label>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypePpt size={14} />}
-                                            onClick={() => {
-                                                // Set content type before clicking
-                                                contentTypeRef.current = 'lecture';
-                                                if (openRef.current) {
-                                                    openRef.current.click();
-                                                }
-                                            }}
-                                        >
-                                            Lecture
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconBookDownload size={14} />}
-                                            onClick={() => {
-                                                // Set content type before clicking
-                                                contentTypeRef.current = 'textbook';
-                                                if (openRef.current) {
-                                                    openRef.current.click();
-                                                }
-                                            }}
-                                        >
-                                            Textbook
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileExcel size={14} />}
-                                            onClick={() => {
-                                                // Set content type before clicking
-                                                contentTypeRef.current = 'homework';
-                                                if (openRef.current) {
-                                                    openRef.current.click();
-                                                }
-                                            }}
-                                        >
-                                            Homework
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileCheck size={14} />}
-                                            onClick={() => {
-                                                // Set content type before clicking
-                                                contentTypeRef.current = 'rubric';
-                                                if (openRef.current) {
-                                                    openRef.current.click();
-                                                }
-                                            }}
-                                        >
-                                            Rubric
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => {
-                                                // Set content type before clicking
-                                                contentTypeRef.current = 'other';
-                                                if (openRef.current) {
-                                                    openRef.current.click();
-                                                }
-                                            }}
-                                        >
-                                            Other
-                                        </Menu.Item>
-                                    </Menu.Dropdown>
-                                </Menu> : classData?.files_enabled ?
-                                    <Tooltip label={"Upload files"}>
-                                        <ActionIcon size={30} aria-label="Upload files" onClick={() => {
-                                            // Set content type before clicking
-                                            contentTypeRef.current = 'other';
-                                            if (openRef.current) {
-                                                openRef.current.click();
-                                            }
-                                        }}>
-                                            <IconUpload size={18} />
-                                        </ActionIcon>
-                                    </Tooltip> : null}
-                        </>
                     </Flex>
                 )}
 
@@ -940,8 +954,9 @@ export function ContextPanel({
                                                             makeDraggable={makeDraggable}
                                                             setViewerMode={setViewerMode}
                                                             fileDocuments={fileDocuments}
-                                                            onFileDelete={onFileDelete}
-                                                            onReorder={handleReorderFiles}
+                                                            onReorder={handleReorderFiles} // Keep reordering functionality
+                                                            isAnimating={isAnimating}
+                                                            animationId={animatingItemId || ''}
                                                         />
                                                     </div>
                                                 );
@@ -1033,7 +1048,6 @@ export function ContextPanel({
                                                 makeDraggable={makeDraggable}
                                                 setViewerMode={setViewerMode}
                                                 fileDocuments={fileDocuments}
-                                                onFileDelete={onFileDelete}
                                                 onReorder={handleReorderFiles}
                                             />
                                         </div>

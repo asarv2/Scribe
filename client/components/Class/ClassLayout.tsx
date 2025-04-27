@@ -6,9 +6,8 @@
  * 17.02.2025
  */
 
-import { AppShell, Group } from "@mantine/core";
+import { AppShell, Burger, Group, Skeleton } from '@mantine/core';
 import { ReactNode, useState, useEffect } from "react";
-import { ClassNavbar } from "./ClassNavbar";
 import { ClassHeader } from "./ClassHeader";
 import { NAVBAR_CONSTANTS } from './ClassHeader';
 import { getClasses } from "@/utils/queries/get-classes";
@@ -29,7 +28,7 @@ interface ClassLayoutProps {
     classId: string | null;
     showHeader?: boolean;
     showClasses?: boolean;
-    showNavbar?: boolean;
+    showNavbar?: boolean; // Keep prop for potential future use, but don't use it for rendering navbar
 }
 
 export function ClassLayout({ children, classId, showHeader = true, showClasses = true, showNavbar = true }: ClassLayoutProps) {
@@ -37,17 +36,9 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
     const { studentMode } = useStudentMode();
     const { colorScheme } = useMantineColorScheme();
 
-    const [mobileNavOpen, setMobileNavOpen] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
-
     const getFilteredClasses = (profile: Profile | undefined, classData: Class[] | undefined) => {
         if (!profile || !classData) return [];
         return profile.admin ? classData : classData?.filter(classItem => profile.classes?.includes(classItem.id));
-    };
-
-    // Toggle function for mobile menu
-    const toggleMobileNav = () => {
-        setMobileNavOpen(prev => !prev);
     };
 
     const { data: user } = useQuery({
@@ -66,17 +57,17 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
         queryFn: () => getClasses(supabase),
     })
 
+    // Calculate basePath here
+    const basePath = classId ? `/class/${classId}` : '/';
+
     return (
         <DndProvider backend={HTML5Backend}>
             <AppShell
                 header={{ height: showHeader ? 60 : 0 }}
                 navbar={{
-                    width: profile && ((profile.professor || profile.admin) && !studentMode) && showNavbar ? {
-                        base: NAVBAR_CONSTANTS.COLLAPSED_WIDTH,
-                        expanded: NAVBAR_CONSTANTS.EXPANDED_WIDTH
-                    } : 0,
-                    breakpoint: 'sm',
-                    collapsed: { mobile: !mobileNavOpen },
+                    // Set width to 0 to hide the navbar area
+                    width: 0,
+                    breakpoint: 'sm', // Keep breakpoint for consistency if needed elsewhere
                 }}
                 padding="md"
                 styles={(theme) => ({
@@ -86,24 +77,16 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                 })}
             >
                 {showHeader && (
-                    <AppShell.Header>
+                    <AppShell.Header
+                    withBorder={false}
+                    >
                         <ClassHeader
+                            // Pass classId and basePath
                             classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
+                            basePath={basePath} // Pass basePath
                             showClasses={showClasses}
-                            onMobileMenuToggle={toggleMobileNav}
                         />
                     </AppShell.Header>
-                )}
-
-                {profile && ((profile.professor || profile.admin) && !studentMode) && (classId !== null) && (showNavbar) && (
-                    <AppShell.Navbar>
-                        <ClassNavbar
-                            classId={classId}
-                            basePath={`/class/${classId}`}
-                            isExpanded={isExpanded}
-                            onExpandedChange={setIsExpanded}
-                        />
-                    </AppShell.Navbar>
                 )}
 
                 <AppShell.Main>

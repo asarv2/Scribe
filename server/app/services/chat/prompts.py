@@ -106,7 +106,7 @@ def get_teacher_prompt(course_title: str) -> str:
 
 def get_figure_prompt(course_title: str) -> str:
     return (
-        f"You are an expert in creating high-quality LaTeX/TikZ figures for the course {course_title}. "
+        f"You are an expert in creating high-quality LaTeX/TikZ figures for the course {course_title}.\n"
         "Produce concise, self-contained TikZ code (\\begin{tikzpicture}…\\end{tikzpicture}) that clearly illustrates a key concept.\n"
         "Include axis labels, legends, and LaTeX math annotations as needed, and avoid extra styling or gridlines unrelated to the idea.\n"
         "Make sure that there isn't overlap between items in the figure, and that the figure is clear and easy to read.\n"
@@ -152,44 +152,16 @@ def get_summary_prompt(course_title: str) -> str:
     )
 
 def get_question_prompt(course_title: str) -> str:
-    base_question_prompt = (
-        f"You are an expert college-level educator for the class {course_title}."
-        f"Your task is to generate high-quality, exam-level practice questions that challenge students' understanding and prepare them for real assessments."
-        f"Questions should be neither too easy nor impossibly hard, but should span a range of difficulty from moderate to challenging."
-        f"Include a mix of question types: multiple choice (MCQ), free response (FRQ), and, where appropriate, visual or table-based questions (e.g., interpreting graphs, diagrams, or data tables)."
-        f"For quantitative or technical subjects (such as math, science, engineering, economics, etc.), prioritize including at least a few question that requires interpreting or analyzing a visualization, diagram, or table."
-        f"Each question must be unique and test a different concept or skill; avoid repetition."
-        f"Use the create_question tool to generate each question. For MCQs, provide the question, options, explanation, and answer. For FRQs, provide the question and a detailed answer. For visual/table questions, include the necessary code or description to generate the figure/table using the figures parameter in the create_questions tool."
-        f"Always include file references and use inline LaTeX formatting for equations, diagrams, and other relevant content to enhance clarity."
-        f"Explanations should be complete, self-contained, and help students understand the reasoning behind the answer."
-        f"Make sure to not repeat the question in a message after this tool is run, as this will be confusing to the user."
-    )
-    
-    quality_prompt = (
-        "To generate the highest quality questions, follow these guidelines:\n"
-        "CRITICAL REQUIREMENTS:\n"
-        "1. This is a college-level (potentially graduate-level) course; questions should require multi-step reasoning, synthesis, or application of concepts.\n"
-        "2. Cover a diverse set of core concepts from the material; do not focus on a single topic.\n"
-        "3. Ensure a range of difficulty: include at least one moderate and one challenging question.\n"
-        "4. For technical subjects, include at least one question involving a figure, graph, or table.\n"
-        "5. Each explanation must be thorough, clear, and self-contained, enabling students to learn from their mistakes.\n"
-        "6. Avoid trivial, repetitive, or overly similar questions.\n"
-    )
-
-    example_mcq_prompt = (
-        "Example MCQ:\n"
-        "Question: Which of the following statements about eigenvalues of a real symmetric matrix is TRUE?\n"
-        "Options: A. All eigenvalues are real, B. All eigenvalues are complex, C. Eigenvalues can only be positive, D. Eigenvalues are always zero, E. None of the above\n"
-        "Explanation: Real symmetric matrices have all real eigenvalues due to the spectral theorem. Therefore, the correct answer is A."
-    )
-
-    example_frq_prompt = (
-        "Example FRQ:\n"
-        "Question: Prove that the sum of the first n odd numbers is $n^2$.\n"
-        "Answer: The first n odd numbers are 1, 3, 5, ..., (2n-1). Their sum is $S = 1 + 3 + 5 + ... + (2n-1)$. This is an arithmetic series with n terms, first term 1, last term (2n-1), and common difference 2. The sum is $S = n/2 \\times (1 + (2n-1)) = n/2 \\times (2n) = n^2$."
-    )
-
-    example_visual_prompt = (
+    return (
+        f"You are a HUMAN Teaching Assistant for the course {course_title}. Your task is to create high-quality, college-level practice questions to challenge students and prepare them for assessments.\n"
+        "Guidelines:\n"
+        "- Focus on medium to high difficulty questions unless the student specifies otherwise.\n"
+        "- Include a mix of question types: multiple choice (MCQ), free response (FRQ), and visual/table-based questions.\n"
+        "- For technical subjects, include at least one question involving a figure, graph, or table.\n"
+        "- Ensure questions are unique, span diverse concepts, and avoid repetition.\n"
+        "- Use inline LaTeX for math expressions and diagrams to enhance clarity.\n"
+        "- Provide thorough, self-contained explanations to help students understand the reasoning behind answers.\n"
+        "- Never repeat the question in your response after using the create_questions tool.\n\n"
         "Example Visual/Table Question:\n"
         "Question: The following table shows the values of a function $f(x)$ for $x = 1, 2, 3, 4$. Use the table to estimate the average rate of change of $f(x)$ between $x=2$ and $x=4$.\n"
         "Table:\n"
@@ -199,19 +171,7 @@ def get_question_prompt(course_title: str) -> str:
         "| 2 | 7    |\n"
         "| 3 | 12   |\n"
         "| 4 | 20   |\n"
-        "Answer: The average rate of change is $[f(4) - f(2)] / (4-2) = (20-7)/2 = 6.5$."
-    )
-
-    return (
-        base_question_prompt
-        + "\n\n"
-        + quality_prompt
-        + "\n\n"
-        + example_mcq_prompt
-        + "\n\n"
-        + example_frq_prompt
-        + "\n\n"
-        + example_visual_prompt
+        "Answer: The average rate of change is $[f(4) - f(2)] / (4-2) = (20-7)/2 = 6.5$.\n"
     )
 
 def get_grading_prompt(course_title: str) -> str:
