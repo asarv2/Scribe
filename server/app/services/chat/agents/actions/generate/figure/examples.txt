@@ -1,0 +1,100 @@
+Example TikZ code:
+```latex
+\\begin{tikzpicture}[scale=0.8]
+    % Axes
+    \\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+    \\draw[->] (0,-1) -- (0,8) node[above] {$y$};
+    % Functions
+    \\draw[domain=-2.5:2.5, smooth, thick, blue] plot (\\x,{\\x}) node[above right] {$y=x$};
+\\end{tikzpicture}
+```
+
+Example PGFPlots code:
+```latex
+\\begin{tikzpicture}
+    \\begin{axis}[
+    xlabel={$x$},
+    ylabel={$y$},
+    axis lines=middle
+    ]
+    \\addplot[domain=-2:2, samples=100, smooth, blue] {x^2};
+    \\end{axis}
+\\end{tikzpicture}
+```
+
+Example 1: Sample weighted graph
+```
+\\begin{tikzpicture}[scale=0.8]
+    % Vertices
+    \\node[circle, draw, fill=green!30] (A) at (0,4)  {A};
+    \\node[circle, draw, fill=green!30] (B) at (2,6)  {B};
+    \\node[circle, draw, fill=green!30] (C) at (2,2)  {C};
+    \\node[circle, draw, fill=green!30] (D) at (5,5)  {D};
+    \\node[circle, draw, fill=green!30] (E) at (5,1)  {E};
+    \\node[circle, draw, fill=green!30] (F) at (7,5)  {F};
+
+    % Edges with weights
+    \\draw (A) -- node[above left] {5}  (B);
+    \\draw (A) -- node[below left] {2}  (C);
+    \\draw (B) -- node[above left] {12} (C);
+    \\draw (B) -- node[above]      {7}  (D);
+    \\draw (C) -- node[above right]{6}  (D);
+    \\draw (C) -- node[above right]{10} (E);
+    \\draw (D) -- node[right]      {8}  (E);
+    \\draw (D) to[bend left =20]   node[above] {4} (F);
+    \\draw (D) to[bend right=20]   node[below] {1} (F);
+    \\draw (F) to[loop right]      node[right] {5} (F);
+\\end{tikzpicture}
+```
+
+Example 2: Power-law relationship
+```
+\\begin{tikzpicture}
+    \\begin{loglogaxis}[
+        xlabel={$x$},
+        ylabel={$y$},
+        legend pos=south east,
+        grid=both,
+    ]
+    % Data points
+    \\addplot[only marks] table[row sep=\\\\]{
+        x   y \\\\
+        1   2 \\\\
+        2   4 \\\\
+        4   7.9 \\\\
+        8   16.2 \\\\
+        16  31.5 \\\\
+    };
+    \\addlegendentry{Experimental}
+
+    % Best-fit y = 2·x^{1.05}
+    \\addplot+[domain=1:16,samples=100]{2*pow(x,1.05)};
+    \\addlegendentry{Model $y = 2x^{1.05}$}
+    \\end{loglogaxis}
+\\end{tikzpicture}
+```
+
+Example 3: Dijkstra pseudo-algorithm
+```
+\\begin{algorithm}[H]
+\\caption{Dijkstra's shortest-path}
+\\begin{algorithmic}[1]
+\\Require weighted graph $G=(V,E)$, source $s$
+\\Ensure $\\text{dist}[v]$ is the shortest distance from $s$ to every $v\\in V$
+\\State initialize all $\\text{dist}[v] \\gets \\infty$, $\\text{prev}[v] \\gets \\text{null}$
+\\State $\\text{dist}[s] \\gets 0$
+\\State $Q \\gets V$ \\Comment{min-priority queue keyed by $\\text{dist}$}
+\\While{$Q \\neq \\emptyset$}
+    \\State $u \\gets$ vertex in $Q$ with smallest $\\text{dist}[u]$
+    \\State remove $u$ from $Q$
+    \\For{\\textbf{each} neighbor $v$ of $u$}
+    \\If{$\\text{dist}[u] + w(u,v) < \\text{dist}[v]$}
+        \\State $\\text{dist}[v] \\gets \\text{dist}[u] + w(u,v)$
+        \\State $\\text{prev}[v] \\gets u$
+        \\State update key of $v$ in $Q$
+    \\EndIf
+    \\EndFor
+\\EndWhile
+\\end{algorithmic}
+\\end{algorithm}
+```

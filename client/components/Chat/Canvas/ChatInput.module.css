@@ -1,63 +1,48 @@
-/* ChatInput.module.css */
-.inputContainer {
-    position: relative;
-    width: 100%;
+/* clone Mantine Textarea look & feel */
+.recorderContainer {
+  position: relative;
+  padding: 8px 12px;
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-gray-4);   /* same border */
+  border-radius: var(--mantine-radius-md);
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 
-.inputBox {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding-top: 6px;
-    padding-bottom: 12px;
-    position: relative;
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+.waveform {
+  flex: 1;
+  height: 48px;
 }
 
-.textarea {
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+.waveSkeleton {          /* placeholder while initializing */
+  flex: 1;
+  height: 48px;
+  border-radius: 4px;
 }
 
-.textareaInput {
-    border: none;
-    padding-bottom: 45px;
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+.timer {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  user-select: none;
 }
 
-.textareaInput:focus {
-    border: none;
-    outline: none;
+.transcribing {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.textareaWrapper {
-    border: none;
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-}
-
-.controlsBackground {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-    z-index: 5;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 8px;
-    border-bottom-left-radius: 7px;
-    border-bottom-right-radius: 7px;
-    padding-bottom: 5px;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.stopGroup {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;               /* ensures clickability */
 }

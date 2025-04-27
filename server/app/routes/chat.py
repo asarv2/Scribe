@@ -4,8 +4,10 @@ import logging
 import traceback
 from app.extensions import get_supabase
 from app.services.chat.main import ChatProcessor
-from app.services.chat.models import Documents, fetch_chat_context, get_mapped_references
-from app.services.chat.google import GoogleFiles
+from app.services.chat.models.main import Documents
+from app.services.chat.utils.google import GoogleFiles
+from app.services.chat.utils.references import fetch_chat_context, get_mapped_references
+
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
@@ -98,6 +100,11 @@ async def handle_chat(
                 "output_tokens": output_tokens
             }).execute()
 
+        async def update_chat_title(chat_id: str, title: str):
+            response = supabase_client.table("chats").update({
+                "name": title
+            }).eq("id", chat_id).execute()
+            return response.data[0]['trace']
         # Initialize processor and response
         processor = ChatProcessor(
             prompt_type=chat['chat_type'],
@@ -107,7 +114,8 @@ async def handle_chat(
             trace_id=trace_id,
             stream_callback=update_callback,
             update_trace_id=update_trace_id,
-            update_chat_usage=update_chat_usage
+            update_chat_usage=update_chat_usage,
+            update_chat_title=update_chat_title
         )
 
         try:
