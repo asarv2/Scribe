@@ -165,13 +165,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
             () => {
               console.log("figures changed");
               queryClient.invalidateQueries({
-                queryKey: ["figures", chatId]
-              });
-              queryClient.invalidateQueries({
-                queryKey: ["summaryFigures", chatId]
-              });
-              queryClient.invalidateQueries({
-                queryKey: ["questionFigures", chatId]
+                queryKey: ["figures", classId]
               });
             }
           )
@@ -190,7 +184,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
             () => {
               console.log("summaries changed");
               queryClient.invalidateQueries({
-                queryKey: ["summaries", chatId]
+                queryKey: ["summaries", classId]
               });
             }
           )
@@ -209,7 +203,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
             () => {
               console.log("questions changed");
               queryClient.invalidateQueries({
-                queryKey: ["questions", chatId]
+                queryKey: ["questions", classId]
               });
             }
           )
@@ -226,7 +220,6 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
               filter: `message=in.(${messages.map(m => m.id).join(',')})`
             },
             () => {
-              console.log("grades changed");
               queryClient.invalidateQueries({
                 queryKey: ["grades", chatId]
               });
