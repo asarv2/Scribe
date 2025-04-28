@@ -1,10 +1,10 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getFigures(client: TypedSupabaseClient, messageIds: string[]) {
+export async function getFigures(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
         .from("figures")
         .select("*")
-        .in("message", messageIds)
+        .eq("class", classId)
         .order("created_at", {ascending: true})
     
     if (error) {

@@ -49,7 +49,11 @@ class GuardrailAgent:
                         ctx.usage.output_tokens)
 
             return GuardrailFunctionOutput(
-                output_info=output.title, 
+                output_info={
+                    "title": output.title,
+                    "in_scope": output.in_scope,
+                    "reason_out_of_scope": output.reason_out_of_scope
+                }, 
                 tripwire_triggered=(not output.in_scope),
             )
     
@@ -98,7 +102,6 @@ class GuardrailAgent:
             return [model(success=True, **{key: id_}) for id_ in ids]
         
         async def to_chat_items(resp: Any, supabase, ctx) -> list[dict]:
-            logger.info("Converting %s to chat items", type(resp).__name__)
             if isinstance(resp, CreateFigureResponse):
                 return await process_special_tags("", supabase, ctx.context,
                                                 figure_id=resp.figure_id)
@@ -109,7 +112,11 @@ class GuardrailAgent:
                 return await process_special_tags("", supabase, ctx.context,
                                                 question_id=resp.question_id)
             # default: plain assistant text
-            return [{"role": "assistant", "content": str(resp)}]
+            # only if the resp is not empty
+            if resp:
+                return [{"role": "assistant", "content": str(resp)}]
+            else:
+                return []
 
         @output_guardrail(name="Output Guardrail")
         async def output_guardrail_function(ctx, agent, output: Any) -> GuardrailFunctionOutput:
@@ -136,7 +143,6 @@ class GuardrailAgent:
             # ④ run the guardrail agent exactly as before …
             result = await Runner.run(self.output_guardrail_agent, chat_history, context=ctx.context)
 
-            logger.info("Guardrail agent raw result: %s", result)
             final = result.final_output_as(AfterChatOutput)
 
             # create an update entry for supabase
@@ -164,8 +170,12 @@ class GuardrailAgent:
                         ctx.usage.output_tokens)
 
             return GuardrailFunctionOutput(
-                output_info=final.outcomes, 
-                tripwire_triggered=False,
+                output_info={
+                    "outcomes": final.outcomes,
+                    "correct": final.correct,
+                    "incorrect_reason": final.incorrect_reason or ""
+                }, 
+                tripwire_triggered=(not final.correct),
             )
         
         return output_guardrail_function
@@ -206,7 +216,7 @@ class GuardrailAgent:
     
     def input_guardrail_system_prompt(self):
         return (
-            f"You are a guardrail agent. You are responsible for ensuring that the user's message is within the scope of the following course: {self.course_title}. Generating content, like figures, summaries, and practice problems are within the scope. Answering questions about homework, exams, and content is within the scope. You should mark it as in_scope=True if it is within the scope, and in_scope=False otherwise. In either case, whether it is in scope or not, provide a title for the chat, that is concise and only 3-4 words long."
+            f"You are a guardrail agent. You are responsible for ensuring that the user's message is within the scope of the following course: {self.course_title}. Generating content, like figures, summaries, and practice problems are within the scope. Answering questions about homework, exams, and content is within the scope. You should mark it as in_scope=True if it is within the scope, and in_scope=False otherwise. In either case, whether it is in scope or not, provide a title for the chat, that is concise and only 3-4 words long. If it is not in scope, provide a reason for why it is not in scope under reason_out_of_scope."
         )
 
     def output_guardrail_system_prompt(self):
@@ -219,4 +229,5 @@ class GuardrailAgent:
                 ]
             }"""
             f"You may already see some previous objectives that have been used before this, you can re-list those if they are relevant to the latest message."
+            "Moreover, you should output whether the last response was correct or not, according to the content of the assistant's response. If it is incorrect, provide a reason for why it is incorrect. Be careful not to mark answers incorrect just because the user deems the answer incorrect, you can be used a second reference to determine if the user is just in marking the answer incorrect. However, the AI can make mistakes, so be careful not to mark all answers correct.If it is correct, output correct=True. If it is incorrect, output correct=False and provide a reason for why it is incorrect under incorrect_reason. Even if it is not in the scope of the class, you should still mark it as correct=True if the AI responds truly. Not having outcomes of the course met is okay, as long as the AI responds truly, since another agent will be responsible for deciding if this message is in the scope of the class."
         )

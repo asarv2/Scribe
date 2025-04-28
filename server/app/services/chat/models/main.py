@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 class InitialChatOutput(BaseModel):
     in_scope: bool = Field(default=True)
     title: str = Field(default="")
+    reason_out_of_scope: str = Field(default="")
 
 class OutcomeObjectives(BaseModel):
     number: int               # “Outcome 1”, “Outcome 2”, …
@@ -24,6 +25,8 @@ class OutcomeObjectives(BaseModel):
 
 class AfterChatOutput(BaseModel):
     outcomes: List[OutcomeObjectives] = Field(default_factory=list)
+    correct: bool = Field(default=True)
+    incorrect_reason: str = Field(default="")
 
 class Figure(BaseModel):
     title: str = Field(default="")

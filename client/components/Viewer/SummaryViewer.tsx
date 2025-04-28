@@ -64,10 +64,10 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
         enabled: !!user?.id
     });
 
-    const { data: figures, isLoading: figuresLoading } = useQuery({
-        queryKey: ["summaryFigures", chatId, summary.id],
-        queryFn: () => getFigures(supabase, [summary.message].filter(Boolean) as string[]),
-        enabled: !!summary.message
+    const { data: figures } = useQuery({
+        queryKey: ["figures", classId],
+        queryFn: () => getFigures(supabase, classId),
+        enabled: !!classId
     });
 
     // Handle navigation between summaries

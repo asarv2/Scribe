@@ -268,6 +268,7 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
     """
     # get the message id
     message_id = wrapper.context.message_id
+    class_id = wrapper.context.class_id
     supabase_client = get_supabase()
 
     responses = []
@@ -292,7 +293,8 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
                 'generation_status': 'generating',
                 'message': message_id,
                 'title': title,
-                'references': references
+                'references': references,
+                'class': class_id
             }).execute()
             summary_id = summary_response.data[0]['id']
 

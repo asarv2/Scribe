@@ -222,12 +222,19 @@ class ChatProcessor(RunHooks):
             except InputGuardrailTripwireTriggered as e:
                 # Handle tripwire triggered
                 error_msg = str(e)
+                guardrail_result = e.guardrail_result
                 logger.error(f"InputGuardrailTripwireTriggered in process_message: {error_msg}")
-                return
+                # raise exception to have message be marked as error
+                raise Exception(f"{guardrail_result.output.output_info['reason_out_of_scope']}")
             except OutputGuardrailTripwireTriggered as e:
                 # Handle tripwire triggered
                 error_msg = str(e)
+                guardrail_result = e.guardrail_result
                 logger.error(f"OutputGuardrailTripwireTriggered in process_message: {error_msg}")
+                result = self.supabase_client.table("messages").update({
+                    "correct": guardrail_result.output.output_info["correct"],
+                    "incorrect_reason": guardrail_result.output.output_info["incorrect_reason"]
+                }).eq("id", documents.message_id).execute()
                 return
                 
             except ModelBehaviorError as e:
@@ -239,7 +246,12 @@ class ChatProcessor(RunHooks):
                 
                 # If this was our last retry, send an error message to the user
                 if retry_number >= 3:
-                    await self.stream_callback("\n\nI'm sorry, I encountered an error while processing your request. Please try again with a different question or in a new chat.")
+                    # update the message with an error message
+                    self.supabase_client.table("messages").update({
+                        "generation_status": "error",
+                        "generation_error": f"ModelBehaviorError: {error_msg}"
+                    }).eq("id", documents.message_id).execute()
+                    return
                     
             except Exception as e:
                 # Handle other exceptions, including the 499 client closed error

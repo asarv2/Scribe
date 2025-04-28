@@ -56,9 +56,10 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         enabled: !!user?.id
     });
 
-    const { data: figures, isLoading: figuresLoading } = useQuery({
-        queryKey: ["questionFigures", chatId, ...questions.map(q => q.id)],
-        queryFn: () => getFigures(supabase, questions.map(q => q.message).filter(Boolean) as string[])
+    const { data: figures } = useQuery({
+        queryKey: ["figures", classId],
+        queryFn: () => getFigures(supabase, classId),
+        enabled: !!classId
     });
 
     const isStudent = profile && !profile.professor && !profile.admin;

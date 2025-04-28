@@ -463,7 +463,8 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                     'title': title,
                     'code': latex_code,
                     'references': references,
-                    'generation_error': error_msg
+                    'generation_error': error_msg,
+                    'class': class_id
                 }).execute()
                 
                 figure_id = figure_response.data[0]['id']
@@ -485,7 +486,8 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
                 'message': message_id,
                 'title': title,
                 'code': latex_code,
-                'references': references
+                'references': references,
+                'class': class_id
             }).execute()
 
             # get the figure id

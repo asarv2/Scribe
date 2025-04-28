@@ -270,6 +270,7 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
 
     # get the message id
     message_id = wrapper.context.message_id
+    class_id = wrapper.context.class_id
 
     for question in questions:
         question_id = None  # Initialize question_id at the beginning of each loop
@@ -297,7 +298,8 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
                     'explanations': explanations,
                     'answers': [answer],
                     'frq': False,
-                    'references': references
+                    'references': references,
+                    'class': class_id
                 }).execute()
                 
                 # get the question id
@@ -360,7 +362,8 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
                     'problem': question_text,
                     'solution': answer,
                     'frq': True,
-                    'references': references
+                    'references': references,
+                    'class': class_id
                 }).execute()
                 
                 # get the question id

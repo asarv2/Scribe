@@ -4,7 +4,7 @@
  */
 
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme, Divider } from "@mantine/core";
-import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb } from "@tabler/icons-react";
+import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb, IconAlertCircle } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
 import { Message, Profile, Document, ChatType, Chat, ChatMessage, ViewerMode, CONTENT_COLORS } from "@/types";
 import Latex from "../../Latex";
@@ -36,6 +36,11 @@ import FigureViewer from "@/components/Viewer/FigureViewer";
 import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import PulseText from "./PulseText";
+import { submitFeedback } from "@/utils/services/feedback";
+import styles from "../../Viewer/MessageViewer.module.css";
+import { getClass } from "@/utils/queries/get-class";
+import { notifications } from "@mantine/notifications";
+
 interface MessageListProps {
   chatId: string;
   classId: string;
@@ -65,6 +70,12 @@ export const MessageList = memo(({
   const supabase = useSupabaseBrowser();
   const queryClient = useQueryClient();
   const { colorScheme } = useMantineColorScheme();
+
+  const { data: classData } = useQuery({
+    queryKey: ["class", classId],
+    queryFn: () => getClass(supabase, classId!),
+    enabled: !!classId
+  });
 
   const { data: messages, isLoading: isLoadingMessages } = useQuery({
     queryKey: ["messages", chatId],
@@ -97,21 +108,21 @@ export const MessageList = memo(({
   });
 
   const { data: figures } = useQuery({
-    queryKey: ["figures", chatId],
-    queryFn: () => getFigures(supabase, messages!.map(m => m.id)),
-    enabled: !!messages
+    queryKey: ["figures", classId],
+    queryFn: () => getFigures(supabase, classId!),
+    enabled: !!classId
   });
 
   const { data: summaries } = useQuery({
-    queryKey: ["summaries", chatId],
-    queryFn: () => getSummaries(supabase, messages!.map(m => m.id)),
-    enabled: !!messages
+    queryKey: ["summaries", classId],
+    queryFn: () => getSummaries(supabase, classId!),
+    enabled: !!classId
   });
 
   const { data: questions } = useQuery({
-    queryKey: ["questions", chatId],
-    queryFn: () => getQuestions(supabase, messages!.map(m => m.id)),
-    enabled: !!messages
+    queryKey: ["questions", classId],
+    queryFn: () => getQuestions(supabase, classId!),
+    enabled: !!classId
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -149,7 +160,6 @@ export const MessageList = memo(({
                 AI Assistant
               </Text>
             </Group>
-
             <Card
               padding="sm"
               radius="md"
@@ -474,6 +484,35 @@ export const MessageList = memo(({
     };
   }, []);
 
+  // Add this new function to handle bug reports
+  const handleBugReport = async (message: Message) => {
+    try {
+      const classInfo = existingChat ? `class (${classId}): ${classData?.title || 'Unknown'}` : `class (${classId}): Unknown`;
+      const chatInfo = existingChat ? `chat (${chatId}): ${existingChat.name || 'Unknown'}` : `chat (${chatId}): New chat`;
+      const messageInfo = `message (${message.id})`;
+      const errorInfo = `error: ${message.generation_error || 'Unknown error'}`;
+
+      const bugReport = `BUG REPORT:\n${classInfo}\n${chatInfo}\n${messageInfo}\n${errorInfo}`;
+
+      // Call the submitFeedback function with empty likes/wishlist and the bug report as dislikes
+      await submitFeedback('', bugReport, '');
+
+      // Show success notification
+      notifications.show({
+        title: 'Bug Report Submitted',
+        message: 'Thank you for helping us improve!',
+        color: 'green',
+      });
+    } catch (error) {
+      console.error('Failed to submit bug report:', error);
+      notifications.show({
+        title: 'Error',
+        message: 'Failed to submit bug report. Please try again later.',
+        color: 'red',
+      });
+    }
+  };
+
   return (
 
     // Then replace the Stack component
@@ -506,7 +545,6 @@ export const MessageList = memo(({
         // cannot get fade list to work with immersive mode
         <>
           {renderWelcomeMessages()}
-          {/* Deduplicate messages before rendering them */}
           {messages?.map((message, index) => (
             <Stack key={`${message.id}`}>
               {/* User message */}
@@ -552,24 +590,70 @@ export const MessageList = memo(({
               <Flex gap="md" align="flex-start">
                 <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
                   {/* AI info container */}
-                  <Group gap="xs" align="center">
-                    <Avatar
-                      src={undefined}
-                      size="sm"
-                      radius="xl"
-                      alt="AI Assistant"
-                    />
-                    <Text size="sm" c="dimmed">
-                      AI Assistant
-                    </Text>
-                  </Group>
+                  <Flex justify="space-between" align="center" w="100%">
+                    <Group gap="xs" align="center">
+                      <Avatar
+                        src={undefined}
+                        size="sm"
+                        radius="xl"
+                        alt="AI Assistant"
+                      />
+                      <Text size="sm" c="dimmed">
+                        AI Assistant
+                      </Text>
+                    </Group>
+                    {!message.correct && message.incorrect_reason && (
+                      <Tooltip label={`This response may be incorrect: ${message.incorrect_reason}`} withArrow multiline w="200px">
+                        <IconAlertCircle size={16} color="#ff6b6b" opacity={0.7} style={{cursor: "pointer"}} />
+                      </Tooltip>
+                    )}
+                  </Flex>
 
                   {/* Message container */}
                   {!message.response || message.response.trim() === '' ? (
-                    <PulseText key={index} text={message.status_text !== "" ? message.status_text : "Thinking..."} />
+                    message.generation_status === "error" ? (
+                      <Card
+                        padding="sm"
+                        radius="md"
+                        className={styles.messageCard}
+                        style={{
+                          border: "1px solid #fa5252",
+                        }}
+                      >
+                        <Text c="red" fw={500}>
+                          We ran into an issue while creating your response. Try again, or{' '}
+                          <Text span c="red" fw={700} style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => handleBugReport(message)}>
+                            press here
+                          </Text>{' '}
+                          to send us the bug report.
+                        </Text>
+                      </Card>
+                    ) : (
+                      <PulseText key={index} text={message.status_text !== "" ? message.status_text : "Thinking..."} />
+                    )
                   ) : (
                     <Stack gap="xs" style={{ width: "100%" }}>
-                      <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
+                      {message.generation_status === "error" && (
+                        <Card
+                          padding="sm"
+                          radius="md"
+                          className={styles.messageCard}
+                          style={{
+                            border: "1px solid #fa5252",
+                            marginBottom: "8px"
+                          }}
+                        >
+                          <Text c="red" size="sm" fw={500}>
+                            We ran into an issue while creating your response
+                            {message.generation_error ? `: ${message.generation_error}` : ""}{message.generation_error && message.generation_error.endsWith(".") ? "" : "."} Try again, or{' '}
+                            <Text span c="red" fw={700} style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => handleBugReport(message)}>
+                              press here
+                            </Text>{' '}
+                            to send us the bug report.
+                          </Text>
+                        </Card>
+                      )}
+                      {message.generation_status !== "error" && <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
                         <Stack>
                           {splitTextByGenerationTags(splitTextByDocuments(
                             message.response,
@@ -586,20 +670,20 @@ export const MessageList = memo(({
                               )
                             } else if (segment.figure && figures) {
                               return (
-                                  <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
                             } else if (segment.summary && summaries) {
                               return (
-                                  <SummaryViewer key={`summaries-${message.id}`} classId={classId} chatId={chatId} summaries={summaries.filter(s => s.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                <SummaryViewer key={`summaries-${message.id}`} classId={classId} chatId={chatId} summaries={summaries.filter(s => s.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
                             } else if (segment.question && questions) {
                               return (
-                                  <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
-                                )
+                                <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                              )
                             }
                           })}
                         </Stack>
-                      </Box>
+                      </Box>}
                     </Stack>
                   )}
                 </Stack>

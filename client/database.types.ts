@@ -612,85 +612,61 @@ export type Database = {
         Row: {
           bare_question: string
           bare_response: string
-          chapter_exercise_references: string[]
-          chapter_references: string[]
-          chapters: string[]
           chat: string | null
           class: string
+          correct: boolean
           created_at: string
           documents: string[]
-          file_references: string[]
           files: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
-          homework_exercise_references: string[]
-          homeworks: string[]
           id: string
+          incorrect_reason: string
           last_generation_attempt: string | null
-          lecture_references: string[]
-          lectures: string[]
           profile: string | null
           question: string
-          rating: boolean | null
           references: string[]
           response: string
-          response_url: string
           status_text: string
         }
         Insert: {
           bare_question?: string
           bare_response?: string
-          chapter_exercise_references?: string[]
-          chapter_references?: string[]
-          chapters?: string[]
           chat?: string | null
           class?: string
+          correct?: boolean
           created_at?: string
           documents?: string[]
-          file_references?: string[]
           files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
-          homework_exercise_references?: string[]
-          homeworks?: string[]
           id?: string
+          incorrect_reason?: string
           last_generation_attempt?: string | null
-          lecture_references?: string[]
-          lectures?: string[]
           profile?: string | null
           question?: string
-          rating?: boolean | null
           references?: string[]
           response?: string
-          response_url?: string
           status_text?: string
         }
         Update: {
           bare_question?: string
           bare_response?: string
-          chapter_exercise_references?: string[]
-          chapter_references?: string[]
-          chapters?: string[]
           chat?: string | null
           class?: string
+          correct?: boolean
           created_at?: string
           documents?: string[]
-          file_references?: string[]
           files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
-          homework_exercise_references?: string[]
-          homeworks?: string[]
           id?: string
+          incorrect_reason?: string
           last_generation_attempt?: string | null
-          lecture_references?: string[]
-          lectures?: string[]
           profile?: string | null
           question?: string
-          rating?: boolean | null
           references?: string[]
           response?: string
-          response_url?: string
           status_text?: string
         }
         Relationships: [
@@ -714,34 +690,25 @@ export type Database = {
         Row: {
           class: string
           created_at: string
-          description: string | null
-          files: string[]
           id: string
-          outcome_id: string | null
-          position_x: number | null
-          position_y: number | null
+          message: string | null
+          outcome: string
           title: string | null
         }
         Insert: {
           class?: string
           created_at?: string
-          description?: string | null
-          files?: string[]
           id?: string
-          outcome_id?: string | null
-          position_x?: number | null
-          position_y?: number | null
+          message?: string | null
+          outcome: string
           title?: string | null
         }
         Update: {
           class?: string
           created_at?: string
-          description?: string | null
-          files?: string[]
           id?: string
-          outcome_id?: string | null
-          position_x?: number | null
-          position_y?: number | null
+          message?: string | null
+          outcome?: string
           title?: string | null
         }
         Relationships: [
@@ -753,8 +720,15 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "objectives_outcome_id_fkey"
-            columns: ["outcome_id"]
+            foreignKeyName: "objectives_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "objectives_outcome_fkey"
+            columns: ["outcome"]
             isOneToOne: false
             referencedRelation: "outcomes"
             referencedColumns: ["id"]
@@ -806,8 +780,6 @@ export type Database = {
           deleted: boolean
           description: string | null
           id: string
-          position_x: number | null
-          position_y: number | null
           title: string | null
         }
         Insert: {
@@ -816,8 +788,6 @@ export type Database = {
           deleted?: boolean
           description?: string | null
           id?: string
-          position_x?: number | null
-          position_y?: number | null
           title?: string | null
         }
         Update: {
@@ -826,8 +796,6 @@ export type Database = {
           deleted?: boolean
           description?: string | null
           id?: string
-          position_x?: number | null
-          position_y?: number | null
           title?: string | null
         }
         Relationships: [
