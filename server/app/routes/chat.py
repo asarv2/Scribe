@@ -143,7 +143,9 @@ async def handle_chat(
             # throw the error to the outside block
             raise error
     except Exception as error:
+        # print the stack trace
         logger.error(f"Error in generate-chat function: {error}")
+        logger.error(f"Stack trace: {traceback.format_exc()}")
 
         # Update message status to error
         supabase_client.table("messages").update({

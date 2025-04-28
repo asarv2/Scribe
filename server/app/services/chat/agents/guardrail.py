@@ -149,7 +149,10 @@ class GuardrailAgent:
             entries = []
             # ── guardrail agent post-processing ───────────────────────────────────────
             for item in final.outcomes:
-                outcome_id = ctx.context.outcomes[item.number]   # mapping you built earlier
+                outcome_id = ctx.context.outcomes.get(item.number, None)   # mapping you built earlier
+                if outcome_id is None:
+                    logger.warning(f"Outcome ID not found for number: {item.number}")
+                    continue
                 for obj in item.objectives:
                     entries.append({
                         "class":      ctx.context.class_id,

@@ -65,7 +65,7 @@ class GoogleFiles:
                             "extension": file_data["extension"],
                             "google_id": google_id,
                             "expires_at": expires_at
-            })
+                        })
             
             return files_data
             
@@ -283,13 +283,26 @@ class GoogleFiles:
             google_file_id = media_file.name
             expires_at = media_file.expiration_time
             
-            # Save to the google table
+            # Save to the google table - check if there's an existing record
             try:
-                insert_response = self.supabase.table("google").insert({
-                    "document": document_id,
-                    "google_id": google_file_id,
-                    "expires_at": expires_at.isoformat()
-                }).execute()
+                existing_record = self.supabase.table("google").select("id").eq("document", document_id).execute()
+                
+                if existing_record.data and len(existing_record.data) > 0:
+                    # Update the existing record
+                    update_response = self.supabase.table("google").update({
+                        "google_id": google_file_id,
+                        "expires_at": expires_at.isoformat()
+                    }).eq("document", document_id).execute()
+                    logger.info(f"Updated existing Google record for document {document_id}")
+                else:
+                    # Insert a new record
+                    insert_response = self.supabase.table("google").insert({
+                        "document": document_id,
+                        "google_id": google_file_id,
+                        "expires_at": expires_at.isoformat()
+                    }).execute()
+                    logger.info(f"Created new Google record for document {document_id}")
+                
             except Exception as db_error:
                 logger.error(f"Error saving to database: {str(db_error)}")
                 logger.error(traceback.format_exc())
@@ -360,12 +373,24 @@ class GoogleFiles:
             google_file_id = media_file.name
             expires_at = media_file.expiration_time
             
-            # Save to the google table
-            self.supabase.table("google").insert({
-                "file": file_id,
-                "google_id": google_file_id,
-                "expires_at": expires_at.isoformat()
-            }).execute()
+            # Check if there's an existing record for this file
+            existing_record = self.supabase.table("google").select("id").eq("file", file_id).execute()
+            
+            if existing_record.data and len(existing_record.data) > 0:
+                # Update the existing record
+                self.supabase.table("google").update({
+                    "google_id": google_file_id,
+                    "expires_at": expires_at.isoformat()
+                }).eq("file", file_id).execute()
+                logger.info(f"Updated existing Google record for file {file_id}")
+            else:
+                # Insert a new record
+                self.supabase.table("google").insert({
+                    "file": file_id,
+                    "google_id": google_file_id,
+                    "expires_at": expires_at.isoformat()
+                }).execute()
+                logger.info(f"Created new Google record for file {file_id}")
             
             # Clean up the temporary file
             os.remove(local_path)
