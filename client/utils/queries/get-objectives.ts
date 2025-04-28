@@ -5,7 +5,6 @@ export async function getObjectives(client: TypedSupabaseClient, classId: string
       .from("objectives")
       .select("*")
       .eq("class", classId)
-      .eq("deleted", false)
   
     if (error) {
       throw new Error(error.message);

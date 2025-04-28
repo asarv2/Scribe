@@ -46,10 +46,9 @@ const GradeViewer: React.FC<GradeViewerProps> = ({ classId, chatId, grade, viewe
         enabled: !!user?.id
     });
 
-    const { data: figures, isLoading: figuresLoading } = useQuery({
-        queryKey: ["gradeFigures", chatId, grade.id],
-        queryFn: () => getFigures(supabase, [grade.message].filter(Boolean) as string[]),
-        enabled: !!grade.message
+    const {data: figures, isLoading: figuresLoading} = useQuery({
+        queryKey: ["figures", classId,],
+        queryFn: () => getFigures(supabase, classId),
     });
 
     const [loading, setLoading] = useState(false);

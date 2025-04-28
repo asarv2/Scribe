@@ -498,6 +498,31 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
     // Get the pie chart data
     const objectivesChartData = processObjectivesByOutcome();
 
+    // Move this function before it's used
+    const buildObjectiveMessageCounts = () => {
+        if (!objectives || !messages) return new Map<string, number>();
+
+        // Map objectiveId → Set<messageId>
+        const map = new Map<string, Set<string>>();
+        
+        // Iterate through objectives instead of messages
+        objectives.forEach(objective => {
+            const messageId = objective.message;  // Get the message id from the objective
+            if (!messageId) return;
+            
+            if (!map.has(objective.id)) map.set(objective.id, new Set());
+            map.get(objective.id)!.add(messageId);
+        });
+
+        // Convert to counts
+        return new Map(
+            Array.from(map.entries()).map(([objId, set]) => [objId, set.size])
+        );
+    };
+
+    // Initialize this before using it in processOutcomesWithTopObjectives
+    const objectiveMsgCounts = buildObjectiveMessageCounts();
+
     // Add this new function to process outcomes and objectives for the grouped bar chart
     const processOutcomesWithTopObjectives = () => {
         if (!outcomes || !objectives) return [];
@@ -541,29 +566,6 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
 
     // Get the grouped bar chart data
     const outcomesWithObjectivesData = processOutcomesWithTopObjectives();
-
-    const buildObjectiveMessageCounts = () => {
-        if (!objectives || !messages) return new Map<string, number>();
-
-        // Map objectiveId → Set<messageId>
-        const map = new Map<string, Set<string>>();
-        
-        // Iterate through objectives instead of messages
-        objectives.forEach(objective => {
-            const messageId = objective.message;  // Get the message id from the objective
-            if (!messageId) return;
-            
-            if (!map.has(objective.id)) map.set(objective.id, new Set());
-            map.get(objective.id)!.add(messageId);
-        });
-
-        // Convert to counts
-        return new Map(
-            Array.from(map.entries()).map(([objId, set]) => [objId, set.size])
-        );
-    };
-
-    const objectiveMsgCounts = buildObjectiveMessageCounts();
 
     // Update the statsData to include the new indicators
     const statsData: {
@@ -928,9 +930,9 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                                     data={outcomesWithObjectivesData}
                                     dataKey="outcome"
                                     series={[
-                                        { name: 'objective1', color: 'violet.6', label: 'Top Objective' },
-                                        { name: 'objective2', color: 'blue.6', label: 'Second Objective' },
-                                        { name: 'objective3', color: 'teal.6', label: 'Third Objective' }
+                                        { name: 'objective1', color: 'violet.6', label: outcomesWithObjectivesData[0]?.objective1Name || 'Top Objective' },
+                                        { name: 'objective2', color: 'blue.6', label: outcomesWithObjectivesData[0]?.objective2Name || 'Second Objective' },
+                                        { name: 'objective3', color: 'teal.6', label: outcomesWithObjectivesData[0]?.objective3Name || 'Third Objective' }
                                     ]}
                                     tickLine="y"
                                     gridAxis="xy"
