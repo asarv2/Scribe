@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     DOCKER_ENV=true \
-    UNO_PATH=/usr/lib/libreoffice/program
+    UUNOPATH=/usr/lib/libreoffice/program
 
 # ────────────────────────────────────────────────────────────────
 # System packages
@@ -32,6 +32,9 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
         # --- fonts -------------------
         fonts-dejavu fonts-liberation ttf-mscorefonts-installer && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Force unoconv to use python3
+RUN sed -i '1s|python$|python3|' $(which unoconv)
 
 # ────────────────────────────────────────────────────────────────
 # Workdir & caches
