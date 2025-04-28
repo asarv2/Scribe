@@ -6,8 +6,7 @@ FROM pytorch/pytorch:2.6.0-cuda12.6-cudnn9-runtime
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
-    DOCKER_ENV=true \
-    UNO_PATH=/usr/lib/libreoffice/program
+    DOCKER_ENV=true
 
 # ────────────────────────────────────────────────────────────────
 # System packages
@@ -26,9 +25,7 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
         # --- graphics converters ----
         pdf2svg poppler-utils imagemagick ghostscript \
         # --- office → PDF pipeline --
-        libreoffice-core libreoffice-writer libreoffice-impress \
-        libreoffice-script-provider-python \
-        unoconv python3-uno pandoc \
+        libreoffice-core libreoffice-writer libreoffice-impress pandoc \
         # --- fonts -------------------
         fonts-dejavu fonts-liberation ttf-mscorefonts-installer && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
