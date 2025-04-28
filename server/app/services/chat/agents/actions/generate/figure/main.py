@@ -26,10 +26,12 @@ class FigureAgent(FigureHooks):
             ),
             model_settings=ModelSettings(
                 temperature=0.0,
-                include_usage=True
+                include_usage=True,
+                tool_choice='required'
             ),
             handoff_description=handoff_prompt,
-            output_type=List[Figure]
+            tools=[self.create_figure_tool, self.create_figures_tool],
+            tool_use_behavior=self.create_figure_check
         )
     
     def system_prompt(self):
@@ -39,13 +41,13 @@ class FigureAgent(FigureHooks):
             "If you need to do anything that doesn't involve helping the user with generating a figure, table plot, tree, graph, visual or anything similar use the transfer_to_general function, to allow the colleague specialized in general help to take over.\n"
             "You should not engage in conversation, you should only focus on creating the necessary visualization.\n"
             "You are an expert in creating high-quality LaTeX/TikZ figures for the course {course_title}.\n"
-            "Produce concise, self-contained TikZ code (\\begin{tikzpicture}…\\end{tikzpicture}) that clearly illustrates a key concept.\n",
+            "Produce concise, self-contained TikZ code (\\begin{tikzpicture}…\\end{tikzpicture}) that clearly illustrates a key concept.\n"
             "Include axis labels, legends, and LaTeX math annotations as needed, and avoid extra styling or gridlines unrelated to the idea.\n"
             "Make sure that there isn't overlap between items in the figure, and that the figure is clear and easy to read.\n"
             "Be confident in your figure creation, there shouldn't be coinciding numbers, letters, line, nodes, or anything else in the figure.\n"
             "Guidelines:\n"
-            "- Use pure TikZ or PGFPlots only; no external plotting libraries.\n",
-            "- Precede the code with a one-line comment describing the figure's purpose.\n\n",
+            "- Use pure TikZ or PGFPlots only; no external plotting libraries.\n"
+            "- Precede the code with a one-line comment describing the figure's purpose.\n\n"
             "Example:\n"
             "Purpose: Compare linear, quadratic, and exponential growth.\n"
             r"```latex\n"

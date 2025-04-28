@@ -507,31 +507,7 @@ export const MessageList = memo(({
         <>
           {renderWelcomeMessages()}
           {/* Deduplicate messages before rendering them */}
-          {(() => {
-            // Deduplicate messages based on content similarity
-            const uniqueMessages: Message[] = [];
-            const seenResponses = new Set();
-
-            messages?.forEach((message) => {
-              // If no response yet, always include the message
-              if (!message.response) {
-                uniqueMessages.push(message);
-                return;
-              }
-
-              // For messages with responses, check for duplicates
-              // Create a simplified fingerprint of the response (first 50 chars) to detect duplicates
-              const responseFingerprint = message.response.trim().substring(0, 100);
-              if (!seenResponses.has(responseFingerprint)) {
-                seenResponses.add(responseFingerprint);
-                uniqueMessages.push(message);
-              } else {
-                console.log("Skipping duplicate message response");
-              }
-            });
-
-            return uniqueMessages;
-          })().map((message, index) => (
+          {messages?.map((message, index) => (
             <Stack key={`${message.id}`}>
               {/* User message */}
               <Flex gap="md" justify="flex-end" align="flex-start">

@@ -135,6 +135,54 @@ export const ChatInput = memo((props: ChatInputProps) => {
     }
   };
 
+  // Add global keyboard event listener to capture typing anywhere
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: globalThis.KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      // Only trigger if focus is not already on an input or contenteditable element
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      // Check if Enter key is pressed and not with modifiers
+      if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+
+        // If recording, stop recording and flag that Enter was pressed
+        if (isRecording) {
+          setEnterDuringRec(true);
+          stopRecording();
+          return;
+        }
+
+        // Send message if there's content and not loading or transcribing
+        if (!loading && !transcribing && activeChat.prompt.trim()) {
+          onSend();
+        }
+        return;
+      }
+
+      // Check if the key is a single character and not a modifier key
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // Focus the text area if not already focused
+        textareaRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [activeChat.prompt, loading, onSend, isRecording, transcribing]);
+
+  // Add useEffect to send message after transcription completes if Enter was pressed
+  useEffect(() => {
+    if (enterDuringRec && !transcribing && !isRecording && !recordingMode) {
+      if (!loading && activeChat.prompt.trim()) {
+        onSend();
+      }
+      setEnterDuringRec(false);
+    }
+  }, [enterDuringRec, transcribing, isRecording, recordingMode, loading, activeChat.prompt, onSend]);
+
   useEffect(() => () => wavesurferRef.current?.destroy(), []);
 
   /* ---------- icons ---------- */
@@ -227,7 +275,7 @@ export const ChatInput = memo((props: ChatInputProps) => {
               <Text className={classes.timer}>{fmt(recordTime)}</Text>
             )}
 
-            {/* subtle “…transcribing” overlay in place of waveform */}
+            {/* subtle "…transcribing" overlay in place of waveform */}
             {transcribing && (
               <Text className={classes.transcribing}>Transcribing…</Text>
             )}

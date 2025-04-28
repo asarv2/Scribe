@@ -1,5 +1,4 @@
 import { Document, ViewerMode } from "@/types";
-import { Dispatch, SetStateAction } from "react";
 
 // Pre-compile once
 const TAG_REGEX = /<DOCUMENT>([^<]+)<\/DOCUMENT>/g;

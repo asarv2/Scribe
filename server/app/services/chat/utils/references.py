@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any, Callable
 import json
 import logging
 import math
@@ -27,7 +27,7 @@ def clean_references(text: str, references: Dict[int, str]) -> str:
     
     return text
 
-async def fetch_chat_context(supabase, chat_id):
+async def fetch_chat_context(supabase, chat_id, class_id):
     # get all the messages in the chat
     messages = supabase.table("messages").select("*").eq("chat", chat_id).execute().data or []
 
@@ -45,6 +45,9 @@ async def fetch_chat_context(supabase, chat_id):
     references.update({summary.get("id"): summary.get("references") for summary in summaries})
     references.update({question.get("id"): question.get("references") for question in questions})
 
+    # get all of the outcomes for the class
+    outcomes = supabase.table("outcomes").select("*").eq("class", class_id).eq("deleted", False).execute().data or []
+
     # return list of figures, summaries, questions, in sorted order by created_at. Want to return the ids of each of these.
     figures = sorted(figures, key=lambda x: x.get("created_at"))
     summaries = sorted(summaries, key=lambda x: x.get("created_at"))
@@ -53,7 +56,8 @@ async def fetch_chat_context(supabase, chat_id):
         "figures": [figure.get("id") for figure in figures],
         "summaries": [summary.get("id") for summary in summaries],
         "questions": [question.get("id") for question in questions],
-        "references": list(set(references))
+        "references": list(set(references)),
+        "outcomes": [outcome.get("id") for outcome in outcomes]
     }
 
 # ------------------------------------------------------------
@@ -221,324 +225,269 @@ async def get_mapped_references(
     return ref_map, description, ordered_file_ids, ordered_document_ids
 
 
-async def process_special_tags(message, supabase_client, documents: Documents):
+
+# ── Generic small utilities ────────────────────────────────────────────────
+def _get_refs_rev(documents) -> Dict[str, int]:
+    return {v: k for k, v in documents.references.items()}
+
+def _replace_tags(text: str,
+                  token_pat: str,
+                  repl_fn: Callable[[str], str]) -> str:
+    for token in re.findall(token_pat, text):
+        text = text.replace(token, repl_fn(token))
+    return text
+
+def _process_doc_tags(text: str, refs_rev: Dict[str, int]) -> str:
+    return _replace_tags(
+        text,
+        r'<DOCUMENT>(.*?)</DOCUMENT>',
+        lambda full: f"[{refs_rev.get(full[10:-11], 'unknown')}]"
+    )
+
+def _process_fig_tags(text: str, figs_rev: Dict[str, int]) -> str:
+    return _replace_tags(
+        text,
+        r'<FIGURE>(.*?)</FIGURE>',
+        lambda full: f"{{{figs_rev.get(full[8:-9], 'unknown figure')}}}"
+    )
+
+# ── DB → model mappers  (all ≤ 6 lines each) ──────────────────────────────
+def _row_to_figure(row, refs_rev) -> Dict[str, Any]:
+    return {
+        "title": row.get("title", ""),
+        "latex_code": row.get("code", ""),
+        "references": [refs_rev[r] for r in (row.get("references") or []) if r in refs_rev],
+    }
+
+def _row_to_question(row, refs_rev, fig_rows, figs_rev) -> Dict[str, Any]:
+    return {
+        "title": row.get("title", ""),
+        "question_type": "frq" if row.get("frq") else "mcq",
+        "question": _process_fig_tags(
+            _process_doc_tags(row.get("question", ""), refs_rev), figs_rev
+        ),
+        "options": row.get("options", []),
+        "answer": (row.get("answers") or [""])[0],
+        "explanations": row.get("explanations", []),
+        "references": [refs_rev[r] for r in (row.get("references") or []) if r in refs_rev],
+        "figures": [_row_to_figure(f, refs_rev) for f in fig_rows],
+    }
+
+def _row_to_summary(row, refs_rev, fig_rows, figs_rev) -> Dict[str, Any]:
+    proc = lambda t: _process_fig_tags(_process_doc_tags(t, refs_rev), figs_rev)
+    return {
+        "title": row.get("title", ""),
+        "preamble": proc(row.get("preamble", "")),
+        "body": proc(row.get("body", "")),
+        "conclusion": proc(row.get("conclusion", "")),
+        "references": [refs_rev[r] for r in (row.get("references") or []) if r in refs_rev],
+        "figures": [_row_to_figure(f, refs_rev) for f in fig_rows],
+    }
+
+# ── One convenience for wiring up the chat-history blocks ────────────────
+def _emit_call(tool_name: str,
+               call_id: str,
+               payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Return the standard [function_call, function_call_output] pair."""
+    return [
+        {
+            "type": "function_call",
+            "name": tool_name,
+            "id": call_id,
+            "call_id": call_id,
+            "arguments": json.dumps(payload),
+            "status": "completed",
+        },
+        {
+            "type": "function_call_output",
+            "id": call_id,
+            "call_id": call_id,
+            "output": json.dumps(payload.get("responses")),
+            "status": "completed",
+        },
+    ]
+
+# ── Fetch once, use everywhere ───────────────────────────────────────────
+async def _fetch_rows(db, table: str, ids: List[str]) -> List[dict]:
+    if not ids:
+        return []
+    return (
+        db.table(table)
+          .select("*")
+          .in_("id", ids if isinstance(ids, list) else [ids])
+          .execute()
+          .data
+          or []
+    )
+
+# ── Dispatch table that drives *everything*  # ★ ─────────────────────────
+_KIND: Dict[str, Dict[str, Any]] = {
+    "figure": {
+        "singular": "create_figure",
+        "plural":   "create_figures",
+        "id_key":   "figure_id",
+        "row_to_model": _row_to_figure,
+        "table":    "figures",
+    },
+    "question": {
+        "singular": "create_question",
+        "plural":   "create_questions",
+        "id_key":   "question_id",
+        "row_to_model": _row_to_question,
+        "table":    "questions",
+    },
+    "summary": {
+        "singular": "create_summary",
+        "plural":   "create_summaries",
+        "id_key":   "summary_id",
+        "row_to_model": _row_to_summary,
+        "table":    "summaries",
+    },
+}
+
+# ──────────────────────────────────────────────────────────────────────────
+# Public entry-point that replaces the three old build_*_history routines
+# and also auto-picks singular vs plural for _process_tags_from_message.
+# ──────────────────────────────────────────────────────────────────────────
+async def build_history(kind: str,
+                        ids: List[str],
+                        db,
+                        documents) -> List[Dict[str, Any]]:
     """
-    Process special tags in a message and replace them with the corresponding content.
-    
-    Supported tags:
-    - <FIGURE_GENERATING> - Replace with create_figures tool call
-    - <QUESTION_GENERATING> - Replace with create_questions tool call
-    - <SUMMARY_GENERATING> - Replace with create_summaries tool call
-    - <DOCUMENT>document_id</DOCUMENT> - Replace with the document reference
-    
-    Args:
-        message (str): The message containing special tags
-        supabase_client: The Supabase client to use for fetching data
-        documents: The documents to map the document ids to the reference number
-    Returns:
-        list: Will return a conversation history object that can be used directly in the chat history
+    kind ∈ {'figure','question','summary'} ; ids = list of DB row IDs.
     """
-    import re
+    meta = _KIND[kind]
+    refs_rev = _get_refs_rev(documents)
 
-    references_reverse = {v: k for k, v in documents.references.items()}
-    content_parts = []
+    rows = await _fetch_rows(db, meta["table"], ids)
+    if not rows:
+        return []
 
-    # get the chat from supabase
-    chat = supabase_client.table("chats").select("*").eq("id", documents.chat_id).execute().data[0]
+    # Figures nested inside Q/S
+    fig_rows_by_id = {}
+    if kind in ("question", "summary"):
+        fig_ids = [fid for r in rows for fid in (r.get("figures") or [])]
+        fig_rows = await _fetch_rows(db, "figures", fig_ids)
+        fig_rows_by_id = {r["id"]: r for r in fig_rows}
 
-    # get all the messages in the chat
-    messages = supabase_client.table("messages").select("*").eq("chat", documents.chat_id).execute().data or []
-    message_ids = [message.get("id") for message in messages]
+    models, responses = [], []
+    for r in rows:
+        # Build nested figs + {id → {1},{2},…} map where needed
+        figs = [fig_rows_by_id[fid] for fid in (r.get("figures") or [])]
+        figs_rev = {fid: idx + 1 for idx, fid in enumerate([f["id"] for f in figs])}
+        model = meta["row_to_model"](r, refs_rev, figs, figs_rev) \
+            if kind != "figure" else _row_to_figure(r, refs_rev)
+        models.append(model)
+        responses.append({"success": True,
+                          "error": None,
+                          meta["id_key"]: r["id"]})
 
-    # get all the questions, summaries, and figures for the messages
-    questions = supabase_client.table("questions").select("*").in_("message", message_ids).execute().data or []
-    summaries = supabase_client.table("summaries").select("*").in_("message", message_ids).execute().data or []
-    figures = supabase_client.table("figures").select("*").in_("message", message_ids).execute().data or []
-    
-    # Helper function to process document tags in a text
-    def process_document_tags(text):
-        if not documents.references:
-            return text
-        
-        document_pattern = r'<DOCUMENT>(.*?)</DOCUMENT>'
-        document_matches = re.findall(document_pattern, text)
-        
-        for document_id in document_matches:
-            if document_id in references_reverse:
-                reference_number = references_reverse[document_id]
-                text = text.replace(f"<DOCUMENT>{document_id}</DOCUMENT>", f"[{reference_number}]")
-            else:
-                text = text.replace(f"<DOCUMENT>{document_id}</DOCUMENT>", f"[unknown reference]")
-        
-        return text
-    
-    # Process document tags in the main message
-    message = process_document_tags(message)
-    
-    # Find all special tags and their positions
-    tag_positions = []
-    
-    # Find figure generating tags
-    figure_pattern = r'<FIGURE_GENERATING>'
-    for match in re.finditer(figure_pattern, message):
-        tag_positions.append({
-            'start': match.start(),
-            'end': match.end(),
-            'type': 'figure'
-        })
-    
-    # Find question generating tags
-    question_pattern = r'<QUESTION_GENERATING>'
-    for match in re.finditer(question_pattern, message):
-        tag_positions.append({
-            'start': match.start(),
-            'end': match.end(),
-            'type': 'question'
-        })
-    
-    # Find summary generating tags
-    summary_pattern = r'<SUMMARY_GENERATING>'
-    for match in re.finditer(summary_pattern, message):
-        tag_positions.append({
-            'start': match.start(),
-            'end': match.end(),
-            'type': 'summary'
-        })
-    
-    # Sort positions by start index
-    tag_positions.sort(key=lambda x: x['start'])
-    
-    # Break the message into parts and insert function calls
-    last_end = 0
-    for pos in tag_positions:
-        # Add text before this tag
-        if pos['start'] > last_end:
-            text_before = message[last_end:pos['start']]
-            if text_before.strip():
-                content_parts.append({
-                    "role": "assistant",
-                    "content": text_before
-                })
-        
-        # Process the tag based on its type
-        if pos['type'] == 'figure':
-            # Convert database figures to Figure model objects
-            figure_objects = []
-            for fig in figures:
-                # Map references to reference numbers
-                fig_references = []
-                if "references" in fig and fig["references"]:
-                    fig_references = [
-                        references_reverse[ref] for ref in fig["references"] 
-                        if ref in references_reverse
-                    ]
-                
-                figure_objects.append({
-                    "title": fig.get("title", ""),
-                    "latex_code": fig.get("code", ""),
-                    "references": fig_references
-                })
-            
-            # Create a function call for create_figures
-            call_id = f"figures_{documents.message_id}"
-            function_call = {
-                "arguments": json.dumps({
-                    "figures": figure_objects
-                }),
-                "call_id": call_id,
-                "name": "create_figures",
-                "type": "function_call",
-                "id": call_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_call)
-            
-            # Format the output as requested
-            figure_responses = []
-            for fig in figures:
-                figure_responses.append(f"CreateFigureResponse(success=True, error=None, figure_id='{fig.get('id', '')}')")
-            
-            # Format as a list string
-            output_str = f"[{', '.join(figure_responses)}]"
-            
-            function_output = {
-                "call_id": call_id,
-                "output": output_str,
-                "type": "function_call_output",
-                "id": call_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_output)
-            
-        elif pos['type'] == 'question':
-            # Convert database questions to Question model objects
-            question_objects = []
-            for q in questions:
-                # Map references to reference numbers
-                q_references = []
-                if "references" in q and q["references"]:
-                    q_references = [
-                        references_reverse[ref] for ref in q["references"] 
-                        if ref in references_reverse
-                    ]
-                
-                # Process figures if any
-                q_figures = []
-                if "figures" in q and q["figures"]:
-                    for fig_id in q["figures"]:
-                        # Find the figure in our figures list
-                        for fig in figures:
-                            if fig.get("id") == fig_id:
-                                fig_references = []
-                                if "references" in fig and fig["references"]:
-                                    fig_references = [
-                                        references_reverse[ref] for ref in fig["references"] 
-                                        if ref in references_reverse
-                                    ]
-                                
-                                q_figures.append({
-                                    "title": fig.get("title", ""),
-                                    "latex_code": fig.get("code", ""),
-                                    "references": fig_references
-                                })
-                                break
-                
-                question_objects.append({
-                    "title": q.get("title", ""),
-                    "question_type": "frq" if q.get("frq", False) else "mcq",
-                    "question": q.get("question", ""),
-                    "options": q.get("options", []),
-                    "answer": q.get("answers", [""])[0] if q.get("answers") else "",
-                    "explanations": q.get("explanations", []),
-                    "references": q_references,
-                    "figures": q_figures
-                })
-            
-            # Create a function call for create_questions
-            call_id = f"questions_{documents.message_id}"
-            function_call = {
-                "arguments": json.dumps({
-                    "questions": question_objects
-                }),
-                "call_id": call_id,
-                "name": "create_questions",
-                "type": "function_call",
-                "id": call_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_call)
-            
-            # Format the output as requested
-            question_responses = []
-            for q in questions:
-                question_responses.append(f"CreateQuestionResponse(success=True, error=None, question_id='{q.get('id', '')}')")
-            
-            # Format as a list string
-            output_str = f"[{', '.join(question_responses)}]"
-            
-            function_output = {
-                "call_id": call_id,
-                "output": output_str,
-                "type": "function_call_output",
-                "id": call_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_output)
-            
-        elif pos['type'] == 'summary':
-            # Convert database summaries to Summary model objects
-            summary_objects = []
-            for s in summaries:
-                # Process document tags in summary content
-                preamble = process_document_tags(s.get("preamble", ""))
-                body = process_document_tags(s.get("body", ""))
-                conclusion = process_document_tags(s.get("conclusion", ""))
-                
-                # Map references to reference numbers
-                s_references = []
-                if "references" in s and s["references"]:
-                    s_references = [
-                        references_reverse[ref] for ref in s["references"] 
-                        if ref in references_reverse
-                    ]
-                
-                # Process figures if any
-                s_figures = []
-                if "figures" in s and s["figures"]:
-                    for fig_id in s["figures"]:
-                        # Find the figure in our figures list
-                        for fig in figures:
-                            if fig.get("id") == fig_id:
-                                fig_references = []
-                                if "references" in fig and fig["references"]:
-                                    fig_references = [
-                                        references_reverse[ref] for ref in fig["references"] 
-                                        if ref in references_reverse
-                                    ]
-                                
-                                s_figures.append({
-                                    "title": fig.get("title", ""),
-                                    "latex_code": fig.get("code", ""),
-                                    "references": fig_references
-                                })
-                                break
-                
-                summary_objects.append({
-                    "title": s.get("title", ""),
-                    "preamble": preamble,
-                    "body": body,
-                    "conclusion": conclusion,
-                    "references": s_references,
-                    "figures": s_figures
-                })
-            
-            # Create a function call for create_summaries
-            call_id = f"summaries_{documents.message_id}"
-            function_call = {
-                "arguments": json.dumps({
-                    "summaries": summary_objects
-                }),
-                "call_id": call_id,
-                "name": "create_summaries",
-                "type": "function_call",
-                "id": call_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_call)
-            
-            # Format the output as requested
-            summary_responses = []
-            for s in summaries:
-                summary_responses.append(f"CreateSummaryResponse(success=True, error=None, summary_id='{s.get('id', '')}')")
-            
-            # Format as a list string
-            output_str = f"[{', '.join(summary_responses)}]"
-            
-            function_output = {
-                "call_id": call_id,
-                "output": output_str,
-                "type": "function_call_output",
-                "id": call_id,
-                "status": "completed"
-            }
-            
-            content_parts.append(function_output)
-        
-        last_end = pos['end']
-    
-    # Add any remaining text after the last tag
-    if last_end < len(message):
-        remaining_text = message[last_end:]
-        if remaining_text.strip():
-            content_parts.append({
-                "role": "assistant",
-                "content": remaining_text
-            })
-    
-    # Return the complete message with function calls and content parts
-    return content_parts
+    single = len(models) == 1
+    tool_name = meta["singular"] if single else meta["plural"]
+    payload_key = f"{kind}{'' if single else 's'}"  # e.g. 'figure' vs 'figures'
+    payload = {payload_key: models, "responses": responses}
+    call_id = f"{kind}_{'_'.join(ids)}"
+    return _emit_call(tool_name, call_id, payload)
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  process_special_tags  (top-level wrapper remains almost unchanged)
+# ──────────────────────────────────────────────────────────────────────────
+async def process_special_tags(message: str,
+                               supabase_client,
+                               documents,
+                               *,
+                               figure_id: str | None = None,
+                               question_id: str | None = None,
+                               summary_id: str | None = None,
+                              ):
+    supplied = sum(x is not None for x in (figure_id, question_id, summary_id))
+    if supplied > 1:
+        raise ValueError("Pass at most one of figure_id / question_id / summary_id")
+
+    if figure_id:
+        return await build_history("figure", [figure_id], supabase_client, documents)
+    if question_id:
+        return await build_history("question", [question_id], supabase_client, documents)
+    if summary_id:
+        return await build_history("summary", [summary_id], supabase_client, documents)
+
+    # No ID fast-path → scan the raw message
+    return await _process_tags_from_message(message, supabase_client, documents)
+
+# ──────────────────────────────────────────────────────────────────────────
+#  _process_tags_from_message  (only the *inside* changed)  # ★
+# ──────────────────────────────────────────────────────────────────────────
+async def _process_tags_from_message(message, db, documents):
+    """
+    Same docstring as before, but now calls build_history() which in turn
+    auto-selects singular vs plural tools. Almost all heavy lifting moved
+    out, so this becomes ~60 lines instead of 300+.
+    """
+    import json
+    refs_rev = _get_refs_rev(documents)
+    parts: List[Dict[str, Any]] = []
+
+    # --- cheap inline tag replacements (DOCUMENT/FIGURE placeholders) ----
+    message = _process_doc_tags(message, refs_rev)
+    # we'll replace <FIGURE>… later once we have figs_rev mapping
+
+    # --- locate generation tags ------------------------------------------
+    TAG_PAT = {
+        "figure":   r'<FIGURE_GENERATING>',
+        "question": r'<QUESTION_GENERATING>',
+        "summary":  r'<SUMMARY_GENERATING>',
+    }
+    tags: List[Tuple[int,int,str]] = []
+    for kind, pat in TAG_PAT.items():
+        for m in re.finditer(pat, message):
+            tags.append((m.start(), m.end(), kind))
+    tags.sort()  # by start idx
+
+    if not tags:
+        return [{"role": "assistant", "content": message}]  # no magic tags
+
+    # --- pull all rows we could possibly need in *one* go -----------------
+    chat_id = documents.chat_id
+    msgs   = (db.table("messages").select("id").eq("chat", chat_id).execute().data) or []
+    msg_ids = [m["id"] for m in msgs]
+
+    # cache: table -> rows
+    cache = {}
+    for tbl in ("figures", "questions", "summaries"):
+        cache[tbl] = (db.table(tbl).select("*").in_("message", msg_ids).execute().data) or []
+
+    # mapping id → row for quick lookup
+    by_id = {row["id"]: row for tbl in cache.values() for row in tbl}
+
+    # Build global figure-index map {fig_id: 1,2,3…} so we can replace
+    figs_rev: Dict[str,int] = {}
+    next_idx = 1
+    for q in cache["questions"] + cache["summaries"]:
+        for fid in q.get("figures", []):
+            if fid not in figs_rev:
+                figs_rev[fid] = next_idx; next_idx += 1
+    # last step: actually swap inline <FIGURE> tags in *whole* message
+    message = _process_fig_tags(message, figs_rev)
+
+    # --- walk the message and inject tool calls --------------------------
+    last = 0
+    for start, end, kind in tags:
+        if start > last:
+            txt = message[last:start]
+            if txt.strip():
+                parts.append({"role": "assistant", "content": txt})
+
+        # collect the rows that belong to this message
+        rows = [r for r in cache[_KIND[kind]["table"]] if r["message"] in msg_ids]
+        ids  = [r["id"] for r in rows]
+        parts += await build_history(kind, ids, db, documents)
+        last = end
+
+    # trailing text
+    if last < len(message):
+        tail = message[last:]
+        if tail.strip():
+            parts.append({"role": "assistant", "content": tail})
+
+    return parts

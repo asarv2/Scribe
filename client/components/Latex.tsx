@@ -20,14 +20,22 @@ import { getFileDocuments } from '@/utils/queries/get-file-docs';
 import { getProfile } from '@/utils/queries/get-profile';
 import { getUser } from '@/utils/queries/get-user';
 import { getPageRanges } from '@/utils/chat/chat-helpers';
+import Image from 'next/image';
+import MarkdownImage from './MarkdownImage';
 
 interface LatexProps {
     children: string;
     classId?: string;
     handleEnhancedDocumentClick?: (fileId: string, documentId?: string) => void;
+    figureUrls?: Record<string, string>;
 }
 
-export default function Latex({ children, classId, handleEnhancedDocumentClick }: LatexProps) {
+export default function Latex({
+    children,
+    classId,
+    handleEnhancedDocumentClick,
+    figureUrls = {}
+}: LatexProps) {
     const supabase = useSupabaseBrowser();
 
     const { data: user } = useQuery({
@@ -65,7 +73,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                 const minutes = Math.floor(seconds / 60);
                 const remainingSeconds = Math.floor(seconds % 60);
                 return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-            };  
+            };
             return `${file?.title ?? 'File'} ${formatTime(doc?.start_time ?? 0)} - ${formatTime(doc?.end_time ?? 0)}`;
         } else {
             return `${file?.title ?? 'File'} ${range ? `p.${range}` : `p.${doc?.page}`}`;
@@ -94,9 +102,9 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                             c={CONTENT_COLORS[file_type ?? 'other']}
                             span
                             className="context-reference-link"
-                            style={{ 
-                                display: 'inline', 
-                                margin: '0 0.25rem', 
+                            style={{
+                                display: 'inline',
+                                margin: '0 0.25rem',
                                 cursor: 'pointer'
                             }}
                             onClick={() => {
@@ -145,6 +153,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                     table: ({ children }) => <table className="prose-table">{children}</table>,
                     th: ({ children }) => <th className="prose-th">{children}</th>,
                     td: ({ children }) => <td className="prose-td">{children}</td>,
+                    img: ({ src, alt }) => <MarkdownImage src={src as string} alt={alt as string} />,
                     span: (props: any) => {
                         if (props.className === 'tag-badge' && props['data-tag-id'] && classId) {
                             const tagIds = props['data-tag-id'].split(',');
@@ -153,7 +162,7 @@ export default function Latex({ children, classId, handleEnhancedDocumentClick }
                             const documents = tagIds.map((id: string) => {
                                 return fileDocuments?.find((fileDocument: Document) => fileDocument.id === id);
                             });
-                            
+
                             return renderBadges(documents);
                         }
                         return <span {...props} />;

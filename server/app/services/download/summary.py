@@ -98,6 +98,9 @@ class SummaryDownloader:
         # filter out any <DOCUMENT></DOCUMENT> tags, and remove spaces around the tags
         content = re.sub(r"\s*<DOCUMENT>.*?</DOCUMENT>\s*", "", content)
 
+        # filter out any <FIGURE></FIGURE> tags, and remove spaces around the tags
+        content = re.sub(r"\s*<FIGURE>.*?</FIGURE>\s*", "", content)
+
         # 1) Convert **bold** to \textbf{...}
         cleaned_content = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", content)
 

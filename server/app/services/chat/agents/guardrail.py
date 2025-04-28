@@ -1,27 +1,39 @@
-from typing import Optional, Callable, Awaitable
+import logging
+import re
+from typing import Optional, Callable, Awaitable, Any, List, Iterable, Dict
 from agents import Agent, OpenAIChatCompletionsModel, ModelSettings
 from app.extensions import get_gemini
-from app.services.chat.models.main import Documents, InitialChatOutput
-from agents import input_guardrail, RunContextWrapper, GuardrailFunctionOutput, Runner, trace
+from app.services.chat.models.main import InitialChatOutput, Documents, AfterChatOutput, CreateFigureResponse, CreateSummaryResponse, CreateQuestionResponse
+from agents import input_guardrail, RunContextWrapper, GuardrailFunctionOutput, Runner, trace, output_guardrail
 from agents.items import TResponseInputItem
+from app.extensions import get_supabase
+from app.services.chat.utils.references import process_special_tags
+import json
+logger = logging.getLogger(__name__)
+
 
 class GuardrailAgent:
-    def __init__(self, course_title: str, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None):
+    def __init__(self, course_title: str, outcomes_description: str | None, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None):
+        """
+        course_title: the title of the course
+        outcomes_description: the text description of the outcomes of the course, with the description of each outcome
+        """
         self.gemini_client = get_gemini()
         self.course_title = course_title
+        self.outcomes_description = outcomes_description or ""
+
         self.update_chat_title = update_chat_title
         self.update_chat_usage = update_chat_usage
 
-        self.guardrail_agent = self.agent()
-
-    def main(self):
-        @input_guardrail
-        async def general_guardrail( 
+        self.input_guardrail_agent = self.input_guardrail_agent()
+        self.output_guardrail_agent = self.output_guardrail_agent()
+    
+    def input_guardrail_wrapper(self):
+        @input_guardrail(name="Input Guardrail")
+        async def input_guardrail_function( 
             ctx: RunContextWrapper[Documents], agent: Agent, input: str | list[TResponseInputItem]
         ) -> GuardrailFunctionOutput:
-            if isinstance(input, list):
-                input = [input[-1]] # get the last message
-            result = await Runner.run(self.guardrail_agent, input, context=ctx.context)
+            result = await Runner.run(self.input_guardrail_agent, input, context=ctx.context)
             output = result.final_output_as(InitialChatOutput)
 
             # updating the chat title
@@ -41,13 +53,128 @@ class GuardrailAgent:
                 tripwire_triggered=(not output.in_scope),
             )
     
-        return general_guardrail
+        return input_guardrail_function
+    
+    def output_guardrail_wrapper(self):
+        # ── tiny config table ───────────────────────────────────────────────────
+        _ID_KEY: Dict[str, tuple[str, type]] = {
+            "Figure Agent":   ("figure_id",   CreateFigureResponse),
+            "Summary Agent":  ("summary_id",  CreateSummaryResponse),
+            "Question Agent": ("question_id", CreateQuestionResponse),
+        }
 
-    def agent(self):
-        system_prompt = self.system_prompt()
+        # ── single helper -------------------------------------------------------
+        def build_responses(agent_name: str, raw: Any) -> List[Any]:
+            """
+            Always returns a *list* of either CreateXResponse objects or plain strings.
+            """
+            # if upstream already sent a model (or list of models) just normalise ↴
+            if isinstance(raw, (CreateFigureResponse,
+                                CreateSummaryResponse,
+                                CreateQuestionResponse)):
+                return [raw]
+            if isinstance(raw, list) and raw and isinstance(raw[0], (CreateFigureResponse,
+                                                                    CreateSummaryResponse,
+                                                                    CreateQuestionResponse)):
+                return raw
+
+            # anything non-string we pass through unchanged
+            if not isinstance(raw, str):
+                return [raw]
+
+            # figure out which ID key we care about from the agent name
+            key, model = _ID_KEY.get(agent_name, (None, None))
+            if not key:                                 # unknown agent → plain text
+                return [raw]
+
+            # grab every UUID that follows e.g.  figure_id='…'
+            ids = re.findall(rf"{key}=['\"]([0-9a-f-]+)", raw)
+            logger.debug("Agent %s → found %d id(s): %s", agent_name, len(ids), ids)
+
+            # if nothing matched we still keep the text so nothing is lost
+            if not ids:
+                return [raw]
+
+            return [model(success=True, **{key: id_}) for id_ in ids]
+        
+        async def to_chat_items(resp: Any, supabase, ctx) -> list[dict]:
+            logger.info("Converting %s to chat items", type(resp).__name__)
+            if isinstance(resp, CreateFigureResponse):
+                return await process_special_tags("", supabase, ctx.context,
+                                                figure_id=resp.figure_id)
+            if isinstance(resp, CreateSummaryResponse):
+                return await process_special_tags("", supabase, ctx.context,
+                                                summary_id=resp.summary_id)
+            if isinstance(resp, CreateQuestionResponse):
+                return await process_special_tags("", supabase, ctx.context,
+                                                question_id=resp.question_id)
+            # default: plain assistant text
+            return [{"role": "assistant", "content": str(resp)}]
+
+        @output_guardrail(name="Output Guardrail")
+        async def output_guardrail_function(ctx, agent, output: Any) -> GuardrailFunctionOutput:
+            supabase = get_supabase()
+
+            # 1) convert whatever we got into a clean list
+            responses = build_responses(agent.name, output)
+
+            # 2) turn each into chat items (unchanged helper)
+            chat_history: list[dict] = []
+            for resp in responses:
+                chat_history.extend(await to_chat_items(resp, supabase, ctx))
+
+            # ③ add the user ask-back that the guardrail agent expects
+            chat_history.append({
+                "role": "user",
+                "content": (
+                    "Find the outcomes that were achieved in the previous message, "
+                    "and the objectives that were used to achieve those outcomes. "
+                    f"Previous outcomes: {self.outcomes_description}"
+                ),
+            })
+
+            # ④ run the guardrail agent exactly as before …
+            result = await Runner.run(self.output_guardrail_agent, chat_history, context=ctx.context)
+
+            logger.info("Guardrail agent raw result: %s", result)
+            final = result.final_output_as(AfterChatOutput)
+
+            # create an update entry for supabase
+            entries = []
+            # ── guardrail agent post-processing ───────────────────────────────────────
+            for item in final.outcomes:
+                outcome_id = ctx.context.outcomes[item.number]   # mapping you built earlier
+                for obj in item.objectives:
+                    entries.append({
+                        "class":      ctx.context.class_id,
+                        "outcome":    outcome_id,
+                        "message":    ctx.context.message_id,
+                        "title":      obj,
+                    })
+            
+            # Only attempt to insert if there are entries to insert
+            if entries:
+                supabase.table("objectives").insert(entries).execute()
+
+            # updating the chat usage
+            if self.update_chat_usage:
+                await self.update_chat_usage(ctx.context.chat_id, 
+                        ctx.context.profile_id, 
+                        ctx.usage.input_tokens, 
+                        ctx.usage.output_tokens)
+
+            return GuardrailFunctionOutput(
+                output_info=final.outcomes, 
+                tripwire_triggered=False,
+            )
+        
+        return output_guardrail_function
+    
+    def input_guardrail_agent(self):
+        system_prompt = self.input_guardrail_system_prompt()
 
         return Agent[Documents](
-            name="Guardrail Agent",
+            name="Input Guardrail Agent",
             instructions=system_prompt,
             model=OpenAIChatCompletionsModel( 
                 model="gemini-2.0-flash",
@@ -60,7 +187,36 @@ class GuardrailAgent:
             output_type=InitialChatOutput,
         )
     
-    def system_prompt(self):
+    def output_guardrail_agent(self):
+        system_prompt = self.output_guardrail_system_prompt()
+
+        return Agent[Documents](
+            name="Output Guardrail Agent",
+            instructions=system_prompt,
+            model=OpenAIChatCompletionsModel( 
+                model="gemini-2.0-flash",
+                openai_client=self.gemini_client,
+            ),
+            model_settings=ModelSettings(
+                temperature=0.0,
+                include_usage=True
+            ),
+            output_type=AfterChatOutput,
+        )
+    
+    def input_guardrail_system_prompt(self):
         return (
-            f"You are a guardrail agent. You are responsible for ensuring that the user's message is within the scope of a question being answered by a teaching assistant for {self.course_title}. You should mark it as in_scope=True if it is within the scope, and in_scope=False otherwise. In either case, whether it is in scope or not, provide a title for the chat, that is concise and only 3-4 words long."
+            f"You are a guardrail agent. You are responsible for ensuring that the user's message is within the scope of the following course: {self.course_title}. Generating content, like figures, summaries, and practice problems are within the scope. Answering questions about homework, exams, and content is within the scope. You should mark it as in_scope=True if it is within the scope, and in_scope=False otherwise. In either case, whether it is in scope or not, provide a title for the chat, that is concise and only 3-4 words long."
+        )
+
+    def output_guardrail_system_prompt(self):
+        return (
+            f"You are a guardrail agent. You are a part of managing the course: {self.course_title}. You are responsible for identifying which outcomes of the course the previous agent has achieved in the latest message, and what objectives were used to achieve those outcomes."
+            """Each objective should be a 1-2 word string. Avoid general objectives like 'understanding', 'knowledge', 'skills', etc. It should be a specific concept for this class, like BFS or Simplex Method. If someone were to look at the objective, they should be able to make the clear connection that it is a part of this course. It is okay to not include objectives that are not relevant to this course. You should output in this schema: {
+                \"outcomes\": [
+                    { \"number\": <int>, \"objectives\": [<str>, …] },
+                    …
+                ]
+            }"""
+            f"You may already see some previous objectives that have been used before this, you can re-list those if they are relevant to the latest message."
         )

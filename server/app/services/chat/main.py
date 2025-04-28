@@ -2,7 +2,7 @@ from typing import List, Any, Optional, Callable, Awaitable, Tuple
 from agents import Agent
 from datetime import datetime
 from app.extensions import get_supabase, get_gemini
-from agents import Agent, Runner, trace, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig, ModelBehaviorError, InputGuardrailTripwireTriggered
+from agents import Agent, Runner, trace, RunHooks, Tool, RunContextWrapper, RawResponsesStreamEvent, RunConfig, ModelBehaviorError, InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered
 from app.services.chat.models.main import Documents, CreateFigureResponse, CreateQuestionResponse, CreateSummaryResponse
 from app.services.chat.utils.references import process_special_tags, clean_references
 from agents.items import TResponseInputItem
@@ -27,6 +27,7 @@ class ChatProcessor(RunHooks):
         update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None,
         update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str,
         update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None,
+        outcomes_description: Optional[str] = None,
     ):
         super().__init__()
         self.supabase_client = get_supabase()
@@ -48,7 +49,12 @@ class ChatProcessor(RunHooks):
         self.update_chat_usage = update_chat_usage
 
         self.starting_agent = GeneralAgent(self.course_title).main()
-        self.guardrail = GuardrailAgent(self.course_title, self.update_chat_title, self.update_chat_usage).main()
+
+        # check if this is a new chat
+        new_chat = len(self.chat_history) == 0
+        self.guardrail = GuardrailAgent(self.course_title, outcomes_description, self.update_chat_title if new_chat else None, self.update_chat_usage)
+        self.input_guardrail = self.guardrail.input_guardrail_wrapper()
+        self.output_guardrail = self.guardrail.output_guardrail_wrapper()
 
     async def format_conversation(self, google_file_ids: List[str], reference_description: str, documents: Documents, add_current=True) -> list[TResponseInputItem]:
         """Format the conversation history into context"""
@@ -97,7 +103,46 @@ class ChatProcessor(RunHooks):
             await self.stream_callback(f"<SUMMARY_GENERATING>")
         elif agent.name == "Question Agent":
             await self.stream_callback(f"<QUESTION_GENERATING>")
-  
+
+    async def on_tool_end(
+        self,
+        context: RunContextWrapper[Documents],
+        agent: Agent[Documents],
+        tool: Tool,
+        result: Any,
+    ) -> None:
+        """Called after a tool is invoked."""
+        if tool.name == "create_figure":
+            if isinstance(result, CreateFigureResponse):
+                await self.stream_callback(result.message)
+        elif tool.name == "create_figures":
+            # Check if result is a list first, then check each item
+            if isinstance(result, list):
+                for i, item in enumerate(result):
+                    prefix = f"<FIGURE_GENERATING>" if i > 0 else ""
+                    if isinstance(item, CreateFigureResponse):
+                        await self.stream_callback(f"{prefix}{item.message}")
+        elif tool.name == "create_question":
+            if isinstance(result, CreateQuestionResponse):
+                await self.stream_callback(result.message)
+        elif tool.name == "create_questions":
+            # Check if result is a list first, then check each item
+            if isinstance(result, list):
+                for i, item in enumerate(result):
+                    prefix = f"<QUESTION_GENERATING>" if i > 0 else ""
+                    if isinstance(item, CreateQuestionResponse):
+                        await self.stream_callback(f"{prefix}{item.message}")
+        elif tool.name == "create_summary":
+            if isinstance(result, CreateSummaryResponse):
+                await self.stream_callback(result.message)
+        elif tool.name == "create_summaries":
+            # Check if result is a list first, then check each item
+            if isinstance(result, list):
+                for i, item in enumerate(result):
+                    prefix = f"<SUMMARY_GENERATING>" if i > 0 else ""
+                    if isinstance(item, CreateSummaryResponse):
+                        await self.stream_callback(f"{prefix}{item.message}")
+
     async def process_message(
         self,
         chat_id: str,
@@ -129,11 +174,11 @@ class ChatProcessor(RunHooks):
                 )
 
                 # Create a new run configuration for each attempt
-                input_guardrails = [self.guardrail] if len(self.chat_history) == 0 else []
                 run_config = RunConfig(
                     group_id=chat_id,
                     trace_id=self.trace_id,
-                    input_guardrails=input_guardrails
+                    input_guardrails=[self.input_guardrail],
+                    output_guardrails=[self.output_guardrail]
                 )
                 
                 # Run the agent with the current context
@@ -178,6 +223,11 @@ class ChatProcessor(RunHooks):
                 # Handle tripwire triggered
                 error_msg = str(e)
                 logger.error(f"InputGuardrailTripwireTriggered in process_message: {error_msg}")
+                return
+            except OutputGuardrailTripwireTriggered as e:
+                # Handle tripwire triggered
+                error_msg = str(e)
+                logger.error(f"OutputGuardrailTripwireTriggered in process_message: {error_msg}")
                 return
                 
             except ModelBehaviorError as e:

@@ -48,6 +48,11 @@ export default function FigureViewer({
     return figures.filter(f => f.generation_status !== 'error');
   }, [figures]);
 
+  // Check if we have any figures with error status
+  const hasErrorFigures = useMemo(() => {
+    return figures.some(f => f.generation_status === 'error');
+  }, [figures]);
+
   // Initialize currentIndex to first valid figure if needed
   useEffect(() => {
     if (validFigures.length > 0 && currentIndex >= validFigures.length) {
@@ -209,13 +214,13 @@ export default function FigureViewer({
     switch (figure.generation_status) {
       case 'idle':
         return (
-          <Center style={{ height: '100%' }}>
+          <Center style={{ height: '100%', maxHeight: '700px' }}>
             <PulseText text={`Waiting to generate figure ${currentIndex + 1} of ${validFigures.length}...`} />
           </Center>
         );
       case 'generating':
         return (
-          <Center style={{ height: '100%' }}>
+          <Center style={{ height: '100%', maxHeight: '700px' }}>
             <PulseText text={`Generating figure ${currentIndex + 1} of ${validFigures.length}...`} />
           </Center>
         );
@@ -226,6 +231,7 @@ export default function FigureViewer({
               pos="relative"
               style={{
                 maxWidth: '100%',
+                maxHeight: '700px',
                 display: 'flex',
                 justifyContent: 'center',
                 margin: '0',
@@ -254,6 +260,7 @@ export default function FigureViewer({
                   className={styles.figureImage}
                   style={{
                     maxWidth: '100%',
+                    maxHeight: '700px',
                     height: 'auto',
                     objectFit: 'contain',
                     opacity: 0,
@@ -286,7 +293,22 @@ export default function FigureViewer({
     }
   };
 
-  return (validFigures.length > 0) && (
+  // If no valid figures, show appropriate message
+  if (validFigures.length === 0) {
+    return (
+      <Card withBorder p="md" w={"100%"} shadow='none'>
+        <Center style={{ height: '200px', maxHeight: '700px' }}>
+          {hasErrorFigures ? (
+            <PulseText text="Retrying figure generation..." />
+          ) : (
+            <PulseText text="Waiting to generate figure..." />
+          )}
+        </Center>
+      </Card>
+    );
+  }
+
+  return (
     <Card
       withBorder={validFigures.length > 1}
       p={validFigures.length > 1 ? "md" : 0}
@@ -320,9 +342,15 @@ export default function FigureViewer({
               </ActionIcon>
             </Group>
             <Text size="sm" c="dimmed">{figure.title}</Text>
+            {figure.generation_status === 'generating' && (
+              <Text size="sm" c="blue" fw={500}>Generating...</Text>
+            )}
+            {figure.generation_status === 'idle' && (
+              <Text size="sm" c="dimmed" fw={500}>Waiting...</Text>
+            )}
           </Group>
 
-          {showDownloadMenu && <Menu position="bottom-end" shadow="md">
+          {showDownloadMenu && figure.generation_status === 'complete' && <Menu position="bottom-end" shadow="md">
             <Menu.Target>
               <Tooltip label={downloadLoading ? `Downloading ${downloadFormat?.toUpperCase()}...` : "Download Figure"}>
                 <ActionIcon
@@ -389,10 +417,16 @@ export default function FigureViewer({
         <Group justify="space-between" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 10, padding: '0 10px' }}>
           <Text size="sm" c="dimmed" p="xs" style={{ borderRadius: '4px' }}>
             {figure.title}
+            {figure.generation_status === 'generating' && (
+              <Text span ml="xs" c="blue" fw={500}>Generating...</Text>
+            )}
+            {figure.generation_status === 'idle' && (
+              <Text span ml="xs" c="dimmed" fw={500}>Waiting...</Text>
+            )}
           </Text>
           
           <Box>
-            {showDownloadMenu && <Menu position="bottom-end" shadow="md">
+            {showDownloadMenu && figure.generation_status === 'complete' && <Menu position="bottom-end" shadow="md">
               <Menu.Target>
                 <Tooltip label={downloadLoading ? `Downloading ${downloadFormat?.toUpperCase()}...` : "Download Figure"}>
                   <ActionIcon

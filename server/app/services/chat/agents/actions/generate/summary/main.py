@@ -25,10 +25,12 @@ class SummaryAgent(SummaryHooks):
             ),
             model_settings=ModelSettings(
                 temperature=0.0,
-                include_usage=True
+                include_usage=True,
+                tool_choice='required'
             ),
             handoff_description=handoff_prompt,
-            output_type=List[Summary]
+            tools=[self.create_summary_tool, self.create_summaries_tool],
+            tool_use_behavior=self.create_summary_check
         )
     
     def system_prompt(self):

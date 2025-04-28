@@ -7,6 +7,7 @@ from app.services.chat.main import ChatProcessor
 from app.services.chat.models.main import Documents
 from app.services.chat.utils.google import GoogleFiles
 from app.services.chat.utils.references import fetch_chat_context, get_mapped_references
+from app.services.chat.utils.outcomes import get_mapped_outcomes
 
 router = APIRouter()
 
@@ -54,18 +55,22 @@ async def handle_chat(
         document_ids = current_message.get('documents', []) or []
 
         # Fetch chat context
-        chat_context = await fetch_chat_context(supabase_client, chat_id)
+        chat_context = await fetch_chat_context(supabase_client, chat_id, class_id)
         figures = chat_context.get('figures', [])
         summaries = chat_context.get('summaries', [])
         questions = chat_context.get('questions', [])
         references = chat_context.get('references', [])
+        outcomes = chat_context.get('outcomes', [])
 
         # get the mapped references
-        mapped_references, text_description, ordered_file_ids, ordered_document_ids = await get_mapped_references(supabase_client, file_ids, document_ids, references)
-        logger.info(f"Text description: {text_description}")
+        mapped_references, reference_description, ordered_file_ids, ordered_document_ids = await get_mapped_references(supabase_client, file_ids, document_ids, references)
+        logger.info(f"Text description: {reference_description}")
+
+        # get the mapped outcomes   
+        mapped_outcomes, outcomes_description = await get_mapped_outcomes(supabase_client, class_id, outcomes)
 
         # to call the agents
-        documents = Documents(references=mapped_references, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
+        documents = Documents(references=mapped_references, outcomes=mapped_outcomes, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
 
         # Fetch google file ids
         google_files = GoogleFiles(ordered_file_ids, ordered_document_ids, supabase_client)
@@ -115,7 +120,8 @@ async def handle_chat(
             stream_callback=update_callback,
             update_trace_id=update_trace_id,
             update_chat_usage=update_chat_usage,
-            update_chat_title=update_chat_title
+            update_chat_title=update_chat_title,
+            outcomes_description=outcomes_description
         )
 
         try:
@@ -123,7 +129,7 @@ async def handle_chat(
                 chat_id=chat_id,
                 google_ids=google_ids,
                 documents=documents,
-                reference_description=text_description
+                reference_description=reference_description,
             )
 
             # update the status of the message to completed

@@ -24,10 +24,12 @@ class QuestionAgent(QuestionHooks):
             ),
             model_settings=ModelSettings(
                 temperature=0.0,
-                include_usage=True
+                include_usage=True,
+                tool_choice='required'
             ),
             handoff_description=handoff_prompt,
-            output_type=List[Question]
+            tools=[self.create_question_tool, self.create_questions_tool],
+            tool_use_behavior=self.create_question_check
         )
     
     def system_prompt(self):

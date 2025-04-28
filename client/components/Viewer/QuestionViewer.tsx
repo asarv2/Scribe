@@ -68,6 +68,11 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         return questions.filter(q => q.generation_status !== 'error');
     }, [questions]);
 
+    // Check if we have any questions with error status
+    const hasErrorQuestions = useMemo(() => {
+        return questions.some(q => q.generation_status === 'error');
+    }, [questions]);
+
     // Initialize currentIndex to first valid question if needed
     useEffect(() => {
         if (validQuestions.length > 0 && currentIndex >= validQuestions.length) {
@@ -363,7 +368,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             case 'idle':
                 return (
                     <Center style={{ height: '100%' }}>
-                        <PulseText text={`Waiting to generate question... ${currentIndex + 1} of ${validQuestions.length}`} />
+                        <PulseText text={`Waiting to generate question ${currentIndex + 1} of ${validQuestions.length}...`} />
                     </Center>
                 );
             case 'generating':
@@ -374,15 +379,32 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 );
             case 'complete':
                 return renderQuestion();
+            default:
+                return null;
         }
     };
 
-    return (question.generation_status === 'idle' || question.generation_status === 'generating' || question.generation_status === 'complete') && (
+    // If no valid questions, show appropriate message
+    if (validQuestions.length === 0) {
+        return (
+            <Card withBorder p="md" w={"100%"}>
+                <Center style={{ height: '200px' }}>
+                    {hasErrorQuestions ? (
+                        <PulseText text="Retrying question generation..." />
+                    ) : (
+                        <PulseText text="Waiting to generate question..." />
+                    )}
+                </Center>
+            </Card>
+        );
+    }
+
+    return (
         <>
             <Card
                 withBorder
                 p="md"
-                w={"100%"}
+                w="100%"
                 ref={cardRef}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
@@ -411,14 +433,21 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                             </Group>
                         ) : null}
                         <Text size="sm" c="dimmed">{question.title}</Text>
+                        {question.generation_status === 'generating' && (
+                            <Text size="sm" c="blue" fw={500}>Generating...</Text>
+                        )}
+                        {question.generation_status === 'idle' && (
+                            <Text size="sm" c="dimmed" fw={500}>Waiting...</Text>
+                        )}
                     </Group>
                     <Group gap="xs">
                         <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
-                                <Tooltip label="Download Questions">
+                                <Tooltip label={downloadLoading ? "Downloading..." : "Download Questions"}>
                                     <ActionIcon
                                         variant="subtle"
                                         size="md"
+                                        loading={downloadLoading}
                                     >
                                         <IconDownload size={18} />
                                     </ActionIcon>

@@ -19,20 +19,13 @@ class GeneralAgent:
         self.question = QuestionAgent(course_title).agent()
         self.summary  = SummaryAgent(course_title).agent()
         self.figure   = FigureAgent(course_title).agent()
-        # self.generate = GenerateAgent(course_title).agent()
         self.review   = ReviewAgent(course_title).agent()
         self.homework = HomeworkAgent(course_title).agent()
         self.learn    = LearnAgent(course_title).agent()
-
         # Phase 2: wire up handoffs once all agents exist
-        self.question.handoffs  = [self.general]
-        self.summary.handoffs   = [self.general]
-        self.figure.handoffs    = [self.general]
-
-        # self.generate.handoffs  = [self.question, self.summary, self.figure, self.general]
-        self.review.handoffs    = [self.general]
-        self.homework.handoffs  = [self.general]
-        self.learn.handoffs     = [self.general]
+        self.review.handoffs    = [self.question, self.summary, self.figure]
+        self.homework.handoffs  = [self.question, self.summary, self.figure]
+        self.learn.handoffs     = [self.question, self.summary, self.figure]
 
         self.general.handoffs   = [self.review, self.homework, self.learn, self.figure, self.question, self.summary]
 
@@ -74,7 +67,9 @@ class GeneralAgent:
             "If the request is related to course material, such as the student needing help understanding a concept, or anything related to a student learning, use the transfer_to_learn function, so that the colleague specialized in helping students learn can take over.\n"
             "If the request is related to preparing for an exam, quiz, midterm, or anything similar, use the transfer_to_review function, to allow the colleague specialized in helping with test preparation can take over.\n"
             "If the request is related to a student needing help with anything homework related, use the transfer_to_homework function, to allow the colleague specialized in helping with homework, can take over.\n"
-            "If the request is related to generating any sort of content use the transfer_to_generate function, to allow the colleague specialized in generating material to take over.\n"
+            "If you are tasked with creating a visual, plot, table, graph, tree, or any sort of figure, use the transfer_to_figure function to allow the colleague specialized in generating figures to take over.\n"
+            "If you are tasked with creating a summary or review paper or anything similar, use the transfer_to_summary function to allow the colleague specialized in generating summaries to take over.\n"
+            "If you are tasked with creating any type of practice question(s), use the transfer_to_question function to allow the colleague specialized in generating practice questions to take over.\n"
             "Keep conversations natural, concise, and engaging, don't say unnecessary information just for the sake of having more words, the user will appreciate a succinct response that has the necessary information. Make sure you only Respond in English only.\n"
         )
 
