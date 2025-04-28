@@ -77,7 +77,6 @@ async def handle_chat(
         google_file_ids = google_files.get_files()
         google_document_ids = google_files.get_documents()
         google_ids = google_file_ids + google_document_ids
-
         total_response = ""
         async def update_callback(chunk: str):
             nonlocal total_response

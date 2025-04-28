@@ -14,6 +14,9 @@ from agents import AgentOutputSchemaBase
 
 logger = logging.getLogger(__name__)
 
+class ContextFile(BaseModel):
+    file_id: str
+
 class InitialChatOutput(BaseModel):
     in_scope: bool = Field(default=True)
     title: str = Field(default="")
@@ -76,6 +79,7 @@ class Documents(BaseModel):
     profile_id: str
     chat_id: str
     message_id: str
+    # files: Dict[int, str] # maps file number to file id in supabase
     references: Dict[int, str] # maps number found in text to the id in supabase
     outcomes: Dict[int, str] # maps outcome number to outcome id in supabase
     figures: List[str] = []

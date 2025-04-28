@@ -31,6 +31,8 @@ class GoogleFiles:
         try:
             if not file_ids:
                 return []
+            
+            logger.info(f"Fetching file data for IDs: {file_ids}")
 
             # Get file information
             files_response = self.supabase.table("files").select(
@@ -46,9 +48,9 @@ class GoogleFiles:
             # For each file, get the Google file information
             google_response = self.supabase.table("google").select(
                 "file", "google_id", "expires_at"
-            ).in_("file", file_ids).eq("deleted", False).order("created_at", desc=True).limit(1).execute()
+            ).in_("file", file_ids).order("created_at", desc=True).execute()
             
-            if google_response.data and len(google_response.data) > 0:
+            if google_response.data:
                 for google_file in google_response.data:
                     file_id = google_file.get("file")
                     google_id = google_file.get("google_id")
@@ -75,7 +77,6 @@ class GoogleFiles:
         """Fetch document data from Supabase for the given document IDs"""
         try:
             if not document_ids:
-                logger.info("No document IDs provided")
                 return []
 
             # Get document information
@@ -91,7 +92,7 @@ class GoogleFiles:
             
             google_response = self.supabase.table("google").select(
                 "document", "google_id", "expires_at"
-            ).in_("document", document_ids).eq("deleted", False).order("created_at", desc=True).limit(1).execute()
+            ).in_("document", document_ids).order("created_at", desc=True).execute()
 
             for document_id in document_ids:
                 google_document = next((f for f in google_response.data if f["document"] == document_id), None)
@@ -156,9 +157,6 @@ class GoogleFiles:
             
             if is_expired:
                 logger.info(f"File {file_id} has expired or needs uploading. Uploading from Supabase.")
-                if google_id:
-                    # Mark the existing Google file as deleted
-                    self._mark_google_file_as_deleted(file_id)
                 
                 # Upload from Supabase
                 new_file = self._upload_file_from_supabase(
@@ -202,10 +200,6 @@ class GoogleFiles:
                     is_expired = True  # Assume expired if we can't parse the date
             
             if is_expired:
-                if google_id:
-                    # Mark the existing Google file as deleted
-                    self._mark_google_file_as_deleted(document_id, is_document=True)
-                
                 
                 # Upload from Supabase
                 new_file = self._upload_document_from_supabase(
@@ -224,22 +218,6 @@ class GoogleFiles:
                 google_document_ids.append(google_id)
         
         return google_document_ids
-        
-
-    def _mark_google_file_as_deleted(self, id_value: str, is_document: bool = False) -> None:
-        """Mark Google file or document entries as deleted in the database"""
-        try:
-            if is_document:
-                self.supabase.table("google").update(
-                    {"deleted": True}
-                ).eq("document", id_value).execute()
-            else:
-                self.supabase.table("google").update(
-                    {"deleted": True}
-                ).eq("file", id_value).execute()
-        except Exception as e:
-            logger.error(f"Error marking Google entries as deleted: {str(e)}")
-
 
     def _upload_document_from_supabase(self, file_id: str, document_id: str, class_id: str, extension: str) -> Optional[File]:
         """Upload document from Supabase to Google"""
@@ -252,13 +230,22 @@ class GoogleFiles:
             file_dir = os.path.join(temp_dir, file_id)
             os.makedirs(file_dir, exist_ok=True)
             
-            # Construct the storage path
-            storage_path = f"{class_id}/{file_id}/{document_id}.{extension}"
+            # Construct the storage paths - try both with and without extension
+            storage_path_with_ext = f"{class_id}/{file_id}/{document_id}.{extension}"
+            storage_path_without_ext = f"{class_id}/{file_id}/{document_id}"
             local_path = os.path.join(temp_dir, f"{file_id}/{document_id}.{extension}")
             
-            # Download the file from Supabase
+            # Download the file from Supabase - try with extension first, then without
             try:
-                res = self.supabase.storage.from_("files").download(storage_path)
+                try:
+                    # First try with extension
+                    res = self.supabase.storage.from_("files").download(storage_path_with_ext)
+                    logger.info(f"Downloaded file with extension: {storage_path_with_ext}")
+                except Exception as with_ext_error:
+                    # If that fails, try without extension
+                    logger.info(f"Failed to download with extension, trying without: {storage_path_without_ext}")
+                    res = self.supabase.storage.from_("files").download(storage_path_without_ext)
+                    logger.info(f"Downloaded file without extension: {storage_path_without_ext}")
                 
                 with open(local_path, 'wb+') as f:
                     f.write(res)
@@ -337,13 +324,23 @@ class GoogleFiles:
             temp_dir = os.path.join(os.getcwd(), "temp")
             os.makedirs(temp_dir, exist_ok=True)
             
-            # Construct the storage path
-            storage_path = f"{class_id}/{file_id}.{extension}"
+            # Construct the storage paths - try both with and without extension
+            storage_path_with_ext = f"{class_id}/{file_id}.{extension}"
+            storage_path_without_ext = f"{class_id}/{file_id}"
             local_path = os.path.join(temp_dir, f"{file_id}.{extension}")
             
-            # Download the file from Supabase
+            # Download the file from Supabase - try with extension first, then without
+            try:
+                # First try with extension
+                res = self.supabase.storage.from_("files").download(storage_path_with_ext)
+                logger.info(f"Downloaded file with extension: {storage_path_with_ext}")
+            except Exception:
+                # If that fails, try without extension
+                logger.info(f"Failed to download with extension, trying without: {storage_path_without_ext}")
+                res = self.supabase.storage.from_("files").download(storage_path_without_ext)
+                logger.info(f"Downloaded file without extension: {storage_path_without_ext}")
+            
             with open(local_path, 'wb+') as f:
-                res = self.supabase.storage.from_("files").download(storage_path)
                 f.write(res)
             
             # Determine MIME type based on extension
