@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Literal
 from filelock import FileLock, Timeout       # <── new ❶
 from .models import FileCompressionResult
+from subprocess import TimeoutExpired, CalledProcessError
 
 logger = logging.getLogger(__name__)
 
@@ -30,43 +31,64 @@ class FileCompressor:
         timeout: int = 600
     ) -> str | None:
         """
-        Convert DOCX or PPTX to PDF using **unoconv** (LibreOffice headless).
-        Returns the path of the produced PDF or *None* on failure.
+        Convert DOCX or PPTX to PDF using LibreOffice headless (soffice).
+        Returns the path of the produced PDF or None on failure.
         """
 
-        pdf_path = Path(output_dir) / (Path(input_path).stem + ".pdf")
+        input_path = Path(input_path)
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        pdf_path = output_dir / f"{input_path.stem}.pdf"
 
-        if pdf_path.exists() and pdf_path.stat().st_size:
-            logger.info("Using existing converted PDF: %s", pdf_path)
+        # reuse existing PDF
+        if pdf_path.exists() and pdf_path.stat().st_size > 0:
+            logger.info("Using cached PDF: %s", pdf_path)
             return str(pdf_path)
 
         if progress_callback:
             progress_callback(5.0, "converting", "Waiting for LibreOffice lock")
 
         try:
-            # one conversion at a time → prevents “cfgwk” crashes
             with _OFFICE_LOCK:
                 if progress_callback:
                     progress_callback(10.0, "converting", "LibreOffice lock acquired")
 
                 cmd = [
-                    "unoconv", "--no-launch",
-                    "-f", "pdf", "-o", str(pdf_path), str(input_path)
+                    "soffice",
+                    "--headless",
+                    "--nologo",
+                    "--nodefault",
+                    "--nofirststartwizard",
+                    "--convert-to", "pdf:writer_pdf_Export",
+                    "--outdir", str(output_dir),
+                    str(input_path),
                 ]
-                logger.info("Running: %s", " ".join(cmd))
-                subprocess.run(cmd, check=True, capture_output=True, timeout=timeout)
+                logger.info("Running conversion command: %s", " ".join(cmd))
 
-                if not (pdf_path.exists() and pdf_path.stat().st_size):
-                    raise RuntimeError("unoconv produced no output")
+                proc = subprocess.run(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    timeout=timeout,
+                    check=False,
+                )
+
+                if proc.returncode != 0:
+                    stderr = proc.stderr.decode(errors="ignore").strip()
+                    raise CalledProcessError(proc.returncode, cmd, output=proc.stdout, stderr=stderr)
+
+                # verify output
+                if not (pdf_path.exists() and pdf_path.stat().st_size > 0):
+                    raise RuntimeError("soffice produced no output PDF")
 
                 if progress_callback:
                     progress_callback(20.0, "converted", "Office file converted → PDF")
                 return str(pdf_path)
 
-        except Timeout:
-            logger.error("LibreOffice lock timeout when converting %s", input_path)
-        except subprocess.CalledProcessError as e:
-            logger.error("unoconv failed: %s", e.stderr.decode() if e.stderr else e)
+        except TimeoutExpired:
+            logger.error("LibreOffice conversion timed out for %s", input_path)
+        except CalledProcessError as e:
+            logger.error("soffice conversion failed: %s", e.stderr or e)
         except Exception as e:
             logger.error("Office-to-PDF conversion error: %s", e)
 
