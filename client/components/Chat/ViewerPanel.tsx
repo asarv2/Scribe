@@ -3,10 +3,10 @@
  * Component for viewing documents, lectures, and textbooks
  */
 
-import { Card, Stack, Group, Text, ActionIcon, Box, Button, Divider, Tooltip } from "@mantine/core";
-import { IconPlus, IconX, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
+import { Group, Stack, Text, ActionIcon, Box, Tooltip } from "@mantine/core"; // Removed Collapse
+import { IconPlus, IconSettings, IconTrash, IconX } from "@tabler/icons-react"; // Removed Chevrons, Added IconX
 import { memo } from "react";
-import { ChatMessage, ContentType, ViewerMode } from "@/types";
+import { ChatMessage, ContentType, ViewerMode, File as ScribeFile } from "@/types"; // Added ScribeFile import
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import FileViewer from "@/components/Viewer/FileViewer";
@@ -16,22 +16,28 @@ import { getProfile } from "@/utils/queries/get-profile";
 import DeleteFileModal from "../Delete/DeleteFileModal";
 import FileSettingsModal from "./FileSettingsModal";
 
+// Define props interface
 interface ViewerPanelProps {
     viewerMode: ViewerMode;
     setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
-    activeChat: ChatMessage;
     addFileToChat: (fileId: string) => void;
     addDocumentToChat: (documentId: string) => void;
     classId: string;
+    activeChat: ChatMessage;
 }
 
-const CONTENT_TYPES = {
-    lecture: 'Lecture',
-    textbook: 'Textbook',
-    homework: 'Homework',
-    other: 'File'
-}
+// Helper function to get content type label
+const getContentTypeLabel = (contentType: ContentType | undefined): string => {
+    switch (contentType) {
+        case 'lecture': return 'Lecture';
+        case 'homework': return 'Homework';
+        case 'rubric': return 'Rubric';
+        case 'textbook': return 'Textbook';
+        default: return 'File';
+    }
+};
 
+// Use memo for performance optimization
 export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, addDocumentToChat, classId, activeChat }: ViewerPanelProps) => {
     const supabase = useSupabaseBrowser();
 
@@ -52,111 +58,103 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
         enabled: !!profile
     });
 
+    // Find the active file
+    const activeFile = files?.find(f => f.id === viewerMode.fileId);
+    const contentTypeLabel = getContentTypeLabel(activeFile?.content_type);
 
-    // Helper function to get viewer title
-    const getViewerTitle = () => {
-        const file = files?.find(f => f.id === viewerMode.fileId);
-        return file ? `${file.title}` : "File Viewer";
-    };
+    // Check if the current file is already in the chat context
+    const isFileInChat = activeChat.files.includes(viewerMode.fileId ?? "");
 
-    // Modify the close handler to fully close the panel
-    const handleClose = () => {
-        if (viewerMode.active) {
-            setViewerMode(prev => ({
-                ...prev,
-                active: false,
-            }));
-        }
+    const handleCloseViewer = () => {
+        setViewerMode(prev => ({
+            ...prev,
+            active: false, // Set viewer inactive to show ContextPanel
+            fileId: undefined,
+            documentId: undefined,
+            showPageDetails: false,
+        }));
     };
 
     return (
-        <Card
-            bg="transparent"
-            // shadow="sm"
-            // padding="lg"
-            // radius="md"
-            // withBorder
-            h="calc(100vh - 75px)"
-            p="xs"
-            pt="35px"
-            style={{ position: 'relative' }}
-
+        // Card container removed, starting directly with Stack
+        <Stack
+            style={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                overflow: 'hidden',
+                width: "100%",
+                flex: 1,
+            }}
         >
-            {/* Horizontal minimize bar at the top */}
-            <Tooltip label="Close viewer" openDelay={500}>
-                <Box
-                    onClick={handleClose}
-                    style={{
-                        position: 'absolute',
-                        left: '0',
-                        top: '0',
-                        width: '100%',
-                        height: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'var(--mantine-color-blue-light)',
-                        color: 'var(--mantine-color-blue-filled)',
-                        borderTopLeftRadius: '8px',
-                        borderTopRightRadius: '8px',
-                        cursor: 'pointer',
-                        boxShadow: '0 0 5px rgba(0,0,0,0.1)',
-                        zIndex: 10
-                    }}
-                >
-                    <IconChevronDown size={16} />
-                </Box>
-            </Tooltip>
-
-            <Stack style={{ height: "100%" }}>
-                <Group justify="space-between" wrap="nowrap" align="flex-start" style={{ width: '100%' }}>
-                    <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
-                        <Text
-                            size="lg"
-                            fw={700}
-                            truncate="end"
-                            style={{ width: '100%' }}
-                        >
-                            {getViewerTitle()}
-                        </Text>
-                    </Stack>
-                    <Group gap={2}>
-                        <FileSettingsModal
-                            fileId={viewerMode.fileId ?? ""}
-                            classId={classId}
-                        />
-                        <DeleteFileModal
-                            fileId={viewerMode.fileId ?? ""}
-                            classId={classId}
-                            onDelete={() => {
-                                setViewerMode(prev => ({
-                                    ...prev,
-                                    active: false,
-                                }));
-                            }}
-                        />
+            {/* Header Section */}
+            <Stack
+                gap="xs"
+                style={{
+                    borderBottom: '1px solid var(--mantine-color-gray-3)',
+                    padding: 'var(--mantine-spacing-sm)',
+                }}
+            >
+                <Group justify="space-between" align="center">
+                    <Text fw={500} size="sm" truncate="end">
+                        {activeFile?.title ?? "File Viewer"}
+                    </Text>
+                    <Group gap="xs">
+                        {/* Add to Chat Icon */}
+                        {viewerMode.fileId && !isFileInChat && (
+                            <Tooltip label={`Add ${contentTypeLabel} to Chat`}>
+                                <ActionIcon
+                                    variant="subtle"
+                                    color="blue"
+                                    onClick={() => addFileToChat(viewerMode.fileId ?? "")}
+                                    size="lg" // Match other icons
+                                >
+                                    <IconPlus size={18} />
+                                </ActionIcon>
+                            </Tooltip>
+                        )}
+                        {/* Settings Icon */}
+                        {viewerMode.fileId && <FileSettingsModal fileId={viewerMode.fileId} classId={classId} />}
+                        {/* Delete Icon */}
+                        {viewerMode.fileId && <DeleteFileModal fileId={viewerMode.fileId} classId={classId} />}
+                        {/* Close Icon */}
+                        {viewerMode.fileId && (
+                            <Tooltip label="Close Viewer">
+                                <ActionIcon
+                                    variant="subtle"
+                                    color="gray"
+                                    onClick={handleCloseViewer} // Uses updated handler
+                                    size="lg" // Match other icons
+                                >
+                                    <IconX size={18} />
+                                </ActionIcon>
+                            </Tooltip>
+                        )}
                     </Group>
                 </Group>
-                <>
-                    <Box style={{ flex: 1, overflow: 'hidden' }}>
-                        <FileViewer
-                            key={`${viewerMode.fileId}`}
-                            classId={classId}
-                            addDocumentToChat={addDocumentToChat}
-                            activeChat={activeChat}
-                            viewerMode={viewerMode}
-                            setViewerMode={setViewerMode}
-                        />
-                    </Box>
-                    {activeChat.files.includes(viewerMode.fileId ?? "") ? null : <Button
-                        leftSection={<IconPlus size={16} />}
-                        onClick={() => addFileToChat(viewerMode.fileId ?? "")}
-                    >Add {CONTENT_TYPES[files?.find(f => f.id === viewerMode.fileId)?.content_type as keyof typeof CONTENT_TYPES]} to Chat</Button>}
-                </>
-
             </Stack>
-        </Card >
+
+            {/* Viewer Content */}
+            <Box style={{ 
+                flex: 1, 
+                overflow: 'hidden'
+            }}>
+                {viewerMode.fileId ? (
+                    <FileViewer
+                        classId={classId}
+                        addDocumentToChat={addDocumentToChat}
+                        activeChat={activeChat}
+                        viewerMode={viewerMode}
+                        setViewerMode={setViewerMode}
+                    />
+                ) : (
+                    <Stack align="center" justify="center" style={{ height: '100%' }}>
+                        <Text c="dimmed">Select a file to view</Text>
+                    </Stack>
+                )}
+            </Box>
+        </Stack>
     );
 });
 
-ViewerPanel.displayName = 'ViewerPanel';
+ViewerPanel.displayName = 'ViewerPanel'; // Add display name

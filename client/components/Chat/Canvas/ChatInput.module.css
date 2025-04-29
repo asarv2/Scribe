@@ -3,11 +3,12 @@
 /* Style for the OUTER input group (contains mode selector + inner group) */
 .outerInputGroup {
     position: relative;
-    flex-grow: 1; /* Allow the group to take full width */
-    padding: 8px; /* Padding inside the border */
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6)); /* Background for the whole area */
-    border-radius: var(--mantine-radius-lg); /* Rounded corners for the whole area */
-    border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); /* Border for the whole area */
+    flex-grow: 1;
+    padding: 8px 8px 8px 8px;
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+    border-radius: var(--mantine-radius-lg);
+    border-top: none; /* Ensure no top border */
+    box-shadow: none; /* Remove any shadow that might appear as a line */
 }
 
 
@@ -23,24 +24,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 36px; /* Match textarea min-height */
+    height: 36px;
     min-height: 36px;
-    width: 36px; /* Keep width */
+    width: 36px;
     padding: 0;
     border-radius: var(--mantine-radius-sm);
     transition: background-color 150ms ease;
     background-color: transparent;
-    border: none; /* Removed border */
-
-    &:hover {
-        /* Optional: Add subtle hover effect if desired */
-        background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
-    }
-
-    &[data-active] {
-        /* Optional: Add subtle active effect if desired */
-        background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
-    }
 }
 
 /* Mode Popover Dropdown */
@@ -54,9 +44,9 @@
 /* Container for Textarea and Action Button */
 .textareaContainer {
     position: relative;
-    flex-grow: 1; /* Take remaining space */
-    display: flex; /* Use flex to align textarea and button */
-    align-items: flex-end; /* Align items to the bottom */
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end;
 }
 
 /* Textarea specific styles */
@@ -74,7 +64,8 @@
     border: none; /* Remove default input border */
     background-color: transparent; /* Make input transparent */
     padding-right: 45px; /* Ensure space for the button */
-    padding-left: 0; /* Remove left padding as outer group has padding */
+    /* Adjusted left padding as outer group handles it */
+    padding-left: 0;
     padding-top: var(--mantine-spacing-xs);
     padding-bottom: var(--mantine-spacing-xs);
     min-height: 36px; /* Ensure minimum height */
@@ -98,11 +89,6 @@
     gap: var(--mantine-spacing-xs); /* Add gap between buttons */
 }
 
-/* Optional: Specific style for collapse button if needed */
-.collapseButton {
-    /* Add specific styles here if required */
-}
-
 /* Recording Box Styles */
 .recordingBox {
     display: flex;
@@ -110,10 +96,9 @@
     align-items: center;
     justify-content: center;
     padding: 16px;
-    min-height: 100px; /* Ensure enough height */
+    min-height: 100px;
     border-radius: var(--mantine-radius-lg);
     background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
-    border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
     position: relative; /* For positioning the stop button */
 }
 

@@ -158,7 +158,7 @@ export const MessageList = memo(({
                 minWidth: "200px",
                 width: "auto",
                 maxWidth: "100%",
-                border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
+                border: 'transparent',
                 position: "relative"
               }}
             >
@@ -310,7 +310,6 @@ export const MessageList = memo(({
     setViewerMode(prev => ({
       ...prev,
       active: true,
-      open: true,
       documentId,
       fileId: contextId,
     }));
@@ -475,167 +474,166 @@ export const MessageList = memo(({
   }, []);
 
   return (
+        <Stack
+            ref={(el) => {
+                drop(el);
+                if (containerRef) {
+                    containerRef.current = el;
+                }
+            }}
+            style={{
+                flex: 1,
+                overflowY: "auto",
+                position: "relative",
+                opacity: isLoading ? 0.7 : 1,
+                transition: "all 0.2s ease-in-out",
+                borderRadius: '8px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                margin: '0',
+                // Clean drop target - just a dashed border
+                border: isOver ? '3px dashed #228be6' : 'none',
+                backgroundColor: 'transparent', // Keep transparent
+            }}
+        >
+            {/* Remove the overlay text */}
+            
+            {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
+                // cannot get fade list to work with immersive mode
+                <>
+                  {renderWelcomeMessages()}
+                  {/* Deduplicate messages before rendering them */}
+                  {(() => {
+                    // Deduplicate messages based on content similarity
+                    const uniqueMessages: Message[] = [];
+                    const seenResponses = new Set();
 
-    // Then replace the Stack component
-    <Stack
-      ref={(el) => {
-        // Use the drop function which returns a ref function
-        drop(el);
+                    messages?.forEach((message) => {
+                      // If no response yet, always include the message
+                      if (!message.response) {
+                        uniqueMessages.push(message);
+                        return;
+                      }
 
-        // Update container ref without directly assigning to .current
-        if (containerRef) {
-          // Store the reference for scrolling functionality
-          containerRef.current = el;
-        }
-      }}
-      style={{
-        flex: 1,
-        overflowY: "auto",
-        marginBottom: "1rem",
-        // maxHeight: "calc(100vh - 100px)",
-        position: "relative",
-        opacity: isLoading ? 0.7 : 1,
-        transition: "all 0.2s ease-in-out",
-        border: isOver ? `2px dashed ${canDrop ? '#228be6' : '#fa5252'}` : '2px solid transparent',
-        padding: isOver ? '8px' : '10px',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
-        // cannot get fade list to work with immersive mode
-        <>
-          {renderWelcomeMessages()}
-          {/* Deduplicate messages before rendering them */}
-          {(() => {
-            // Deduplicate messages based on content similarity
-            const uniqueMessages: Message[] = [];
-            const seenResponses = new Set();
+                      // For messages with responses, check for duplicates
+                      // Create a simplified fingerprint of the response (first 50 chars) to detect duplicates
+                      const responseFingerprint = message.response.trim().substring(0, 100);
+                      if (!seenResponses.has(responseFingerprint)) {
+                        seenResponses.add(responseFingerprint);
+                        uniqueMessages.push(message);
+                      } else {
+                        console.log("Skipping duplicate message response");
+                      }
+                    });
 
-            messages?.forEach((message) => {
-              // If no response yet, always include the message
-              if (!message.response) {
-                uniqueMessages.push(message);
-                return;
-              }
+                    return uniqueMessages;
+                  })().map((message, index) => (
+                    <Stack key={`${message.id}`}>
+                      {/* User message */}
+                      <Flex gap="md" justify="flex-end" align="flex-start">
+                        <Stack gap="xs" align="flex-end">
+                          {/* User info container */}
+                          <Group gap="xs" align="center">
+                            <Text size="sm" c="dimmed">
+                              {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
+                            </Text>
+                            <Avatar
+                              src={profile ? getAvatarUrl(profile.id) : undefined}
+                              radius="xl"
+                              size="sm"
+                              alt={`${profile?.first_name} ${profile?.last_name}`}
+                            />
+                          </Group>
 
-              // For messages with responses, check for duplicates
-              // Create a simplified fingerprint of the response (first 50 chars) to detect duplicates
-              const responseFingerprint = message.response.trim().substring(0, 100);
-              if (!seenResponses.has(responseFingerprint)) {
-                seenResponses.add(responseFingerprint);
-                uniqueMessages.push(message);
-              } else {
-                console.log("Skipping duplicate message response");
-              }
-            });
+                          {/* Message container */}
+                          {message.question && <Card
+                            padding="sm"
+                            radius="md"
+                            style={{
+                              backgroundColor: "#228be6",
+                              maxWidth: "100%"
+                            }}
+                          >
+                            <Text c="white">
+                              {message.question}
+                            </Text>
 
-            return uniqueMessages;
-          })().map((message, index) => (
-            <Stack key={`${message.id}`}>
-              {/* User message */}
-              <Flex gap="md" justify="flex-end" align="flex-start">
-                <Stack gap="xs" align="flex-end">
-                  {/* User info container */}
-                  <Group gap="xs" align="center">
-                    <Text size="sm" c="dimmed">
-                      {profile ? `${profile.first_name} ${profile.last_name}` : 'User'}
-                    </Text>
-                    <Avatar
-                      src={profile ? getAvatarUrl(profile.id) : undefined}
-                      radius="xl"
-                      size="sm"
-                      alt={`${profile?.first_name} ${profile?.last_name}`}
-                    />
-                  </Group>
+                            {/* Display message-specific context badges */}
 
-                  {/* Message container */}
-                  {message.question && <Card
-                    padding="sm"
-                    radius="md"
-                    style={{
-                      backgroundColor: "#228be6",
-                      maxWidth: "100%"
-                    }}
-                  >
-                    <Text c="white">
-                      {message.question}
-                    </Text>
-
-                    {/* Display message-specific context badges */}
-
-                    {/* Show auto-added context badges only for the first message */}
-                  </Card>}
-                  {(message.files?.length > 0 || message.documents?.length > 0) &&
-                    renderMessageContext(message)
-                  }
-                </Stack>
-              </Flex>
-
-              {/* AI response */}
-              <Flex gap="md" align="flex-start">
-                <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
-                  {/* AI info container */}
-                  <Group gap="xs" align="center">
-                    <Avatar
-                      src={undefined}
-                      size="sm"
-                      radius="xl"
-                      alt="AI Assistant"
-                    />
-                    <Text size="sm" c="dimmed">
-                      AI Assistant
-                    </Text>
-                  </Group>
-
-                  {/* Message container */}
-                  {!message.response || message.response.trim() === '' ? (
-                    <PulseText key={index} text={message.status_text !== "" ? message.status_text : "Thinking..."} />
-                  ) : (
-                    <Stack gap="xs" style={{ width: "100%" }}>
-                      <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
-                        <Stack>
-                          {splitTextByGenerationTags(splitTextByDocuments(
-                            message.response,
-                            fileDocuments ?? [],
-                          )).map((segment, figIndex) => {
-                            if (segment.text && segment.text.trim() !== '') {
-                              return (
-                                <MessageViewer
-                                  key={figIndex}
-                                  text={segment.text}
-                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
-                                  classId={classId}
-                                />
-                              )
-                            } else if (segment.figure && figures) {
-                              return (
-                                  <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
-                              )
-                            } else if (segment.summary && summaries) {
-                              return (
-                                  <SummaryViewer key={`summaries-${message.id}`} classId={classId} chatId={chatId} summaries={summaries.filter(s => s.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
-                              )
-                            } else if (segment.question && questions) {
-                              return (
-                                  <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
-                                )
-                            }
-                          })}
+                            {/* Show auto-added context badges only for the first message */}
+                          </Card>}
+                          {(message.files?.length > 0 || message.documents?.length > 0) &&
+                            renderMessageContext(message)
+                          }
                         </Stack>
-                      </Box>
-                    </Stack>
-                  )}
-                </Stack>
-              </Flex>
-            </Stack>
-          ))}
-        </>
-      )}
+                      </Flex>
 
-      <div ref={messagesEndRef} />
-    </Stack>
-  );
+                      {/* AI response */}
+                      <Flex gap="md" align="flex-start">
+                        <Stack gap="xs" align="flex-start" style={{ maxWidth: "75%" }}>
+                          {/* AI info container */}
+                          <Group gap="xs" align="center">
+                            <Avatar
+                              src={undefined}
+                              size="sm"
+                              radius="xl"
+                              alt="AI Assistant"
+                            />
+                            <Text size="sm" c="dimmed">
+                              AI Assistant
+                            </Text>
+                          </Group>
+
+                          {/* Message container */}
+                          {!message.response || message.response.trim() === '' ? (
+                            <PulseText key={index} text={message.status_text !== "" ? message.status_text : "Thinking..."} />
+                          ) : (
+                            <Stack gap="xs" style={{ width: "100%" }}>
+                              <Box key={index} style={{ maxWidth: "100%", overflow: "hidden" }}>
+                                <Stack>
+                                  {splitTextByGenerationTags(splitTextByDocuments(
+                                    message.response,
+                                    fileDocuments ?? [],
+                                  )).map((segment, figIndex) => {
+                                    if (segment.text && segment.text.trim() !== '') {
+                                      return (
+                                        <MessageViewer
+                                          key={figIndex}
+                                          text={segment.text}
+                                          handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                          classId={classId}
+                                        />
+                                      )
+                                    } else if (segment.figure && figures) {
+                                      return (
+                                          <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                      )
+                                    } else if (segment.summary && summaries) {
+                                      return (
+                                          <SummaryViewer key={`summaries-${message.id}`} classId={classId} chatId={chatId} summaries={summaries.filter(s => s.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                      )
+                                    } else if (segment.question && questions) {
+                                      return (
+                                          <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                        )
+                                    }
+                                  })}
+                                </Stack>
+                              </Box>
+                            </Stack>
+                          )}
+                        </Stack>
+                      </Flex>
+                    </Stack>
+                  ))}
+                </>
+            )}
+
+            <div ref={messagesEndRef} />
+        </Stack>
+    );
 });
 
 MessageList.displayName = 'MessageList';

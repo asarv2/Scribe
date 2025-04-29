@@ -8,7 +8,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "../../../utils/supabase/supabase-browser";
-import { AppShell, Button, Burger, Container, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme, Card, Badge, Group, Paper, Skeleton } from "@mantine/core";
+import { AppShell, Button, Burger, Container, em, Loader, Modal, SimpleGrid, Stack, Text, useMantineTheme, Card, Badge, Group, Paper, Skeleton, MultiSelect, Box, Flex, Menu, Checkbox } from "@mantine/core";
 import { Suspense, use, useEffect, useState } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
@@ -27,6 +27,7 @@ import { BarChart } from '@mantine/charts';
 import { getAllChats } from "@/utils/queries/get-all-chats";
 import { BubbleChart } from '@mantine/charts';
 import { PieChart } from '@mantine/charts';
+import { ScatterChart } from '@mantine/charts'; // Added import
 import {
     IconArrowDownRight,
     IconArrowUpRight,
@@ -34,6 +35,9 @@ import {
     IconClock,
     IconStar,
     IconHourglass,
+    IconChevronLeft,
+    IconChevronRight,
+    IconChevronDown, // Add this import
 } from '@tabler/icons-react';
 
 export default function Class({ params }: { params: Promise<{ classId: string }> }) {
@@ -206,6 +210,19 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
 
     // Add state for toggles
     const [timeFrame, setTimeFrame] = useState<'all' | 'recent'>('all');
+    const [learningObjectiveFilter, setLearningObjectiveFilter] = useState<string>('Learning Object 1');
+    const [learningObjectiveFilter2, setLearningObjectiveFilter2] = useState<string>('Learning Object 1');
+
+    // Add state for exam filters
+    const [selectedExams1, setSelectedExams1] = useState<string[]>(['Exam 1']);
+    const [selectedExams2, setSelectedExams2] = useState<string[]>(['Exam 1']);
+    
+    // Define available exam options
+    const examOptions = [
+        { value: 'Exam 1', label: 'Exam 1' },
+        { value: 'Exam 2', label: 'Exam 2' },
+        { value: 'Exam 3', label: 'Exam 3' },
+    ];
 
     // Check if the user is a professor or admin
     const isProfessorOrAdmin = () => {
@@ -301,6 +318,61 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
         };
     };
 
+    // Modified mock data generation to create separate color series for each exam
+    const generateMockScatterData = (filter: string, seed = 1, selectedExams: string[] = ['Exam 1']) => {
+        const numStudents = 30; // Example number of students
+        
+        // Colors for each exam
+        const examColors = {
+            'Exam 1': 'green.6',
+            'Exam 2': 'blue.6',
+            'Exam 3': 'orange.6'
+        };
+        
+        // Create separate series for each exam
+        const series = selectedExams.map(exam => {
+            const points = [];
+            
+            // Use predictable seeded randomization
+            const seededRandom = (min: number, max: number, studentId: number, examSeed: number = 0) => {
+                const x = Math.sin(seed * 9999 + studentId * 333 + examSeed * 777) * 10000;
+                const r = x - Math.floor(x);
+                return min + r * (max - min);
+            };
+            
+            // Get index for this exam (used for randomization)
+            const examIndex = examOptions.findIndex(opt => opt.value === exam);
+            
+            for (let i = 0; i < numStudents; i++) {
+                // Different score patterns for different exams
+                const timeMultiplier = filter === 'Mean Learning Objective' ? 1.5 : 1;
+                const scoreOffset = filter.includes('2') ? 1 : (filter.includes('3') ? -1 : 0);
+                const examOffset = exam === 'Exam 1' ? 0 : (exam === 'Exam 2' ? 1 : -0.5);
+
+                const scoreValue = Math.max(1, Math.min(10, Math.round(seededRandom(1, 10, i, examIndex) + scoreOffset + examOffset)));
+                
+                points.push({
+                    x: seededRandom(5, 60 * timeMultiplier, i, examIndex), // Random time up to 60 mins
+                    y: scoreValue, // Random score 1-10
+                    studentName: `Student ${i + 1}`, // Add student identifier for tooltip
+                    examName: exam // Add exam identifier for filtering
+                });
+            }
+            
+            return {
+                name: exam,
+                color: examColors[exam as keyof typeof examColors],
+                data: points
+            };
+        });
+        
+        return series;
+    };
+
+    // Now we can use the modified function with exam filters
+    const scatterData = generateMockScatterData(learningObjectiveFilter, 1, selectedExams1);
+    const scatterData2 = generateMockScatterData(learningObjectiveFilter2, 2, selectedExams2);
+
     // Update the statsData to use the new calculation results
     const statsData = [
         {
@@ -319,6 +391,14 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
 
     // Combine all loading states
     const isLoading = !messages || !chats;
+
+    // Add states for filter expansion
+    const [outcome1FiltersExpanded, setOutcome1FiltersExpanded] = useState(false);
+    const [outcome2FiltersExpanded, setOutcome2FiltersExpanded] = useState(false);
+
+    // Toggle functions for filter expansion
+    const toggleOutcome1Filters = () => setOutcome1FiltersExpanded(!outcome1FiltersExpanded);
+    const toggleOutcome2Filters = () => setOutcome2FiltersExpanded(!outcome2FiltersExpanded);
 
     // Simplify the return statement to show only 3 charts in a row
     return (
@@ -364,7 +444,8 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                     </SimpleGrid>
                 )}
 
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
+                <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+                    {/* First two cards (Active Students and Message Activity) remain unchanged */}
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Group justify="space-between" mb="md">
                             <Text size="lg" fw={500}>Active Students</Text>
@@ -485,6 +566,212 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                                     />
                                 </Stack>
                             )
+                        ) : (
+                            <Skeleton height={300} radius="md" />
+                        )}
+                    </Card>
+
+                    {/* Modified Learning Outcome 1 card */}
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Group justify="space-between" mb="md" align="center" wrap="nowrap">
+                            {/* Left: Exam filter circles */}
+                            <Group gap="xs" ml="md">
+                                {examOptions.map((option) => (
+                                    <Group key={option.value} gap="xs" style={{ cursor: isProfessorOrAdmin() ? 'pointer' : 'default' }}>
+                                        <Box 
+                                            onClick={() => {
+                                                if (!isProfessorOrAdmin()) return;
+                                                if (selectedExams1.includes(option.value)) {
+                                                    // Don't allow deselecting the last exam
+                                                    if (selectedExams1.length > 1) {
+                                                        setSelectedExams1(selectedExams1.filter(exam => exam !== option.value));
+                                                    }
+                                                } else {
+                                                    setSelectedExams1([...selectedExams1, option.value]);
+                                                }
+                                            }}
+                                            style={{
+                                                width: 16, 
+                                                height: 16, 
+                                                borderRadius: '50%',
+                                                border: '2px solid',
+                                                borderColor: option.value === 'Exam 1' ? 'var(--mantine-color-green-6)' : 
+                                                            option.value === 'Exam 2' ? 'var(--mantine-color-blue-6)' : 
+                                                            'var(--mantine-color-orange-6)',
+                                                backgroundColor: selectedExams1.includes(option.value) ? 
+                                                            (option.value === 'Exam 1' ? 'var(--mantine-color-green-6)' : 
+                                                            option.value === 'Exam 2' ? 'var(--mantine-color-blue-6)' : 
+                                                            'var(--mantine-color-orange-6)') : 'transparent',
+                                                display: 'inline-block',
+                                            }}
+                                        />
+                                        <Text size="xs">{option.label}</Text>
+                                    </Group>
+                                ))}
+                            </Group>
+
+                            {/* Center: Title */}
+                            <Text size="lg" fw={500} style={{ textAlign: 'center' }}>Learning Outcome 1</Text>
+
+                            {/* Right: Objective filter dropdown - updated to use chevron */}
+                            <Menu position="bottom-end" withArrow>
+                                <Menu.Target>
+                                    <Group 
+                                        gap={4} // Reduced gap to move chevron closer
+                                        style={{ 
+                                            cursor: isProfessorOrAdmin() ? 'pointer' : 'default',
+                                            opacity: isProfessorOrAdmin() ? 1 : 0.6,
+                                            transition: 'color 0.2s ease'
+                                        }}
+                                    >
+                                        <Text size="sm" weight={500}>
+                                            {learningObjectiveFilter === 'Mean Learning Objective' 
+                                                ? 'Mean' 
+                                                : 'Objective ' + learningObjectiveFilter.split(' ').pop()}
+                                        </Text>
+                                        <IconChevronDown size={16} stroke={1.5} />
+                                    </Group>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    {['Learning Object 1', 'Learning Objective 2', 'Learning Objective 3', 'Mean Learning Objective'].map((filter) => (
+                                        <Menu.Item 
+                                            key={filter}
+                                            onClick={() => setLearningObjectiveFilter(filter)}
+                                            disabled={!isProfessorOrAdmin()}
+                                        >
+                                            {filter === 'Mean Learning Objective' ? 'Mean' : 'Objective ' + filter.split(' ').pop()}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Dropdown>
+                            </Menu>
+                        </Group>
+
+                        {!isLoading ? (
+                            <ScatterChart
+                                h={300}
+                                data={scatterData}
+                                dataKey={{ x: 'x', y: 'y' }}
+                                xAxisLabel="Messages Sent"
+                                yAxisLabel="Score (1-10)"
+                                yAxisProps={{ domain: [0, 10] }}
+                                xAxisProps={{ domain: [0, 'auto'] }}
+                                withTooltip
+                                tooltipProps={{
+                                    content: ({ point }) => {
+                                        // Access properties safely
+                                        const student = point?.studentName || 'Student';
+                                        const score = point?.y || '0';
+                                        const exam = point?.examName || 'Exam';
+                                        return `${student}: ${score} (${exam})`;
+                                    }
+                                }}
+                                // Removed withLegend prop
+                                gridAxis="xy"
+                                tickLine="xy"
+                            />
+                        ) : (
+                            <Skeleton height={300} radius="md" />
+                        )}
+                    </Card>
+
+                    {/* Learning Outcome 2 card - updated with same pattern */}
+                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                        <Group justify="space-between" mb="md" align="center" wrap="nowrap">
+                            {/* Left: Exam filter circles */}
+                            <Group gap="xs" ml="md">
+                                {examOptions.map((option) => (
+                                    <Group key={option.value} gap="xs" style={{ cursor: isProfessorOrAdmin() ? 'pointer' : 'default' }}>
+                                        <Box 
+                                            onClick={() => {
+                                                if (!isProfessorOrAdmin()) return;
+                                                if (selectedExams2.includes(option.value)) {
+                                                    // Don't allow deselecting the last exam
+                                                    if (selectedExams2.length > 1) {
+                                                        setSelectedExams2(selectedExams2.filter(exam => exam !== option.value));
+                                                    }
+                                                } else {
+                                                    setSelectedExams2([...selectedExams2, option.value]);
+                                                }
+                                            }}
+                                            style={{
+                                                width: 16, 
+                                                height: 16, 
+                                                borderRadius: '50%',
+                                                border: '2px solid',
+                                                borderColor: option.value === 'Exam 1' ? 'var(--mantine-color-green-6)' : 
+                                                            option.value === 'Exam 2' ? 'var(--mantine-color-blue-6)' : 
+                                                            'var(--mantine-color-orange-6)',
+                                                backgroundColor: selectedExams2.includes(option.value) ? 
+                                                            (option.value === 'Exam 1' ? 'var(--mantine-color-green-6)' : 
+                                                            option.value === 'Exam 2' ? 'var(--mantine-color-blue-6)' : 
+                                                            'var(--mantine-color-orange-6)') : 'transparent',
+                                                display: 'inline-block',
+                                            }}
+                                        />
+                                        <Text size="xs">{option.label}</Text>
+                                    </Group>
+                                ))}
+                            </Group>
+
+                            {/* Center: Title */}
+                            <Text size="lg" fw={500} style={{ textAlign: 'center' }}>Learning Outcome 2</Text>
+
+                            {/* Right: Objective filter dropdown - updated to use chevron */}
+                            <Menu position="bottom-end" withArrow>
+                                <Menu.Target>
+                                    <Group 
+                                        gap={4} // Reduced gap to move chevron closer
+                                        style={{ 
+                                            cursor: isProfessorOrAdmin() ? 'pointer' : 'default',
+                                            opacity: isProfessorOrAdmin() ? 1 : 0.6,
+                                            transition: 'color 0.2s ease'
+                                        }}
+                                    >
+                                        <Text size="sm" weight={500}>
+                                            {learningObjectiveFilter2 === 'Mean Learning Objective' 
+                                                ? 'Mean' 
+                                                : 'Objective ' + learningObjectiveFilter2.split(' ').pop()}
+                                        </Text>
+                                        <IconChevronDown size={16} stroke={1.5} />
+                                    </Group>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    {['Learning Object 1', 'Learning Objective 2', 'Learning Objective 3', 'Mean Learning Objective'].map((filter) => (
+                                        <Menu.Item 
+                                            key={filter}
+                                            onClick={() => setLearningObjectiveFilter2(filter)}
+                                            disabled={!isProfessorOrAdmin()}
+                                        >
+                                            {filter === 'Mean Learning Objective' ? 'Mean' : 'Objective ' + filter.split(' ').pop()}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Dropdown>
+                            </Menu>
+                        </Group>
+
+                        {!isLoading ? (
+                            <ScatterChart
+                                h={300}
+                                data={scatterData2}
+                                dataKey={{ x: 'x', y: 'y' }}
+                                xAxisLabel="Messages Sent"
+                                yAxisLabel="Score (1-10)"
+                                yAxisProps={{ domain: [0, 10] }}
+                                xAxisProps={{ domain: [0, 'auto'] }}
+                                withTooltip
+                                tooltipProps={{
+                                    content: ({ point }) => {
+                                        // Access properties safely
+                                        const student = point?.studentName || 'Student';
+                                        const score = point?.y || '0';
+                                        const exam = point?.examName || 'Exam';
+                                        return `${student}: ${score} (${exam})`;
+                                    }
+                                }}
+                                // Removed withLegend prop
+                                gridAxis="xy"
+                                tickLine="xy"
+                            />
                         ) : (
                             <Skeleton height={300} radius="md" />
                         )}

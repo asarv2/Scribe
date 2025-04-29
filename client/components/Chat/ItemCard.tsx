@@ -1,7 +1,7 @@
 import { useDrop } from "react-dnd";
-import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Image } from "@mantine/core";
-import { IconX, IconEye, IconLoader } from "@tabler/icons-react";
-import { useRef, useState, useEffect } from "react";
+import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Image, Box } from "@mantine/core"; // Added Box
+import { IconX, IconPlus, IconLoader } from "@tabler/icons-react"; // Changed IconEye to IconPlus
+import { useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Document, ViewerMode } from "@/types";
 import { ContentType } from "@/types";
@@ -22,8 +22,6 @@ export default function ItemCard({
     fileDocuments,
     onFileDelete,
     onReorder,
-    isAnimating = false,
-    animationId = '',
 }: {
     item: any,
     classId: string,
@@ -37,78 +35,8 @@ export default function ItemCard({
     fileDocuments?: Document[],
     onFileDelete?: () => void,
     onReorder?: (draggedId: string, targetId: string) => void,
-    isAnimating?: boolean, // New prop for animation
-    animationId?: string, // For tracking which item is animating
 }) {
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const [flyPosition, setFlyPosition] = useState<{x: number, y: number} | null>(null);
-    const [isFlying, setIsFlying] = useState(false);
-
-    // Animation effect
-    useEffect(() => {
-        if (isAnimating && animationId === item.id) {
-            // 1. Capture initial position
-            if (containerRef.current) {
-                const rect = containerRef.current.getBoundingClientRect();
-                
-                // 2. Calculate target position (input area) - ADJUSTED TO MOVE MORE LEFT, LESS DOWN
-                // Calculate a point that's mostly to the left with minimal downward movement
-                const targetX = window.innerWidth / 2 - rect.left - 200; // Move further left by subtracting more
-                const targetY = window.innerHeight - rect.bottom - 300; // Less downward movement by subtracting more
-                
-                // 3. Store position for CSS variables
-                setFlyPosition({ x: targetX, y: targetY });
-                
-                // 4. Trigger animation
-                setIsFlying(true);
-                
-                // 5. Before animation starts, apply crucial DOM changes
-                if (containerRef.current) {
-                    // Move element to document body for maximum z-index effect
-                    const element = containerRef.current;
-                    const originalParent = element.parentElement;
-                    const originalNextSibling = element.nextSibling;
-                    
-                    // Copy the element's position data for absolute positioning
-                    const originalRect = element.getBoundingClientRect();
-                    
-                    // Apply absolute positioning to match original position
-                    element.style.position = 'fixed';
-                    element.style.top = `${originalRect.top}px`;
-                    element.style.left = `${originalRect.left}px`;
-                    element.style.width = `${originalRect.width}px`;
-                    element.style.height = `${originalRect.height}px`;
-                    element.style.zIndex = '99999';
-                    element.style.pointerEvents = 'none';
-                    
-                    // Move to body temporarily
-                    document.body.appendChild(element);
-                    
-                    // Reset after animation completes
-                    const animationDuration = 1200; // 1.2s to match our CSS animation
-                    setTimeout(() => {
-                        if (originalParent && element.parentElement === document.body) {
-                            // Only move back if still attached to body
-                            if (originalNextSibling) {
-                                originalParent.insertBefore(element, originalNextSibling);
-                            } else {
-                                originalParent.appendChild(element);
-                            }
-                            // Reset styles
-                            element.style.position = '';
-                            element.style.top = '';
-                            element.style.left = '';
-                            element.style.width = '';
-                            element.style.height = '';
-                            element.style.zIndex = '';
-                            element.style.pointerEvents = '';
-                        }
-                        setIsFlying(false);
-                    }, animationDuration);
-                }
-            }
-        }
-    }, [isAnimating, animationId, item.id]);
 
     // Add the useDrop hook to handle drag-and-drop functionality
     const [{ isOver }, drop] = useDrop(() => ({
@@ -148,19 +76,18 @@ export default function ItemCard({
                 borderLeft: `3px solid var(--mantine-color-${color}-filled)`,
                 backgroundColor: isOver ? 'var(--mantine-color-blue-light)' : undefined,
                 boxSizing: 'border-box',
-                width: "100%", // Default width behavior
+                width: "100%", // Keep full width of parent container
                 maxWidth: "100%", // Prevent overflow
-                ...(isFlying && flyPosition ? {
-                    '--fly-x': `${flyPosition.x}px`,
-                    '--fly-y': `${flyPosition.y}px`,
-                } as React.CSSProperties : {}),
+                padding: "8px", // Slightly reduce padding
             }}
-            className={isFlying ? classes.flyingItemCard : undefined}
-            onClick={(e) => {
+            onClick={(e) => { // Changed onClick handler
                 e.stopPropagation();
                 // Only allow clicking if the file is complete or in processing stages
-                if (item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
-                    addFileToChat(item.id);
+                if ((item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') && setViewerMode) {
+                    const document = fileDocuments?.find(d => d.file === item.id);
+                    if (document) {
+                        handleDocumentClick(item.id, document.id, setViewerMode, false); // Open viewer on card click
+                    }
                 }
             }}
         >
@@ -190,7 +117,7 @@ export default function ItemCard({
                 ) : (
                     <Skeleton width={40} height={40} radius={4} />
                 )}
-                <Stack style={{ flex: 1 }}>
+                <Stack style={{ flex: 1, minWidth: 0 }}> {/* Added minWidth: 0 */}
                     <Group justify="space-between" wrap="nowrap">
                         <Text
                             size="sm"
@@ -201,7 +128,6 @@ export default function ItemCard({
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap', // Prevent wrapping
-                                flex: 1,
                             }}
                         >
                             {item.newName}
@@ -226,19 +152,20 @@ export default function ItemCard({
                                     <IconX size={16} /> {/* Use IconX for a plain red "X" */}
                                 </div>
                             ) : (
-                                // Render eye icon for context in the panel
-                                <Tooltip label="Open in viewer">
-                                    <ActionIcon variant="subtle" size="md" onClick={(e) => {
-                                        e.stopPropagation();
-                                        if (setViewerMode) {
-                                            const document = fileDocuments?.find(d => d.file === item.id);
-                                            if (document) {
-                                                handleDocumentClick(item.id, document.id, setViewerMode, false);
+                                // Render plus icon for context in the panel
+                                <Tooltip label="Add to Chat">
+                                    {/* Wrap ActionIcon in a Box */}
+                                    <Box>
+                                        <ActionIcon variant="subtle" size="md" onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Only allow adding if the file is complete or in processing stages
+                                            if (item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
+                                                addFileToChat(item.id); // Add to chat on icon click
                                             }
-                                        }
-                                    }}>
-                                        <IconEye size={20} />
-                                    </ActionIcon>
+                                        }}>
+                                            <IconPlus size={20} />
+                                        </ActionIcon>
+                                    </Box>
                                 </Tooltip>
                             )}
                         </>

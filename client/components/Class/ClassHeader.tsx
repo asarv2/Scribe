@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 
-import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack, Badge, Box, Collapse } from '@mantine/core'; // Added Box, Collapse
+import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack, Badge, Box, Collapse } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -19,11 +19,14 @@ import { getClasses } from '@/utils/queries/get-classes';
 import { Menu as MantineMenu, useMantineColorScheme, Avatar } from '@mantine/core';
 import { getAvatarUrl } from '@/utils/services/images';
 import { notifications } from '@mantine/notifications';
-import { useState } from 'react'; // Keep useState
+import { useState } from 'react';
 import { logout } from '@/utils/services/auth';
 import { AccountMenu } from '../AccountMenu';
-import { Profile } from '@/types';
+import { Profile as BaseProfile } from '@/types';
 import { Class } from '@/types';
+
+// Extended Profile type to make created_at optional
+type Profile = Omit<BaseProfile, 'created_at'> & { created_at?: string };
 import cx from 'clsx';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import FeedbackModal from '../FeedbackModal';
@@ -42,7 +45,7 @@ interface ClassHeaderProps {
     // Remove onMobileMenuToggle
 }
 
-export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps) { // Add basePath to destructuring
+export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const [isOpen, { open, close }] = useDisclosure(false);
@@ -292,9 +295,8 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
 
     return (
         <Group h="100%" px="md" w="100%" justify="space-between" pos="relative" className={classes.headerRoot}>
-            {/* Left Group: Navigation Menu */}
+            {/* Left Group: Navigation Menu + Class Selector */}
             <Group gap="xs" style={{ zIndex: 2 }}>
-                {/* Navigation Menu Trigger - Moved from right side */}
                 {profile && ((profile.professor || profile.admin) && !studentMode) && classId && (
                     <Menu
                         shadow="md"
@@ -303,26 +305,28 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                         onChange={setNavMenuOpened}
                         position="bottom-start"
                         offset={8}
+                        trigger="hover"
+                        transitionProps={{ exitDuration: 0 }}
                     >
                         <Menu.Target>
-                            <Tooltip label="Navigation Menu">
-                                <ActionIcon
-                                    variant="subtle"
-                                    aria-label="Navigation Menu"
-                                    onClick={() => setNavMenuOpened((o) => !o)}
-                                >
-                                    <IconMenu2 size={24} />
-                                </ActionIcon>
-                            </Tooltip>
+                            <ActionIcon
+                                variant="subtle"
+                                aria-label="Navigation Menu"
+                            >
+                                <IconMenu2 size={24} />
+                            </ActionIcon>
                         </Menu.Target>
                         <Menu.Dropdown>
                             {navLinks}
                         </Menu.Dropdown>
                     </Menu>
                 )}
+                
+                {/* Class Selector - Moved here to left side */}
+                {renderClassSelector()}
             </Group>
 
-            {/* Center: Logo, Divider, Class Selector, Student Mode Badge */}
+            {/* Center: Logo only */}
             <Center style={{
                 position: 'absolute',
                 left: 0,
@@ -332,10 +336,9 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                 pointerEvents: 'none',
                 display: 'flex',
                 flexDirection: 'row',
-                alignItems: 'center', 
-                gap: '8px', // Increased from 4px to add more space
+                alignItems: 'center',
             }}>
-                {/* Logo */}
+                {/* Logo - Centered */}
                 <Link href="/" style={{ pointerEvents: 'auto', display: 'inline-block' }}>
                     <Image
                         src={"/images/logo-light.png"}
@@ -357,31 +360,10 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                     />
                 </Link>
                 
-                {/* Divider */}
-                <Box 
-                    style={{ 
-                        height: '20px', 
-                        width: '1px', 
-                        background: 'var(--mantine-color-blue-6)',
-                        opacity: 0.9,
-                        pointerEvents: 'none' 
-                    }} 
-                />
-                
-                {/* Class Selector - Moved here from left and right groups */}
-                <Box style={{ 
-                    pointerEvents: 'auto',
-                    marginLeft: '-4px', // Change from 2px to -4px to move closer to divider
-                    display: 'flex',
-                    alignItems: 'center' // Ensure vertical centering
-                }}>
-                    {renderClassSelector()}
-                </Box>
-                
                 {/* Student Mode Badge */}
                 {profile && ((profile.professor || profile.admin) && studentMode) &&
                     <Tooltip label="To disable, click 'Exit Student Mode' under the profile menu">
-                        <Badge style={{ pointerEvents: 'auto', marginTop: '2px' }}>Student Mode</Badge>
+                        <Badge style={{ pointerEvents: 'auto', marginLeft: '10px', marginTop: '2px' }}>Student Mode</Badge>
                     </Tooltip>
                 }
             </Center>

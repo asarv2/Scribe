@@ -88,6 +88,17 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
             padding="md"
             centered
             title={`${fileData?.title || 'File'} - Page ${activeDocument?.page || ''}`}
+            styles={{
+                content: {
+                    border: '3px solid #581845', // Deep purple border
+                },
+                header: {
+                    borderBottom: 'none' // Remove the bottom border of the header
+                },
+                title: {
+                    fontWeight: 600, // Optional: make title stand out more instead of using a border
+                }
+            }}
         >
             <Stack
                 style={{
@@ -95,7 +106,8 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '80vh',
-                    width: '100%'
+                    width: '100%',
+                    border: 'none' // Remove the yellow border that was here
                 }}
                 gap="md"
             >
@@ -159,7 +171,8 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                             maxHeight: '40%', 
                             overflowY: 'auto',
                             padding: '15px',
-                            borderRadius: '8px'
+                            borderRadius: '8px',
+                            border: '2px solid #DAF7A6' // Light green border
                     }}
                 >
                     <Latex>

@@ -13,13 +13,15 @@ import { getFiles } from "@/utils/queries/get-files";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
-import ItemCard from "../ItemCard"; // Corrected the import path
+import ItemCard from "../ItemCard";
+
 interface ContextBadgesProps {
     activeChat: ChatMessage;
     classId: string;
     onRemoveFile?: (fileId: string) => void;
     onRemoveDocument?: (documentId: string) => void;
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
+    modePopoverOpened?: boolean; // Add this new prop
 }
 
 export const ContextBadges = memo(({
@@ -28,6 +30,7 @@ export const ContextBadges = memo(({
     onRemoveFile,
     onRemoveDocument,
     setViewerMode,
+    modePopoverOpened = false, // Default to false
 }: ContextBadgesProps) => {
     const supabase = useSupabaseBrowser();
 
@@ -51,6 +54,10 @@ export const ContextBadges = memo(({
                 flexWrap: "wrap",
                 justifyContent: "flex-start", // Align badges to the start
                 alignItems: "center", // Align badges vertically
+                paddingLeft: modePopoverOpened ? '160px' : '0px', // Add left padding when popover is open
+                transition: 'padding-left 0.2s ease', // Smooth transition for movement
+                borderBottom: 'none', // Ensure no bottom border
+                borderTop: 'none' // Ensure no top border
             }}
         >
             {activeChat.files.map(fileId => {

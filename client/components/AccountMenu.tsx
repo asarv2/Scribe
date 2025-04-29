@@ -7,8 +7,8 @@
  * 26.02.2025
  */
 
-import { Menu, ActionIcon, Tooltip, useMantineColorScheme, Avatar, Text, Group } from '@mantine/core';
-import { IconUser, IconSettings, IconLogout, IconSun, IconMoon, IconEye, IconEyeOff } from '@tabler/icons-react'; // Import IconUser
+import { Menu, ActionIcon, useMantineColorScheme, Avatar, Text, Group } from '@mantine/core';
+import { IconUser, IconEdit, IconLogout, IconSun, IconMoon, IconEye, IconEyeOff } from '@tabler/icons-react'; // Changed IconSettings to IconEdit
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { Profile } from '@/types';
@@ -35,27 +35,39 @@ export function AccountMenu({ profile, classId }: AccountMenuProps) {
     };
 
     const toggleStudentMode = () => {
-        setStudentMode(!studentMode);
-        // Optionally redirect or refresh data based on mode change
+        const newMode = !studentMode;
+        setStudentMode(newMode);
+        // Redirect based on mode change
         if (classId) {
-            router.push(`/class/${classId}`); // Navigate to base class page on mode switch
+            if (newMode) {
+                // If entering student mode, go to chat page
+                router.push(`/class/${classId}/chat/new`);
+            } else {
+                // If exiting student mode, go to base class page
+                router.push(`/class/${classId}`);
+            }
         }
     };
 
     return (
-        <Menu shadow="md" width={200} position="bottom-end">
+        <Menu 
+            shadow="md" 
+            width={200} 
+            position="bottom-end"
+            trigger="hover"
+            openDelay={100}
+            closeDelay={400}
+            transitionProps={{ transition: 'fade', duration: 200 }}
+        >
             <Menu.Target>
-                <Tooltip label="Account Settings">
-                    {/* Replace Avatar with ActionIcon */}
-                    <ActionIcon
-                        variant="subtle"
-                        color="blue" // Set color to blue
-                        size="lg" // Adjust size as needed
-                        aria-label="Account Settings"
-                    >
-                        <IconUser size={24} />
-                    </ActionIcon>
-                </Tooltip>
+                <ActionIcon
+                    variant="subtle"
+                    color="blue"
+                    size="lg"
+                    aria-label="Account Settings"
+                >
+                    <IconUser size={24} />
+                </ActionIcon>
             </Menu.Target>
 
             <Menu.Dropdown>
@@ -80,11 +92,11 @@ export function AccountMenu({ profile, classId }: AccountMenuProps) {
                 )}
 
                 <Menu.Item
-                    leftSection={<IconSettings size={14} />}
+                    leftSection={<IconEdit size={14} />}
                     component={Link}
                     href="/account"
                 >
-                    Account Settings
+                    Edit Account
                 </Menu.Item>
 
                 {/* Theme Toggle */}

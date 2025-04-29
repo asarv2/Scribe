@@ -6,8 +6,8 @@
  * 02.05.2025
  */
 
-import { TextInput, Group, Stack, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Flex, Loader, RingProgress, Menu } from "@mantine/core";
-import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX, IconFileCheck } from "@tabler/icons-react";
+import { TextInput, Group, Stack, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Flex, Loader, RingProgress, Menu, useMantineColorScheme } from "@mantine/core"; // Added useMantineColorScheme
+import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX, IconFileCheck } from "@tabler/icons-react"; // Removed Chevrons
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -43,11 +43,9 @@ interface ContextPanelProps {
     addDocumentToChat: (documentId: string) => void;
     activeChat: ChatMessage;
     makeDraggable?: boolean;
-    viewerMode: ViewerMode;
-    setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
+    viewerMode: ViewerMode; // Keep viewerMode
+    setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>; // Keep setViewerMode
     onFileDelete?: () => void;
-    isAnimating?: boolean; // Add animation props
-    animatingItemId?: string | null;
 }
 
 export function ContextPanel({
@@ -59,14 +57,13 @@ export function ContextPanel({
     addDocumentToChat,
     activeChat,
     makeDraggable = false,
-    viewerMode,
-    setViewerMode,
+    viewerMode, // Receive viewerMode
+    setViewerMode, // Receive setViewerMode
     onFileDelete,
-    isAnimating = false,
-    animatingItemId = null
 }: ContextPanelProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
+    const { colorScheme } = useMantineColorScheme(); // Added to access color scheme
     const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
     const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set());
     const containerRef = useRef<HTMLDivElement>(null);
@@ -703,14 +700,26 @@ export function ContextPanel({
         <Card
             bg="transparent"
             style={{
-                // width: "80", // This seems incorrect, removing or adjusting if needed
-                height: "calc(100vh - 90px)",
+                height: "100%", 
                 display: "flex",
                 flexDirection: "column",
+                overflow: 'hidden',
+                border: 'transparent',
+                borderRadius: '8px',
+                width: "100%",
             }}
-            p="xs"
+            pt={0}
+            px={0}
+            pb={0}
         >
-            <Stack style={{ height: '100%', flex: 1 }}>
+            <Stack style={{ 
+                height: '100%', 
+                flex: 1, 
+                overflow: 'hidden', 
+                paddingLeft: 'var(--mantine-spacing-xs)'
+                // Removed unnecessary green border
+            }}> 
+                {/* Keep left padding but no right padding */}
                 {isInitializing ? (
                     // Skeleton for search bar and upload button when initializing
                     <Flex justify="space-between" align="center" gap="md">
@@ -736,9 +745,9 @@ export function ContextPanel({
                                             position="bottom-end"
                                         >
                                             <Menu.Target>
-                                                <ActionIcon 
-                                                    size={30} 
-                                                    aria-label="Upload content" 
+                                                <ActionIcon
+                                                    size={30}
+                                                    aria-label="Upload content"
                                                     variant="transparent"
                                                     style={{ marginRight: 13 }} // Increased margin to move it more to the left
                                                 >
@@ -806,9 +815,9 @@ export function ContextPanel({
                                         </Menu>
                                     ) : classData?.files_enabled ? (
                                         <Tooltip label={"Upload files"}>
-                                            <ActionIcon 
-                                                size={30} 
-                                                aria-label="Upload files" 
+                                            <ActionIcon
+                                                size={30}
+                                                aria-label="Upload files"
                                                 variant="transparent"
                                                 style={{ marginRight: 20 }} // Increased margin to move it more to the left
                                                 onClick={() => {
@@ -843,10 +852,10 @@ export function ContextPanel({
                             });
                         }}
                         accept={[
-                            'application/pdf', 
-                            'video/*', 
-                            'audio/*', 
-                            'image/*', 
+                            'application/pdf',
+                            'video/*',
+                            'audio/*',
+                            'image/*',
                             'text/*',
                             ...MS_WORD_MIME_TYPE,
                             ...MS_POWERPOINT_MIME_TYPE
@@ -859,20 +868,38 @@ export function ContextPanel({
                                 height: '100%',
                                 padding: 0,
                                 margin: 0,
-                                pointerEvents: 'none',
+                                position: 'relative',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                flex: 1
+                                flex: 1,
+                                overflow: 'hidden'
                             },
                             inner: {
                                 pointerEvents: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 flex: 1,
-                                height: '100%'
+                                height: '100%',
+                                overflow: 'hidden',
+                                paddingRight: 0,
+                                marginRight: 0
+                            },
+                            // Clean active state - just a dashed border
+                            active: {
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: 'transparent', // Keep transparent
+                                borderRadius: '8px',
+                                border: `4px dashed ${colorScheme === 'dark' ? '#228be6' : '#1864ab'}`,
+                                zIndex: 1000
                             }
                         }}
                         activateOnDrag={true}
+                        activateOnClick={false}
+                        // Remove dragOverlayText to eliminate text overlay
                     >
                         {isLoading || isInitializing ? (
                             // Always show 10 skeleton items when loading or initializing
@@ -893,11 +920,14 @@ export function ContextPanel({
                             <div
                                 ref={containerRef}
                                 style={{
-                                    height: "100%",
+                                    height: "100%", // Fill Dropzone height
                                     overflow: 'auto',
                                     position: 'relative',
                                     flex: 1,
-                                    paddingBottom: '16px', // Add padding at the bottom of the scroll container
+                                    paddingBottom: '0',
+                                    paddingRight: 0,
+                                    marginRight: 0,
+                                    marginBottom: 10,
                                 }}
                             >
                                 {/* Add section marker divs for scrolling */}
@@ -939,8 +969,10 @@ export function ContextPanel({
                                                             width: '100%',
                                                             height: `${virtualRow.size}px`,
                                                             transform: `translateY(${virtualRow.start}px)`,
-                                                            padding: '0 0 2px 0',
+                                                            padding: '0 0 2px 0', // No right padding
                                                             boxSizing: 'border-box',
+                                                            paddingRight: 0, // Explicitly remove right padding
+                                                            marginRight: 0, // Explicitly remove right margin
                                                         }}
                                                     >
                                                         <ItemCard
@@ -955,8 +987,6 @@ export function ContextPanel({
                                                             setViewerMode={setViewerMode}
                                                             fileDocuments={fileDocuments}
                                                             onReorder={handleReorderFiles} // Keep reordering functionality
-                                                            isAnimating={isAnimating}
-                                                            animationId={animatingItemId || ''}
                                                         />
                                                     </div>
                                                 );
@@ -966,9 +996,9 @@ export function ContextPanel({
                                         <div style={{ height: '16px' }} />
                                     </>
                                 ) : (
-                                    <Text 
-                                        c="dimmed" 
-                                        ta="center" 
+                                    <Text
+                                        c="dimmed"
+                                        ta="center"
                                         py="md"
                                         style={{
                                             flex: 1,
@@ -989,10 +1019,12 @@ export function ContextPanel({
                     <div
                         ref={containerRef}
                         style={{
-                            height: "100%",
+                            height: "100%", // Fill Stack height
                             overflow: 'auto',
                             position: 'relative',
-                            flex: 1
+                            flex: 1,
+                            paddingRight: 0, // Remove right padding
+                            marginRight: 0, // Remove right margin
                         }}
                     >
                         {/* Add section marker divs for scrolling */}
@@ -1062,8 +1094,6 @@ export function ContextPanel({
                     </div>
                 )}
             </Stack>
-
-            {/* Hidden file input for manual uploads */}
         </Card>
     );
 }
