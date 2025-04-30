@@ -3,7 +3,8 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Menu, ActionIcon, ScrollArea, Group, Text, Avatar, Stack, Tooltip } from "@mantine/core";
-import { IconHistory } from "@tabler/icons-react";
+// Import IconChevronUp
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { getMessages } from "@/utils/queries/get-messages";
@@ -11,6 +12,8 @@ import { format } from "date-fns";
 import { getFiles } from "@/utils/queries/get-files";
 import { getDocuments } from "@/utils/queries/get-documents";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
+// Import useState
+import { useState } from "react";
 
 interface ChatHistoryDropdownProps {
     currentChatId: string;
@@ -21,6 +24,8 @@ interface ChatHistoryDropdownProps {
 function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHistoryDropdownProps) {
     const router = useRouter();
     const supabase = useSupabaseBrowser();
+    // Add state for menu open status
+    const [menuOpened, setMenuOpened] = useState(false);
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -96,12 +101,32 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
     // // If no other chats, don't show the dropdown
     // if (otherChats?.length === 0) return null;
 
+    // Function to handle selection and close menu
+    const handleSelect = (chatId: string) => {
+        onChatSelect(chatId);
+        setMenuOpened(false); // Close menu on selection
+    };
+
+
     return (
-        <Menu position="bottom-start" shadow="md">
+        <Menu
+            position="bottom-start"
+            shadow="md"
+            // Control opened state
+            opened={menuOpened}
+            // Update state on change
+            onChange={setMenuOpened}
+        >
             <Menu.Target>
-                <Tooltip label="History">
-                    <ActionIcon variant="subtle" size="lg" aria-label="View chat history">
-                        <IconHistory size={20} />
+                {/* Disable tooltip when menu is open */}
+                <Tooltip label="History" disabled={menuOpened}>
+                    <ActionIcon variant="transparent" size="lg" aria-label="View chat history">
+                        {/* Conditionally render chevron based on menuOpened state */}
+                        {menuOpened ? (
+                            <IconChevronUp size={22} style={{ marginTop: '2px' }} />
+                        ) : (
+                            <IconChevronDown size={22} style={{ marginTop: '2px' }} />
+                        )}
                     </ActionIcon>
                 </Tooltip>
             </Menu.Target>
@@ -112,7 +137,8 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
                     {otherChats?.slice(0, 10).map(chat => (
                         <Menu.Item
                             key={chat.id}
-                            onClick={() => onChatSelect(chat.id)}
+                            // Use handleSelect to close menu on click
+                            onClick={() => handleSelect(chat.id)}
                         >
                             <Group>
                                 <Avatar

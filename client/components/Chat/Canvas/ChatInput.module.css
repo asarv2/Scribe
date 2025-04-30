@@ -1,48 +1,201 @@
-/* clone Mantine Textarea look & feel */
-.recorderContainer {
-  position: relative;
-  padding: 8px 12px;
-  background: var(--mantine-color-body);
-  border: 1px solid var(--mantine-color-gray-4);   /* same border */
-  border-radius: var(--mantine-radius-md);
-  min-height: 72px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+/* ChatInput.module.css */
+
+/* Style for the OUTER input group (contains mode selector + inner group) */
+.outerInputGroup {
+    position: relative;
+    flex-grow: 1;
+    padding: 8px 8px 8px 8px;
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+    border-radius: var(--mantine-radius-lg);
+    border-top: none; /* Ensure no top border */
+    box-shadow: none; /* Remove any shadow that might appear as a line */
 }
 
-.waveform {
-  flex: 1;
-  height: 48px;
+
+/* Style for the INNER input group (now just a flex container) */
+.inputGroup {
+    position: relative;
+    flex-grow: 1;
+    /* Removed padding, background, border, border-radius */
 }
 
-.waveSkeleton {          /* placeholder while initializing */
-  flex: 1;
-  height: 48px;
-  border-radius: 4px;
+/* Mode Selector Button */
+.modeSelectorButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    min-height: 36px;
+    width: 36px;
+    padding: 0;
+    border-radius: var(--mantine-radius-sm);
+    transition: background-color 150ms ease;
+    background-color: transparent;
 }
 
+/* Mode Popover Dropdown */
+.modePopoverDropdown {
+    background-color: light-dark(rgba(255, 255, 255, 0.8), rgba(37, 38, 43, 0.85)); /* Semi-transparent */
+    backdrop-filter: blur(8px); /* Blur effect */
+    border-radius: var(--mantine-radius-md);
+    padding: var(--mantine-spacing-xs);
+}
+
+/* Container for Textarea and Action Button */
+.textareaContainer {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end;
+}
+
+/* Textarea specific styles */
+.textareaRoot {
+    flex-grow: 1; /* Textarea takes available space */
+}
+
+.textareaWrapper {
+    border: none; /* Remove default wrapper border */
+    background-color: transparent; /* Make wrapper transparent */
+    padding: 0; /* Remove default wrapper padding */
+}
+
+.textareaInput {
+    border: none; /* Remove default input border */
+    background-color: transparent; /* Make input transparent */
+    /* Adjusted left padding to create space for the mode icon */
+    padding-left: 8px;
+    padding-right: 40px; /* Ensure space for the action button */
+    padding-top: var(--mantine-spacing-xs);
+    padding-bottom: var(--mantine-spacing-xs);
+    min-height: 36px; /* Ensure minimum height */
+    line-height: 1.4;
+    resize: none; /* Disable manual resize handle */
+
+    &:focus {
+        outline: none; /* Remove focus outline */
+        box-shadow: none; /* Remove focus shadow */
+    }
+}
+
+/* Container for the action button (mic/send/collapse) */
+.actionButtonContainer {
+    position: absolute;
+    right: 5px;
+    bottom: 5px; /* Adjust vertical position */
+    z-index: 2; /* Ensure button is above textarea */
+    display: flex;
+    align-items: center;
+    gap: var(--mantine-spacing-xs); /* Add gap between buttons */
+}
+
+/* Recording Box Styles */
+.recordingBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border-radius: var(--mantine-radius-lg);
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    position: relative;
+    overflow: hidden;
+}
+
+.stopRecordButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10; /* Ensure button is above other elements */
+    cursor: pointer; /* Make sure cursor changes to pointer */
+    pointer-events: auto; /* Ensure clicks are registered */
+}
+
+/* Timer style */
 .timer {
-  position: absolute;
-  top: 4px;
-  left: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  user-select: none;
+    font-family: monospace;
+    font-weight: 500;
 }
 
+/* Waveform container */
+.waveform {
+    width: 100%;
+    height: 60px;
+    position: relative;
+}
+
+/* Pulsing animation for recording indicator */
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
+    }
+    
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+/* Loading dots animation */
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--mantine-color-blue-6);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+/* Add these new styles for the waveform and recording UI */
 .transcribing {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--mantine-color-blue-6);
 }
 
-.stopGroup {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  z-index: 2;               /* ensures clickability */
+.recorderContainer {
+    position: relative;
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--mantine-radius-lg);
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+.stopBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+/* Remove old controls background */
+.controlsBackground {
+    display: none; /* Hide the old controls bar */
+}
+
+/* Gradient animation for tooltips (optional, kept from original) */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }

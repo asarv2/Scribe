@@ -7,124 +7,116 @@
  * 26.02.2025
  */
 
-import { Menu, Avatar, Loader, Button, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
-import { getAvatarUrl } from '@/utils/services/images';
-import { logout } from '@/utils/services/auth';
-import { useRouter } from 'next/navigation';
-import { User } from '@supabase/supabase-js';
-import Link from 'next/link';
-import { Profile } from '@/types';
-import { notifications } from '@mantine/notifications';
-import { useState } from 'react';
+import { Menu, ActionIcon, useMantineColorScheme, Avatar, Text, Group } from '@mantine/core';
+import { IconUser, IconEdit, IconLogout, IconSun, IconMoon, IconEye, IconEyeOff } from '@tabler/icons-react'; // Changed IconSettings to IconEdit
 import { useQueryClient } from '@tanstack/react-query';
-import { IconDoorExit, IconLogout, IconLogout2, IconMoon, IconSchool, IconSchoolOff, IconSun, IconUser } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
+import { Profile } from '@/types';
+import { logout } from '@/utils/services/auth';
+import { getAvatarUrl } from '@/utils/services/images';
 import { useStudentMode } from './StudentModeContext';
+import Link from 'next/link';
 
 interface AccountMenuProps {
-    profile: Profile | undefined;
-    classId: string;
+    profile: Profile | undefined | null;
+    classId?: string | null;
 }
 
 export function AccountMenu({ profile, classId }: AccountMenuProps) {
-    const router = useRouter();
     const queryClient = useQueryClient();
-    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const { colorScheme, setColorScheme } = useMantineColorScheme();
     const { studentMode, setStudentMode } = useStudentMode();
-    const computedColorScheme = useComputedColorScheme(undefined, { getInitialValueInEffect: true });
-    const { setColorScheme } = useMantineColorScheme();
-
-    const toggleColorScheme = () => {
-        setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
-    };
 
     const handleLogout = async () => {
-        setLoading(true)
-        try {
-            const { success, error } = await logout()
-            if (!success) {
-                throw new Error(error)
+        await logout();
+        queryClient.clear(); // Clear all query cache on logout
+        router.push('/login'); // Redirect to login page
+    };
+
+    const toggleStudentMode = () => {
+        const newMode = !studentMode;
+        setStudentMode(newMode);
+        // Redirect based on mode change
+        if (classId) {
+            if (newMode) {
+                // If entering student mode, go to chat page
+                router.push(`/class/${classId}/chat/new`);
             } else {
-                notifications.show({
-                    title: 'Success',
-                    message: 'Logged out',
-                    color: 'green'
-                })
-                queryClient.clear();
-                router.push("/login")
+                // If exiting student mode, go to base class page
+                router.push(`/class/${classId}`);
             }
-        } catch (error: any) {
-            notifications.show({
-                title: 'Error',
-                message: error.message,
-                color: 'red'
-            })
-        } finally {
-            setLoading(false);
         }
-    }
-
-    const avatarUrl = profile ? getAvatarUrl(profile.id) : null;
-
+    };
 
     return (
-        <Menu
-            trigger="click-hover"
+        <Menu 
+            shadow="md" 
+            width={200} 
+            position="bottom-end"
+            trigger="hover"
             openDelay={100}
-            closeDelay={200}
-            shadow="md"
-            width={200}
+            closeDelay={400}
+            transitionProps={{ transition: 'fade', duration: 200 }}
         >
             <Menu.Target>
-                <Avatar
-                    src={avatarUrl}
-                    size="md"
-                    radius="xl"
-                    style={{ cursor: 'pointer' }}
-                />
-            </Menu.Target>
-            <Menu.Dropdown>
-                <Menu.Item
-                    component={Link}
-                    href="/account"
-                    leftSection={<IconUser size={16} />}
+                <ActionIcon
+                    variant="subtle"
+                    color="blue"
+                    size="lg"
+                    aria-label="Account Settings"
                 >
-                    Account
-                </Menu.Item>
+                    <IconUser size={24} />
+                </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+                {profile && (
+                    <>
+                        <Menu.Label>
+                            <Text size="sm" fw={500} truncate="end">{`${profile.first_name} ${profile.last_name}` || 'User'}</Text>
+                            <Text size="xs" c="dimmed" truncate="end">{profile.email || 'No email'}</Text>
+                        </Menu.Label>
+                        <Menu.Divider />
+                    </>
+                )}
+
+                {/* Student Mode Toggle */}
                 {profile && (profile.professor || profile.admin) && (
                     <Menu.Item
-                        component={"button"}
-                        leftSection={studentMode ? <IconSchoolOff size={16} /> : <IconSchool size={16} />}
-                        onClick={() => {
-                            setStudentMode(!studentMode);
-                            if (!studentMode) {
-                                if (window.location.pathname.includes(`/class/${classId}/chat`)) {
-                                    window.location.reload();
-                                } else {
-                                    router.push(`/class/${classId}/chat/new`);
-                                }
-                            } else {
-                                window.location.reload();
-                            }
-                        }}
+                        leftSection={studentMode ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                        onClick={toggleStudentMode}
                     >
-                        {studentMode ? "Exit Student Mode" : "Student Mode"}
+                        {studentMode ? 'Exit Student Mode' : 'Enter Student Mode'}
                     </Menu.Item>
                 )}
-                <Menu.Divider />
+
                 <Menu.Item
-                    leftSection={computedColorScheme === 'dark' ? <IconSun size={16} /> : <IconMoon size={16} />}
-                    onClick={toggleColorScheme}
+                    leftSection={<IconEdit size={14} />}
+                    component={Link}
+                    href="/account"
                 >
-                    {computedColorScheme === 'dark' ? 'Light' : 'Dark'}
+                    Edit Account
                 </Menu.Item>
+
+                {/* Theme Toggle */}
                 <Menu.Item
-                    onClick={handleLogout}
-                    leftSection={<IconLogout size={16} />}
-                    color="red"
+                    leftSection={colorScheme === 'dark' ? <IconSun size={14} /> : <IconMoon size={14} />}
+                    onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
                 >
-                    {loading ? <Loader size="sm" /> : 'Logout'}
+                    {colorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </Menu.Item>
+
+                <Menu.Divider />
+
+                <Menu.Item
+                    color="red"
+                    leftSection={<IconLogout size={14} />}
+                    onClick={handleLogout}
+                >
+                    Logout
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
-    )
+    );
 }

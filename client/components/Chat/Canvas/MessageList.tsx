@@ -6,7 +6,7 @@
 import { Stack, Flex, Group, Avatar, Text, Card, Box, Badge, Button, ActionIcon, Skeleton, Loader, Switch, Tooltip, useMantineColorScheme, Divider } from "@mantine/core";
 import { IconArrowDown, IconChevronRight, IconExternalLink, IconFileText, IconRefresh, IconX, IconBulb, IconAlertCircle } from "@tabler/icons-react";
 import { memo, useRef, useEffect, useState } from "react";
-import { Message, Profile, Document, ChatType, Chat, ChatMessage, ViewerMode, CONTENT_COLORS } from "@/types";
+import { Message, Profile, Document, Chat, ChatMessage, ViewerMode, CONTENT_COLORS, AgentType } from "@/types";
 import Latex from "../../Latex";
 import Image from "next/image";
 import { getAvatarUrl, getFigureUrl } from "@/utils/services/images";
@@ -49,7 +49,7 @@ interface MessageListProps {
   existingChat: Chat | null;
   activeChat: ChatMessage;
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>;
-  onOptionClick: (type: ChatType, isTeacherMode?: boolean, teacherOption?: string) => void;
+  onOptionClick: (type: AgentType, isTeacherMode?: boolean, teacherOption?: string) => void;
   viewerMode: ViewerMode;
   setViewerMode: React.Dispatch<React.SetStateAction<ViewerMode>>;
   isInitializing?: boolean;
@@ -70,8 +70,6 @@ export const MessageList = memo(({
   fullscreen = false,
 }: MessageListProps) => {
   const supabase = useSupabaseBrowser();
-  const queryClient = useQueryClient();
-  const { colorScheme } = useMantineColorScheme();
 
   const { data: classData } = useQuery({
     queryKey: ["class", classId],
@@ -135,6 +133,8 @@ export const MessageList = memo(({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
   // Scroll to bottom handler
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -151,6 +151,24 @@ export const MessageList = memo(({
       scrollToBottom();
     }
   }, [messages]);
+
+  // Add scroll event listener to show/hide scroll button
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      // Show button whenever user is not at the bottom
+      const isScrolledUp = scrollHeight - scrollTop - clientHeight > 100;
+      setShowScrollButton(isScrolledUp);
+    };
+    
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const firstMessage = messages && messages.length > 0 ? messages[0] : null;
 
   const renderWelcomeMessages = () => {
     return (
@@ -169,44 +187,65 @@ export const MessageList = memo(({
               </Text>
             </Group>
             <Card
+              className={styles.messageCard}
               padding="sm"
               radius="md"
-              style={{
-                backgroundColor: colorScheme === "dark" ? "#25262b" : "#f1f3f5",
-                minWidth: "200px",
-                width: "auto",
-                maxWidth: "100%",
-                border: colorScheme === "dark" ? "1px solid #373A40" : "1px solid #e9ecef",
-                position: "relative"
-              }}
             >
               <Box>
                 {!(existingChat ? existingChat.teacher : activeChat.teacher) ? (
                   <>
                     {/* Student follow-up text */}
-                    {existingChat ? (
-                      // Use existingChat data when available
-                      existingChat.chat_type === 'learn' ? (
+                    {existingChat && firstMessage ? (
+                      // Use latest message.start_agent as a reference
+                      firstMessage.start_agent === 'learn' ? (
                         <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                      ) : existingChat.chat_type === 'homework' ? (
+                      ) : firstMessage.start_agent === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                      ) : existingChat.chat_type === 'grade' ? (
+                      ) : firstMessage.start_agent === 'review' ? (
+                        <>Which <Text span fw={600} c="teal">topics</Text> would you like me to help you review?</>
+                      ) : firstMessage.start_agent === 'grade' ? (
                         <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
-                      ) : existingChat.chat_type === 'test' ? (
-                        <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
+                      ) : firstMessage.start_agent === 'figure' ? (
+                        <>What <Text span fw={600} c="green">figures</Text> would you like me to generate?</>
+                      ) : firstMessage.start_agent === 'summary' ? (
+                        <>What <Text span fw={600} c="yellow">content</Text> would you like me to summarize?</>
+                      ) : firstMessage.start_agent === 'question' ? (
+                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
+                      ) : firstMessage.start_agent === 'syllabus' ? (
+                        <>What <Text span fw={600} c="lime">course information</Text> would you like me to organize into a syllabus?</>
+                      ) : firstMessage.start_agent === 'analyze' ? (
+                        <>What <Text span fw={600} c="violet">student data</Text> would you like me to analyze?</>
+                      ) : firstMessage.start_agent === 'report' ? (
+                        <>What kind of <Text span fw={600} c="grape">report</Text> would you like me to generate?</>
+                      ) : firstMessage.start_agent === 'content' ? (
+                        <>What <Text span fw={600} c="pink">educational content</Text> would you like me to create?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
                     ) : (
                       // Fall back to activeChat data for new chats
-                      activeChat.chatType === 'learn' ? (
+                      activeChat.agentType === 'learn' ? (
                         <>What specific <Text span fw={600} c="green">concepts</Text> do you need help understanding?</>
-                      ) : activeChat.chatType === 'homework' ? (
+                      ) : activeChat.agentType === 'homework' ? (
                         <>Which <Text span fw={600} c="indigo">homework</Text> question can I help you figure out?</>
-                      ) : activeChat.chatType === 'grade' ? (
+                      ) : activeChat.agentType === 'review' ? (
+                        <>Which <Text span fw={600} c="teal">topics</Text> would you like me to help you review?</>
+                      ) : activeChat.agentType === 'grade' ? (
                         <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
-                      ) : activeChat.chatType === 'test' ? (
-                        <>Which topics would you like me to help you <Text span fw={600} c="cyan">review</Text>?</>
+                      ) : activeChat.agentType === 'figure' ? (
+                        <>What <Text span fw={600} c="green">figures</Text> would you like me to generate?</>
+                      ) : activeChat.agentType === 'summary' ? (
+                        <>What <Text span fw={600} c="yellow">content</Text> would you like me to summarize?</>
+                      ) : activeChat.agentType === 'question' ? (
+                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
+                      ) : activeChat.agentType === 'syllabus' ? (
+                        <>What <Text span fw={600} c="lime">course information</Text> would you like me to organize into a syllabus?</>
+                      ) : activeChat.agentType === 'analyze' ? (
+                        <>What <Text span fw={600} c="violet">student data</Text> would you like me to analyze?</>
+                      ) : activeChat.agentType === 'report' ? (
+                        <>What kind of <Text span fw={600} c="grape">report</Text> would you like me to generate?</>
+                      ) : activeChat.agentType === 'content' ? (
+                        <>What <Text span fw={600} c="pink">educational content</Text> would you like me to create?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
@@ -215,29 +254,45 @@ export const MessageList = memo(({
                 ) : (
                   <>
                     {/* Teacher follow-up text */}
-                    {existingChat ? (
+                    {existingChat && firstMessage ? (
                       // Use existingChat data when available
-                      existingChat.chat_type === 'figure' ? (
-                        <>What <Text span fw={600} c="grape">figures</Text> would you like me to generate?</>
-                      ) : existingChat.chat_type === 'summary' ? (
-                        <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
-                      ) : existingChat.chat_type === 'question' ? (
-                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
-                      ) : existingChat.chat_type === 'grade' ? (
+                      firstMessage.start_agent === 'analyze' ? (
+                        <>What <Text span fw={600} c="violet">student data</Text> would you like me to analyze?</>
+                      ) : firstMessage.start_agent === 'report' ? (
+                        <>What kind of <Text span fw={600} c="grape">report</Text> would you like me to generate?</>
+                      ) : firstMessage.start_agent === 'content' ? (
+                        <>What <Text span fw={600} c="pink">educational content</Text> would you like me to create?</>
+                      ) : firstMessage.start_agent === 'grade' ? (
                         <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
+                      ) : firstMessage.start_agent === 'figure' ? (
+                        <>What <Text span fw={600} c="green">figures</Text> would you like me to generate?</>
+                      ) : firstMessage.start_agent === 'summary' ? (
+                        <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
+                      ) : firstMessage.start_agent === 'question' ? (
+                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
+                      ) : firstMessage.start_agent === 'syllabus' ? (
+                        <>What <Text span fw={600} c="lime">course information</Text> would you like me to organize into a syllabus?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
                     ) : (
                       // Fall back to activeChat data for new chats
-                      activeChat.chatType === 'figure' ? (
-                        <>What <Text span fw={600} c="grape">figures</Text> would you like me to generate?</>
-                      ) : activeChat.chatType === 'summary' ? (
-                        <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
-                      ) : activeChat.chatType === 'question' ? (
-                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
-                      ) : activeChat.chatType === 'grade' ? (
+                      activeChat.agentType === 'analyze' ? (
+                        <>What <Text span fw={600} c="violet">student data</Text> would you like me to analyze?</>
+                      ) : activeChat.agentType === 'report' ? (
+                        <>What kind of <Text span fw={600} c="grape">report</Text> would you like me to generate?</>
+                      ) : activeChat.agentType === 'content' ? (
+                        <>What <Text span fw={600} c="pink">educational content</Text> would you like me to create?</>
+                      ) : activeChat.agentType === 'grade' ? (
                         <>Which <Text span fw={600} c="orange">assignment or question</Text> can I help you grade?</>
+                      ) : activeChat.agentType === 'figure' ? (
+                        <>What <Text span fw={600} c="green">figures</Text> would you like me to generate?</>
+                      ) : activeChat.agentType === 'summary' ? (
+                        <>What <Text span fw={600} c="yellow">content or topics</Text> would you like me to summarize for your students?</>
+                      ) : activeChat.agentType === 'question' ? (
+                        <>What types of <Text span fw={600} c="blue">questions</Text> would you like me to generate?</>
+                      ) : activeChat.agentType === 'syllabus' ? (
+                        <>What <Text span fw={600} c="lime">course information</Text> would you like me to organize into a syllabus?</>
                       ) : (
                         <><Text>Hi {profile?.first_name || 'there'}, how can I assist you today?</Text></>
                       )
@@ -328,7 +383,6 @@ export const MessageList = memo(({
     setViewerMode(prev => ({
       ...prev,
       active: true,
-      open: true,
       documentId,
       fileId: contextId,
     }));
@@ -522,35 +576,31 @@ export const MessageList = memo(({
   };
 
   return (
-
-    // Then replace the Stack component
     <Stack
       ref={(el) => {
-        // Use the drop function which returns a ref function
         drop(el);
-
-        // Update container ref without directly assigning to .current
         if (containerRef) {
-          // Store the reference for scrolling functionality
           containerRef.current = el;
         }
       }}
       style={{
         flex: 1,
         overflowY: "auto",
-        marginBottom: "1rem",
-        // maxHeight: "calc(100vh - 100px)",
         position: "relative",
         opacity: isLoading ? 0.7 : 1,
         transition: "all 0.2s ease-in-out",
-        border: isOver ? `2px dashed ${canDrop ? '#228be6' : '#fa5252'}` : '2px solid transparent',
-        padding: isOver ? '8px' : '10px',
+        borderRadius: '8px',
+        padding: '10px',
         display: 'flex',
         flexDirection: 'column',
+        width: '100%',
+        margin: '0',
+        // Clean drop target - just a dashed border
+        border: isOver ? '3px dashed #228be6' : 'none',
+        backgroundColor: 'transparent', // Keep transparent
       }}
     >
       {(isInitializing || isLoadingMessages) ? renderLoadingState() : (
-        // cannot get fade list to work with immersive mode
         <>
           {renderWelcomeMessages()}
           {messages?.map((message, index) => (
@@ -583,10 +633,6 @@ export const MessageList = memo(({
                     <Text c="white">
                       {message.question}
                     </Text>
-
-                    {/* Display message-specific context badges */}
-
-                    {/* Show auto-added context badges only for the first message */}
                   </Card>}
                   {(message.files?.length > 0 || message.documents?.length > 0) &&
                     renderMessageContext(message)
@@ -670,7 +716,7 @@ export const MessageList = memo(({
                             if (segment.text) {
                               if (segment.handoff) {
                                 return (
-                                  <HandoffViewer  
+                                  <HandoffViewer
                                     key={figIndex}
                                     text={segment.text}
                                     handleEnhancedDocumentClick={handleEnhancedDocumentClick}
@@ -689,21 +735,54 @@ export const MessageList = memo(({
                               }
                             } else if (segment.figure && figures) {
                               return (
-                                <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                <FigureViewer
+                                  key={`figures-${message.id}`}
+                                  classId={classId}
+                                  chatId={chatId}
+                                  figures={figures.filter(f => f.message === message.id)}
+                                  viewerMode={viewerMode}
+                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                  fileDocuments={fileDocuments ?? []}
+                                />
                               )
                             } else if (segment.summary && summaries) {
                               return (
-                                <SummaryViewer key={`summaries-${message.id}`} classId={classId} chatId={chatId} summaries={summaries.filter(s => s.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                <SummaryViewer
+                                  key={`summaries-${message.id}`}
+                                  classId={classId}
+                                  chatId={chatId}
+                                  summaries={summaries.filter(s => s.message === message.id)}
+                                  viewerMode={viewerMode}
+                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                  fileDocuments={fileDocuments ?? []}
+                                />
                               )
                             } else if (segment.question && questions) {
                               return (
-                                <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                <QuestionViewer
+                                  key={`questions-${message.id}`}
+                                  classId={classId}
+                                  chatId={chatId}
+                                  questions={questions.filter(q => q.message === message.id)}
+                                  viewerMode={viewerMode}
+                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                  fileDocuments={fileDocuments ?? []}
+                                />
                               )
                             } else if (segment.report && reports) {
                               return (
-                                <ReportViewer key={`reports-${message.id}`} classId={classId} chatId={chatId} reports={reports.filter(r => r.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                                <ReportViewer
+                                  key={`reports-${message.id}`}
+                                  classId={classId}
+                                  chatId={chatId}
+                                  reports={reports.filter(r => r.message === message.id)}
+                                  viewerMode={viewerMode}
+                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                  fileDocuments={fileDocuments ?? []}
+                                />
                               )
                             }
+                            return null;
                           })}
                         </Stack>
                       </Box>}
@@ -715,8 +794,29 @@ export const MessageList = memo(({
           ))}
         </>
       )}
-
       <div ref={messagesEndRef} />
+      
+      {/* Scroll to bottom button - centered and sticky */}
+      {showScrollButton && (
+        <ActionIcon
+          variant="filled"
+          color="blue"
+          radius="xl"
+          size="lg"
+          onClick={scrollToBottom}
+          style={{
+            position: 'sticky',
+            bottom: '0px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            marginTop: '-40px', // Pull it up a bit so it doesn't add to the scroll height
+            zIndex: 10,
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          <IconArrowDown size={20} />
+        </ActionIcon>
+      )}
     </Stack>
   );
 });

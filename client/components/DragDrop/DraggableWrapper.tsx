@@ -1,4 +1,3 @@
-
 /**
  * DraggableWrapper.tsx
  * Used to make the files and documents draggable
@@ -34,9 +33,13 @@ export default function DraggableWrapper({
         <div
             ref={(drag as unknown) as React.LegacyRef<HTMLDivElement>}
             style={{
-                opacity: isDragging ? 0.5 : 1,
-                cursor: 'move',
-                position: 'relative'
+                opacity: isDragging ? 0.6 : 1,
+                cursor: isDragging ? 'grabbing' : 'grab',
+                position: 'relative',
+                transform: isDragging ? 'scale(0.98)' : 'scale(1)',
+                transition: 'opacity 0.2s, transform 0.2s',
+                boxShadow: isDragging ? '0 5px 15px rgba(0,0,0,0.1)' : 'none',
+                zIndex: isDragging ? 1000 : 1,
             }}
         >
             {children}

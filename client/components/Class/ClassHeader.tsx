@@ -5,7 +5,7 @@
  * 09.01.2024
  */
 
-import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack, Badge } from '@mantine/core';
+import { ActionIcon, Button, Container, Group, Tooltip, useComputedColorScheme, Menu, Center, Text, Modal, TextInput, Textarea, Stack, Badge, Box, Collapse } from '@mantine/core';
 import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -22,8 +22,11 @@ import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
 import { logout } from '@/utils/services/auth';
 import { AccountMenu } from '../AccountMenu';
-import { Profile } from '@/types';
+import { Profile as BaseProfile } from '@/types';
 import { Class } from '@/types';
+
+// Extended Profile type to make created_at optional
+type Profile = Omit<BaseProfile, 'created_at'> & { created_at?: string };
 import cx from 'clsx';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import FeedbackModal from '../FeedbackModal';
@@ -32,13 +35,17 @@ import { createClass } from '@/utils/services/class';
 import { updateProfile } from '@/utils/services/profile';
 import { checkCode } from '@/utils/services/code';
 import { useStudentMode } from '../StudentModeContext';
+import { menuConfig } from '@/utils/menu/menuConfig'; // Import menuConfig
+import { ClassNavbarLinksGroup } from './ClassNavbarLinksGroup'; // Import ClassNavbarLinksGroup
+
 interface ClassHeaderProps {
-    classId: string
-    showClasses: boolean
-    onMobileMenuToggle?: () => void
+    classId: string;
+    basePath: string; // Add basePath prop
+    showClasses: boolean;
+    // Remove onMobileMenuToggle
 }
 
-export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassHeaderProps) {
+export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps) {
     const supabase = useSupabaseBrowser();
     const queryClient = useQueryClient();
     const [isOpen, { open, close }] = useDisclosure(false);
@@ -48,8 +55,10 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
     const [newClassDescription, setNewClassDescription] = useState("");
     const [loading, setLoading] = useState(false);
     const { studentMode } = useStudentMode();
+    const [navMenuOpened, setNavMenuOpened] = useState(false); // State for nav menu
 
     const router = useRouter();
+    const isMobile = useMediaQuery('(max-width: 768px)'); // Keep isMobile
 
     const { data: user, isLoading: userLoading } = useQuery({
         queryKey: ["user"],
@@ -66,6 +75,34 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase),
     })
+
+    // --- Navigation Data Generation (from ClassNavbar) ---
+    const generateNavData = () => {
+        return Object.entries(menuConfig).map(([key, item]) => ({
+            ...item,
+            icon: item.icon as React.FC<any>,
+            link: item.link ? 
+                // Special handling for home link to make sure it ends with '/'
+                (item.link === '/' ? `${basePath}/` : `${basePath}${item.link}`) 
+                : undefined,
+            isLink: !!item.link,
+            links: item.links?.map(link => ({
+                ...link,
+                link: `${basePath}${link.link}`
+            }))
+        }));
+    };
+
+    const navLinks = generateNavData().map((item) => (
+        <ClassNavbarLinksGroup
+            {...item}
+            key={item.label}
+            isExpanded={true} // Always expanded within the dropdown
+            isLoading={userLoading || profileLoading}
+        />
+    ));
+    // --- End Navigation Data Generation ---
+
 
     const getFilteredClasses = (profile: Profile | undefined, classData: Class[] | undefined) => {
         if (!profile || !classData) return [];
@@ -187,22 +224,33 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
         }
     };
 
-    const isMobile = useMediaQuery('(max-width: 768px)');
-
     const renderClassSelector = () => {
         const hasNoClasses = getFilteredClasses(profile, classData).length === 0;
         return showClasses && !userLoading && !profileLoading && !classDataLoading && (
-            <Group pt={4}>
+            <Group pt={0}> {/* Remove padding top */}
                 {hasNoClasses ? <Button
                     onClick={open}
+                    size="xs"
                 >
                     {profile && ((profile.professor || profile.admin) && !studentMode) ? "Add Class" : "Join Class"}
                 </Button> : <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
                     <Menu.Target>
-                        <Button variant="subtle" className={classes.classSelector}>
+                        <Button 
+                            variant="subtle" 
+                            className={classes.classSelector}
+                            p={4} 
+                            h={25} 
+                        >
                             <Center>
                                 <Group gap={2}>
-                                    <Text size="sm" fw={500}>
+                                    <Text 
+                                        size="sm" 
+                                        fw={300}
+                                        style={{ 
+                                            lineHeight: '16px',
+                                            fontSize: '16px'
+                                        }}
+                                    >
                                         {classData?.find(c => c.id === classId)?.class_code || 'Select Class'}
                                     </Text>
                                     <IconChevronDown size={14} stroke={1.5} />
@@ -210,6 +258,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                             </Center>
                         </Button>
                     </Menu.Target>
+                    
                     <Menu.Dropdown>
                         {getFilteredClasses(profile, classData).map((classItem) => (
                             <Menu.Item
@@ -238,95 +287,65 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                     size="lg"
                     centered
                 >
-                    <Stack gap="md">
-                        {profile && ((profile.professor || profile.admin) && !studentMode) ? (
-                            <Stack gap="md">
-                                <Group grow>
-                                    <TextInput
-                                        label="Class Name"
-                                        placeholder="Introduction to Computer Science"
-                                        value={newClassName}
-                                        onChange={(e) => setNewClassName(e.currentTarget.value)}
-                                        required
-                                    />
-                                    <TextInput
-                                        label="Class Code"
-                                        placeholder="CS101"
-                                        value={newClassCode}
-                                        onChange={(e) => setNewClassCode(e.currentTarget.value)}
-                                        required
-                                    />
-                                </Group>
-                                <Textarea
-                                    label="Description"
-                                    placeholder="A brief description of the class"
-                                    value={newClassDescription}
-                                    onChange={(e) => setNewClassDescription(e.currentTarget.value)}
-                                    autosize
-                                    minRows={3}
-                                />
-                            </Stack>
-                        ) : (
-                            <TextInput
-                                label="Class Code"
-                                placeholder="XXXXX-XXXXX"
-                                value={classCode}
-                                onChange={(event) => {
-                                    let value = event.currentTarget.value.toUpperCase();
-
-                                    // Remove any non-alphanumeric characters except hyphen
-                                    value = value.replace(/[^A-Z0-9-]/g, '');
-
-                                    // Auto-insert hyphen after 5 characters if not present
-                                    if (value.length > 5 && value.charAt(5) !== '-') {
-                                        value = value.slice(0, 5) + '-' + value.slice(5);
-                                    }
-
-                                    // Limit to 11 characters (5 + hyphen + 5)
-                                    if (value.length > 11) {
-                                        value = value.slice(0, 11);
-                                    }
-
-                                    setClassCode(value);
-                                }}
-                            />
-                        )}
-                        <Group justify="flex-end">
-                            {profile && ((profile.professor || profile.admin) && !studentMode) ? (
-                                <Button onClick={handleAddClass} loading={loading}>Add</Button>
-                            ) : (
-                                <Button onClick={handleJoinClass} loading={loading}>Join</Button>
-                            )}
-                        </Group>
-                    </Stack>
+                    {/* ...existing modal code... */}
                 </Modal>
             </Group>
         )
     }
 
     return (
-        <Group h="100%" px="md" w="100%" justify="space-between" pos="relative">
+        <Group h="100%" px="md" w="100%" justify="space-between" pos="relative" className={classes.headerRoot}>
+            {/* Left Group: Navigation Menu + Class Selector */}
             <Group gap="xs" style={{ zIndex: 2 }}>
-                {profile && ((profile.professor || profile.admin) && !studentMode) && isMobile && (
-                    <Group pt={4}>
-                        <Tooltip label="Open Menu">
+                {profile && ((profile.professor || profile.admin) && !studentMode) && classId && (
+                    <Menu
+                        shadow="md"
+                        width={200}
+                        opened={navMenuOpened}
+                        onChange={setNavMenuOpened}
+                        position="bottom-start"
+                        offset={8}
+                        trigger="hover"
+                        transitionProps={{ exitDuration: 0 }}
+                    >
+                        <Menu.Target>
                             <ActionIcon
-                                onClick={onMobileMenuToggle}
                                 variant="subtle"
-                                aria-label="Open Menu"
+                                aria-label="Navigation Menu"
                             >
                                 <IconMenu2 size={24} />
                             </ActionIcon>
-                        </Tooltip>
-                    </Group>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            {navLinks}
+                        </Menu.Dropdown>
+                    </Menu>
                 )}
-                <Link href="/">
+                
+                {/* Class Selector - Moved here to left side */}
+                {renderClassSelector()}
+            </Group>
+
+            {/* Center: Logo only */}
+            <Center style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                margin: 'auto',
+                zIndex: 1,
+                pointerEvents: 'none',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+            }}>
+                {/* Logo - Centered */}
+                <Link href="/" style={{ pointerEvents: 'auto', display: 'inline-block' }}>
                     <Image
                         src={"/images/logo-light.png"}
                         priority
                         alt="Logo"
-                        width={90}
-                        height={20}
+                        width={75}
+                        height={25}
                         style={{ marginTop: '4px' }}
                         className={classes['logo-light']}
                     />
@@ -334,33 +353,23 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
                         src={"/images/logo-dark.png"}
                         priority
                         alt="Logo"
-                        width={90}
-                        height={20}
+                        width={75}
+                        height={25}
                         style={{ marginTop: '4px' }}
                         className={classes['logo-dark']}
                     />
                 </Link>
-                {!isMobile && renderClassSelector()}
-            </Group>
-            
-            {profile && ((profile.professor || profile.admin) && studentMode) && 
-                <Center style={{ 
-                    position: 'absolute', 
-                    left: 0, 
-                    right: 0, 
-                    margin: 'auto',
-                    zIndex: 1,
-                    pointerEvents: 'none' // This makes the center container "click-through"
-                }}>
+                
+                {/* Student Mode Badge */}
+                {profile && ((profile.professor || profile.admin) && studentMode) &&
                     <Tooltip label="To disable, click 'Exit Student Mode' under the profile menu">
-                        <Badge style={{ pointerEvents: 'auto' }}>Student Mode</Badge>
+                        <Badge style={{ pointerEvents: 'auto', marginLeft: '10px', marginTop: '2px' }}>Student Mode</Badge>
                     </Tooltip>
-                </Center>
-            }
+                }
+            </Center>
 
-            {isMobile && renderClassSelector()}
-            
-            <Group style={{ zIndex: 2 }}>
+            {/* Right Group: Feedback, Account Menu */}
+            <Group style={{ zIndex: 2 }} gap="xs">
                 <FeedbackModal />
                 <AccountMenu profile={profile} classId={classId} />
             </Group>
@@ -368,6 +377,7 @@ export function ClassHeader({ classId, showClasses, onMobileMenuToggle }: ClassH
     );
 }
 
+// Keep NAVBAR_CONSTANTS if they are used elsewhere, otherwise remove
 export const NAVBAR_CONSTANTS = {
     COLLAPSED_WIDTH: 70,
     EXPANDED_WIDTH: 250,

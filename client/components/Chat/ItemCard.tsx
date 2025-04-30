@@ -1,12 +1,13 @@
 import { useDrop } from "react-dnd";
-import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Image } from "@mantine/core";
-import { IconCircleX, IconEye, IconLoader } from "@tabler/icons-react";
+import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Image, Box } from "@mantine/core"; // Added Box
+import { IconX, IconPlus, IconLoader } from "@tabler/icons-react"; // Changed IconEye to IconPlus
 import { useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Document, ViewerMode } from "@/types";
 import { ContentType } from "@/types";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
+import classes from '../Chat/Canvas/ChatCanvas.module.css'; // Import animation CSS
 
 export default function ItemCard({
     item,
@@ -20,7 +21,7 @@ export default function ItemCard({
     setViewerMode,
     fileDocuments,
     onFileDelete,
-    onReorder
+    onReorder,
 }: {
     item: any,
     classId: string,
@@ -33,75 +34,11 @@ export default function ItemCard({
     setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>;
     fileDocuments?: Document[],
     onFileDelete?: () => void,
-    onReorder?: (draggedId: string, targetId: string) => void
+    onReorder?: (draggedId: string, targetId: string) => void,
 }) {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    // Get color based on parse status
-    const getStatusColor = () => {
-        switch (item.parse_status) {
-            case 'uploading':
-                return 'blue';
-            case 'compressing':
-                return 'yellow';
-            case 'extracting':
-                return 'violet';
-            case 'processing':
-                return 'green';
-            case 'error':
-                return 'red';
-            case 'complete':
-                return 'teal';
-            default:
-                return 'gray';
-        }
-    };
-
-    // Centralized file progress calculation based on parse_status
-    const getFileProgress = (fileId: string) => {
-        // If no file documents, return 0
-        if (!fileDocuments) return 0;
-
-        // Handle different states with appropriate progress calculations
-        switch (item.parse_status) {
-            case 'compressing':
-                // Use compression_progress (0-100) for compressing state
-                return item.compression_progress ? item.compression_progress : 0;
-            case 'extracting':
-                return item.extraction_progress ? item.extraction_progress : 0;
-            case 'processing':
-                return item.processing_progress ? item.processing_progress : 0;
-            case 'uploading':
-                // For uploading, we rely on the tus progress updates
-                // This is handled separately in the notifications
-                return item.upload_progress ? item.upload_progress : 0;
-            case 'complete':
-                return 100;
-
-            default:
-                return 0;
-        }
-    };
-
-    // Get progress label based on status
-    const getProgressLabel = () => {
-        const progress = Math.round(getFileProgress(item.id));
-
-        switch (item.parse_status) {
-            case 'compressing':
-                return `Compressing: ${progress}%`;
-            case 'extracting':
-                return `Extracting: ${progress}%`;
-            case 'processing':
-                return `Processing: ${progress}%`;
-            case 'uploading':
-                return `Uploading: ${progress}%`;
-            default:
-                return `${progress}%`;
-        }
-    };
-
-    // Add a drop handler for reordering
+    // Add the useDrop hook to handle drag-and-drop functionality
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'CONTEXT_ITEM',
         drop: (droppedItem: { id: string, type: string }) => {
@@ -112,10 +49,11 @@ export default function ItemCard({
             return { dropped: false };
         },
         collect: (monitor) => ({
-            isOver: !!monitor.isOver(),
+            isOver: !!monitor.isOver(), // Collect the isOver state
         }),
     }), [item.id, onReorder]);
 
+    // Create the card content with animation support
     const originalCard = (
         <Card
             ref={(el) => {
@@ -124,7 +62,6 @@ export default function ItemCard({
 
                 // Update container ref without directly assigning to .current
                 if (containerRef) {
-                    // Store the reference for scrolling functionality
                     containerRef.current = el;
                 }
             }}
@@ -133,18 +70,24 @@ export default function ItemCard({
             radius="md"
             withBorder
             style={{
+                display: "inline-flex", // Ensure the card behaves like an inline element
                 cursor: makeDraggable ? 'grab' : 'pointer',
                 transition: 'all 0.2s ease',
                 borderLeft: `3px solid var(--mantine-color-${color}-filled)`,
                 backgroundColor: isOver ? 'var(--mantine-color-blue-light)' : undefined,
                 boxSizing: 'border-box',
-                width: '100%',
+                width: "100%", // Keep full width of parent container
+                maxWidth: "100%", // Prevent overflow
+                padding: "8px", // Slightly reduce padding
             }}
-            onClick={(e) => {
+            onClick={(e) => { // Changed onClick handler
                 e.stopPropagation();
                 // Only allow clicking if the file is complete or in processing stages
-                if (item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
-                    addFileToChat(item.id);
+                if ((item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') && setViewerMode) {
+                    const document = fileDocuments?.find(d => d.file === item.id);
+                    if (document) {
+                        handleDocumentClick(item.id, document.id, setViewerMode, false); // Open viewer on card click
+                    }
                 }
             }}
         >
@@ -158,7 +101,7 @@ export default function ItemCard({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: '#f0f0f0'
+                        backgroundColor: '#f0f0f0',
                     }}>
                         <Image
                             src={item.imageUrl}
@@ -174,76 +117,62 @@ export default function ItemCard({
                 ) : (
                     <Skeleton width={40} height={40} radius={4} />
                 )}
-                <Stack style={{ flex: 1 }}>
+                <Stack style={{ flex: 1, minWidth: 0 }}> {/* Added minWidth: 0 */}
                     <Group justify="space-between" wrap="nowrap">
                         <Text
                             size="sm"
-                            lineClamp={2}
+                            lineClamp={1} // Ensure the title is truncated to one line
                             title={item.newName}
                             style={{
                                 wordBreak: 'break-word',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical',
-                                flex: 1
+                                whiteSpace: 'nowrap', // Prevent wrapping
                             }}
                         >
                             {item.newName}
                         </Text>
                         <>
                             {/* Status indicators based on parse_status */}
-                            {item.parse_status === 'idle' ? (
-                                <Tooltip label="Loading...">
-                                    <ActionIcon variant="transparent" color="blue" size="sm">
-                                        <Loader size={"xs"} />
-                                    </ActionIcon>
-                                </Tooltip>
-                            ) : item.parse_status === 'error' ? (
-                                <Tooltip label="Error Processing">
-                                    <ActionIcon variant="light" color="red" size="sm">
-                                        <IconCircleX size={16} />
-                                    </ActionIcon>
-                                </Tooltip>
-                            ) : (item.parse_status === 'uploading' || item.parse_status === 'compressing' ||
-                                item.parse_status === 'extracting' ||
-                                item.parse_status === 'processing') ? (
-                                <Tooltip label={getProgressLabel()}>
-                                    <RingProgress
-                                        size={40}
-                                        thickness={2}
-                                        sections={[{
-                                            value: getFileProgress(item.id),
-                                            color: getStatusColor()
-                                        }]}
-                                        label={
-                                            <Text size="xs" ta="center" fw={500} c={getStatusColor()}>
-                                                {Math.round(getFileProgress(item.id))}%
-                                            </Text>
-                                        }
-                                    />
-                                </Tooltip>
-                            ) : (
-                                <Tooltip label="Open in viewer">
-                                    <ActionIcon variant="subtle" size="md" onClick={(e) => {
+                            {onFileDelete ? (
+                                // Render red "X" for context in the chat area
+                                <div
+                                    onClick={(e) => {
                                         e.stopPropagation();
-                                        if (setViewerMode) {
-                                            const document = fileDocuments?.find(d => d.file === item.id)
-                                            if (document) {
-                                                handleDocumentClick(item.id, document.id, setViewerMode, false);
+                                        onFileDelete();
+                                    }}
+                                    style={{
+                                        color: "red", // Red color for the "X"
+                                        cursor: "pointer", // Pointer cursor
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <IconX size={16} /> {/* Use IconX for a plain red "X" */}
+                                </div>
+                            ) : (
+                                // Render plus icon for context in the panel
+                                <Tooltip label="Add to Chat">
+                                    {/* Wrap ActionIcon in a Box */}
+                                    <Box>
+                                        <ActionIcon variant="subtle" size="md" onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Only allow adding if the file is complete or in processing stages
+                                            if (item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
+                                                addFileToChat(item.id); // Add to chat on icon click
                                             }
-                                        }
-                                    }}>
-                                        <IconEye size={20} />
-                                    </ActionIcon>
+                                        }}>
+                                            <IconPlus size={20} />
+                                        </ActionIcon>
+                                    </Box>
                                 </Tooltip>
                             )}
                         </>
                     </Group>
                 </Stack>
-            </Group >
-        </Card >
+            </Group>
+        </Card>
     );
 
     // Wrap in draggable component if needed

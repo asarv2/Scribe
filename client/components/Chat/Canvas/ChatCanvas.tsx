@@ -3,13 +3,15 @@
  * This component is for chatting with the AI.
  */
 
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip, Box } from "@mantine/core";
+// Ensure necessary Mantine components are imported, remove Paper if not used elsewhere
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip, Box, useMantineTheme } from "@mantine/core"; // Added useMantineTheme if not already there
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
-import { IconPlus, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { useEffect, useState, useCallback } from "react";
+// Updated icon imports
+import { IconPlus, IconArrowBarLeft, IconArrowBarToRight } from "@tabler/icons-react";
+import { useEffect, useState, useCallback } from "react"; // Added back useState, useEffect, useCallback
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFavicon, useHotkeys, useMediaQuery } from "@mantine/hooks";
+import { useFavicon, useHotkeys, useMediaQuery } from "@mantine/hooks"; // Removed useHotkeys if only used for toggle
 import { em } from "@mantine/core";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { getChat } from "@/utils/queries/get-chat";
@@ -35,6 +37,13 @@ import { useOs } from '@mantine/hooks';
 import PageDetailsModal from "../PageDetailsModal";
 import { useStudentMode } from "@/components/StudentModeContext";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
+// Removed animation-related imports if no longer needed elsewhere
+// import { CONTENT_COLORS, File as SupabaseFile, Document as SupabaseDocument } from "@/types";
+// import ItemCard from "../ItemCard"; // Re-import ItemCard
+// import classes from './ChatCanvas.module.css'; // Import the CSS module
+// Remove imports only needed for placeholder if they aren't used elsewhere
+// import { Paper } from "@mantine/core";
+
 
 export interface RecordedVideo {
     id: string;
@@ -49,12 +58,10 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
     const supabase = useSupabaseBrowser();
     const [viewerMode, setViewerMode] = useState<ViewerMode>({
         active: false,
-        open: chatId === "new",
+        open: true, // Added back the 'open' property as it's required
         showPageDetails: false,
     });
     const [loading, setLoading] = useState(false);
-
-    // Search and expansion states
     const [contextSearchQuery, setContextSearchQuery] = useState("");
 
     const router = useRouter();
@@ -92,6 +99,14 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         enabled: !!profile
     });
 
+    // Fetch file documents based on files data
+    const { data: fileDocuments, isLoading: loadingFileDocuments } = useQuery({
+        queryKey: ["fileDocuments", files?.map(f => f.id) ?? []],
+        queryFn: () => getFileDocuments(supabase, files?.map(f => f.id) ?? []),
+        enabled: !!files && files.length > 0 // Ensure files are loaded
+    });
+
+
     const [activeChat, setActiveChat] = useState<ChatMessage>({
         id: 1,
         title: "Office Hours",
@@ -103,8 +118,9 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         rating: null
     });
 
-    // Combine all loading states
-    const isInitializing = !user || !profile || !files;
+    // Combine all loading states, including fileDocuments
+    const isInitializing = !user || !profile || loadingFiles || loadingFileDocuments;
+
 
     const [shouldAnimateTitle, setShouldAnimateTitle] = useState<boolean>(false);
 
@@ -127,6 +143,35 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         const allDocuments = Array.from(new Set([...(activeChat.documents ?? [])]));
         return allDocuments;
     }
+
+    // MOVED: Define these functions BEFORE handleAnimateContextAdd
+    const addFileToChat = (fileId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            files: [...prev.files, fileId]
+        }));
+    };
+
+    const addDocumentToChat = (documentId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            documents: [...prev.documents, documentId]
+        }));
+    };
+
+    const removeFileFromChat = (fileId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            files: prev.files.filter((id: string) => id !== fileId)
+        }));
+    };
+
+    const removeDocumentFromChat = (documentId: string) => {
+        setActiveChat(prev => ({
+            ...prev,
+            documents: prev.documents.filter((id: string) => id !== documentId)
+        }));
+    };
 
     // Define sendMessage with useCallback
     const sendMessage = useCallback(async () => {
@@ -204,7 +249,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         activeChat,
         router,
         getContextFiles,
-        getContextDocuments
+        getContextDocuments,
+        fileDocuments // Add fileDocuments if used inside
     ]);
 
     const handleChat = async () => {
@@ -221,40 +267,12 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         }
     };
 
-    // Modify addContextToChat to remove drag-related state updates
-    const addFileToChat = (fileId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            files: [...prev.files, fileId]
-        }));
-    };
-
-    const addDocumentToChat = (documentId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            documents: [...prev.documents, documentId]
-        }));
-    };
-
-    const removeFileFromChat = (fileId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            files: prev.files.filter((id: string) => id !== fileId)
-        }));
-    };
-
-    const removeDocumentFromChat = (documentId: string) => {
-        setActiveChat(prev => ({
-            ...prev,
-            documents: prev.documents.filter((id: string) => id !== documentId)
-        }));
-    };
-
     const handleFileDelete = () => {
         // close the window
         setViewerMode(prev => ({
             ...prev,
             active: false,
+            // open: true, // Removed setting open state
         }));
         // remove from context
         removeFileFromChat(viewerMode.fileId ?? "");
@@ -269,14 +287,16 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
 
     useEffect(() => {
         if (profile) {
+            const isTeacherView = (profile.admin || profile.professor) && !studentMode;
             setActiveChat(prev => ({
                 ...prev,
-                title: studentMode ? "Office Hours" : "Chat",
-                chatType: ((profile.admin || profile.professor) && !studentMode) ? 'professor' : 'student',
-                teacher: ((profile.admin || profile.professor) && !studentMode),
+                // Only reset title/type if it's a new chat or if the mode fundamentally changes the default
+                title: chatId === "new" ? (isTeacherView ? "Chat" : "Office Hours") : prev.title,
+                chatType: chatId === "new" ? (isTeacherView ? 'professor' : 'student') : prev.chatType, // Keep existing type for existing chats unless logic dictates otherwise
+                teacher: isTeacherView,
             }));
         }
-    }, [profile]);
+    }, [profile, studentMode, chatId]); // Add studentMode and chatId to dependency array
 
     // Use the chatTitleUpdated prop to trigger animation when title changes
     useEffect(() => {
@@ -292,62 +312,43 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         }
     };
 
-    // Add keyboard shortcuts
-    useHotkeys([
-        ['mod+M', () => {
-            setViewerMode(prev => ({ ...prev, open: !prev.open }));
-        }],
-    ], []
-    );
+    const theme = useMantineTheme(); // Ensure theme is available
+    const { colorScheme } = useMantineColorScheme(); // Get color scheme
+    const [isContextPanelOpen, setIsContextPanelOpen] = useState(true); // State for context panel
 
     return (
-        <Container fluid>
-            <Grid p={0}>
+        <Container fluid p={0}> {/* Ensure no padding on the main container */}
+            <Grid p={0}
+            >
                 <Grid.Col
-                    span={isMobile ? 12 : viewerMode.open ? 8 : 12}
+                    // Adjust span: use 'auto' when context is closed on desktop
+                    span={isMobile ? 12 : isContextPanelOpen ? 9 : 'auto'} 
                     style={{
-                        transition: 'width 300ms ease-in-out, flex 300ms ease-in-out',
+                        transition: 'all 300ms ease-in-out',
+                        position: 'relative',
+                        height: 'calc(100vh - 75px)',
+                        flex: '1 1 auto', // Allow this column to grow and fill available space
+                        width: isMobile ? undefined : isContextPanelOpen ? undefined : 'calc(100% - 60px)',
                     }}
                     p={0}
                 >
                     <Card
-                        h="calc(100vh - 75px)"
-                        style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}
-                        p="xs"
+                        h="100%"
+                        style={{
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                        }}
+                        p={0}
                         bg="transparent"
                     >
-                        {/* Replace the ActionIcon with a direct icon that sits on the border */}
-                        {/* <Tooltip label={viewerMode.open ? `Close menu (${getShortcutText()})` : `Open menu (${getShortcutText()})`} openDelay={500}>
-                            <Box
-                                onClick={() => setViewerMode(prev => ({ ...prev, open: !prev.open }))}
-                                style={{
-                                    position: 'absolute',
-                                    right: '0',
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                    zIndex: 100,
-                                    cursor: 'pointer',
-                                    width: '16px',
-                                    height: '40px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'var(--mantine-color-blue-light)',
-                                    color: 'var(--mantine-color-blue-filled)',
-                                    borderTopLeftRadius: '4px',
-                                    borderBottomLeftRadius: '4px',
-                                    boxShadow: '0 0 5px rgba(0,0,0,0.1)'
-                                }}
-                            >
-                                {viewerMode.open ?
-
-                                    <IconChevronRight size={18} style={{ position: 'relative', right: '-2px' }} /> :
-                                    <IconChevronLeft size={18} style={{ position: 'relative', right: '-2px' }} />
-                                }
-                            </Box>
-                        </Tooltip> */}
-                        {/* Show controls only when not in immersive mode */}
-                        <Flex justify="space-between" align="center" mb={10}>
+                        {/* Header Flex */}
+                        <Flex justify="space-between" align="center" h={46} p="xs" style={{ 
+                            flexShrink: 0, 
+                            // Removed borderBottom style
+                        }}>
                             {isInitializing ? (
                                 <>
                                     <Group gap="sm">
@@ -360,8 +361,9 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                 </>
                             ) : (
                                 <>
-                                    <Group gap="sm">
-                                        <Text size="xl" fw={700} mb={6}>
+                                    {/* Reduce gap further */}
+                                    <Group gap={0} align="center">
+                                        <Text size="xl" fw={700} mb={0}> {/* Title Style */}
                                             {existingChat ? (
                                                 shouldAnimateTitle ? (
                                                     <TypeAnimation
@@ -393,6 +395,12 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                                 activeChat.title
                                             )}
                                         </Text>
+                                        {/* Moved ChatHistoryDropdown here */}
+                                        <ChatHistoryDropdown
+                                            currentChatId={chatId}
+                                            onChatSelect={handleChatSelect}
+                                            classId={classId}
+                                        />
                                         {existingChat?.chat_type === "grade" && <Badge color="orange" variant="light">Grade</Badge>}
                                         {existingChat?.chat_type === "test" && <Badge color="cyan" variant="light">Test-Prep</Badge>}
                                         {existingChat?.chat_type === "homework" && <Badge color="indigo" variant="light">Homework</Badge>}
@@ -413,11 +421,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                                 <IconPlus size={20} />
                                             </ActionIcon>
                                         </Tooltip>}
-                                        <ChatHistoryDropdown
-                                            currentChatId={chatId}
-                                            onChatSelect={handleChatSelect}
-                                            classId={classId}
-                                        />
+                                        {/* Removed ChatHistoryDropdown from here */}
                                     </Group>
                                 </>
                             )}
@@ -436,54 +440,123 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                             loading={loading}
                         />
 
-                        <ChatInput
-                            viewerMode={viewerMode}
-                            activeChat={activeChat}
-                            setActiveChat={setActiveChat}
-                            loading={loading}
-                            isInitializing={isInitializing}
-                            classId={classId}
-                            chatId={chatId}
-                            onSend={handleChat}
-                            onRemoveFile={removeFileFromChat}
-                            onRemoveDocument={removeDocumentFromChat}
-                            setViewerMode={setViewerMode}
-                        />
+                        <Box p="xs" style={{ 
+                            flexShrink: 0,
+                            // Removed borderTop style
+                        }}> {/* Added borderTop for better visual separation */}
+                            <ChatInput
+                                viewerMode={viewerMode}
+                                activeChat={activeChat}
+                                setActiveChat={setActiveChat}
+                                loading={loading}
+                                isInitializing={isInitializing}
+                                classId={classId}
+                                chatId={chatId}
+                                onSend={handleChat}
+                                onRemoveFile={removeFileFromChat}
+                                onRemoveDocument={removeDocumentFromChat}
+                                setViewerMode={setViewerMode}
+                                files={files}
+                                fileDocuments={fileDocuments}
+                                onAddFileContext={addFileToChat}
+                                onAddDocumentContext={addDocumentToChat}
+                            />
+                        </Box>
+
                     </Card>
+
                 </Grid.Col>
                 <Grid.Col
-                    span={isMobile ? 12 : 4}
+                    // Fixed width column with right alignment
+                    span={isMobile ? 12 : 'content'} 
                     style={{
-                        display: (viewerMode.open) ? 'block' : 'none',
-                        transition: 'width 300ms ease-in-out, flex 300ms ease-in-out',
-
+                        transition: 'width 300ms ease-in-out',
+                        padding: 0,
+                        display: 'flex', // Use flexbox for column layout
+                        flexDirection: 'column', // Stack header and content vertically
+                        height: 'calc(100vh - 75px)', // Explicit height for the column
+                        width: isMobile ? undefined : isContextPanelOpen ? '25%' : '60px',
+                        minWidth: isMobile ? undefined : isContextPanelOpen ? '250px' : '60px',
+                        maxWidth: isMobile ? undefined : isContextPanelOpen ? '400px' : '60px',
+                        position: 'relative',
                     }}
-                    p={0}
                 >
-                    {viewerMode.active ? (
-                        <ViewerPanel
-                            viewerMode={viewerMode}
-                            setViewerMode={setViewerMode}
-                            addFileToChat={addFileToChat}
-                            addDocumentToChat={addDocumentToChat}
-                            classId={classId}
-                            activeChat={activeChat}
-                        />
-                    ) : (
-                        <ContextPanel
-                            classId={classId}
-                            searchQuery={contextSearchQuery}
-                            setSearchQuery={setContextSearchQuery}
-                            addFileToChat={addFileToChat}
-                            addDocumentToChat={addDocumentToChat}
-                            activeChat={activeChat}
-                            makeDraggable={true}
-                            viewerMode={viewerMode}
-                            setViewerMode={setViewerMode}
-                            onFileDelete={handleFileDelete}
-                            isInitializing={isInitializing}
-                        />
-                    )}
+                    {/* Context Header Box */}
+                    <Box
+                        style={{
+                            height: 46,
+                            width: '100%', // Full width of the parent column
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end', // Keep icon to the right
+                            padding: `0 ${theme.spacing.xs}`, // Consistent horizontal padding
+                            flexShrink: 0, // Prevent header from shrinking vertically
+                            backgroundColor: colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+                            overflow: 'hidden',
+                            position: 'relative', // Allow absolute positioning within
+                        }}
+                    >
+                        {/* Fixed position toggle button */}
+                        <ActionIcon
+                            variant="transparent"
+                            onClick={() => setIsContextPanelOpen((o) => !o)}
+                            size="lg"
+                            style={{
+                                width: 36, 
+                                height: 36, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                position: 'absolute', // Fixed position
+                                // Adjust 'right' based on panel state for visual stability
+                                right: isContextPanelOpen ? theme.spacing.xs : `${(60 - 36) / 2}px`, 
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                zIndex: 2,
+                            }}
+                            aria-label={isContextPanelOpen ? "Hide Context" : "Show Context"}
+                        >
+                            {isContextPanelOpen ? <IconArrowBarToRight size={25} /> : <IconArrowBarLeft size={25} />}
+                        </ActionIcon>
+                    </Box>
+
+                    {/* Content Area Box */}
+                    <Box style={{ 
+                        flex: 1, 
+                        overflow: 'hidden',
+                        width: '100%',
+                        visibility: isContextPanelOpen ? 'visible' : 'hidden', // Hide content when closed
+                        opacity: isContextPanelOpen ? 1 : 0,
+                        transition: 'opacity 200ms ease-in-out',
+                    }}>
+                        {isContextPanelOpen && (
+                            viewerMode.active ? (
+                                <ViewerPanel
+                                    viewerMode={viewerMode}
+                                    setViewerMode={setViewerMode}
+                                    addFileToChat={addFileToChat}
+                                    addDocumentToChat={addDocumentToChat}
+                                    classId={classId}
+                                    activeChat={activeChat}
+                                />
+                            ) : (
+                                <ContextPanel
+                                    classId={classId}
+                                    searchQuery={contextSearchQuery}
+                                    setSearchQuery={setContextSearchQuery}
+                                    addFileToChat={addFileToChat}
+                                    addDocumentToChat={addDocumentToChat}
+                                    activeChat={activeChat}
+                                    makeDraggable={true}
+                                    viewerMode={viewerMode}
+                                    setViewerMode={setViewerMode}
+                                    onFileDelete={handleFileDelete}
+                                    isInitializing={isInitializing}
+                                />
+                            )
+                        )}
+                    </Box>
                 </Grid.Col>
             </Grid>
             <PageDetailsModal

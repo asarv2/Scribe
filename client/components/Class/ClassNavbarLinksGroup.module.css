@@ -5,41 +5,40 @@
     padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
     font-size: var(--mantine-font-size-sm);
-    text-decoration: none;
-  
+    text-decoration: none; /* Ensure no underline */
+
     &:hover {
       background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
       color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
     }
-  }
-  
-  .link {
+}
+
+.link {
     font-weight: 500;
     display: block;
     text-decoration: none;
     padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
-    padding-left: var(--mantine-spacing-xl);
-    margin-left: var(--mantine-spacing-xl);
+    padding-left: var(--mantine-spacing-xl); /* Keep indentation for sublinks */
+    /* margin-left: var(--mantine-spacing-xl); Remove margin-left if padding-left is enough */
     font-size: var(--mantine-font-size-sm);
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
-  
+
     &:hover {
       background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
       color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
     }
-  }
-  
-  .chevron {
-    transition: transform 200ms ease;
-  }
-
-.control[data-active="true"] {
-  background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-5));
-  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
 }
 
+.chevron {
+    transition: transform 200ms ease;
+}
+
+/* Active state styles */
+.control[data-active="true"],
 .link[data-active="true"] {
   background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-5));
   color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
 }
+
+/* Remove border-left styles from ClassNavbar.module.css if they existed */
 
