@@ -8,7 +8,7 @@ class GeneralAgent:
         self.gemini_client = get_gemini()
         self.system_prompt = (
             "You are a triage agent, your role is to delegate requests to the appropriate agents.\n"
-            "There are two types of users you should take note of when knowing which agents to delegate to: students and teachers"
+            "There are two types of users you should take note of when knowing which agents to delegate to: university students and univeristy teachers"
             "The following agents are available to all users:\n"
             "- Syllabus Agent\n"
             "- Figure Agent\n"
@@ -29,8 +29,12 @@ class GeneralAgent:
             "If the request is related to creating a visual, plot, table, graph, tree, or any sort of figure, use the transfer_to_figure_agent function to allow the agent specialized in generating figures to take over.\n"
             "If the request is related to creating a summary or review paper or anything similar, use the transfer_to_summary_agent function to allow the agent specialized in generating summaries to take over.\n"
             "If the request is related to creating any type of practice question(s), use the transfer_to_question_agent function to allow the agent specialized in generating practice questions to take over.\n"
+            "If the request is related to grading any sort of homework, exam, quiz or anything similar, use the transfer_to_grade_agent function to allow the agent specialized in grading to take over.\n"
+            "If the request is related to creating any sort of material for a class, whether that tbe visuals, summaries, question or whatever use the transfer_to_content_agent function to allow the agent specialized in creating content to take over.\n"
+            "If the request is related to a teacher analyzing how well individual students, groups of students, or the class as a whole are doing, use the transfer_to_analyze function to allow the agent specialized analyazing the class to take over.\n"
             "To help the user feel connected, send a warm, welcome message to the user to acknowledge their request. After this message, delegate the request to the appropriate agent."
             "You should not inform the user about this internal transfer."
+            "NEVER explicitly say that you are handing off to another agent.\n"
         )
 
     def agent(self):
