@@ -10,7 +10,7 @@ import classes from "./ClassHeader.module.css"
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { IconChevronDown, IconMenu2, IconMessageCircle, IconMoon, IconSun } from '@tabler/icons-react';
+import { IconBook, IconChevronDown, IconEdit, IconMenu2, IconMessageCircle, IconMoon, IconSun } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSupabaseBrowser from '@/utils/supabase/supabase-browser';
 import { getUser } from '@/utils/queries/get-user';
@@ -81,9 +81,9 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
         return Object.entries(menuConfig).map(([key, item]) => ({
             ...item,
             icon: item.icon as React.FC<any>,
-            link: item.link ? 
+            link: item.link ?
                 // Special handling for home link to make sure it ends with '/'
-                (item.link === '/' ? `${basePath}/` : `${basePath}${item.link}`) 
+                (item.link === '/' ? `${basePath}/` : `${basePath}${item.link}`)
                 : undefined,
             isLink: !!item.link,
             links: item.links?.map(link => ({
@@ -227,38 +227,24 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
     const renderClassSelector = () => {
         const hasNoClasses = getFilteredClasses(profile, classData).length === 0;
         return showClasses && !userLoading && !profileLoading && !classDataLoading && (
-            <Group pt={0}> {/* Remove padding top */}
+            <Group pt={4}>
                 {hasNoClasses ? <Button
                     onClick={open}
-                    size="xs"
                 >
                     {profile && ((profile.professor || profile.admin) && !studentMode) ? "Add Class" : "Join Class"}
                 </Button> : <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
                     <Menu.Target>
-                        <Button 
-                            variant="subtle" 
-                            className={classes.classSelector}
-                            p={4} 
-                            h={25} 
-                        >
+                        <Button variant="subtle" className={classes.classSelector}>
                             <Center>
-                                <Group gap={2}>
-                                    <Text 
-                                        size="sm" 
-                                        fw={300}
-                                        style={{ 
-                                            lineHeight: '16px',
-                                            fontSize: '16px'
-                                        }}
-                                    >
+                                <Group gap={4}>
+                                    <IconBook size={14} stroke={1.5} />
+                                    <Text size="sm" fw={500}>
                                         {classData?.find(c => c.id === classId)?.class_code || 'Select Class'}
                                     </Text>
-                                    <IconChevronDown size={14} stroke={1.5} />
                                 </Group>
                             </Center>
                         </Button>
                     </Menu.Target>
-                    
                     <Menu.Dropdown>
                         {getFilteredClasses(profile, classData).map((classItem) => (
                             <Menu.Item
@@ -287,7 +273,67 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                     size="lg"
                     centered
                 >
-                    {/* ...existing modal code... */}
+                    <Stack gap="md">
+                        {profile && ((profile.professor || profile.admin) && !studentMode) ? (
+                            <Stack gap="md">
+                                <Group grow>
+                                    <TextInput
+                                        label="Class Name"
+                                        placeholder="Introduction to Computer Science"
+                                        value={newClassName}
+                                        onChange={(e) => setNewClassName(e.currentTarget.value)}
+                                        required
+                                    />
+                                    <TextInput
+                                        label="Class Code"
+                                        placeholder="CS101"
+                                        value={newClassCode}
+                                        onChange={(e) => setNewClassCode(e.currentTarget.value)}
+                                        required
+                                    />
+                                </Group>
+                                <Textarea
+                                    label="Description"
+                                    placeholder="A brief description of the class"
+                                    value={newClassDescription}
+                                    onChange={(e) => setNewClassDescription(e.currentTarget.value)}
+                                    autosize
+                                    minRows={3}
+                                />
+                            </Stack>
+                        ) : (
+                            <TextInput
+                                label="Class Code"
+                                placeholder="XXXXX-XXXXX"
+                                value={classCode}
+                                onChange={(event) => {
+                                    let value = event.currentTarget.value.toUpperCase();
+
+                                    // Remove any non-alphanumeric characters except hyphen
+                                    value = value.replace(/[^A-Z0-9-]/g, '');
+
+                                    // Auto-insert hyphen after 5 characters if not present
+                                    if (value.length > 5 && value.charAt(5) !== '-') {
+                                        value = value.slice(0, 5) + '-' + value.slice(5);
+                                    }
+
+                                    // Limit to 11 characters (5 + hyphen + 5)
+                                    if (value.length > 11) {
+                                        value = value.slice(0, 11);
+                                    }
+
+                                    setClassCode(value);
+                                }}
+                            />
+                        )}
+                        <Group justify="flex-end">
+                            {profile && ((profile.professor || profile.admin) && !studentMode) ? (
+                                <Button onClick={handleAddClass} loading={loading}>Add</Button>
+                            ) : (
+                                <Button onClick={handleJoinClass} loading={loading}>Join</Button>
+                            )}
+                        </Group>
+                    </Stack>
                 </Modal>
             </Group>
         )
@@ -321,9 +367,25 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                         </Menu.Dropdown>
                     </Menu>
                 )}
-                
+
+                {/* Student Mode Badge */}
+                {profile && ((profile.professor || profile.admin) && studentMode) &&
+                    <Tooltip label="To disable, click 'Exit Student Mode' under the profile menu">
+                        <Badge style={{ pointerEvents: 'auto', marginLeft: '10px', marginTop: '2px' }}>Student Mode</Badge>
+                    </Tooltip>
+                }
+
                 {/* Class Selector - Moved here to left side */}
-                {renderClassSelector()}
+                <Tooltip label="New chat">
+                    <ActionIcon
+                        variant="subtle"
+                        aria-label="Start a new chat"
+                        onClick={() => router.push(`/class/${classId}/chat/new`)}
+                    >
+                        <IconEdit size={24} />
+                    </ActionIcon>
+                </Tooltip>
+
             </Group>
 
             {/* Center: Logo only */}
@@ -333,13 +395,13 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                 right: 0,
                 margin: 'auto',
                 zIndex: 1,
-                pointerEvents: 'none',
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
             }}>
                 {/* Logo - Centered */}
-                <Link href="/" style={{ pointerEvents: 'auto', display: 'inline-block' }}>
+                {renderClassSelector()}
+                {/* <Link href="/" style={{ pointerEvents: 'auto', display: 'inline-block' }}>
                     <Image
                         src={"/images/logo-light.png"}
                         priority
@@ -358,14 +420,7 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                         style={{ marginTop: '4px' }}
                         className={classes['logo-dark']}
                     />
-                </Link>
-                
-                {/* Student Mode Badge */}
-                {profile && ((profile.professor || profile.admin) && studentMode) &&
-                    <Tooltip label="To disable, click 'Exit Student Mode' under the profile menu">
-                        <Badge style={{ pointerEvents: 'auto', marginLeft: '10px', marginTop: '2px' }}>Student Mode</Badge>
-                    </Tooltip>
-                }
+                </Link> */}
             </Center>
 
             {/* Right Group: Feedback, Account Menu */}

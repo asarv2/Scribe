@@ -23,21 +23,21 @@
 }
 
 .classSelector {
-    border: none;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-white)); /* Changed to black in light mode, white in dark mode */
-    padding: 8px;
-    border-radius: 4px;
-    transition: color 0.2s;
-    font-size: var(--mantine-font-size-sm);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--mantine-color-text);
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-size: var(--mantine-font-size-sm);
 }
 
 .classSelector:hover {
-    background-color: transparent;
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
 }
 
 .profileButton, .feedbackButton {

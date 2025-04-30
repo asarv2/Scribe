@@ -6,13 +6,11 @@
 
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
-import { ChatType } from "@/types";
 
 export const createChat = async (
     classId: string, 
     chatTitle: string, 
     userId: string | null = null, 
-    chatType: ChatType,
     teacher: boolean = false,
 ) => {
     const supabase = await useSupabaseServer(cookies());
@@ -22,7 +20,6 @@ export const createChat = async (
     const updates = {
         class: classId,
         name: name,
-        chat_type: chatType,
         teacher: teacher,
     } as any;
     

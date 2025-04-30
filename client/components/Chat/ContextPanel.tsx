@@ -7,7 +7,7 @@
  */
 
 import { TextInput, Group, Stack, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Flex, Loader, RingProgress, Menu, useMantineColorScheme } from "@mantine/core"; // Added useMantineColorScheme
-import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX, IconFileCheck } from "@tabler/icons-react"; // Removed Chevrons
+import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX, IconFileCheck, IconCloudUpload } from "@tabler/icons-react"; // Removed Chevrons
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -700,7 +700,7 @@ export function ContextPanel({
         <Card
             bg="transparent"
             style={{
-                height: "100%", 
+                height: 'calc(100vh - 75px)', // Explicit height for the column
                 display: "flex",
                 flexDirection: "column",
                 overflow: 'hidden',
@@ -751,7 +751,7 @@ export function ContextPanel({
                                                     variant="transparent"
                                                     style={{ marginRight: 13 }} // Increased margin to move it more to the left
                                                 >
-                                                    <IconUpload size={18} />
+                                                    <IconCloudUpload size={18} />
                                                 </ActionIcon>
                                             </Menu.Target>
                                             <Menu.Dropdown>
@@ -872,7 +872,15 @@ export function ContextPanel({
                                 display: 'flex',
                                 flexDirection: 'column',
                                 flex: 1,
-                                overflow: 'hidden'
+                                overflow: 'hidden',
+                                // Use the data attribute selector for the active drop state
+                                '&[data-accept]': {
+                                    position: 'relative',
+                                    backgroundColor: 'transparent', // Keep transparent
+                                    borderRadius: '8px',
+                                    border: `4px dashed ${colorScheme === 'dark' ? '#228be6' : '#1864ab'}`,
+                                    zIndex: 1000
+                                }
                             },
                             inner: {
                                 pointerEvents: 'auto',
@@ -883,22 +891,10 @@ export function ContextPanel({
                                 overflow: 'hidden',
                                 paddingRight: 0,
                                 marginRight: 0
-                            },
-                            // Clean active state - just a dashed border
-                            active: {
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                backgroundColor: 'transparent', // Keep transparent
-                                borderRadius: '8px',
-                                border: `4px dashed ${colorScheme === 'dark' ? '#228be6' : '#1864ab'}`,
-                                zIndex: 1000
                             }
                         }}
                         activateOnDrag={true}
-                        activateOnClick={false}
+                        activateOnClick={true}
                         // Remove dragOverlayText to eliminate text overlay
                     >
                         {isLoading || isInitializing ? (
@@ -940,7 +936,7 @@ export function ContextPanel({
                                     <>
                                         <div
                                             style={{
-                                                height: `${rowVirtualizer.getTotalSize()}px`,
+                                                height: `${rowVirtualizer.getTotalSize() - 12}px`,
                                                 width: '100%',
                                                 position: 'relative'
                                             }}
@@ -962,14 +958,14 @@ export function ContextPanel({
                                                         key={itemId}
                                                         data-id={itemId}
                                                         id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
+                                                        ref={rowVirtualizer.measureElement} // <- ADD THIS!
                                                         style={{
                                                             position: 'absolute',
                                                             top: 0,
                                                             left: 0,
                                                             width: '100%',
-                                                            height: `${virtualRow.size}px`,
                                                             transform: `translateY(${virtualRow.start}px)`,
-                                                            padding: '0 0 2px 0', // No right padding
+                                                            padding: '0 0 0 0', // No right padding
                                                             boxSizing: 'border-box',
                                                             paddingRight: 0, // Explicitly remove right padding
                                                             marginRight: 0, // Explicitly remove right margin
@@ -992,8 +988,6 @@ export function ContextPanel({
                                                 );
                                             })}
                                         </div>
-                                        {/* Add a bottom spacer */}
-                                        <div style={{ height: '16px' }} />
                                     </>
                                 ) : (
                                     <Text
@@ -1058,14 +1052,14 @@ export function ContextPanel({
                                             key={itemId}
                                             data-id={itemId}
                                             id={isFirstOfType ? `${item.type}-section-first-item` : undefined}
+                                            ref={rowVirtualizer.measureElement} // <- ADD THIS!
                                             style={{
                                                 position: 'absolute',
                                                 top: 0,
                                                 left: 0,
                                                 width: '100%',
-                                                height: `${virtualRow.size}px`,
                                                 transform: `translateY(${virtualRow.start}px)`,
-                                                padding: '0 0 2px 0',
+                                                padding: '0 0 0 0',
                                                 boxSizing: 'border-box',
                                             }}
                                         >

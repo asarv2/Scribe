@@ -4,7 +4,7 @@ import { getUser } from "@/utils/queries/get-user";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { Menu, ActionIcon, ScrollArea, Group, Text, Avatar, Stack, Tooltip } from "@mantine/core";
 // Import IconChevronUp
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconHistory } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { getMessages } from "@/utils/queries/get-messages";
@@ -116,6 +116,7 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
             opened={menuOpened}
             // Update state on change
             onChange={setMenuOpened}
+            trigger="click-hover"
         >
             <Menu.Target>
                 {/* Disable tooltip when menu is open */}
@@ -123,9 +124,9 @@ function ChatHistoryDropdown({ currentChatId, onChatSelect, classId }: ChatHisto
                     <ActionIcon variant="transparent" size="lg" aria-label="View chat history">
                         {/* Conditionally render chevron based on menuOpened state */}
                         {menuOpened ? (
-                            <IconChevronUp size={22} style={{ marginTop: '2px' }} />
+                            <IconChevronUp size={18} style={{ marginTop: '2px' }} />
                         ) : (
-                            <IconChevronDown size={22} style={{ marginTop: '2px' }} />
+                            <IconChevronDown size={18} style={{ marginTop: '2px' }} />
                         )}
                     </ActionIcon>
                 </Tooltip>

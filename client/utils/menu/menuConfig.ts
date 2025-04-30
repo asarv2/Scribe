@@ -18,11 +18,11 @@ export const menuConfig = {
   //   icon: IconBook,
   //   link: '/content',
   // },
-  chat: {
-    label: 'Chat',
-    icon: IconMessage,
-    link: '/chat/new',
-  },
+  // chat: {
+  //   label: 'Chat',
+  //   icon: IconMessage,
+  //   link: '/chat/new',
+  // },
   // learning: {
   //   label: 'Learning',
   //   icon: IconBinaryTree,

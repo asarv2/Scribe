@@ -78,7 +78,6 @@ export default function ItemCard({
                 boxSizing: 'border-box',
                 width: "100%", // Keep full width of parent container
                 maxWidth: "100%", // Prevent overflow
-                padding: "8px", // Slightly reduce padding
             }}
             onClick={(e) => { // Changed onClick handler
                 e.stopPropagation();
@@ -136,21 +135,23 @@ export default function ItemCard({
                             {/* Status indicators based on parse_status */}
                             {onFileDelete ? (
                                 // Render red "X" for context in the chat area
-                                <div
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onFileDelete();
-                                    }}
-                                    style={{
-                                        color: "red", // Red color for the "X"
-                                        cursor: "pointer", // Pointer cursor
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <IconX size={16} /> {/* Use IconX for a plain red "X" */}
-                                </div>
+                                <Tooltip label="Remove from Chat" openDelay={500}>
+                                    <div
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onFileDelete();
+                                        }}
+                                        style={{
+                                            color: "red", // Red color for the "X"
+                                            cursor: "pointer", // Pointer cursor
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <IconX size={16} /> {/* Use IconX for a plain red "X" */}
+                                    </div>
+                                </Tooltip>
                             ) : (
                                 // Render plus icon for context in the panel
                                 <Tooltip label="Add to Chat">

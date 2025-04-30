@@ -4,11 +4,11 @@
  */
 
 // Ensure necessary Mantine components are imported, remove Paper if not used elsewhere
-import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip, Box, useMantineTheme } from "@mantine/core"; // Added useMantineTheme if not already there
+import { Text, Card, Stack, Group, Grid, Badge, Modal, ActionIcon, Avatar, useMantineColorScheme, Skeleton, Rating, Menu, Button, Tooltip, Box, useMantineTheme, ScrollArea } from "@mantine/core"; // Added useMantineTheme if not already there
 import { useRouter } from "next/navigation";
 import { Container, Flex } from "@mantine/core";
 // Updated icon imports
-import { IconPlus, IconArrowBarLeft, IconArrowBarToRight } from "@tabler/icons-react";
+import { IconPlus, IconArrowBarLeft, IconArrowBarToRight, IconEdit, IconChevronDown, IconArrowBarRight } from "@tabler/icons-react";
 import { useEffect, useState, useCallback } from "react"; // Added back useState, useEffect, useCallback
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFavicon, useHotkeys, useMediaQuery } from "@mantine/hooks"; // Removed useHotkeys if only used for toggle
@@ -24,7 +24,7 @@ import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 import { TypeAnimation } from 'react-type-animation';
 
-import { ChatMessage, ChatType, ViewerMode } from "@/types";
+import { AgentType, ChatMessage, ViewerMode } from "@/types";
 import { getUser } from "@/utils/queries/get-user";
 import { notifications } from "@mantine/notifications";
 import { createMessages } from "@/utils/services/messages";
@@ -37,13 +37,8 @@ import { useOs } from '@mantine/hooks';
 import PageDetailsModal from "../PageDetailsModal";
 import { useStudentMode } from "@/components/StudentModeContext";
 import { getFileDocuments } from "@/utils/queries/get-file-docs";
-// Removed animation-related imports if no longer needed elsewhere
-// import { CONTENT_COLORS, File as SupabaseFile, Document as SupabaseDocument } from "@/types";
-// import ItemCard from "../ItemCard"; // Re-import ItemCard
-// import classes from './ChatCanvas.module.css'; // Import the CSS module
-// Remove imports only needed for placeholder if they aren't used elsewhere
-// import { Paper } from "@mantine/core";
-
+import { getChats } from "@/utils/queries/get-chats";
+import { format } from "date-fns";
 
 export interface RecordedVideo {
     id: string;
@@ -106,6 +101,46 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         enabled: !!files && files.length > 0 // Ensure files are loaded
     });
 
+    // Get other chats for the dropdown
+    const { data: userChats } = useQuery({
+        queryKey: ["userChats", classId, profile?.id],
+        queryFn: () => getChats(supabase, classId, [profile!.id]),
+        enabled: !!profile
+    });
+
+    // Format date helper function
+    const formatDate = (dateString: string): string => {
+        try {
+            return format(new Date(dateString), 'MMM d, yyyy');
+        } catch (error) {
+            return dateString;
+        }
+    };
+
+    // Get chat image URL helper function
+    const getChatImageUrl = (chatId: string): string => {
+        if (!messages || !files || !fileDocuments) return '/placeholder_image.svg';
+
+        // Get all messages for this chat
+        const chatMessages = messages.filter(m => m.chat === chatId);
+        if (chatMessages.length === 0) return '/placeholder_image.svg';
+
+        const references = Array.from(new Set(chatMessages.flatMap(m => m.references || [])));
+
+        for (const reference of references) {
+            const document = fileDocuments?.find(d => d.id === reference);
+            if (document) {
+                return `${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${document.file}/${document.id}.png`;
+            }
+        }
+        // Default placeholder
+        return '/placeholder_image.svg';
+    };
+
+    // Filter and sort chats
+    const otherChats = userChats
+        ?.filter(chat => chat.id !== chatId && chat.id !== "new")
+        ?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     const [activeChat, setActiveChat] = useState<ChatMessage>({
         id: 1,
@@ -113,7 +148,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         prompt: "",
         files: [],
         documents: [],
-        chatType: 'student',
+        agentType: 'general',
         teacher: false,
         rating: null
     });
@@ -186,15 +221,10 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                     classId,
                     activeChat.title,
                     profileId,
-                    activeChat.chatType,
                     activeChat.teacher,
                 );
                 newChatId = chat.id;
             }
-
-            // find the last message of the chat
-            const lastMessage = messages?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
-            const startAgent = lastMessage?.end_agent ?? "general";
 
             // Create the message
             const newMessage = {
@@ -205,7 +235,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 question: activeChat.prompt,
                 files: getContextFiles(),
                 documents: getContextDocuments(),
-                start_agent: startAgent
+                start_agent: activeChat.agentType
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);
@@ -278,10 +308,10 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         removeFileFromChat(viewerMode.fileId ?? "");
     };
 
-    const handleOptionClick = useCallback((type: ChatType) => {
+    const handleOptionClick = useCallback((type: AgentType) => {
         setActiveChat(prev => ({
             ...prev,
-            chatType: type,
+            agentType: type,
         }));
     }, []);
 
@@ -292,7 +322,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 ...prev,
                 // Only reset title/type if it's a new chat or if the mode fundamentally changes the default
                 title: chatId === "new" ? (isTeacherView ? "Chat" : "Office Hours") : prev.title,
-                chatType: chatId === "new" ? (isTeacherView ? 'professor' : 'student') : prev.chatType, // Keep existing type for existing chats unless logic dictates otherwise
                 teacher: isTeacherView,
             }));
         }
@@ -312,23 +341,42 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         }
     };
 
-    const theme = useMantineTheme(); // Ensure theme is available
-    const { colorScheme } = useMantineColorScheme(); // Get color scheme
-    const [isContextPanelOpen, setIsContextPanelOpen] = useState(true); // State for context panel
+    const [menuOpened, setMenuOpened] = useState(false);
+
+    // Initialize agent type from the latest message's end_agent if available
+    useEffect(() => {
+        if (messages && messages.length > 0 && existingChat) {
+            // Sort messages by created_at in descending order to get the latest one
+            const sortedMessages = [...messages].sort((a, b) => 
+                new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            );
+            
+            // Get the latest message
+            const latestMessage = sortedMessages[0];
+            
+            // If the latest message has an end_agent, use it to set the agent type
+            if (latestMessage.end_agent) {
+                setActiveChat(prev => ({
+                    ...prev,
+                    agentType: latestMessage.end_agent
+                }));
+            }
+        }
+    }, [messages, existingChat]);
 
     return (
-        <Container fluid p={0}> {/* Ensure no padding on the main container */}
+        <Container fluid pb={0} pt={0} pl={"xs"} pr={"xs"}> {/* Ensure no padding on the main container */}
             <Grid p={0}
             >
                 <Grid.Col
                     // Adjust span: use 'auto' when context is closed on desktop
-                    span={isMobile ? 12 : isContextPanelOpen ? 9 : 'auto'} 
+                    span={isMobile ? 12 : viewerMode.open ? 9 : 'auto'} 
                     style={{
                         transition: 'all 300ms ease-in-out',
                         position: 'relative',
                         height: 'calc(100vh - 75px)',
                         flex: '1 1 auto', // Allow this column to grow and fill available space
-                        width: isMobile ? undefined : isContextPanelOpen ? undefined : 'calc(100% - 60px)',
+                        width: isMobile ? undefined : viewerMode.open ? undefined : 'calc(100% - 60px)',
                     }}
                     p={0}
                 >
@@ -363,65 +411,112 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                 <>
                                     {/* Reduce gap further */}
                                     <Group gap={0} align="center">
-                                        <Text size="xl" fw={700} mb={0}> {/* Title Style */}
-                                            {existingChat ? (
-                                                shouldAnimateTitle ? (
-                                                    <TypeAnimation
-                                                        key={`${existingChat.id}-${existingChat.name}-animate`}
-                                                        sequence={[
-                                                            existingChat.name || '',
-                                                        ]}
-                                                        wrapper="span"
-                                                        cursor={false}
-                                                        repeat={0}
-                                                        speed={50}
-                                                        preRenderFirstString={false}
-                                                        style={{
-                                                            fontSize: '1.25rem',
-                                                            fontWeight: 700,
-                                                            display: 'inline-block',
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <span style={{
-                                                        fontSize: '1.25rem',
-                                                        fontWeight: 700,
-                                                        display: 'inline-block',
-                                                    }}>
-                                                        {existingChat.name}
-                                                    </span>
-                                                )
-                                            ) : (
-                                                activeChat.title
-                                            )}
-                                        </Text>
-                                        {/* Moved ChatHistoryDropdown here */}
-                                        <ChatHistoryDropdown
-                                            currentChatId={chatId}
-                                            onChatSelect={handleChatSelect}
-                                            classId={classId}
-                                        />
-                                        {existingChat?.chat_type === "grade" && <Badge color="orange" variant="light">Grade</Badge>}
-                                        {existingChat?.chat_type === "test" && <Badge color="cyan" variant="light">Test-Prep</Badge>}
-                                        {existingChat?.chat_type === "homework" && <Badge color="indigo" variant="light">Homework</Badge>}
-                                        {existingChat?.chat_type === "learn" && <Badge color="green" variant="light">Learn</Badge>}
-                                        {existingChat?.chat_type === "figure" && <Badge color="grape" variant="light">Figure</Badge>}
-                                        {existingChat?.chat_type === "summary" && <Badge color="yellow" variant="light">Summary</Badge>}
-                                        {existingChat?.chat_type === "question" && <Badge color="blue" variant="light">Question</Badge>}
+                                        <Menu
+                                            position="bottom-start"
+                                            shadow="md"
+                                            opened={menuOpened}
+                                            onChange={setMenuOpened}
+                                            trigger="click-hover"
+                                        >
+                                            <Menu.Target>
+                                                <Box 
+                                                    style={{ 
+                                                        cursor: 'pointer',
+                                                        opacity: menuOpened ? 0.8 : 1,
+                                                        transition: 'opacity 150ms ease',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px',
+                                                        '&:hover': { opacity: 0.8 }
+                                                    }}
+                                                >
+                                                    <Text size="xl" fw={700} mb={0} component="span"> {/* Title Style */}
+                                                        {existingChat ? (
+                                                            shouldAnimateTitle ? (
+                                                                <TypeAnimation
+                                                                    key={`${existingChat.id}-${existingChat.name}-animate`}
+                                                                    sequence={[
+                                                                        existingChat.name || '',
+                                                                    ]}
+                                                                    wrapper="span"
+                                                                    cursor={false}
+                                                                    repeat={0}
+                                                                    speed={50}
+                                                                    preRenderFirstString={false}
+                                                                    style={{
+                                                                        fontSize: '1.25rem',
+                                                                        fontWeight: 700,
+                                                                        display: 'inline-block',
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <span style={{
+                                                                    fontSize: '1.25rem',
+                                                                    fontWeight: 700,
+                                                                    display: 'inline-block',
+                                                                }}>
+                                                                    {existingChat.name}
+                                                                </span>
+                                                            )
+                                                        ) : (
+                                                            activeChat.title
+                                                        )}
+                                                    </Text>
+                                                    <IconChevronDown size={18} style={{ marginTop: '2px'}} />
+                                                </Box>
+                                            </Menu.Target>
+
+                                            <Menu.Dropdown>
+                                                <Menu.Label>Previous Chats</Menu.Label>
+                                                <ScrollArea h={otherChats && otherChats.length > 5 ? 300 : undefined} scrollbarSize={8}>
+                                                    {otherChats?.slice(0, 10).map(chat => (
+                                                        <Menu.Item
+                                                            key={chat.id}
+                                                            onClick={() => handleChatSelect(chat.id)}
+                                                        >
+                                                            <Group>
+                                                                <Avatar
+                                                                    src={getChatImageUrl(chat.id)}
+                                                                    size="sm"
+                                                                    radius="sm"
+                                                                />
+                                                                <Stack gap={0} w={250}>
+                                                                    <Text size="sm" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                                        {chat.name || `Chat ${chat.id.substring(0, 6)}`}
+                                                                    </Text>
+                                                                    <Text size="xs" c="dimmed">
+                                                                        {formatDate(chat.created_at)}
+                                                                    </Text>
+                                                                </Stack>
+                                                            </Group>
+                                                        </Menu.Item>
+                                                    ))}
+                                                </ScrollArea>
+                                            </Menu.Dropdown>
+                                        </Menu>
                                     </Group>
                                     <Group gap="xs" ml="auto">
-                                        {chatId !== "new" && <Tooltip label="New chat">
+                                        {viewerMode.open ? <Tooltip label="Close Context">
                                             <ActionIcon
                                                 variant="subtle"
                                                 size="lg"
-                                                aria-label="Start a new chat"
-                                                onClick={() => router.push(`/class/${classId}/chat/new`)}
+                                                aria-label="Close Context"
+                                                onClick={() => setViewerMode(prev => ({ ...prev, open: false }))}
                                                 mb={3}
                                             >
-                                                <IconPlus size={20} />
+                                                <IconArrowBarRight size={20} />
+                                            </ActionIcon>
+                                        </Tooltip> : <Tooltip label="Open Context">
+                                            <ActionIcon
+                                                variant="subtle"
+                                                size="lg"
+                                                aria-label="Open Context"
+                                                onClick={() => setViewerMode(prev => ({ ...prev, open: true }))}
+                                                mb={3}
+                                            >
+                                                <IconArrowBarLeft size={20} />
                                             </ActionIcon>
                                         </Tooltip>}
-                                        {/* Removed ChatHistoryDropdown from here */}
                                     </Group>
                                 </>
                             )}
@@ -468,21 +563,17 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 </Grid.Col>
                 <Grid.Col
                     // Fixed width column with right alignment
-                    span={isMobile ? 12 : 'content'} 
+                    span={isMobile ? 12 : viewerMode.open ? 3 : 0} 
                     style={{
                         transition: 'width 300ms ease-in-out',
                         padding: 0,
                         display: 'flex', // Use flexbox for column layout
                         flexDirection: 'column', // Stack header and content vertically
                         height: 'calc(100vh - 75px)', // Explicit height for the column
-                        width: isMobile ? undefined : isContextPanelOpen ? '25%' : '60px',
-                        minWidth: isMobile ? undefined : isContextPanelOpen ? '250px' : '60px',
-                        maxWidth: isMobile ? undefined : isContextPanelOpen ? '400px' : '60px',
                         position: 'relative',
                     }}
                 >
-                    {/* Context Header Box */}
-                    <Box
+                    {/* <Box
                         style={{
                             height: 46,
                             width: '100%', // Full width of the parent column
@@ -497,7 +588,6 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                             position: 'relative', // Allow absolute positioning within
                         }}
                     >
-                        {/* Fixed position toggle button */}
                         <ActionIcon
                             variant="transparent"
                             onClick={() => setIsContextPanelOpen((o) => !o)}
@@ -519,18 +609,19 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                         >
                             {isContextPanelOpen ? <IconArrowBarToRight size={25} /> : <IconArrowBarLeft size={25} />}
                         </ActionIcon>
-                    </Box>
+                    </Box> */}
 
                     {/* Content Area Box */}
                     <Box style={{ 
                         flex: 1, 
                         overflow: 'hidden',
                         width: '100%',
-                        visibility: isContextPanelOpen ? 'visible' : 'hidden', // Hide content when closed
-                        opacity: isContextPanelOpen ? 1 : 0,
+                        visibility: viewerMode.open ? 'visible' : 'hidden', // Hide content when closed
+                        opacity: viewerMode.open ? 1 : 0,
                         transition: 'opacity 200ms ease-in-out',
+                        paddingTop: 2
                     }}>
-                        {isContextPanelOpen && (
+                        {viewerMode.open && (
                             viewerMode.active ? (
                                 <ViewerPanel
                                     viewerMode={viewerMode}

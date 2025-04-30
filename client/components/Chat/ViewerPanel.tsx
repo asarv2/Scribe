@@ -4,7 +4,7 @@
  */
 
 import { Group, Stack, Text, ActionIcon, Box, Tooltip } from "@mantine/core"; // Removed Collapse
-import { IconPlus, IconSettings, IconTrash, IconX } from "@tabler/icons-react"; // Removed Chevrons, Added IconX
+import { IconMinus, IconPlus, IconSettings, IconTrash, IconX } from "@tabler/icons-react"; // Removed Chevrons, Added IconX
 import { memo } from "react";
 import { ChatMessage, ContentType, ViewerMode, File as ScribeFile } from "@/types"; // Added ScribeFile import
 import { useQuery } from "@tanstack/react-query";
@@ -96,10 +96,18 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                 }}
             >
                 <Group justify="space-between" align="center">
-                    <Text fw={500} size="sm" truncate="end">
-                        {activeFile?.title ?? "File Viewer"}
-                    </Text>
                     <Group gap="xs">
+                        <Text fw={500} size="sm" truncate="end">
+                            {activeFile?.title ?? "File Viewer"}
+                        </Text>
+                        <Group gap="2">
+                            {/* Settings Icon */}
+                            {viewerMode.fileId && <FileSettingsModal fileId={viewerMode.fileId} classId={classId} />}
+                            {/* Delete Icon */}
+                            {viewerMode.fileId && <DeleteFileModal fileId={viewerMode.fileId} classId={classId} />}
+                        </Group>
+                    </Group>
+                    <Group gap="2">
                         {/* Add to Chat Icon */}
                         {viewerMode.fileId && !isFileInChat && (
                             <Tooltip label={`Add ${contentTypeLabel} to Chat`}>
@@ -113,10 +121,6 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                                 </ActionIcon>
                             </Tooltip>
                         )}
-                        {/* Settings Icon */}
-                        {viewerMode.fileId && <FileSettingsModal fileId={viewerMode.fileId} classId={classId} />}
-                        {/* Delete Icon */}
-                        {viewerMode.fileId && <DeleteFileModal fileId={viewerMode.fileId} classId={classId} />}
                         {/* Close Icon */}
                         {viewerMode.fileId && (
                             <Tooltip label="Close Viewer">
@@ -126,7 +130,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                                     onClick={handleCloseViewer} // Uses updated handler
                                     size="lg" // Match other icons
                                 >
-                                    <IconX size={18} />
+                                    <IconMinus size={18} />
                                 </ActionIcon>
                             </Tooltip>
                         )}
@@ -135,8 +139,8 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
             </Stack>
 
             {/* Viewer Content */}
-            <Box style={{ 
-                flex: 1, 
+            <Box style={{
+                flex: 1,
                 overflow: 'hidden'
             }}>
                 {viewerMode.fileId ? (

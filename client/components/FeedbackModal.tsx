@@ -13,6 +13,7 @@ import { submitFeedback } from '@/utils/services/feedback';
 import { Modal, Button, Text, Group, Rating, Tooltip, ActionIcon, Stack, Title, Textarea, Center } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
+import { IconMessageCircle } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export default function FeedbackModal() {
@@ -59,7 +60,7 @@ export default function FeedbackModal() {
                     <Text size="sm" c="dimmed" mb="xs">
                         Your feedback is completely anonymous and helps us improve Scribe.
                     </Text>
-                    
+
                     <Textarea
                         label="What do you like about Scribe?"
                         placeholder="I really enjoy..."
@@ -126,7 +127,7 @@ export default function FeedbackModal() {
                 </Stack>
             </Modal>
 
-            <Button
+            {/* <Button
                 variant="subtle"
                 onClick={open}
                 p={4}
@@ -145,7 +146,17 @@ export default function FeedbackModal() {
                         Feedback
                     </Text>
                 </Center>
-            </Button>
+            </Button> */}
+            <Tooltip label="Feedback">
+                <ActionIcon
+                    variant="subtle"
+                    aria-label="Feedback"
+                    onClick={open}
+                >
+                    <IconMessageCircle size={24} />
+                </ActionIcon>
+            </Tooltip>
+
         </>
     );
 }

@@ -43,7 +43,7 @@ export interface ChatMessage {
     prompt: string;
     files: string[]; // file ids
     documents: string[]; // document ids (that should be shown separately)
-    chatType: ChatType;
+    agentType: AgentType;
     teacher: boolean; // whether the chat is a teacher chat
     rating: number | null;
 }
