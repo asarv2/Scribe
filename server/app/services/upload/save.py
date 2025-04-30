@@ -5,15 +5,15 @@ import json
 import magic
 from typing import Dict, Any, List, Literal
 from datetime import datetime
-import google.generativeai as genai
-
+from app.extensions import get_google
 from app.services.upload.models import FileExtractChunk
-
+from google.genai.types import UploadFileConfig
 logger = logging.getLogger(__name__)
 
 class FileSaver:
     def __init__(self, supabase_client):
         self.supabase = supabase_client
+        self.google = get_google()
         self.mime = magic.Magic(mime=True)
     
     def save_file_metadata(self, file_id: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
@@ -272,17 +272,15 @@ class FileSaver:
             
             # Upload file to Gemini
             with open(file_path, 'rb') as f:
-                media_file = genai.upload_file(f, mime_type=mime_type)
+                media_file = self.google.files.upload(file=f, config=UploadFileConfig(mime_type=mime_type))
             
             # Extract file ID from response
             google_file_id = media_file.name
-            expires_at = media_file.expiration_time
             
             # saving in the google table
             self.supabase.table("google").insert({
                 "file": file_id,
                 "google_id": google_file_id,
-                "expires_at": expires_at.isoformat()
             }).execute()
             
         except Exception as e:

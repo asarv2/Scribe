@@ -14,7 +14,6 @@ import {
   getPageRanges,
   splitTextByDocuments,
   splitTextByGenerationTags,
-  splitTextByTags,
 } from "@/utils/chat/chat-helpers";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -40,6 +39,9 @@ import { submitFeedback } from "@/utils/services/feedback";
 import styles from "../../Viewer/MessageViewer.module.css";
 import { getClass } from "@/utils/queries/get-class";
 import { notifications } from "@mantine/notifications";
+import ReportViewer from "@/components/Viewer/ReportViewer";
+import { getReports } from "@/utils/queries/get-reports";
+import { HandoffViewer } from "@/components/Viewer/HandoffViewer";
 
 interface MessageListProps {
   chatId: string;
@@ -122,6 +124,12 @@ export const MessageList = memo(({
   const { data: questions } = useQuery({
     queryKey: ["questions", classId],
     queryFn: () => getQuestions(supabase, classId!),
+    enabled: !!classId
+  });
+
+  const { data: reports } = useQuery({
+    queryKey: ["reports", classId],
+    queryFn: () => getReports(supabase, classId!),
     enabled: !!classId
   });
 
@@ -602,9 +610,9 @@ export const MessageList = memo(({
                         AI Assistant
                       </Text>
                     </Group>
-                    {!message.correct && message.incorrect_reason && (
-                      <Tooltip label={`This response may be incorrect: ${message.incorrect_reason}`} withArrow multiline w="200px">
-                        <IconAlertCircle size={16} color="#ff6b6b" opacity={0.7} style={{cursor: "pointer"}} />
+                    {!message.correct && message.reason && (
+                      <Tooltip label={`This response may be incorrect: ${message.reason}`} withArrow multiline w="200px">
+                        <IconAlertCircle size={16} color="#ff6b6b" opacity={0.7} style={{ cursor: "pointer" }} />
                       </Tooltip>
                     )}
                   </Flex>
@@ -659,15 +667,26 @@ export const MessageList = memo(({
                             message.response,
                             fileDocuments ?? [],
                           )).map((segment, figIndex) => {
-                            if (segment.text && segment.text.trim() !== '') {
-                              return (
-                                <MessageViewer
-                                  key={figIndex}
-                                  text={segment.text}
-                                  handleEnhancedDocumentClick={handleEnhancedDocumentClick}
-                                  classId={classId}
-                                />
-                              )
+                            if (segment.text) {
+                              if (segment.handoff) {
+                                return (
+                                  <HandoffViewer  
+                                    key={figIndex}
+                                    text={segment.text}
+                                    handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                    classId={classId}
+                                  />
+                                )
+                              } else if (segment.text.trim() !== '') {
+                                return (
+                                  <MessageViewer
+                                    key={figIndex}
+                                    text={segment.text}
+                                    handleEnhancedDocumentClick={handleEnhancedDocumentClick}
+                                    classId={classId}
+                                  />
+                                )
+                              }
                             } else if (segment.figure && figures) {
                               return (
                                 <FigureViewer key={`figures-${message.id}`} classId={classId} chatId={chatId} figures={figures.filter(f => f.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
@@ -679,6 +698,10 @@ export const MessageList = memo(({
                             } else if (segment.question && questions) {
                               return (
                                 <QuestionViewer key={`questions-${message.id}`} classId={classId} chatId={chatId} questions={questions.filter(q => q.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
+                              )
+                            } else if (segment.report && reports) {
+                              return (
+                                <ReportViewer key={`reports-${message.id}`} classId={classId} chatId={chatId} reports={reports.filter(r => r.message === message.id)} viewerMode={viewerMode} handleEnhancedDocumentClick={handleEnhancedDocumentClick} fileDocuments={fileDocuments ?? []} />
                               )
                             }
                           })}

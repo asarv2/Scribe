@@ -1,15 +1,15 @@
 /**
- * SummaryViewer.tsx
- * Used to view summary document
- * 03/20/2025
+ * ReportViewer.tsx
+ * Used to view report document
+ * 04/29/2025
  */
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Document, Summary } from '../../types';
+import { Document, Report, Summary } from '../../types';
 import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Tooltip, SimpleGrid, Modal } from '@mantine/core';
 import { IconDownload, IconFileText, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
 import Latex from '../Latex';
-import { getFigureUrl, getSummaryDownloadUrl } from '../../utils/services/images';
+import { getFigureUrl, getReportDownloadUrl, getSummaryDownloadUrl } from '../../utils/services/images';
 import { notifications } from '@mantine/notifications';
 import { ViewerMode } from '../../types';
 import { splitTextByDocuments } from '@/utils/chat/chat-helpers';
@@ -22,16 +22,16 @@ import { getFigures } from '@/utils/queries/get-figures';
 import PulseText from '../Chat/Canvas/PulseText';
 import { injectFigures } from '@/utils/chat/figure-helpers';
 
-interface SummaryViewerProps {
+interface ReportViewerProps {
     classId: string;
     chatId: string;
-    summaries: Summary[];
+    reports: Report[];
     viewerMode: ViewerMode;
     fileDocuments: Document[],
     handleEnhancedDocumentClick: (fileId: string, documentId?: string) => void;
 }
 
-const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summaries, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
+const ReportViewer: React.FC<ReportViewerProps> = ({ classId, chatId, reports, viewerMode, handleEnhancedDocumentClick, fileDocuments }) => {
     const supabase = useSupabaseBrowser();
     const [downloadLoading, setDownloadLoading] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -39,19 +39,19 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     const cardRef = useRef<HTMLDivElement>(null);
 
     // Filter out summaries with error status
-    const validSummaries = useMemo(() => {
-        return summaries.filter(s => s.generation_status !== 'error');
-    }, [summaries]);
+    const validReports = useMemo(() => {
+        return reports.filter(r => r.generation_status !== 'error');
+    }, [reports]);
 
     // Initialize currentIndex to first valid summary if needed
     useEffect(() => {
-        if (validSummaries.length > 0 && currentIndex >= validSummaries.length) {
+        if (validReports.length > 0 && currentIndex >= validReports.length) {
             setCurrentIndex(0);
         }
-    }, [validSummaries, currentIndex]);
+    }, [validReports, currentIndex]);
 
     // Get current summary
-    const summary = validSummaries[currentIndex] || {};
+    const report = validReports[currentIndex] || {};
 
     const { data: user } = useQuery({
         queryKey: ["user"],
@@ -78,10 +78,10 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     }, [currentIndex]);
 
     const handleNext = useCallback(() => {
-        if (currentIndex < validSummaries.length - 1) {
+        if (currentIndex < validReports.length - 1) {
             setCurrentIndex(prev => prev + 1);
         }
-    }, [currentIndex, validSummaries.length]);
+    }, [currentIndex, validReports.length]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -127,8 +127,8 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     const handleDownload = (format: 'pdf' | 'latex' | 'text', downloadAll: boolean = false) => {
         // If downloadAll is true, we need to modify the API call to get all summaries
         const downloadUrl = downloadAll
-            ? getSummaryDownloadUrl(chatId, validSummaries.map(s => s.id), format)
-            : getSummaryDownloadUrl(chatId, [summary.id], format);
+            ? getReportDownloadUrl(chatId, validReports.map(r => r.id), format)
+            : getReportDownloadUrl(chatId, [report.id], format);
 
         setDownloadLoading(true);
 
@@ -142,8 +142,8 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                 // Get filename from Content-Disposition header if available
                 const contentDisposition = response.headers.get('Content-Disposition');
                 let filename = downloadAll
-                    ? `all-summaries-${chatId}.${format === 'latex' ? 'tex' : format}`
-                    : `${summary.title || `summary-${currentIndex + 1}`}.${format === 'latex' ? 'tex' : format}`;
+                    ? `all-reports-${chatId}.${format === 'latex' ? 'tex' : format}`
+                    : `${report.title || `report-${currentIndex + 1}`}.${format === 'latex' ? 'tex' : format}`;
 
                 if (contentDisposition) {
                     const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
@@ -190,7 +190,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     }
 
     const renderContent = () => {
-        switch (summary.generation_status) {
+        switch (report.generation_status) {
             case 'idle':
             case 'generating':
                 return null; // We'll handle loading states outside the card content
@@ -198,9 +198,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                 return (
                     <>
                         <Box style={{ display: 'flex', flexDirection: 'column', gap: '10px', position: 'relative', zIndex: 10 }}>
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(injectFigures(summary.preamble, (id) => getFigureUrl(classId, id)), fileDocuments ?? [])}</Latex>
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(injectFigures(summary.body, (id) => getFigureUrl(classId, id)), fileDocuments ?? [])}</Latex>
-                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(injectFigures(summary.conclusion, (id) => getFigureUrl(classId, id)), fileDocuments ?? [])}</Latex>
+                            <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(injectFigures(report.content, (id) => getFigureUrl(classId, id)), fileDocuments ?? [])}</Latex>
                         </Box>
                     </>
                 );
@@ -210,26 +208,26 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     };
 
     // Check if we have any summaries with error status
-    const hasErrorSummaries = useMemo(() => {
-        return summaries.some(s => s.generation_status === 'error');
-    }, [summaries]);
+    const hasErrorReports = useMemo(() => {
+        return reports.some(r => r.generation_status === 'error');
+    }, [reports]);
 
     // Render loading state or content based on generation status
-    const renderSummaryContent = () => {
-        if (validSummaries.length === 0) {
+    const renderReportContent = () => {
+        if (validReports.length === 0) {
             return null; // We'll handle this case outside the card
         }
         
-        if (summary.generation_status === 'idle') {
+        if (report.generation_status === 'idle') {
             return (
                 <Center style={{ height: '200px' }}>
-                    <PulseText text={`Waiting to generate summary ${currentIndex + 1} of ${validSummaries.length}...`} />
+                    <PulseText text={`Waiting to generate report ${currentIndex + 1} of ${validReports.length}...`} />
                 </Center>
             );
-        } else if (summary.generation_status === 'generating') {
+        } else if (report.generation_status === 'generating') {
             return (
                 <Center style={{ height: '200px' }}>
-                    <PulseText text={`Generating summary ${currentIndex + 1} of ${validSummaries.length}...`} />
+                    <PulseText text={`Generating report ${currentIndex + 1} of ${validReports.length}...`} />
                 </Center>
             );
         } else {
@@ -238,14 +236,14 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
     };
 
     // If no valid summaries, show appropriate message
-    if (validSummaries.length === 0) {
+    if (validReports.length === 0) {
         return (
             <Card withBorder p="md" w={"100%"}>
                 <Center style={{ height: '200px' }}>
-                    {hasErrorSummaries ? (
-                        <PulseText text="Retrying summary generation..." />
+                    {hasErrorReports ? (
+                        <PulseText text="Retrying report generation..." />
                     ) : (
-                        <PulseText text="Generating summary(ies)..." />
+                        <PulseText text="Generating report(s)..." />
                     )}
                 </Center>
             </Card>
@@ -264,7 +262,7 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
             {/* Always show header with title and download button */}
             <Group justify="space-between" mb="md">
                 <Group>
-                    {validSummaries.length > 1 ? (
+                    {validReports.length > 1 ? (
                         <Group>
                             <ActionIcon
                                 disabled={currentIndex === 0}
@@ -274,10 +272,10 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                                 <IconChevronLeft size={20} />
                             </ActionIcon>
 
-                            <Text size="sm">Summary {currentIndex + 1} of {validSummaries.length}</Text>
+                            <Text size="sm">Report {currentIndex + 1} of {validReports.length}</Text>
 
                             <ActionIcon
-                                disabled={currentIndex === validSummaries.length - 1}
+                                disabled={currentIndex === validReports.length - 1}
                                 onClick={handleNext}
                                 variant="subtle"
                             >
@@ -285,17 +283,17 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                             </ActionIcon>
                         </Group>
                     ) : null}
-                    <Text size="sm" c="dimmed">{summary.title}</Text>
-                    {summary.generation_status === 'generating' && (
+                    <Text size="sm" c="dimmed">{report.title}</Text>
+                    {report.generation_status === 'generating' && (
                         <Text size="sm" c="blue" fw={500}>Generating...</Text>
                     )}
-                    {summary.generation_status === 'idle' && (
+                    {report.generation_status === 'idle' && (
                         <Text size="sm" c="dimmed" fw={500}>Waiting...</Text>
                     )}
                 </Group>
                 
                 {/* Only show download options for completed summaries */}
-                {summary.generation_status === 'complete' && (
+                {report.generation_status === 'complete' && (
                     (profile?.admin || profile?.professor) ? (
                         <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
@@ -311,21 +309,21 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Label>Download as</Menu.Label>
-                                {validSummaries.length > 1 ? (
+                                {validReports.length > 1 ? (
                                     <>
                                         <Menu.Item
                                             leftSection={<IconFile size={14} />}
                                             onClick={() => handleDownload('pdf', false)}
                                             disabled={downloadLoading}
                                         >
-                                            {downloadLoading ? 'Downloading...' : 'Current Summary (PDF)'}
+                                            {downloadLoading ? 'Downloading...' : 'Current Report (PDF)'}
                                         </Menu.Item>
                                         <Menu.Item
                                             leftSection={<IconFileTypography size={14} />}
                                             onClick={() => handleDownload('latex', false)}
                                             disabled={downloadLoading}
                                         >
-                                            {downloadLoading ? 'Downloading...' : 'Current Summary (LaTeX)'}
+                                            {downloadLoading ? 'Downloading...' : 'Current Report (LaTeX)'}
                                         </Menu.Item>
                                         <Menu.Divider />
                                         <Menu.Item
@@ -333,14 +331,14 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                                             onClick={() => handleDownload('pdf', true)}
                                             disabled={downloadLoading}
                                         >
-                                            {downloadLoading ? 'Downloading...' : 'All Summaries (PDF)'}
+                                            {downloadLoading ? 'Downloading...' : 'All Reports (PDF)'}
                                         </Menu.Item>
                                         <Menu.Item
                                             leftSection={<IconFileTypography size={14} />}
                                             onClick={() => handleDownload('latex', true)}
                                             disabled={downloadLoading}
                                         >
-                                            {downloadLoading ? 'Downloading...' : 'All Summaries (LaTeX)'}
+                                            {downloadLoading ? 'Downloading...' : 'All Reports (LaTeX)'}
                                         </Menu.Item>
                                     </>
                                 ) : (
@@ -379,9 +377,9 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
                 )}
             </Group>
 
-            {renderSummaryContent()}
+            {renderReportContent()}
         </Card>
     );
 };
 
-export default SummaryViewer;
+export default ReportViewer;

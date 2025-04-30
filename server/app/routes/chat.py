@@ -4,11 +4,10 @@ import logging
 import traceback
 from app.extensions import get_supabase
 from app.services.chat.main import ChatProcessor
-from app.services.chat.models.main import Documents
-from app.services.chat.utils.google import GoogleFiles
+from app.services.chat.models.main import Documents, ChatAgents, Reference
 from app.services.chat.utils.references import fetch_chat_context, get_mapped_references
 from app.services.chat.utils.outcomes import get_mapped_outcomes
-
+from typing import List
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
@@ -36,6 +35,9 @@ async def handle_chat(
         trace_id = chat.get('trace')
         class_id = chat.get('class')
         profile_id = chat.get('profile')
+        teacher = chat.get('teacher') # boolean
+        used_files = chat.get('used_files', [])
+        used_documents = chat.get('used_documents', [])
 
         class_response = supabase_client.table("classes").select(
             "title, course_description"
@@ -50,6 +52,21 @@ async def handle_chat(
         current_message = next((msg for msg in messages if msg['id'] == message_id), None)
         past_messages = [(msg['id'], msg['bare_question'], msg.get('bare_response', '')) for msg in messages if msg['id'] != message_id]
 
+        # ——— NEW: build a 2D list of mapped references for each past message ———
+        past_references: List[List[Reference]] = []
+        for msg in messages:
+            if msg['id'] != message_id:
+                f_ids = msg.get('files') or []
+                d_ids = msg.get('documents') or []
+                
+                # reuse your mapping helper
+                past_references_for_msg, _ = await get_mapped_references(
+                    supabase_client,
+                    f_ids,
+                    d_ids
+                )
+                past_references.append(past_references_for_msg)
+
         # Get resource IDs from the message
         file_ids = current_message.get('files', []) or []
         document_ids = current_message.get('documents', []) or []
@@ -59,24 +76,17 @@ async def handle_chat(
         figures = chat_context.get('figures', [])
         summaries = chat_context.get('summaries', [])
         questions = chat_context.get('questions', [])
-        references = chat_context.get('references', [])
         outcomes = chat_context.get('outcomes', [])
 
         # get the mapped references
-        mapped_references, reference_description, ordered_file_ids, ordered_document_ids = await get_mapped_references(supabase_client, file_ids, document_ids, references)
-        logger.info(f"Text description: {reference_description}")
+        references_list, mapped_references = await get_mapped_references(supabase_client, file_ids, document_ids)
 
         # get the mapped outcomes   
-        mapped_outcomes, outcomes_description = await get_mapped_outcomes(supabase_client, class_id, outcomes)
+        mapped_outcomes, full_outcome_description, outcomes_description = await get_mapped_outcomes(supabase_client, class_id, outcomes)
 
         # to call the agents
-        documents = Documents(references=mapped_references, outcomes=mapped_outcomes, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions)
+        documents = Documents(references=mapped_references, outcomes=mapped_outcomes, class_id=class_id, profile_id=profile_id, message_id=message_id, chat_id=chat_id, figures=figures, summaries=summaries, questions=questions, used_files=used_files, used_documents=used_documents)
 
-        # Fetch google file ids
-        google_files = GoogleFiles(ordered_file_ids, ordered_document_ids, supabase_client)
-        google_file_ids = google_files.get_files()
-        google_document_ids = google_files.get_documents()
-        google_ids = google_file_ids + google_document_ids
         total_response = ""
         async def update_callback(chunk: str):
             nonlocal total_response
@@ -109,26 +119,43 @@ async def handle_chat(
                 "name": title
             }).eq("id", chat_id).execute()
             return response.data[0]['trace']
+        
+
+        async def update_end_agent(message_id: str, end_agent: ChatAgents):
+            supabase_client.table("messages").update({
+                "end_agent": end_agent
+            }).eq("id", message_id).execute()
+
+        async def update_chat_files(chat_id: str, used_files: List[str], used_documents: List[str]):
+            supabase_client.table("chats").update({
+                "used_files": used_files,
+                "used_documents": used_documents
+            }).eq("id", chat_id).execute()
+
         # Initialize processor and response
         processor = ChatProcessor(
-            prompt_type=chat['chat_type'],
+            teacher=teacher,
+            starting_agent=current_message['start_agent'],
             course_title=class_title,
+            references=references_list,
             question=current_message['bare_question'],
             past_messages=past_messages,
+            past_references=past_references,
             trace_id=trace_id,
             stream_callback=update_callback,
             update_trace_id=update_trace_id,
             update_chat_usage=update_chat_usage,
             update_chat_title=update_chat_title,
-            outcomes_description=outcomes_description
+            update_end_agent=update_end_agent,
+            update_chat_files=update_chat_files,
+            full_outcome_description=full_outcome_description
         )
 
         try:
             await processor.process_message(
                 chat_id=chat_id,
-                google_ids=google_ids,
-                documents=documents,
-                reference_description=reference_description,
+                outcomes_description=outcomes_description,
+                documents=documents
             )
 
             # update the status of the message to completed

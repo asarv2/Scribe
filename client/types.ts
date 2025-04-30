@@ -20,7 +20,7 @@ export type Code = Database[SchemaName]["Tables"]["codes"]["Row"];
 export type Figure = Database[SchemaName]["Tables"]["figures"]["Row"];
 export type Summary = Database[SchemaName]["Tables"]["summaries"]["Row"];
 export type Question = Database[SchemaName]["Tables"]["questions"]["Row"];
-export type Grade = Database[SchemaName]["Tables"]["grades"]["Row"];
+export type Report = Database[SchemaName]["Tables"]["reports"]["Row"];
 
 export type File = Database[SchemaName]["Tables"]["files"]["Row"];
 
@@ -28,6 +28,7 @@ export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"];
 
 export type FileType = Database[SchemaName]["Enums"]["file_type"];
 export type ContentType = Database[SchemaName]["Enums"]["content_type"];
+export type AgentType = Database[SchemaName]["Enums"]["agent"];
 
 export type OneDrive = Database[SchemaName]["Tables"]["onedrive"]["Row"];
 

@@ -301,7 +301,7 @@ export default function FigureViewer({
           {hasErrorFigures ? (
             <PulseText text="Retrying figure generation..." />
           ) : (
-            <PulseText text="Waiting to generate figure..." />
+            <PulseText text="Generating figure(s)..." />
           )}
         </Center>
       </Card>

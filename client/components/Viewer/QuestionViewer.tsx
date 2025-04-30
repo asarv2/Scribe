@@ -393,7 +393,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                     {hasErrorQuestions ? (
                         <PulseText text="Retrying question generation..." />
                     ) : (
-                        <PulseText text="Waiting to generate question..." />
+                        <PulseText text="Generating question(s)..." />
                     )}
                 </Center>
             </Card>

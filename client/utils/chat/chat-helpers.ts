@@ -80,8 +80,8 @@ export function splitTextByDocuments(
 
 function pushAndTidy(buf: string[], chunk: string) {
     if (chunk === "." && buf.length) {
-      // kill trailing whitespace in the previous segment
-      buf[buf.length - 1] = buf[buf.length - 1].replace(/\s+$/, "");
+        // kill trailing whitespace in the previous segment
+        buf[buf.length - 1] = buf[buf.length - 1].replace(/\s+$/, "");
     }
     buf.push(chunk);
 }
@@ -102,140 +102,6 @@ function compact(
         .map((groupIds) => `::file{id=${groupIds.join(",")}}`)
         .join("");
 }
-
-// Split text by figure references and other special tags
-export const splitTextByTags = (text: string): Array<{
-    text: string | null;
-    figureIds: string[] | null;
-    summaryIds: string[] | null;
-    questionIds: string[] | null;
-}> => {
-    if (!text) return [];
-
-    const result: Array<{
-        text: string | null;
-        figureIds: string[] | null;
-        summaryIds: string[] | null;
-        questionIds: string[] | null;
-    }> = [];
-
-    // Use regex to properly extract tags and content
-    const tagPattern =
-        /<(FIGURE|SUMMARY|QUESTION)>(.*?)<\/(FIGURE|SUMMARY|QUESTION)>/g;
-    let lastIndex = 0;
-    let match;
-
-    // First, collect all text segments and tags in order
-    const segments: Array<{
-        type: "text" | "figure" | "summary" | "question";
-        content: string;
-        index: number;
-    }> = [];
-
-    while ((match = tagPattern.exec(text)) !== null) {
-        const [fullMatch, tagType, content, _] = match;
-        const startIndex = match.index;
-
-        // Add text before the tag if there is any
-        if (startIndex > lastIndex) {
-            segments.push({
-                type: "text",
-                content: text.slice(lastIndex, startIndex),
-                index: lastIndex,
-            });
-        }
-
-        // Add the tag with its content
-        segments.push({
-            type: tagType === "FIGURE"
-                ? "figure"
-                : tagType === "SUMMARY"
-                ? "summary"
-                : "question",
-            content: content.trim(),
-            index: startIndex,
-        });
-
-        lastIndex = startIndex + fullMatch.length;
-    }
-
-    // Add any remaining text after the last tag
-    if (lastIndex < text.length) {
-        segments.push({
-            type: "text",
-            content: text.slice(lastIndex),
-            index: lastIndex,
-        });
-    }
-
-    // Collect all figures, summaries, and questions
-    const allFigureIds: string[] = [];
-    const allSummaryIds: string[] = [];
-    const allQuestionIds: string[] = [];
-
-    // First pass: collect all IDs by type
-    segments.forEach((segment) => {
-        if (segment.type === "figure") {
-            allFigureIds.push(segment.content);
-        } else if (segment.type === "summary") {
-            allSummaryIds.push(segment.content);
-        } else if (segment.type === "question") {
-            allQuestionIds.push(segment.content);
-        }
-    });
-
-    // Track if we've already added each type
-    let figuresAdded = false;
-    let summariesAdded = false;
-    let questionsAdded = false;
-
-    // Second pass: create result objects
-    for (let i = 0; i < segments.length; i++) {
-        const segment = segments[i];
-
-        if (segment.type === "text") {
-            // Only add text segments if they contain non-whitespace content
-            if (segment.content.trim() !== "") {
-                result.push({
-                    text: segment.content,
-                    figureIds: null,
-                    summaryIds: null,
-                    questionIds: null,
-                });
-            }
-        } else if (segment.type === "figure" && !figuresAdded) {
-            // Add all figures at the first figure position
-            result.push({
-                text: null,
-                figureIds: allFigureIds,
-                summaryIds: null,
-                questionIds: null,
-            });
-            figuresAdded = true;
-        } else if (segment.type === "summary" && !summariesAdded) {
-            // Add all summaries at the first summary position
-            result.push({
-                text: null,
-                figureIds: null,
-                summaryIds: allSummaryIds,
-                questionIds: null,
-            });
-            summariesAdded = true;
-        } else if (segment.type === "question" && !questionsAdded) {
-            // Add all questions at the first question position
-            result.push({
-                text: null,
-                figureIds: null,
-                summaryIds: null,
-                questionIds: allQuestionIds,
-            });
-            questionsAdded = true;
-        }
-        // Skip other occurrences of figures, summaries, and questions
-    }
-
-    return result;
-};
 
 // Handle document click with support for different document types
 export const handleDocumentClick = (
@@ -305,106 +171,144 @@ export const getPageRanges = (
     return pageRanges;
 };
 
-// Split text by generation placeholder tags
 export const splitTextByGenerationTags = (text: string): Array<{
     text: string | null;
     figure: boolean;
     summary: boolean;
     question: boolean;
+    report: boolean;
+    handoff: boolean;
 }> => {
     if (!text) return [];
+
+    type TagMatch = {
+        type: "figure" | "summary" | "question" | "report" | "handoff";
+        index: number;
+        length: number;
+        innerText?: string; // only for handoff
+    };
 
     const result: Array<{
         text: string | null;
         figure: boolean;
         summary: boolean;
         question: boolean;
+        report: boolean;
+        handoff: boolean;
     }> = [];
 
-    // Find all tag positions in the original text
-    const allTagMatches: Array<
-        { type: string; index: number; length: number }
-    > = [];
-    const tagRegex = /<(FIGURE|SUMMARY|QUESTION)_GENERATING>/g;
-    let match;
+    // Combined regex: generation OR handoff-with-inner-text
+    const tagRegex =
+        /<(FIGURE|SUMMARY|QUESTION|REPORT)_GENERATING>|<HANDOFF>([\s\S]*?)<\/HANDOFF>/g;
+    const allTagMatches: TagMatch[] = [];
+    let match: RegExpExecArray | null;
 
     while ((match = tagRegex.exec(text)) !== null) {
-        allTagMatches.push({
-            type: match[1].toLowerCase(),
-            index: match.index,
-            length: match[0].length,
-        });
+        if (match[1]) {
+            // one of the GENERATING tags
+            allTagMatches.push({
+                type: match[1].toLowerCase() as any,
+                index: match.index,
+                length: match[0].length,
+            });
+        } else if (match[2] !== undefined) {
+            // a handoff tag
+            allTagMatches.push({
+                type: "handoff",
+                index: match.index,
+                length: match[0].length,
+                innerText: match[2].trim(),
+            });
+        }
     }
 
-    // Sort all tags by their position
+    // sort by position in original text
     allTagMatches.sort((a, b) => a.index - b.index);
 
-    // If no tags, just return the text
-    if (allTagMatches.length === 0) {
-        if (text.trim()) {
+    // if no tags, just return the whole text
+    if (!allTagMatches.length) {
+        const t = text.trim();
+        if (t) {
             result.push({
-                text: text,
+                text: t,
                 figure: false,
                 summary: false,
                 question: false,
+                report: false,
+                handoff: false,
             });
         }
         return result;
     }
 
-    // Track which tag types we've already processed
-    const processedTagTypes = {
+    // track which GENERATING tags we've already emitted
+    const processedTagTypes: Record<
+        "figure" | "summary" | "question" | "report",
+        boolean
+    > = {
         figure: false,
         summary: false,
         question: false,
+        report: false,
     };
 
-    // Process text and tags
     let lastIndex = 0;
 
-    for (let i = 0; i < allTagMatches.length; i++) {
-        const currentTag = allTagMatches[i];
-        const tagType = currentTag.type as "figure" | "summary" | "question";
-
-        // Add text segment before this tag if there is any
-        if (currentTag.index > lastIndex) {
-            const textSegment = text.substring(lastIndex, currentTag.index)
-                .trim();
-            if (textSegment) {
+    for (const tag of allTagMatches) {
+        // 1) any plain text before this tag?
+        if (tag.index > lastIndex) {
+            const segment = text.substring(lastIndex, tag.index).trim();
+            if (segment) {
                 result.push({
-                    text: textSegment,
+                    text: segment,
                     figure: false,
                     summary: false,
                     question: false,
+                    report: false,
+                    handoff: false,
                 });
             }
         }
 
-        // Add the tag if we haven't processed this type yet
-        if (!processedTagTypes[tagType]) {
-            processedTagTypes[tagType] = true;
-
+        // 2) now handle the tag itself
+        if (tag.type === "handoff") {
+            // always emit every handoff
             result.push({
-                text: null,
-                figure: tagType === "figure",
-                summary: tagType === "summary",
-                question: tagType === "question",
-            });
-        }
-
-        // Update lastIndex to after this tag
-        lastIndex = currentTag.index + currentTag.length;
-    }
-
-    // Add any remaining text after the last tag
-    if (lastIndex < text.length) {
-        const finalText = text.substring(lastIndex).trim();
-        if (finalText) {
-            result.push({
-                text: finalText,
+                text: tag.innerText || null,
                 figure: false,
                 summary: false,
                 question: false,
+                report: false,
+                handoff: true,
+            });
+        } else if (!processedTagTypes[tag.type]) {
+            // GENERATING tags: only emit once
+            processedTagTypes[tag.type] = true;
+            result.push({
+                text: null,
+                figure: tag.type === "figure",
+                summary: tag.type === "summary",
+                question: tag.type === "question",
+                report: tag.type === "report",
+                handoff: false,
+            });
+        }
+
+        // advance past the entire tag
+        lastIndex = tag.index + tag.length;
+    }
+
+    // 3) any trailing text after all tags?
+    if (lastIndex < text.length) {
+        const segment = text.substring(lastIndex).trim();
+        if (segment) {
+            result.push({
+                text: segment,
+                figure: false,
+                summary: false,
+                question: false,
+                report: false,
+                handoff: false,
             });
         }
     }

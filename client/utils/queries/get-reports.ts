@@ -1,10 +1,10 @@
 import { TypedSupabaseClient } from "../../types";
 
-export async function getGrades(client: TypedSupabaseClient, messageIds: string[]) {
+export async function getReports(client: TypedSupabaseClient, classId: string) {
     const {data, error} = await client
-        .from("grades")
+        .from("reports")
         .select("*")
-        .in("message", messageIds)
+        .eq("class", classId)
         .order("created_at", {ascending: true})
     
     if (error) {

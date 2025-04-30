@@ -4,28 +4,70 @@ from typing import Dict, List, Tuple, Any, Callable
 import json
 import logging
 import math
-from app.services.chat.models.main import Documents
+from app.services.chat.utils.google import GoogleFiles
+from app.services.chat.models.main import Reference, ReferencesOutputSchema
+from app.extensions import get_supabase
 
 logger = logging.getLogger(__name__)
 
-def clean_references(text: str, references: Dict[int, str]) -> str:
-    # Find all reference patterns like [1] or [1, 2, 3]
-    ref_patterns = re.findall(r'\[([0-9\s,]+)\]', text)
+import re
+from typing import Dict, Any
+
+def clean_references(
+    text: str,
+    references: Dict[int, Dict[str, Any]]
+) -> str:
+    """
+    Replace “[n]” or “[n, m]” with one or more <DOCUMENT>doc_id</DOCUMENT> tags.
     
-    for pattern in ref_patterns:
-        original = f"[{pattern}]"
-        # Split by comma and strip whitespace for each number
-        ref_nums = [int(num.strip()) for num in pattern.split(',')]
-        
-        # Replace with appropriate tags
-        replacement = ""
-        for num in ref_nums:
-            if num in references:
-                replacement += f"<DOCUMENT>{references[num]}</DOCUMENT>"
-        
-        text = text.replace(original, replacement)
-    
-    return text
+    - If references[n]["file"] is True, we look up *all* documents whose
+      .file == that file_id and emit one DOCUMENT tag per document.
+    - Otherwise we emit a single DOCUMENT tag for that reference.
+    """
+    supabase = get_supabase()
+
+    # 1) find which reference numbers point at files
+    file_nums = { num: entry["id"]
+                  for num, entry in references.items()
+                  if entry.get("file") }
+
+    # 2) batch-fetch documents for those files
+    file_to_docs: Dict[str, list[str]] = defaultdict(list)
+    if file_nums:
+        file_ids = list(file_nums.values())
+        rows = (
+            supabase
+            .table("documents")
+            .select("id,file")
+            .in_("file", file_ids)
+            .execute()
+            .data
+            or []
+        )
+        for r in rows:
+            file_to_docs[r["file"]].append(r["id"])
+
+    # 3) replacement function for “[1,2,…]”
+    def _replace(match: re.Match) -> str:
+        nums = [int(n.strip()) for n in match.group(1).split(",")]
+        parts: list[str] = []
+        for n in nums:
+            entry = references.get(n)
+            if not entry:
+                continue
+            if entry.get("file"):
+                # expand to every doc under that file
+                fid = entry["id"]
+                for doc_id in file_to_docs.get(fid, []):
+                    parts.append(f"<DOCUMENT>{doc_id}</DOCUMENT>")
+            else:
+                # single document
+                parts.append(f"<DOCUMENT>{entry['id']}</DOCUMENT>")
+        return "".join(parts)
+
+    # 4) apply across the entire text
+    return re.sub(r"\[([0-9\s,]+)\]", _replace, text)
+
 
 async def fetch_chat_context(supabase, chat_id, class_id):
     # get all the messages in the chat
@@ -40,11 +82,6 @@ async def fetch_chat_context(supabase, chat_id, class_id):
     # get all of the questions for all the messages. Get questions where .message is in this messages list
     questions = supabase.table("questions").select("*").in_("message", [message.get("id") for message in messages]).execute().data or []
 
-    # get all of the references from the figure.references, summary.references, and question.references
-    references = {figure.get("id"): figure.get("references") for figure in figures}
-    references.update({summary.get("id"): summary.get("references") for summary in summaries})
-    references.update({question.get("id"): question.get("references") for question in questions})
-
     # get all of the outcomes for the class
     outcomes = supabase.table("outcomes").select("*").eq("class", class_id).eq("deleted", False).execute().data or []
 
@@ -56,7 +93,6 @@ async def fetch_chat_context(supabase, chat_id, class_id):
         "figures": [figure.get("id") for figure in figures],
         "summaries": [summary.get("id") for summary in summaries],
         "questions": [question.get("id") for question in questions],
-        "references": list(set(references)),
         "outcomes": [outcome.get("id") for outcome in outcomes]
     }
 
@@ -78,7 +114,7 @@ def format_ts(seconds: float | int | None) -> str:
 
 def doc_label(doc: dict, parent_type: str, ref_num: int) -> str:
     """
-    Build the left-hand label before '-> REFERENCE n'
+    Build the left-hand label before '-> DOCUMENT n'
     using the *new* MM:SS format for A/V files.
     """
     if parent_type in {"audio", "video"} and doc.get("start_time") is not None:
@@ -88,147 +124,230 @@ def doc_label(doc: dict, parent_type: str, ref_num: int) -> str:
             if doc.get("end_time") is not None
             else ""
         )
-        return f"{start}{end} -> REFERENCE {ref_num}"
+        return f"{start}{end} -> DOCUMENT {ref_num}"
 
     # fallback for PDFs, images, etc.
-    return f"Page {doc['page']} -> REFERENCE {ref_num}"
+    return f"Page {doc['page']} -> DOCUMENT {ref_num}"
 
-# ------------------------------------------------------------
-# main
-# ------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────
+# extra helper -------------------------------------------------
+def reference_title(doc: dict, parent_type: str, file_title: str) -> str:
+    """Produce a human-friendly title for a single document reference."""
+    if parent_type in {"audio", "video"} and doc.get("start_time") is not None:
+        start = format_ts(doc["start_time"])
+        end   = (
+            f"-{format_ts(doc['end_time'])}"
+            if doc.get("end_time") is not None else ""
+        )
+        return f"{file_title} - {start}{end}"
+    else:                                             # PDFs, images …
+        page = doc.get("page", 0)
+        return f"{file_title} - Page {page}"
+
+# ─── helper to build the page-range suffix ──────────────────────────────
+def _page_range_for_file(docs: List[dict]) -> str:
+    pages = sorted(d.get("page", 0) for d in docs if "page" in d)
+    if not pages:
+        return ""
+    return f" (pages {pages[0]}-{pages[-1]})"
+
+# ─── main refactor ────────────────────────────────────────────────────
 async def get_mapped_references(
     supabase,
     file_ids: List[str] | None,
-    document_ids: List[str] | None,
-    chat_references: List[str] | None,
-) -> Tuple[Dict[int, str], str, List[str], List[str]]:
+    document_ids: List[str] | None
+) -> Tuple[
+        List[Reference],                   
+        Dict[int, Dict[str, Any]]         
+    ]:
+    # 0. init
+    next_ref = 1
+    mapping: Dict[int, Dict[str, Any]] = {}
+    def assign_ref(id_: str, is_file: bool) -> int:
+        nonlocal next_ref
+        mapping[next_ref] = {"id": id_, "file": is_file}
+        next_ref += 1
+        return next_ref - 1
 
-    logger.info(
-        "Fetching mapped references for file_ids: %s, document_ids: %s, chat_refs: %s",
-        file_ids,
-        document_ids,
-        chat_references,
+    # 1. gather IDs
+    fids = file_ids or []
+    dids = document_ids or []
+    fset, dset = set(fids), set(dids)
+
+    if not (fset or dset):
+        return [], {}
+
+    # 2. fetch all matching docs
+    or_clauses = []
+    if dset:
+        or_clauses.append(f"id.in.({','.join(dset)})")
+    if fset:
+        or_clauses.append(f"file.in.({','.join(fset)})")
+
+    docs_q = supabase.table("documents").select("*")
+    if or_clauses:
+        docs_q = docs_q.or_(",".join(or_clauses))
+    all_docs = docs_q.execute().data or []
+
+    # 2a. compute every doc-ID + file-ID we actually need
+    all_doc_ids  = [d["id"] for d in all_docs]
+    all_file_ids = {d["file"] for d in all_docs} | fset
+
+    logger.debug("all_doc_ids = %r", all_doc_ids)
+    logger.debug("all_file_ids = %r", all_file_ids)
+
+    # 3. wire up GoogleFiles and actually upload/check
+    # only upload the documents the user originally passed in:
+    orig_doc_ids = list(dset)  
+
+    logger.debug("uploading only these docs:", orig_doc_ids)
+
+    gf = GoogleFiles(
+        file_ids=list(all_file_ids),
+        document_ids=orig_doc_ids,
+        supabase_client=supabase
     )
 
-    # ---------- 1. normalise ----------
-    orig_file_ids        = file_ids or []
-    orig_document_ids    = document_ids or []
+    # triggers your upload logic + logs
+    new_file_google_ids     = gf.get_files()
+    new_document_google_ids = gf.get_documents()
 
-    file_ids_set         = set(orig_file_ids)
-    direct_doc_ids       = set(orig_document_ids)
-    chat_doc_ids         = set(chat_references or [])
-    wanted_doc_ids       = direct_doc_ids | chat_doc_ids
+    # now file_google has every file → Google ID
+    file_google = {
+        meta["file_id"]: gid
+        for meta, gid in zip(gf.files_data, new_file_google_ids)
+    }
 
-    if not (file_ids_set or wanted_doc_ids):
-        return {}, "", [], []                     # nothing to do
+    # and document_google has *only* your original docs → Google ID
+    document_google = {
+        meta["document_id"]: gid
+        for meta, gid in zip(gf.documents_data, new_document_google_ids)
+    }
 
-    # ---------- 2. pull docs ----------
-    or_parts = []
-    if wanted_doc_ids:
-        or_parts.append(f"id.in.({','.join(wanted_doc_ids)})")
-    if file_ids_set:
-        or_parts.append(f"file.in.({','.join(file_ids_set)})")
-
-    docs_query = supabase.table("documents").select("*")
-    if or_parts:
-        docs_query = docs_query.or_(",".join(or_parts))
-    all_docs: List[dict] = docs_query.execute().data or []
-
+    # 4. group docs by file (for page‐ranges, ordering, etc)
     docs_by_file: Dict[str, List[dict]] = defaultdict(list)
     for d in all_docs:
         docs_by_file[d["file"]].append(d)
 
-    # ---------- 3. fetch files we will mention ----------
-    all_file_ids = {fid for fid in (docs_by_file.keys() | file_ids_set) if fid}
+    # 5. fetch file metadata
     file_rows = (
         supabase.table("files")
-        .select("*")
-        .in_("id", list(all_file_ids))
-        .execute()
-        .data
+                .select("*")
+                .in_("id", list(all_file_ids))
+                .execute().data
         or []
     )
     file_meta = {f["id"]: f for f in file_rows}
 
-    # ---------- 4. build output ----------
-    description_lines: List[str] = []
-    ref_map: Dict[int, str] = {}
-    ref_lookup: Dict[str, int] = {}
-    next_ref = 1
+    # 6. build your Reference list
+    refs: List[Reference] = []
 
-    ordered_file_ids: List[str]     = []
-    ordered_document_ids: List[str] = []
+    # 6a. explicitly passed files
+    for fid in sorted(fset, key=lambda i: file_meta[i]["title"]):
+        ftype  = file_meta[fid]["type"]
+        file_no = assign_ref(fid, True)
 
-    # 4a. files supplied explicitly
-    for fid in sorted(file_ids_set, key=lambda _id: file_meta[_id]["title"]):
-        ordered_file_ids.append(fid)
-        f_type = file_meta[fid]["type"]
-        description_lines.append(file_meta[fid]["title"])
+        suffix = _page_range_for_file(docs_by_file[fid])
+        title  = file_meta[fid]["title"] + suffix
+        url    = file_google.get(fid, "")
 
-        # choose sort key based on type
-        if f_type in {"audio", "video"}:
-            key_fn = lambda d: (d.get("start_time") or 0.0)
-        else:
-            key_fn = lambda d: d.get("page", 0)
+        refs.append(Reference(
+            number=file_no,
+            title=title,
+            url=url,
+            file=True,
+        ))
 
-        for doc in sorted(docs_by_file.get(fid, []), key=key_fn):
-            if doc["id"] not in ref_lookup:
-                ref_lookup[doc["id"]] = next_ref
-                ref_map[next_ref] = doc["id"]
-                next_ref += 1
-                if doc["id"] in direct_doc_ids:
-                    ordered_document_ids.append(doc["id"])
+        key_fn = (lambda d: d.get("start_time") or 0.0) if ftype in {"audio","video"} \
+                 else (lambda d: d.get("page",0))
+        for doc in sorted(docs_by_file[fid], key=key_fn):
+            did    = doc["id"]
+            doc_no = assign_ref(did, False)
+            refs.append(Reference(
+                number=doc_no,
+                title=reference_title(doc, ftype, file_meta[fid]["title"]),
+                url=document_google.get(did, ""),
+                file=False,
+            ))
 
-            description_lines.append(
-                doc_label(doc, f_type, ref_lookup[doc["id"]])
-            )
-        description_lines.append("")  # blank line
+    # 6b. any “stray” docs not under explicitly passed files
+    stray = [d for d in all_docs if d["file"] not in fset]
+    stray.sort(key=lambda d: (
+        file_meta[d["file"]]["title"],
+        (d.get("start_time") if file_meta[d["file"]]["type"] in {"audio","video"} 
+           else d.get("page",0))
+    ))
+    for doc in stray:
+        fid    = doc["file"]
+        ftype  = file_meta[fid]["type"]
+        did    = doc["id"]
+        doc_no = assign_ref(did, False)
+        refs.append(Reference(
+            number=doc_no,
+            title=reference_title(doc, ftype, file_meta[fid]["title"]),
+            url=document_google.get(did, ""),
+            file=False,
+        ))
 
-    # 4b. stray docs
-    stray_docs = [
-        d for d in all_docs if d["file"] not in file_ids_set
+    return refs, mapping
+
+
+
+def emit_user_references(references: List[Reference]) -> List[Dict[str, Any]]:
+    """
+    Emit the two-part tool call:
+    """
+    if not references:
+        return []
+
+    payload = ReferencesOutputSchema(references=references).model_dump()
+
+    return [
+        {
+            "type": "function_call",
+            "name": "user_references",
+            "id": "references",
+            "call_id": "references",
+            "arguments": json.dumps({}),
+            "status": "completed",
+        },
+        {
+            "type": "function_call_output",
+            "id": "references",
+            "call_id": "references",
+            "output": json.dumps(payload),
+            "status": "completed",
+        },
     ]
-    # sort across files: (title, start/page)
-    stray_docs.sort(
-        key=lambda d: (
-            file_meta[d["file"]]["title"],
-            d.get("start_time") if file_meta[d["file"]]["type"] in {"audio", "video"} else d.get("page", 0),
-        )
-    )
 
-    for doc in stray_docs:
-        fid   = doc["file"]
-        ftype = file_meta[fid]["type"]
-        title = file_meta[fid]["title"]
-
-        if fid not in ordered_file_ids:
-            # we don't push fid itself to ordered_file_ids because the caller asked
-            # that this list reflect only originals – not ‘discovered’ files.
-            pass
-
-        if doc["id"] not in ref_lookup:
-            ref_lookup[doc["id"]] = next_ref
-            ref_map[next_ref] = doc["id"]
-            next_ref += 1
-            if doc["id"] in direct_doc_ids:
-                ordered_document_ids.append(doc["id"])
-
-        description_lines.append(
-            f"{title}, {doc_label(doc, ftype, ref_lookup[doc['id']])}"
-        )
-
-    # ---------- 5. finalise ----------
-    if description_lines and description_lines[-1] == "":
-        description_lines.pop()
-    description = "\n".join(description_lines)
-
-    return ref_map, description, ordered_file_ids, ordered_document_ids
-
-
+def emit_google_references(references: List[Reference]) -> List[Dict[str, Any]]:
+    # insert these into the conversation history
+    inputs = []
+    for reference in references:
+        if reference.url:
+            inputs.append({
+                "type": "input_image",
+                "image_url": f"https://generativelanguage.googleapis.com/v1beta/{reference.url}",
+                "detail": "low"
+            })
+            inputs.append({
+                "type": "input_text",
+                "text": f"Reference {reference.number}: {reference.title}"
+            })
+    return inputs
 
 # ── Generic small utilities ────────────────────────────────────────────────
 def _get_refs_rev(documents) -> Dict[str, int]:
-    return {v: k for k, v in documents.references.items()}
+    """
+    Build a lookup from document_id → ref_number
+    assuming documents.references is Dict[int, {"id": str, ...}].
+    """
+    return {
+        entry["id"]: num
+        for num, entry in documents.references.items()
+        if "id" in entry
+    }
+
 
 def _replace_tags(text: str,
                   token_pat: str,
@@ -280,6 +399,15 @@ def _row_to_summary(row, refs_rev, fig_rows, figs_rev) -> Dict[str, Any]:
         "preamble": proc(row.get("preamble", "")),
         "body": proc(row.get("body", "")),
         "conclusion": proc(row.get("conclusion", "")),
+        "references": [refs_rev[r] for r in (row.get("references") or []) if r in refs_rev],
+        "figures": [_row_to_figure(f, refs_rev) for f in fig_rows],
+    }
+
+def _row_to_report(row, refs_rev, fig_rows, figs_rev) -> Dict[str, Any]:
+    proc = lambda t: _process_fig_tags(_process_doc_tags(t, refs_rev), figs_rev)
+    return {
+        "title": row.get("title", ""),
+        "content": proc(row.get("content", "")),
         "references": [refs_rev[r] for r in (row.get("references") or []) if r in refs_rev],
         "figures": [_row_to_figure(f, refs_rev) for f in fig_rows],
     }
@@ -343,6 +471,13 @@ _KIND: Dict[str, Dict[str, Any]] = {
         "row_to_model": _row_to_summary,
         "table":    "summaries",
     },
+    "report": {
+        "singular": "create_report",
+        "plural":   "create_reports",
+        "id_key":   "report_id",
+        "row_to_model": _row_to_report,
+        "table":    "reports",
+    },
 }
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -354,7 +489,7 @@ async def build_history(kind: str,
                         db,
                         documents) -> List[Dict[str, Any]]:
     """
-    kind ∈ {'figure','question','summary'} ; ids = list of DB row IDs.
+    kind ∈ {'figure','question','summary', 'report'} ; ids = list of DB row IDs.
     """
     meta = _KIND[kind]
     refs_rev = _get_refs_rev(documents)
@@ -365,7 +500,7 @@ async def build_history(kind: str,
 
     # Figures nested inside Q/S
     fig_rows_by_id = {}
-    if kind in ("question", "summary"):
+    if kind in ("question", "summary", "report"):
         fig_ids = [fid for r in rows for fid in (r.get("figures") or [])]
         fig_rows = await _fetch_rows(db, "figures", fig_ids)
         fig_rows_by_id = {r["id"]: r for r in fig_rows}
@@ -400,10 +535,11 @@ async def process_special_tags(message: str,
                                figure_id: str | None = None,
                                question_id: str | None = None,
                                summary_id: str | None = None,
+                               report_id: str | None = None,
                               ):
-    supplied = sum(x is not None for x in (figure_id, question_id, summary_id))
+    supplied = sum(x is not None for x in (figure_id, question_id, summary_id, report_id))
     if supplied > 1:
-        raise ValueError("Pass at most one of figure_id / question_id / summary_id")
+        raise ValueError("Pass at most one of figure_id / question_id / summary_id / report_id")
 
     if figure_id:
         return await build_history("figure", [figure_id], supabase_client, documents)
@@ -411,6 +547,8 @@ async def process_special_tags(message: str,
         return await build_history("question", [question_id], supabase_client, documents)
     if summary_id:
         return await build_history("summary", [summary_id], supabase_client, documents)
+    if report_id:
+        return await build_history("report", [report_id], supabase_client, documents)
 
     # No ID fast-path → scan the raw message
     return await _process_tags_from_message(message, supabase_client, documents)
@@ -437,6 +575,7 @@ async def _process_tags_from_message(message, db, documents):
         "figure":   r'<FIGURE_GENERATING>',
         "question": r'<QUESTION_GENERATING>',
         "summary":  r'<SUMMARY_GENERATING>',
+        'report':   r'<REPORT_GENERATING>',
     }
     tags: List[Tuple[int,int,str]] = []
     for kind, pat in TAG_PAT.items():
@@ -454,7 +593,7 @@ async def _process_tags_from_message(message, db, documents):
 
     # cache: table -> rows
     cache = {}
-    for tbl in ("figures", "questions", "summaries"):
+    for tbl in ("figures", "questions", "summaries", "reports"):
         cache[tbl] = (db.table(tbl).select("*").in_("message", msg_ids).execute().data) or []
 
     # mapping id → row for quick lookup
@@ -463,7 +602,7 @@ async def _process_tags_from_message(message, db, documents):
     # Build global figure-index map {fig_id: 1,2,3…} so we can replace
     figs_rev: Dict[str,int] = {}
     next_idx = 1
-    for q in cache["questions"] + cache["summaries"]:
+    for q in cache["questions"] + cache["summaries"] + cache["reports"]:
         for fid in q.get("figures", []):
             if fid not in figs_rev:
                 figs_rev[fid] = next_idx; next_idx += 1

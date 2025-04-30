@@ -3,8 +3,6 @@ import re
 from collections import defaultdict
 from typing import Dict, List, Tuple, Set, Optional, Literal, Any
 from pydantic import BaseModel, Field
-import google.generativeai as genai
-from google.generativeai.types import File
 import json
 import logging
 from collections import defaultdict
@@ -13,6 +11,22 @@ import math
 from agents import AgentOutputSchemaBase
 
 logger = logging.getLogger(__name__)
+
+
+ChatAgents = Literal["general", "review", "homework", "learn", "question", "summary", "figure", "syllabus", "content", "grade", "analyze"]
+
+class Reference(BaseModel):
+    number: int
+    title: str
+    url: str
+    file: bool
+
+class ReferencesOutputSchema(BaseModel):
+    references: List[Reference] = Field(default_factory=list)
+
+
+class HandoffInputSchema(BaseModel):
+    references: List[int] = Field(default_factory=list)
 
 class ContextFile(BaseModel):
     file_id: str
@@ -29,7 +43,7 @@ class OutcomeObjectives(BaseModel):
 class AfterChatOutput(BaseModel):
     outcomes: List[OutcomeObjectives] = Field(default_factory=list)
     correct: bool = Field(default=True)
-    incorrect_reason: str = Field(default="")
+    reason: str = Field(default="")
 
 class Figure(BaseModel):
     title: str = Field(default="")
@@ -74,14 +88,28 @@ class CreateSummaryResponse(BaseModel):
     summary_id: str = Field(default="") 
     message: str = Field(default="")
 
+class Report(BaseModel):
+    title: str = Field(default="")
+    content: str = Field(default="")
+    references: List[int] = Field(default=[])
+    figures: List[Figure] = Field(default=[])
+    message: str = Field(default="")
+
+class CreateReportResponse(BaseModel):
+    success: bool = Field(default=False)
+    error: Optional[str] = Field(default="")
+    report_id: str = Field(default="") 
+    message: str = Field(default="")
+
 class Documents(BaseModel):
     class_id: str
     profile_id: str
     chat_id: str
     message_id: str
-    # files: Dict[int, str] # maps file number to file id in supabase
-    references: Dict[int, str] # maps number found in text to the id in supabase
+    references: Dict[int, Dict[str, Any]] # maps number found in text to the id in supabase
     outcomes: Dict[int, str] # maps outcome number to outcome id in supabase
+    used_files: List[str] = []
+    used_documents: List[str] = []
     figures: List[str] = []
     summaries: List[str] = []
     questions: List[str] = []

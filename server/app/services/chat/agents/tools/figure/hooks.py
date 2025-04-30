@@ -447,7 +447,7 @@ async def create_figures(wrapper: RunContextWrapper[Documents], figures: List[Fi
 
             # Get references
             references = [wrapper.context.references.get(ref, None) for ref in figure.references]
-            references = [ref for ref in references if ref is not None]
+            references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
 
             logger.info(f"Starting figure generation for title: {title}")
             

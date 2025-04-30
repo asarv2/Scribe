@@ -1,480 +1,406 @@
-from typing import List, Optional, Tuple
-import google.generativeai as genai
-from google.generativeai.types import File
-import datetime
+from typing import List, Optional
+from google.genai.types import File, UploadFileConfig
+from google.genai.errors import APIError, ClientError, ServerError
 import logging
-from dateutil import parser
 import os
 import traceback
 import time
+from app.extensions import get_google
 
 logger = logging.getLogger(__name__)
 
 class GoogleFiles:
-    def __init__(self, file_ids: List[str], document_ids: List[str], supabase_client):
+    def __init__(
+        self,
+        file_ids: List[str],
+        document_ids: List[str],
+        supabase_client,
+    ):
         """
         Initialize GoogleFiles with file IDs and fetch all necessary data from Supabase
-        
+
         Args:
             file_ids: List[str] - The IDs of the files to process
             document_ids: List[str] - The IDs of the documents to process
             supabase_client - The Supabase client for database and storage operations
         """
         self.supabase = supabase_client
-        
-        # Fetch file data from Supabase
+        self.google = get_google()
+
+        # Fetch file + document metadata
         self.files_data = self._fetch_files_data(file_ids)
         self.documents_data = self._fetch_documents_data(document_ids)
-    
+
     def _fetch_files_data(self, file_ids: List[str]) -> List[dict]:
-        """Fetch file data from Supabase for the given file IDs"""
-        try:
-            if not file_ids:
-                return []
-            
-            logger.info(f"Fetching file data for IDs: {file_ids}")
-
-            # Get file information
-            files_response = self.supabase.table("files").select(
-                "id", "class", "type", "extension"
-            ).in_("id", file_ids).execute()
-            
-            if not files_response.data:
-                logger.warning(f"No files found for IDs: {file_ids}")
-                return []
-            
-            files_data = []
-            
-            # For each file, get the Google file information
-            google_response = self.supabase.table("google").select(
-                "file", "google_id", "expires_at"
-            ).in_("file", file_ids).order("created_at", desc=True).execute()
-            
-            if google_response.data:
-                for google_file in google_response.data:
-                    file_id = google_file.get("file")
-                    google_id = google_file.get("google_id")
-                    expires_at = google_file.get("expires_at")
-                    
-                    file_data = next((f for f in files_response.data if f["id"] == file_id), None)
-                    
-                    if file_data:
-                        files_data.append({
-                            "file_id": file_data["id"],
-                            "class_id": file_data["class"],
-                            "extension": file_data["extension"],
-                            "google_id": google_id,
-                            "expires_at": expires_at
-                        })
-            
-            return files_data
-            
-        except Exception as e:
-            logger.error(f"Error fetching file data: {str(e)}")
+        """Fetch file metadata and last Google ID (if any)."""
+        if not file_ids:
             return []
-    
+
+        logger.info(f"Fetching meta for files {file_ids}")
+        files_resp = (
+            self.supabase
+                .table("files")
+                .select("id", "class", "type", "extension")
+                .in_("id", file_ids)
+                .execute()
+        )
+        if not files_resp.data:
+            logger.warning(f"No files found for {file_ids}")
+            return []
+
+        # now grab the google-table PK too
+        google_resp = (
+            self.supabase
+                .table("google")
+                .select("id,file,google_id")
+                .in_("file", file_ids)
+                .order("created_at", desc=True)
+                .execute()
+        )
+
+        # map file_id → (google_id, google_table_id)
+        google_map = {}
+        for rec in google_resp.data or []:
+            fid = rec["file"]
+            if fid not in google_map:
+                google_map[fid] = {
+                    "google_id":       rec["google_id"],
+                    "google_table_id": rec["id"],
+                }
+
+        out = []
+        for f in files_resp.data:
+            gm = google_map.get(f["id"], {})
+            out.append({
+                "file_id":          f["id"],
+                "class_id":         f["class"],
+                "extension":        f["extension"],
+                "google_id":        gm.get("google_id"),
+                "google_table_id":  gm.get("google_table_id"),  # may be None
+            })
+        return out
+
     def _fetch_documents_data(self, document_ids: List[str]) -> List[dict]:
-        """Fetch document data from Supabase for the given document IDs"""
-        try:
-            if not document_ids:
-                return []
-
-            # Get document information
-            documents_response = self.supabase.table("documents").select(
-                "id", "class", "file", "extension"
-            ).in_("id", document_ids).execute()
-            
-            if not documents_response.data:
-                logger.warning(f"No documents found for IDs: {document_ids}")
-                return []
-            
-            documents_data = []
-            
-            google_response = self.supabase.table("google").select(
-                "document", "google_id", "expires_at"
-            ).in_("document", document_ids).order("created_at", desc=True).execute()
-
-            for document_id in document_ids:
-                google_document = next((f for f in google_response.data if f["document"] == document_id), None)
-                document_data = next((f for f in documents_response.data if f["id"] == document_id), None)
-                
-                if document_data:
-                    document_id = document_data["id"]
-                    file_id = document_data["file"]
-                    class_id = document_data["class"]
-                    extension = document_data["extension"]
-
-                    if google_document:
-                        google_id = google_document.get("google_id")
-                        expires_at = google_document.get("expires_at")
-                        documents_data.append({
-                            "file_id": file_id,
-                            "document_id": document_id,
-                            "class_id": class_id,
-                            "google_id": google_id,
-                            "expires_at": expires_at,
-                            "extension": extension
-                        })
-                    else:
-                        documents_data.append({
-                            "file_id": file_id,
-                            "document_id": document_id,
-                            "class_id": class_id,
-                            "google_id": None,
-                            "expires_at": None,
-                            "extension": extension
-                        })
-            
-            return documents_data
-
-        except Exception as e:
-            logger.error(f"Error fetching document data: {str(e)}")
-            logger.error(traceback.format_exc())
+        """Fetch document metadata plus the google‐table row ID if it exists."""
+        if not document_ids:
             return []
-    
+
+        docs_resp = (
+            self.supabase
+                .table("documents")
+                .select("id", "class", "file", "extension")
+                .in_("id", document_ids)
+                .execute()
+        )
+        if not docs_resp.data:
+            logger.warning(f"No documents found for {document_ids}")
+            return []
+
+        # Grab both google_id and the google‐table PK
+        google_resp = (
+            self.supabase
+                .table("google")
+                .select("id,document,google_id")
+                .in_("document", document_ids)
+                .order("created_at", desc=True)
+                .execute()
+        )
+
+        # map document → (google_id, google_table_id)
+        google_map = {}
+        for rec in google_resp.data or []:
+            did = rec["document"]
+            # only take the first (latest) record
+            if did not in google_map:
+                google_map[did] = {
+                    "google_id":        rec["google_id"],
+                    "google_table_id":  rec["id"],
+                }
+
+        out = []
+        for d in docs_resp.data:
+            gm = google_map.get(d["id"], {})
+            out.append({
+                "document_id":      d["id"],
+                "file_id":          d["file"],
+                "class_id":         d["class"],
+                "extension":        d["extension"],
+                "google_id":        gm.get("google_id"),
+                "google_table_id":  gm.get("google_table_id"),   # may be None
+            })
+        return out
+
+    def _is_google_file_active(self, google_id: str) -> bool:
+        """Return True if the file exists on Google and is ACTIVE.
+        On any permission, missing-file, or API error, return False → triggers reupload."""
+        if not google_id:
+            return False
+
+        try:
+            info = self.google.files.get(name=google_id)
+            state = getattr(info.state, "name", info.state)
+            return state == "ACTIVE"
+        except ClientError as e:
+            logger.warning(f"GenAI client error ({e.code} {e.status}); reuploading: {e.message}")
+            return False
+        except ServerError as e:
+            logger.warning(f"GenAI server error ({e.code}); treating as inactive: {e.message}")
+            return False
+        except APIError as e:
+            logger.warning(f"Other GenAI error ({e.code}); will reupload: {e.message}")
+            return False
+        except Exception as e:
+            logger.warning(f"Unexpected error checking {google_id}: {e}")
+            return False
+
     def get_files(self) -> List[str]:
-        """Get all files, re-uploading any that have expired"""
-        google_file_ids = []
-        now = datetime.datetime.now(datetime.timezone.utc)
-        
-        for file_data in self.files_data:
-            file_id = file_data["file_id"]
-            google_id = file_data["google_id"]
-            expires_at = file_data["expires_at"]
-            
-            # Check if the file has expired or doesn't have a Google ID
-            is_expired = False
-            if not google_id:
-                is_expired = True
-            elif expires_at:
-                try:
-                    expiration_time = parser.parse(expires_at)
-                    # give an hour grace period
-                    is_expired = now >= expiration_time - datetime.timedelta(hours=1)
-                except Exception as e:
-                    logger.error(f"Error parsing expiration time: {str(e)}")
-                    is_expired = True  # Assume expired if we can't parse the date
-            
-            if is_expired:
-                logger.info(f"File {file_id} has expired or needs uploading. Uploading from Supabase.")
-                
-                # Upload from Supabase
-                new_file = self._upload_file_from_supabase(
-                    file_id, 
-                    file_data["class_id"], 
-                    file_data["extension"]
+        """
+        Return a list of Google IDs for all files,
+        uploading any that don't exist or aren't ACTIVE.
+        """
+        out_ids: List[str] = []
+        for meta in self.files_data:
+            gid = meta.get("google_id")
+            if not gid or not self._is_google_file_active(gid):
+                logger.info(f"Uploading fresh copy of file {meta['file_id']}")
+                media = self._upload_file_from_supabase(
+                    meta["file_id"], meta["class_id"], meta["extension"]
                 )
-                if new_file:
-                    # Add the new Google file ID to the list
-                    google_file_ids.append(new_file.name)
-            else:
-                google_file_ids.append(google_id)
-        return google_file_ids
-    
+                if media:
+                    gid = media.name
+            out_ids.append(gid)
+        return out_ids
 
     def get_documents(self) -> List[str]:
-        """Get all documents, re-uploading any that have expired"""
-        google_document_ids = []
-        now = datetime.datetime.now(datetime.timezone.utc)
-        
-        for document_data in self.documents_data:
-            file_id = document_data["file_id"]
-            class_id = document_data["class_id"]
-            document_id = document_data["document_id"]
-            google_id = document_data["google_id"]
-            expires_at = document_data["expires_at"]
-            extension = document_data["extension"]
-            
-            # Check if the document has expired or doesn't have a Google ID
-            is_expired = False
-            if not google_id:
-                logger.info(f"Document {document_id} has no Google ID, needs upload")
-                is_expired = True
-            elif expires_at:
-                try:
-                    expiration_time = parser.parse(expires_at)
-                    # give an hour grace period
-                    is_expired = now >= expiration_time - datetime.timedelta(hours=1)
-                except Exception as e:
-                    logger.error(f"Error parsing expiration time: {str(e)}")
-                    is_expired = True  # Assume expired if we can't parse the date
-            
-            if is_expired:
-                
-                # Upload from Supabase
-                new_file = self._upload_document_from_supabase(
-                    file_id, 
-                    document_id,
-                    class_id, 
-                    extension
+        """
+        Return a list of Google IDs for all documents,
+        uploading any that don't exist or aren't ACTIVE.
+        """
+        out_ids: List[str] = []
+        for meta in self.documents_data:
+            gid = meta.get("google_id")
+            if not gid or not self._is_google_file_active(gid):
+                logger.info(f"Uploading fresh copy of document {meta['document_id']}")
+                media = self._upload_document_from_supabase(
+                    meta["file_id"],
+                    meta["document_id"],
+                    meta["class_id"],
+                    meta["extension"]
                 )
-                
-                if new_file:
-                    # Add the new Google file ID to the list
-                    google_document_ids.append(new_file.name)
-                else:
-                    logger.error(f"Failed to upload document {document_id} to Google")
-            else:
-                google_document_ids.append(google_id)
-        
-        return google_document_ids
+                if media:
+                    gid = media.name
+            out_ids.append(gid)
+        return out_ids
 
-    def _upload_document_from_supabase(self, file_id: str, document_id: str, class_id: str, extension: str) -> Optional[File]:
-        """Upload document from Supabase to Google"""
+    def _upload_file_from_supabase(
+        self,
+        file_id: str,
+        class_id: str,
+        extension: str
+    ) -> Optional[File]:
+        """Download a file from Supabase and upload it to Google."""
+        temp_dir = os.path.join(os.getcwd(), "temp")
+        os.makedirs(temp_dir, exist_ok=True)
+        local_path = os.path.join(temp_dir, f"{file_id}.{extension}")
+
+        # try download
         try:
-            # Create a temporary directory if it doesn't exist
-            temp_dir = os.path.join(os.getcwd(), "temp")
-            os.makedirs(temp_dir, exist_ok=True)
-            
-            # Create the file_id subdirectory
-            file_dir = os.path.join(temp_dir, file_id)
-            os.makedirs(file_dir, exist_ok=True)
-            
-            # Construct the storage paths - try both with and without extension
-            storage_path_with_ext = f"{class_id}/{file_id}/{document_id}.{extension}"
-            storage_path_without_ext = f"{class_id}/{file_id}/{document_id}"
-            local_path = os.path.join(temp_dir, f"{file_id}/{document_id}.{extension}")
-            
-            # Download the file from Supabase - try with extension first, then without
             try:
-                try:
-                    # First try with extension
-                    res = self.supabase.storage.from_("files").download(storage_path_with_ext)
-                    logger.info(f"Downloaded file with extension: {storage_path_with_ext}")
-                except Exception as with_ext_error:
-                    # If that fails, try without extension
-                    logger.info(f"Failed to download with extension, trying without: {storage_path_without_ext}")
-                    res = self.supabase.storage.from_("files").download(storage_path_without_ext)
-                    logger.info(f"Downloaded file without extension: {storage_path_without_ext}")
-                
-                with open(local_path, 'wb+') as f:
-                    f.write(res)
-                
-                # Check if file exists and has content
-                file_size = os.path.getsize(local_path)
-                if file_size == 0:
-                    logger.error("Downloaded file is empty!")
-                    
-            except Exception as download_error:
-                logger.error(f"Error downloading file: {str(download_error)}")
-                logger.error(traceback.format_exc())
-                return None
-            
-            # Determine MIME type based on extension
-            mime_type = self._get_mime_type(extension)
-            
-            # Upload to Google
-            try:
-                with open(local_path, 'rb') as f:
-                    media_file = genai.upload_file(f, mime_type=mime_type)
-                    
-                # Wait for the file to become active
-                media_file = self._wait_for_file_activation(media_file)
-                if not media_file:
-                    logger.error(f"File {document_id} failed to activate within timeout period")
-                    return None
-                
-            except Exception as upload_error:
-                logger.error(f"Error uploading to Google: {str(upload_error)}")
-                logger.error(traceback.format_exc())
-                return None
-            
-            # Extract file ID and expiration from response
-            google_file_id = media_file.name
-            expires_at = media_file.expiration_time
-            
-            # Save to the google table - check if there's an existing record
-            try:
-                existing_record = self.supabase.table("google").select("id").eq("document", document_id).execute()
-                
-                if existing_record.data and len(existing_record.data) > 0:
-                    # Update the existing record
-                    update_response = self.supabase.table("google").update({
-                        "google_id": google_file_id,
-                        "expires_at": expires_at.isoformat()
-                    }).eq("document", document_id).execute()
-                    logger.info(f"Updated existing Google record for document {document_id}")
-                else:
-                    # Insert a new record
-                    insert_response = self.supabase.table("google").insert({
-                        "document": document_id,
-                        "google_id": google_file_id,
-                        "expires_at": expires_at.isoformat()
-                    }).execute()
-                    logger.info(f"Created new Google record for document {document_id}")
-                
-            except Exception as db_error:
-                logger.error(f"Error saving to database: {str(db_error)}")
-                logger.error(traceback.format_exc())
-            
-            # Clean up the temporary file
-            try:
-                os.remove(local_path)
-            except Exception as cleanup_error:
-                logger.error(f"Error cleaning up file: {str(cleanup_error)}")
-            
-            return media_file
-            
+                res = self.supabase.storage.from_("files") \
+                    .download(f"{class_id}/{file_id}.{extension}")
+            except Exception:
+                res = self.supabase.storage.from_("files") \
+                    .download(f"{class_id}/{file_id}")
+            with open(local_path, "wb") as f:
+                f.write(res)
         except Exception as e:
-            logger.error(f"Error in _upload_document_from_supabase: {str(e)}")
+            logger.error(f"Download failed for {file_id}: {e}")
             logger.error(traceback.format_exc())
             return None
-    
-    def _upload_file_from_supabase(self, file_id: str, class_id: str, extension: str) -> Optional[File]:
-        """
-        Download file from Supabase and upload to Google
-        
-        Args:
-            file_id: The file ID
-            class_id: The class ID
-            extension: The file extension
-            
-        Returns:
-            The new Google File object or None if failed
-        """
+
+        mime_type = self._get_mime_type(extension)
+
         try:
-            # Create a temporary directory if it doesn't exist
-            temp_dir = os.path.join(os.getcwd(), "temp")
-            os.makedirs(temp_dir, exist_ok=True)
-            
-            # Construct the storage paths - try both with and without extension
-            storage_path_with_ext = f"{class_id}/{file_id}.{extension}"
-            storage_path_without_ext = f"{class_id}/{file_id}"
-            local_path = os.path.join(temp_dir, f"{file_id}.{extension}")
-            
-            # Download the file from Supabase - try with extension first, then without
+            with open(local_path, "rb") as f:
+                media = self.google.files.upload(
+                    file=f, config=UploadFileConfig(mime_type=mime_type)
+                )
+            media = self._wait_for_file_activation(media)
+            if not media:
+                logger.error(f"Activation timeout for file {file_id}")
+                return None
+        except Exception as e:
+            logger.error(f"Upload to Google failed for {file_id}: {e}")
+            logger.error(traceback.format_exc())
+            return None
+        finally:
             try:
-                # First try with extension
-                res = self.supabase.storage.from_("files").download(storage_path_with_ext)
-                logger.info(f"Downloaded file with extension: {storage_path_with_ext}")
+                os.remove(local_path)
+            except OSError:
+                pass
+
+        # record in Supabase
+        google_id = media.name
+        
+        # lookup the row‐PK we fetched earlier
+        meta = next(
+            (m for m in self.files_data if m["file_id"] == file_id),
+            {}
+        )
+        pk = meta.get("google_table_id")
+        
+        try:
+            if pk:
+                # update existing record by primary key
+                self.supabase.table("google") \
+                    .update({"google_id": google_id}) \
+                    .eq("id", pk) \
+                    .execute()
+            else:
+                # insert and capture new PK
+                resp = self.supabase.table("google") \
+                    .insert({"file": file_id, "google_id": google_id}) \
+                    .execute()
+                new_pk = resp.data[0]["id"]
+                meta["google_table_id"] = new_pk
+        except Exception as e:
+            logger.error(f"Error upserting google record for file {file_id}: {e}")
+            logger.error(traceback.format_exc())
+
+        return media
+
+    def _upload_document_from_supabase(
+        self,
+        file_id: str,
+        document_id: str,
+        class_id: str,
+        extension: str
+    ) -> Optional[File]:
+        """Download a document from Supabase (raw bytes) and upload it to Google."""
+        temp_dir = os.path.join(os.getcwd(), "temp")
+        os.makedirs(temp_dir, exist_ok=True)
+        local_path = os.path.join(temp_dir, f"{document_id}.{extension}")
+
+        # 1) Download from Supabase (returns bytes, or throws)
+        try:
+            try:
+                data = self.supabase.storage.from_("files") \
+                        .download(f"{class_id}/{file_id}/{document_id}.{extension}")
             except Exception:
-                # If that fails, try without extension
-                logger.info(f"Failed to download with extension, trying without: {storage_path_without_ext}")
-                res = self.supabase.storage.from_("files").download(storage_path_without_ext)
-                logger.info(f"Downloaded file without extension: {storage_path_without_ext}")
-            
-            with open(local_path, 'wb+') as f:
-                f.write(res)
-            
-            # Determine MIME type based on extension
-            mime_type = self._get_mime_type(extension)
-            
-            # Upload to Google
-            with open(local_path, 'rb') as f:
-                media_file = genai.upload_file(f, mime_type=mime_type)
-                
-            # Wait for the file to become active
-            media_file = self._wait_for_file_activation(media_file)
-            if not media_file:
-                logger.error(f"File {file_id} failed to activate within timeout period")
+                data = self.supabase.storage.from_("files") \
+                        .download(f"{class_id}/{file_id}/{document_id}")
+
+            # write raw bytes straight to disk
+            with open(local_path, "wb") as f:
+                f.write(data)
+
+        except Exception as e:
+            logger.error(f"Failed to download document {document_id}: {e}")
+            logger.error(traceback.format_exc())
+            return None
+
+        # 2) Upload to Google
+        mime_type = self._get_mime_type(extension)
+        try:
+            with open(local_path, "rb") as f:
+                media = self.google.files.upload(
+                    file=f,
+                    config=UploadFileConfig(mime_type=mime_type)
+                )
+            media = self._wait_for_file_activation(media)
+            if not media:
+                logger.error(f"{document_id} never became ACTIVE")
                 return None
             
-            # Extract file ID and expiration from response
-            google_file_id = media_file.name
-            expires_at = media_file.expiration_time
-            
-            # Check if there's an existing record for this file
-            existing_record = self.supabase.table("google").select("id").eq("file", file_id).execute()
-            
-            if existing_record.data and len(existing_record.data) > 0:
-                # Update the existing record
-                self.supabase.table("google").update({
-                    "google_id": google_file_id,
-                    "expires_at": expires_at.isoformat()
-                }).eq("file", file_id).execute()
-                logger.info(f"Updated existing Google record for file {file_id}")
-            else:
-                # Insert a new record
-                self.supabase.table("google").insert({
-                    "file": file_id,
-                    "google_id": google_file_id,
-                    "expires_at": expires_at.isoformat()
-                }).execute()
-                logger.info(f"Created new Google record for file {file_id}")
-            
-            # Clean up the temporary file
-            os.remove(local_path)
-            
-            return media_file
-            
-        except Exception as e:
-            logger.error(f"Error uploading file to Google: {str(e)}")
-            return None
-    
+
+            google_id = media.name
+
+            # find the metadata entry so we know the google_table_id
+            meta = next(
+                (m for m in self.documents_data 
+                    if m["document_id"] == document_id),
+                {}
+            )
+            pk = meta.get("google_table_id")
+
+            try:
+                if pk:
+                    # update the existing row by its PK
+                    self.supabase.table("google") \
+                        .update({"google_id": google_id}) \
+                        .eq("id", pk) \
+                        .execute()
+                else:
+                    # insert & capture the new PK
+                    resp = self.supabase.table("google") \
+                        .insert({
+                            "document":   document_id,
+                            "google_id":  google_id
+                        }) \
+                        .execute()
+                    # resp.data[0]["id"] is the new row's PK
+                    new_pk = resp.data[0]["id"]
+                    meta["google_table_id"] = new_pk
+            except Exception as e:
+                logger.error(f"Error upserting google record for doc {document_id}: {e}")
+                logger.error(traceback.format_exc())
+
+            return media
+        finally:
+            try:
+                os.remove(local_path)
+            except OSError:
+                pass
+
+
+
     def _get_mime_type(self, extension: str) -> str:
-        """Determine MIME type based on file extension"""
-        # Make sure extension has a leading dot
+        """Map file extension to MIME type."""
         if not extension.startswith('.'):
             extension = f".{extension}"
-        
-        extension = extension.lower()
-        mime_types = {
-            '.pdf': 'application/pdf',
-            '.jpg': 'image/jpeg',
+        ext = extension.lower()
+        return {
+            '.pdf':  'application/pdf',
+            '.jpg':  'image/jpeg',
             '.jpeg': 'image/jpeg',
-            '.png': 'image/png',
-            '.gif': 'image/gif',
-            '.mp4': 'video/mp4',
-            '.mov': 'video/quicktime',
-            '.mp3': 'audio/mpeg',
-            '.wav': 'audio/wav',
-            '.txt': 'text/plain',
+            '.png':  'image/png',
+            '.gif':  'image/gif',
+            '.mp4':  'video/mp4',
+            '.mov':  'video/quicktime',
+            '.mp3':  'audio/mpeg',
+            '.wav':  'audio/wav',
+            '.txt':  'text/plain',
             '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        }
-        
-        mime_type = mime_types.get(extension, 'application/octet-stream')
-        return mime_type
+        }.get(ext, 'application/octet-stream')
 
-    def _wait_for_file_activation(self, file: File, max_attempts: int = 10, base_delay: float = 0.5) -> Optional[File]:
+    def _wait_for_file_activation(
+        self,
+        media: File,
+        max_attempts: int = 10,
+        base_delay: float = 0.5
+    ) -> Optional[File]:
         """
-        Poll until the Google file becomes active
-        
-        Args:
-            file: The Google File object
-            max_attempts: Maximum number of polling attempts
-            base_delay: Base delay for exponential backoff in seconds
-            
-        Returns:
-            The active File object or None if activation failed
+        Poll until the Google file becomes ACTIVE.
+        Exponential backoff between attempts.
         """
-        import time
-        
-        file_id = file.name
-        logger.info(f"Waiting for Google file {file_id} to become active...")
-        
+        file_id = media.name
         for attempt in range(max_attempts):
             try:
-                # Calculate backoff with exponential increase
-                backoff = base_delay * (2 ** attempt)
-                
-                # Check if the file is active by getting its details
-                file_info = genai.get_file(file_id)
-                
-                # Check for FAILED state first to abort early
-                if hasattr(file_info, 'state'):
-                    if file_info.state == 'FAILED' or getattr(file_info.state, 'name', '') == 'FAILED':
-                        logger.error(f"Google file {file_id} failed to process")
-                        return None
-                    
-                    # Check for ACTIVE state
-                    if file_info.state == 'ACTIVE' or getattr(file_info.state, 'name', '') == 'ACTIVE':
-                        logger.info(f"Google file {file_id} is now active (attempt {attempt+1})")
-                        return file_info
-                    
-                    # Still processing
-                    logger.info(f"Google file {file_id} not yet active, current state: {getattr(file_info.state, 'name', str(file_info.state))} (attempt {attempt+1})")
-                else:
-                    logger.warning(f"Google file {file_id} has no state attribute (attempt {attempt+1})")
-                
-                # Wait with exponential backoff before next attempt
-                logger.info(f"Waiting {backoff:.2f}s before next check...")
-                time.sleep(backoff)
-                
+                info = self.google.files.get(name=file_id)
+                state = getattr(info.state, "name", info.state)
+                if state == "ACTIVE":
+                    logger.info(f"{file_id} is ACTIVE after {attempt+1} attempts")
+                    return info
+                if state == "FAILED":
+                    logger.error(f"{file_id} processed FAILED")
+                    return None
+
+                wait = base_delay * (2 ** attempt)
+                logger.info(f"{file_id} not ACTIVE yet ({state}); retrying in {wait:.2f}s")
+                time.sleep(wait)
             except Exception as e:
-                logger.warning(f"Error checking file status: {str(e)} (attempt {attempt+1})")
-                # Still use backoff on errors
-                time.sleep(backoff)
-        
-        logger.error(f"Google file {file_id} failed to become active after {max_attempts} attempts")
+                logger.warning(f"Check failed for {file_id}: {e}")
+                time.sleep(base_delay * (2 ** attempt))
+        logger.error(f"{file_id} never became ACTIVE")
         return None

@@ -7,8 +7,9 @@
 "use server"
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
+import { AgentType } from "@/types";
 
-export const createMessages = async (messages: { chat: string, class: string, bare_question: string, question: string, files: string[], documents: string[] }[]) => {
+export const createMessages = async (messages: { chat: string, class: string, bare_question: string, question: string, files: string[], documents: string[], start_agent: AgentType }[]) => {
     const supabase = await useSupabaseServer(cookies());
     const { data, error } = await supabase
         .from("messages")

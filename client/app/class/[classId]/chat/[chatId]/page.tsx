@@ -209,19 +209,19 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
           )
           .subscribe();
 
-        const gradesChannel = supabase
-          .channel(`realtime-grades-${chatId}`)
+        const reportsChannel = supabase
+          .channel(`realtime-reports-${chatId}`)
           .on(
             'postgres_changes',
             {
               event: '*',
               schema: 'prod',
-              table: 'grades',
+              table: 'reports',
               filter: `message=in.(${messages.map(m => m.id).join(',')})`
             },
             () => {
               queryClient.invalidateQueries({
-                queryKey: ["grades", chatId]
+                queryKey: ["reports", classId]
               });
             }
           )
@@ -231,7 +231,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
           supabase.removeChannel(figuresChannel);
           supabase.removeChannel(summariesChannel);
           supabase.removeChannel(questionsChannel);
-          supabase.removeChannel(gradesChannel);
+          supabase.removeChannel(reportsChannel);
         };
     }, [chatId, supabase, queryClient, messages]);
 

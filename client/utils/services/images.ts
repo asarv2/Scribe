@@ -28,14 +28,17 @@ export const getSummaryDownloadUrl = (chatId: string, summaryIds: string[], form
     return url.toString();
 }
 
-export const getGradeDownloadUrl = (chatId: string, gradeId: string, format: 'pdf' | 'latex' | 'text') => {
-    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/grade`;
+export const getReportDownloadUrl = (chatId: string, reportIds: string[], format: 'pdf' | 'latex' | 'text') => {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/report`;
     const url = new URL(baseUrl, window.location.origin);
     url.searchParams.append('chat_id', chatId);
-    url.searchParams.append('grade_id', gradeId);
+    reportIds.forEach(id => {
+        url.searchParams.append('report_ids', id);
+    });
     url.searchParams.append('format', format);
     return url.toString();
 }
+
 
 export const getQuestionDownloadUrl = (chatId: string, questionIds: string[], format: 'pdf' | 'latex' | 'text') => {
     

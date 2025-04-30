@@ -109,21 +109,22 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
     const [shouldAnimateTitle, setShouldAnimateTitle] = useState<boolean>(false);
 
     const getContextFiles = () => {
-        const previousMessagesFiles = messages?.flatMap(message =>
-            // Check if references exists and is an array before accessing
-            Array.isArray(message.files) ? message.files : []
-        ) ?? [];
-
-        const allFiles = Array.from(new Set([...(activeChat.files ?? []), ...previousMessagesFiles]));
+        // not using previous messages, since we are tracking a combined history in the chat
+        // const previousMessagesFiles = messages?.flatMap(message =>
+        //     // Check if references exists and is an array before accessing
+        //     Array.isArray(message.files) ? message.files : []
+        // ) ?? [];
+        const allFiles = Array.from(new Set([...(activeChat.files ?? [])]));
         return allFiles;
 
     }
 
     const getContextDocuments = () => {
-        const previousMessagesDocuments = messages?.flatMap(message =>
-            Array.isArray(message.documents) ? message.documents : []
-        ) ?? [];
-        const allDocuments = Array.from(new Set([...(activeChat.documents ?? []), ...previousMessagesDocuments]));
+        // not using previous messages, since we are tracking a combined history in the chat
+        // const previousMessagesDocuments = messages?.flatMap(message =>
+        //     Array.isArray(message.documents) ? message.documents : []
+        // ) ?? [];
+        const allDocuments = Array.from(new Set([...(activeChat.documents ?? [])]));
         return allDocuments;
     }
 
@@ -146,6 +147,10 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 newChatId = chat.id;
             }
 
+            // find the last message of the chat
+            const lastMessage = messages?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+            const startAgent = lastMessage?.end_agent ?? "general";
+
             // Create the message
             const newMessage = {
                 chat: newChatId,
@@ -154,7 +159,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 bare_question: activeChat.prompt,
                 question: activeChat.prompt,
                 files: getContextFiles(),
-                documents: getContextDocuments()
+                documents: getContextDocuments(),
+                start_agent: startAgent
             };
 
             const { success, error, data: messagesData } = await createMessages([newMessage]);

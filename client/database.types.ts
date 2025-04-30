@@ -327,6 +327,7 @@ export type Database = {
         Row: {
           chapter_exercise_references: string[]
           chapter_references: string[]
+          class: string
           code: string
           created_at: string
           file_references: string[]
@@ -347,6 +348,7 @@ export type Database = {
         Insert: {
           chapter_exercise_references?: string[]
           chapter_references?: string[]
+          class?: string
           code?: string
           created_at?: string
           file_references?: string[]
@@ -367,6 +369,7 @@ export type Database = {
         Update: {
           chapter_exercise_references?: string[]
           chapter_references?: string[]
+          class?: string
           code?: string
           created_at?: string
           file_references?: string[]
@@ -385,6 +388,13 @@ export type Database = {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "figures_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "figures_message_fkey"
             columns: ["message"]
@@ -617,6 +627,7 @@ export type Database = {
           correct: boolean
           created_at: string
           documents: string[]
+          end_agent: Database["prod"]["Enums"]["agent"]
           files: string[]
           generation_error: string
           generation_status: Database["prod"]["Enums"]["generation_status"]
@@ -625,8 +636,10 @@ export type Database = {
           last_generation_attempt: string | null
           profile: string | null
           question: string
+          reason: string
           references: string[]
           response: string
+          start_agent: Database["prod"]["Enums"]["agent"]
           status_text: string
         }
         Insert: {
@@ -637,6 +650,7 @@ export type Database = {
           correct?: boolean
           created_at?: string
           documents?: string[]
+          end_agent?: Database["prod"]["Enums"]["agent"]
           files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
@@ -645,8 +659,10 @@ export type Database = {
           last_generation_attempt?: string | null
           profile?: string | null
           question?: string
+          reason?: string
           references?: string[]
           response?: string
+          start_agent?: Database["prod"]["Enums"]["agent"]
           status_text?: string
         }
         Update: {
@@ -657,6 +673,7 @@ export type Database = {
           correct?: boolean
           created_at?: string
           documents?: string[]
+          end_agent?: Database["prod"]["Enums"]["agent"]
           files?: string[]
           generation_error?: string
           generation_status?: Database["prod"]["Enums"]["generation_status"]
@@ -665,8 +682,10 @@ export type Database = {
           last_generation_attempt?: string | null
           profile?: string | null
           question?: string
+          reason?: string
           references?: string[]
           response?: string
+          start_agent?: Database["prod"]["Enums"]["agent"]
           status_text?: string
         }
         Relationships: [
@@ -846,6 +865,7 @@ export type Database = {
           answers: string[]
           chapter_exercise_references: string[]
           chapter_references: string[]
+          class: string
           computational: boolean
           created_at: string
           explanations: string[]
@@ -872,6 +892,7 @@ export type Database = {
           answers?: string[]
           chapter_exercise_references?: string[]
           chapter_references?: string[]
+          class?: string
           computational?: boolean
           created_at?: string
           explanations?: string[]
@@ -898,6 +919,7 @@ export type Database = {
           answers?: string[]
           chapter_exercise_references?: string[]
           chapter_references?: string[]
+          class?: string
           computational?: boolean
           created_at?: string
           explanations?: string[]
@@ -922,7 +944,61 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "questions_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "questions_message_fkey"
+            columns: ["message"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reports: {
+        Row: {
+          content: string
+          created_at: string
+          figures: string[]
+          generation_error: string
+          generation_status: Database["prod"]["Enums"]["generation_status"]
+          id: string
+          last_generation_attempt: string | null
+          message: string
+          references: Json[]
+          title: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          figures?: string[]
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          id?: string
+          last_generation_attempt?: string | null
+          message: string
+          references?: Json[]
+          title?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          figures?: string[]
+          generation_error?: string
+          generation_status?: Database["prod"]["Enums"]["generation_status"]
+          id?: string
+          last_generation_attempt?: string | null
+          message?: string
+          references?: Json[]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_message_fkey"
             columns: ["message"]
             isOneToOne: false
             referencedRelation: "messages"
@@ -935,6 +1011,7 @@ export type Database = {
           body: string
           chapter_exercise_references: string[]
           chapter_references: string[]
+          class: string
           conclusion: string
           created_at: string
           figures: string[]
@@ -956,6 +1033,7 @@ export type Database = {
           body?: string
           chapter_exercise_references?: string[]
           chapter_references?: string[]
+          class?: string
           conclusion?: string
           created_at?: string
           figures?: string[]
@@ -977,6 +1055,7 @@ export type Database = {
           body?: string
           chapter_exercise_references?: string[]
           chapter_references?: string[]
+          class?: string
           conclusion?: string
           created_at?: string
           figures?: string[]
@@ -996,6 +1075,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "summaries_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "summaries_message_fkey"
             columns: ["message"]
             isOneToOne: false
@@ -1006,29 +1092,32 @@ export type Database = {
       }
       usage: {
         Row: {
+          cached_input_tokens: number
           chat: string | null
           created_at: string
-          file: string | null
           id: string
           input_tokens: number
+          model: string
           output_tokens: number
           profile: string | null
         }
         Insert: {
+          cached_input_tokens?: number
           chat?: string | null
           created_at?: string
-          file?: string | null
           id?: string
           input_tokens?: number
+          model?: string
           output_tokens?: number
           profile?: string | null
         }
         Update: {
+          cached_input_tokens?: number
           chat?: string | null
           created_at?: string
-          file?: string | null
           id?: string
           input_tokens?: number
+          model?: string
           output_tokens?: number
           profile?: string | null
         }
@@ -1038,13 +1127,6 @@ export type Database = {
             columns: ["chat"]
             isOneToOne: false
             referencedRelation: "chats"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "usage_file_fkey"
-            columns: ["file"]
-            isOneToOne: false
-            referencedRelation: "files"
             referencedColumns: ["id"]
           },
           {
@@ -1064,6 +1146,19 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      agent:
+        | "general"
+        | "syllabus"
+        | "learn"
+        | "homework"
+        | "review"
+        | "figure"
+        | "summary"
+        | "question"
+        | "content"
+        | "grade"
+        | "analyze"
+        | "report"
       chat_type:
         | "homework-student"
         | "homework-professor"
@@ -1214,6 +1309,20 @@ export type CompositeTypes<
 export const Constants = {
   prod: {
     Enums: {
+      agent: [
+        "general",
+        "syllabus",
+        "learn",
+        "homework",
+        "review",
+        "figure",
+        "summary",
+        "question",
+        "content",
+        "grade",
+        "analyze",
+        "report",
+      ],
       chat_type: [
         "homework-student",
         "homework-professor",

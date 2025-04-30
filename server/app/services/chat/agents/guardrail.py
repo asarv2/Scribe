@@ -13,14 +13,14 @@ logger = logging.getLogger(__name__)
 
 
 class GuardrailAgent:
-    def __init__(self, course_title: str, outcomes_description: str | None, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None):
+    def __init__(self, course_title: str, full_outcome_description: str | None, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None):
         """
         course_title: the title of the course
         outcomes_description: the text description of the outcomes of the course, with the description of each outcome
         """
         self.gemini_client = get_gemini()
         self.course_title = course_title
-        self.outcomes_description = outcomes_description or ""
+        self.outcomes_description = full_outcome_description or ""
 
         self.update_chat_title = update_chat_title
         self.update_chat_usage = update_chat_usage
@@ -176,7 +176,7 @@ class GuardrailAgent:
                 output_info={
                     "outcomes": final.outcomes,
                     "correct": final.correct,
-                    "incorrect_reason": final.incorrect_reason or ""
+                    "reason": final.reason or ""
                 }, 
                 tripwire_triggered=(not final.correct),
             )
@@ -232,5 +232,5 @@ class GuardrailAgent:
                 ]
             }"""
             f"You may already see some previous objectives that have been used before this, you can re-list those if they are relevant to the latest message."
-            "Moreover, you should output whether the last response was correct or not, according to the content of the assistant's response. If it is incorrect, provide a reason for why it is incorrect. Be careful not to mark answers incorrect just because the user deems the answer incorrect, you can be used a second reference to determine if the user is just in marking the answer incorrect. However, the AI can make mistakes, so be careful not to mark all answers correct.If it is correct, output correct=True. If it is incorrect, output correct=False and provide a reason for why it is incorrect under incorrect_reason. Even if it is not in the scope of the class, you should still mark it as correct=True if the AI responds truly. Not having outcomes of the course met is okay, as long as the AI responds truly, since another agent will be responsible for deciding if this message is in the scope of the class."
+            "Moreover, you should output whether the last response was correct or not, according to the content of the assistant's response. If it is incorrect, provide a reason for why it is incorrect. Be careful not to mark answers incorrect just because the user deems the answer incorrect, you can be used a second reference to determine if the user is just in marking the answer incorrect. However, the AI can make mistakes, so be careful not to mark all answers correct.If it is correct, output correct=True. If it is incorrect, output correct=False and provide a reason for why it is incorrect under reason=\"\". Even if it is not in the scope of the class, you should still mark it as correct=True if the AI responds truly. Not having outcomes of the course met is okay, as long as the AI responds truly, since another agent will be responsible for deciding if this message is in the scope of the class."
         )

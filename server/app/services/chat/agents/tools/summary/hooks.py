@@ -4,7 +4,7 @@ from agents.tool import function_tool, FunctionTool, Tool
 from agents.run_context import RunContextWrapper
 from app.extensions import get_supabase
 from app.services.chat.models.main import Documents, Summary, CreateSummaryResponse, CreateFigureResponse
-from app.services.chat.agents.actions.generate.figure.hooks import FigureHooks, create_figures
+from app.services.chat.agents.tools.figure.hooks import create_figures
 from app.services.chat.utils.references import clean_references
 from app.services.chat.utils.figures import clean_figures
 import logging
@@ -282,11 +282,8 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
             figures = summary.figures
 
             # Get references - Fix: Filter out None values before attempting to use them
-            references = []
-            for ref in summary.references:
-                ref_value = wrapper.context.references.get(ref, None)
-                if ref_value is not None:
-                    references.append(ref_value)
+            references = [wrapper.context.references.get(ref, None) for ref in summary.references]
+            references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
 
             # insert a summary in the database, with the generation status set to generating
             summary_response = supabase_client.table('summaries').insert({

@@ -2,6 +2,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from openai import AsyncOpenAI, OpenAI
+from google import genai
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +12,7 @@ load_dotenv()
 # Initialize variables
 supabase_client = None
 gemini_client = None
+google_client = None
 
 # Set paths based on environment
 BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))
@@ -36,7 +38,7 @@ create_directories()
 
 # Initialize clients function - will be called explicitly when needed
 def initialize_clients():
-    global supabase_client, gemini_client
+    global supabase_client, gemini_client, google_client
     
     # Initialize Supabase client only if credentials are available
     if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_PRIVATE_KEY") and supabase_client is None:
@@ -53,6 +55,12 @@ def initialize_clients():
     elif gemini_client is None and os.getenv("GOOGLE_API_KEY"):
         logger.warning("Warning: Google API key not found, running without Gemini client")
 
+    # Creating the google client
+    if os.getenv("GOOGLE_API_KEY") and google_client is None:
+        google_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    elif google_client is None and os.getenv("GOOGLE_API_KEY"):
+        logger.warning("Warning: Google API key not found, running without Google client")
+
 # Get supabase client
 def get_supabase():
     global supabase_client
@@ -66,3 +74,9 @@ def get_gemini():
     if gemini_client is None:
         initialize_clients()
     return gemini_client
+
+def get_google():
+    global google_client
+    if google_client is None:
+        initialize_clients()
+    return google_client

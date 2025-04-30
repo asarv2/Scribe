@@ -5,7 +5,7 @@ from agents.tool import function_tool
 from typing import List
 from app.extensions import get_supabase
 from app.services.chat.models.main import Documents, Question, CreateQuestionResponse, CreateFigureResponse
-from app.services.chat.agents.actions.generate.figure.hooks import create_figures
+from app.services.chat.agents.tools.figure.hooks import create_figures
 import logging
 
 logger = logging.getLogger(__name__)
@@ -286,7 +286,7 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
 
                 # Get references
                 references = [wrapper.context.references.get(ref, None) for ref in question.references]
-                references = [ref for ref in references if ref is not None]
+                references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
                 
                 # insert a question in the database, with the generation status set to generating
                 question_response = supabase_client.table('questions').insert({
@@ -352,7 +352,7 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
 
                 # Get references
                 references = [wrapper.context.references.get(ref, None) for ref in question.references]
-                references = [ref for ref in references if ref is not None]
+                references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
                 
                 # insert a question in the database, with the generation status set to generating
                 question_response = supabase_client.table('questions').insert({
