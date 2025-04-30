@@ -8,7 +8,7 @@
  */
 
 import { Menu, ActionIcon, useMantineColorScheme, Avatar, Text, Group } from '@mantine/core';
-import { IconUser, IconEdit, IconLogout, IconSun, IconMoon, IconEye, IconEyeOff } from '@tabler/icons-react'; // Changed IconSettings to IconEdit
+import { IconUser, IconEdit, IconLogout, IconSun, IconMoon, IconEye, IconEyeOff, IconUserCheck } from '@tabler/icons-react'; // Changed IconSettings to IconEdit
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { Profile } from '@/types';
@@ -92,7 +92,7 @@ export function AccountMenu({ profile, classId }: AccountMenuProps) {
                 )}
 
                 <Menu.Item
-                    leftSection={<IconEdit size={14} />}
+                    leftSection={<IconUserCheck size={14} />}
                     component={Link}
                     href="/account"
                 >
