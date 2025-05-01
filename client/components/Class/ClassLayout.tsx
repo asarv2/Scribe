@@ -21,7 +21,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useMediaQuery } from "@mantine/hooks";
 import { useStudentMode } from "../StudentModeContext";
 import { useMantineColorScheme } from "@mantine/core";
-
+import { ForcedClassModal } from "./ForcedClassModal";
 
 interface ClassLayoutProps {
     children: ReactNode;
@@ -55,19 +55,33 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
     const { data: classData, isLoading: classDataLoading } = useQuery({
         queryKey: ["classes"],
         queryFn: () => getClasses(supabase),
-    })
+    });
 
     // Calculate basePath here
     const basePath = classId ? `/class/${classId}` : '/';
 
+    // Determine if user has no classes
+    const userHasNoClasses = 
+        !profileLoading && 
+        !classDataLoading && 
+        profile && 
+        classData && 
+        getFilteredClasses(profile, classData).length === 0;
+
     return (
         <DndProvider backend={HTML5Backend}>
+            {/* Force the class join modal if user has no classes */}
+            <ForcedClassModal 
+                isOpen={userHasNoClasses}
+                profile={profile}
+                studentMode={studentMode}
+            />
+            
             <AppShell
                 header={{ height: showHeader ? 60 : 0 }}
                 navbar={{
-                    // Set width to 0 to hide the navbar area
                     width: 0,
-                    breakpoint: 'sm', // Keep breakpoint for consistency if needed elsewhere
+                    breakpoint: 'sm',
                 }}
                 padding="md"
                 styles={(theme) => ({
@@ -77,13 +91,10 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
                 })}
             >
                 {showHeader && (
-                    <AppShell.Header
-                    withBorder={false}
-                    >
+                    <AppShell.Header withBorder={false}>
                         <ClassHeader
-                            // Pass classId and basePath
                             classId={classId ?? getFilteredClasses(profile, classData)?.[0]?.id}
-                            basePath={basePath} // Pass basePath
+                            basePath={basePath}
                             showClasses={showClasses}
                         />
                     </AppShell.Header>
