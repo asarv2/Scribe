@@ -95,19 +95,19 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                     padding: 'var(--mantine-spacing-sm)',
                 }}
             >
-                <Group justify="space-between" align="center">
-                    <Group gap="xs">
-                        <Text fw={500} size="sm" truncate="end">
+                <Group justify="space-between" align="center" wrap="nowrap" style={{ width: '100%' }}>
+                    <Group gap="xs" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+                        <Text fw={500} size="sm" truncate="end" style={{ maxWidth: '100%' }}>
                             {activeFile?.title ?? "File Viewer"}
                         </Text>
-                        <Group gap="2">
+                        <Group gap="2" wrap="nowrap">
                             {/* Settings Icon */}
                             {viewerMode.fileId && <FileSettingsModal fileId={viewerMode.fileId} classId={classId} />}
                             {/* Delete Icon */}
                             {viewerMode.fileId && <DeleteFileModal fileId={viewerMode.fileId} classId={classId} />}
                         </Group>
                     </Group>
-                    <Group gap="2">
+                    <Group gap="2" wrap="nowrap">
                         {/* Add to Chat Icon */}
                         {viewerMode.fileId && !isFileInChat && (
                             <Tooltip label={`Add ${contentTypeLabel} to Chat`}>
@@ -115,7 +115,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                                     variant="subtle"
                                     color="blue"
                                     onClick={() => addFileToChat(viewerMode.fileId ?? "")}
-                                    size="lg" // Match other icons
+                                    size="lg"
                                 >
                                     <IconPlus size={18} />
                                 </ActionIcon>
@@ -127,10 +127,10 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                                 <ActionIcon
                                     variant="subtle"
                                     color="gray"
-                                    onClick={handleCloseViewer} // Uses updated handler
-                                    size="lg" // Match other icons
+                                    onClick={handleCloseViewer}
+                                    size="lg"
                                 >
-                                    <IconMinus size={18} />
+                                    <IconX size={18} />
                                 </ActionIcon>
                             </Tooltip>
                         )}
