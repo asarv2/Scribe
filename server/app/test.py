@@ -48,7 +48,7 @@ def create_cache():
     try:
         # Try with dictionary config instead of CreateCachedContentConfig
         cache = client.caches.create(
-            model="models/gemini-2.0-flash-001",
+            model="models/gemini-2.5-flash-preview-04-17-001",
             config={
                 "display_name": "my_cached_file",
                 "contents": [file_obj],
@@ -65,7 +65,7 @@ def run_agent(cache_name):
 
     # 4) Instantiate a Gemini-backed chat model with the cached content
     model = OpenAIChatCompletionsModel(
-        model="gemini-2.0-flash",
+        model="gemini-2.5-flash-preview-04-17",
         model_settings=ModelSettings(
             extra_body={"cachedContent": cache_name},
             include_usage=True,
