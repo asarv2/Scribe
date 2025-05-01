@@ -72,7 +72,7 @@ export function ClassLayout({ children, classId, showHeader = true, showClasses 
         <DndProvider backend={HTML5Backend}>
             {/* Force the class join modal if user has no classes */}
             <ForcedClassModal 
-                isOpen={userHasNoClasses}
+                isOpen={userHasNoClasses ?? false}
                 profile={profile}
                 studentMode={studentMode}
             />
