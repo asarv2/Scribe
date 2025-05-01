@@ -282,9 +282,13 @@ export function ContextPanel({
                 return true;
             }
 
-            return documents?.some(doc =>
-                doc.text?.toLowerCase().includes(query) ||
-                doc.description?.toLowerCase().includes(query)
+            // Find all documents associated with this file
+            const fileDocuments = documents?.filter(doc => doc.file === item.id) || [];
+            
+            // Check if any document's text or description contains the search query
+            return fileDocuments.some(doc => 
+                (doc.text && doc.text.toLowerCase().includes(query)) ||
+                (doc.description && doc.description.toLowerCase().includes(query))
             );
         });
     };
@@ -1087,6 +1091,7 @@ export function ContextPanel({
                         )}
                     </div>
                 )}
+                
             </Stack>
         </Card>
     );
