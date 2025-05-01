@@ -226,13 +226,9 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
 
     const renderClassSelector = () => {
         const hasNoClasses = getFilteredClasses(profile, classData).length === 0;
-        return showClasses && !userLoading && !profileLoading && !classDataLoading && (
+        return showClasses && !userLoading && !profileLoading && !classDataLoading && !hasNoClasses && (
             <Group pt={4}>
-                {hasNoClasses ? <Button
-                    onClick={open}
-                >
-                    {profile && ((profile.professor || profile.admin) && !studentMode) ? "Add Class" : "Join Class"}
-                </Button> : <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+                <Menu trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
                     <Menu.Target>
                         <Button variant="subtle" className={classes.classSelector}>
                             <Center>
@@ -264,7 +260,7 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
                             {profile && ((profile.professor || profile.admin) && !studentMode) ? "Add Class" : "Join Class"}
                         </Menu.Item>
                     </Menu.Dropdown>
-                </Menu>}
+                </Menu>
 
                 <Modal
                     opened={isOpen}
