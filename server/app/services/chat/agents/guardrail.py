@@ -190,7 +190,7 @@ class GuardrailAgent:
             name="Input Guardrail Agent",
             instructions=system_prompt,
             model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash-preview-04-17",
                 openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
@@ -207,7 +207,7 @@ class GuardrailAgent:
             name="Output Guardrail Agent",
             instructions=system_prompt,
             model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash-preview-04-17",
                 openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(

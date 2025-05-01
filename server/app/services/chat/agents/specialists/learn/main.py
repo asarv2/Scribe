@@ -30,7 +30,7 @@ class LearnAgent:
             name="Learn Agent",
             instructions=self.system_prompt,
             model=OpenAIChatCompletionsModel( 
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash-preview-04-17",
                 openai_client=self.gemini_client,
             ),
             model_settings=ModelSettings(
