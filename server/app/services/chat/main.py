@@ -271,7 +271,7 @@ class ChatProcessor(RunHooks):
                     group_id=chat_id,
                     trace_id=self.trace_id,
                     input_guardrails=input_guardrails,
-                    output_guardrails=[self.output_guardrail]
+                    # output_guardrails=[self.output_guardrail]
                 )
                 
                 # Run the agent with the current context

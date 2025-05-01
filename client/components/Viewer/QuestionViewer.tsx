@@ -302,7 +302,21 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                             onChange={(value) => handleAnswerSelect(question.id, value)}
                         >
                             {question.options && question.options.map((option, index) => {
-                                const isCorrectAnswer = question.answers?.includes(option);
+                                // Check if correct by comparing the option text
+                                let isCorrectAnswer = question.answers?.includes(option);
+                                
+                                // Also check if correct by index (for answers like "A", "B", "C", "D" or "1", "2", "3", "4")
+                                if (!isCorrectAnswer && question.answers) {
+                                    // Convert index to letter (0 -> "A", 1 -> "B", etc.)
+                                    const letterAnswer = String.fromCharCode(65 + index);
+                                    // Convert index to number (0 -> "1", 1 -> "2", etc.)
+                                    const numberAnswer = String(index + 1);
+                                    
+                                    // Check if the answer matches the letter or number corresponding to this index
+                                    isCorrectAnswer = question.answers.includes(letterAnswer) || 
+                                                      question.answers.includes(numberAnswer);
+                                }
+                                
                                 const showFeedback = checkedAnswers[question.id];
 
                                 // Determine the style for the option based on whether it's checked and correct
