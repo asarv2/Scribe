@@ -42,6 +42,7 @@ class ChatProcessor(RunHooks):
         self.trace_id = trace_id
         self.current_question = question
         self.current_references = emit_user_references(references)
+        self.current_references_google = emit_google_references(references)
         self.chat_history = []
         # Format past messages into chat history
         for _, q, r in past_messages:
@@ -114,7 +115,10 @@ class ChatProcessor(RunHooks):
         if add_current:
             # Add the current question
             user_message_context = []
-            user_message_context.extend(self.current_references)
+            if self.current_references:
+                user_message_context.extend(self.current_references)
+            if self.current_references_google:
+                user_message_context.append({"role": "user", "content": self.current_references_google})
             user_message_context.append({"role": "user", "content": self.current_question})
             context_summary.extend(user_message_context)
         

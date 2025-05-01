@@ -42,13 +42,36 @@ export async function GET(request: Request) {
                 // Optionally, you could also sign out the user here.
                 return NextResponse.redirect(`${origin}/auth/unauthorized`);
             }
+            
+            // Check directory for professor status
+            const privateKey = process.env.PRIVATE_KEY;
+            let directoryUser = null;
+            try {
+                const { data: directoryData, error: directoryError } = await supabase.functions.invoke(
+                    "check-alias",
+                    {
+                        headers: {
+                            "x-private-key": privateKey ?? "",
+                        },
+                        body: { alias: email.split("@")[0] },
+                    },
+                );
+                
+                if (!directoryError && directoryData) {
+                    const users = directoryData as { name: string; alias: string | null; campus: string | null; title: string | null; }[];
+                    directoryUser = users.find((u) => u.alias === email.split("@")[0]);
+                }
+            } catch (directoryCheckError) {
+                console.error("Error checking directory:", directoryCheckError);
+            }
 
             const classes = await getClasses(supabase);
 
-            // professor status update
-            const isProfessor = classes.some((c) =>
-                c.professors.includes(email)
-            );
+            // professor status update - now includes directory check
+            const isProfessorFromClasses = classes.some((c) => c.professors.includes(email));
+            const isProfessorFromDirectory = directoryUser?.title !== null && 
+                directoryUser?.title.toLowerCase().includes("professor");
+            const isProfessor = isProfessorFromClasses || isProfessorFromDirectory;
 
             const filteredClasses = isProfessor
                 ? classes.filter((c) => c.professors.includes(email))

@@ -104,7 +104,7 @@ export const ViewerPanel = memo(({ viewerMode, setViewerMode, addFileToChat, add
                             {/* Settings Icon */}
                             {viewerMode.fileId && <FileSettingsModal fileId={viewerMode.fileId} classId={classId} />}
                             {/* Delete Icon */}
-                            {viewerMode.fileId && <DeleteFileModal fileId={viewerMode.fileId} classId={classId} />}
+                            {viewerMode.fileId && <DeleteFileModal fileId={viewerMode.fileId} classId={classId} onDelete={handleCloseViewer} />}
                         </Group>
                     </Group>
                     <Group gap="2" wrap="nowrap">

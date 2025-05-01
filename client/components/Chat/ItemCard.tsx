@@ -1,6 +1,6 @@
 import { useDrop } from "react-dnd";
 import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Image, Box } from "@mantine/core"; // Added Box
-import { IconX, IconPlus, IconLoader } from "@tabler/icons-react"; // Changed IconEye to IconPlus
+import { IconX, IconPlus, IconLoader, IconCircleX } from "@tabler/icons-react"; // Changed IconEye to IconPlus, added IconCircleX
 import { useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Document, ViewerMode } from "@/types";
@@ -37,6 +37,68 @@ export default function ItemCard({
     onReorder?: (draggedId: string, targetId: string) => void,
 }) {
     const containerRef = useRef<HTMLDivElement | null>(null);
+
+    // Get color based on parse status
+    const getStatusColor = () => {
+        switch (item.parse_status) {
+            case 'uploading':
+                return 'blue';
+            case 'compressing':
+                return 'yellow';
+            case 'extracting':
+                return 'violet';
+            case 'processing':
+                return 'green';
+            case 'error':
+                return 'red';
+            case 'complete':
+                return 'teal';
+            default:
+                return 'gray';
+        }
+    };
+
+    // Centralized file progress calculation based on parse_status
+    const getFileProgress = (fileId: string) => {
+        // If no file documents, return 0
+        if (!fileDocuments) return 0;
+
+        // Handle different states with appropriate progress calculations
+        switch (item.parse_status) {
+            case 'compressing':
+                // Use compression_progress (0-100) for compressing state
+                return item.compression_progress ? item.compression_progress : 0;
+            case 'extracting':
+                return item.extraction_progress ? item.extraction_progress : 0;
+            case 'processing':
+                return item.processing_progress ? item.processing_progress : 0;
+            case 'uploading':
+                // For uploading, we rely on the tus progress updates
+                return item.upload_progress ? item.upload_progress : 0;
+            case 'complete':
+                return 100;
+            default:
+                return 0;
+        }
+    };
+
+    // Get progress label based on status
+    const getProgressLabel = () => {
+        const progress = Math.round(getFileProgress(item.id));
+
+        switch (item.parse_status) {
+            case 'compressing':
+                return `Compressing: ${progress}%`;
+            case 'extracting':
+                return `Extracting: ${progress}%`;
+            case 'processing':
+                return `Processing: ${progress}%`;
+            case 'uploading':
+                return `Uploading: ${progress}%`;
+            default:
+                return `${progress}%`;
+        }
+    };
 
     // Add the useDrop hook to handle drag-and-drop functionality
     const [{ isOver }, drop] = useDrop(() => ({
@@ -142,32 +204,63 @@ export default function ItemCard({
                                             onFileDelete();
                                         }}
                                         style={{
-                                            color: "red", // Red color for the "X"
-                                            cursor: "pointer", // Pointer cursor
+                                            color: "red",
+                                            cursor: "pointer",
                                             display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
                                         }}
                                     >
-                                        <IconX size={16} /> {/* Use IconX for a plain red "X" */}
+                                        <IconX size={16} />
                                     </div>
                                 </Tooltip>
                             ) : (
-                                // Render plus icon for context in the panel
-                                <Tooltip label="Add to Chat">
-                                    {/* Wrap ActionIcon in a Box */}
-                                    <Box>
-                                        <ActionIcon variant="subtle" size="md" onClick={(e) => {
-                                            e.stopPropagation();
-                                            // Only allow adding if the file is complete or in processing stages
-                                            if (item.parse_status === 'complete' || item.parse_status === 'extracting' || item.parse_status === 'processing') {
-                                                addFileToChat(item.id); // Add to chat on icon click
-                                            }
-                                        }}>
-                                            <IconPlus size={20} />
-                                        </ActionIcon>
-                                    </Box>
-                                </Tooltip>
+                                // Render status indicators or plus icon based on parse_status
+                                <>
+                                    {item.parse_status === 'idle' ? (
+                                        <Tooltip label="Loading...">
+                                            <ActionIcon variant="transparent" color="blue" size="sm">
+                                                <Loader size={"xs"} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    ) : item.parse_status === 'error' ? (
+                                        <Tooltip label="Error Processing">
+                                            <ActionIcon variant="light" color="red" size="sm">
+                                                <IconCircleX size={16} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    ) : (item.parse_status === 'uploading' || item.parse_status === 'compressing' ||
+                                        item.parse_status === 'extracting' ||
+                                        item.parse_status === 'processing') ? (
+                                        <Tooltip label={getProgressLabel()}>
+                                            <RingProgress
+                                                size={40}
+                                                thickness={2}
+                                                sections={[{
+                                                    value: getFileProgress(item.id),
+                                                    color: getStatusColor()
+                                                }]}
+                                                label={
+                                                    <Text size="xs" ta="center" fw={500} c={getStatusColor()}>
+                                                        {Math.round(getFileProgress(item.id))}%
+                                                    </Text>
+                                                }
+                                            />
+                                        </Tooltip>
+                                    ) : (
+                                        // Render plus icon for complete files
+                                        <Tooltip label="Add to Chat">
+                                            <Box>
+                                                <ActionIcon variant="subtle" size="md" onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    addFileToChat(item.id);
+                                                }}>
+                                                    <IconPlus size={20} />
+                                                </ActionIcon>
+                                            </Box>
+                                        </Tooltip>
+                                    )}
+                                </>
                             )}
                         </>
                     </Group>
