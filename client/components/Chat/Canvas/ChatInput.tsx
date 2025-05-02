@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState, useEffect, useCallback } from "react"; // Removed useCallback
+import React, { memo, useRef, useState, useEffect, useCallback, useMemo } from "react"; // Removed useCallback
 import { ChatMessage, Document, File, ViewerMode, AgentType } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton, Popover, UnstyledButton } from "@mantine/core"; // Import Badge
 import { ContextBadges } from "./ContextBadges";
@@ -22,7 +22,7 @@ interface ChatInputProps {
   isInitializing?: boolean;
   chatId: string;
   classId: string;
-  onSend: () => void;
+  onSend: () => Promise<void>;
   onRemoveFile: (fileId: string) => void;
   onRemoveDocument: (documentId: string) => void;
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
@@ -118,35 +118,48 @@ export const ChatInput = memo(({
   //   }
   // }, [chatId]); // Run when chatId changes (e.g., navigating from existing chat to new)
 
-  // 2. Debounce the input change handler
-  const debouncedSetPrompt = useCallback(
-    debounce((value: string) => {
+  // Modify the debounced input handler to use useMemo instead of useCallback
+  const debouncedSetPrompt = useMemo(
+    () => debounce((value: string) => {
       setActiveChat(prev => ({ ...prev, prompt: value }));
-    }, 10), // Small delay that won't be noticeable but reduces render frequency
+    }, 10),
     [setActiveChat]
   );
 
-  // 3. Optimize the onChange handler
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // Update the textarea value directly for immediate feedback
+  // Add cleanup for debounce on unmount
+  useEffect(() => () => debouncedSetPrompt.cancel(), [debouncedSetPrompt]);
+
+  const handleSendClick = async () => {
+    // Sync the last keystroke into state before sending
+    const text = textareaRef.current?.value.trim() ?? "";
+    setActiveChat(prev => ({ ...prev, prompt: text }));
+    
+    await onSend();
+    
+    // Cancel any pending debounced updates
+    debouncedSetPrompt.cancel();
+    
+    // Clear the DOM input
     if (textareaRef.current) {
-      textareaRef.current.value = e.target.value;
+      textareaRef.current.value = '';
     }
-    // Debounce the state update
+  };
+
+  // Optimize the onChange handler to just update DOM and debounce
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // No need to manually set textareaRef.current.value as it happens automatically
     debouncedSetPrompt(e.target.value);
   };
 
-  // 4. Optimize the keydown handler
+  // Update the keydown handler to use the centralized send function
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (!loading && textareaRef.current?.value.trim()) {
-        // Update state synchronously before sending
-        setActiveChat(prev => ({ ...prev, prompt: textareaRef.current?.value || '' }));
-        onSend();
+        handleSendClick();
       }
     }
-  }, [loading, onSend, setActiveChat]);
+  }, [loading, handleSendClick]);
 
   const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -154,37 +167,30 @@ export const ChatInput = memo(({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // 5. Optimize the global keydown handler
+  // Update the global keydown handler to use the same centralized send function
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      // Only proceed if not already in an input element
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
         return;
       }
 
-      // Check if Enter key is pressed
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
 
-        // Handle recording state
         if (isRecording) {
           setEnterDuringRec(true);
           stopRecording();
           return;
         }
 
-        // Send message if there's content
         const currentValue = textareaRef.current?.value || '';
         if (!loading && !transcribing && currentValue.trim()) {
-          // Update state synchronously before sending
-          setActiveChat(prev => ({ ...prev, prompt: currentValue }));
-          onSend();
+          handleSendClick();
         }
         return;
       }
 
-      // Focus and type single characters
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         textareaRef.current?.focus();
       }
@@ -192,17 +198,17 @@ export const ChatInput = memo(({
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [loading, onSend, isRecording, transcribing, setActiveChat]);
+  }, [loading, handleSendClick, isRecording, transcribing]);
 
-  // Add useEffect to send message after transcription completes if Enter was pressed
+  // Update the useEffect for sending after transcription
   useEffect(() => {
     if (enterDuringRec && !transcribing && !isRecording && !recordingMode) {
-      if (!loading && activeChat.prompt.trim()) {
-        onSend();
+      if (!loading && textareaRef.current?.value.trim()) {
+        handleSendClick();
       }
       setEnterDuringRec(false);
     }
-  }, [enterDuringRec, transcribing, isRecording, recordingMode, loading, activeChat.prompt, onSend]);
+  }, [enterDuringRec, transcribing, isRecording, recordingMode, loading, handleSendClick]);
 
   /* ---------- WaveSurfer logic (identical to OLD) ---------- */
   const initWaveSurfer = async () => {
@@ -273,7 +279,16 @@ export const ChatInput = memo(({
       fd.append('task', 'transcribe');
       const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/audio`, { method: 'POST', body: fd });
       const { text } = await r.json();
-      setActiveChat(p => ({ ...p, prompt: p.prompt + text.trim() }));
+      
+      // Update the textarea directly
+      if (textareaRef.current) {
+        const currentValue = textareaRef.current.value;
+        const newValue = currentValue + text.trim();
+        textareaRef.current.value = newValue;
+        
+        // Also update the state
+        debouncedSetPrompt(newValue);
+      }
     } catch (e) { console.error(e); }
     finally {
       setTranscribing(false);
@@ -516,7 +531,7 @@ export const ChatInput = memo(({
                 <Box className={classes.textareaContainer} style={{ position: 'relative' }}>
                   <Textarea
                     ref={textareaRef}
-                    // 6. Use the direct value from ref instead of state for rendering
+                    // Change from controlled to uncontrolled component
                     defaultValue={activeChat.prompt}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
@@ -533,13 +548,13 @@ export const ChatInput = memo(({
                     disabled={isInitializing || loading}
                   />
                   <Box className={classes.actionButtonContainer}>
-                    {activeChat.prompt.trim() ? (
+                    {textareaRef.current?.value?.trim() ? (
                       <Tooltip label="Send Message (Enter)">
                         <ActionIcon
-                          onClick={onSend}
+                          onClick={handleSendClick}
                           size="lg"
                           loading={loading}
-                          disabled={!activeChat.prompt.trim() || loading}
+                          disabled={loading}
                           variant="subtle"
                           color="blue"
                           className={classes.sendButton}
