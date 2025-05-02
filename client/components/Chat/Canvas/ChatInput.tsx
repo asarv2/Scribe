@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState, useEffect } from "react"; // Removed useCallback
+import React, { memo, useRef, useState, useEffect, useCallback } from "react"; // Removed useCallback
 import { ChatMessage, Document, File, ViewerMode, AgentType } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton, Popover, UnstyledButton } from "@mantine/core"; // Import Badge
 import { ContextBadges } from "./ContextBadges";
@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import { getFiles } from "@/utils/queries/get-files";
+import { debounce } from "lodash";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
@@ -126,29 +127,91 @@ export const ChatInput = memo(({
   //   }
   // }, [chatId]); // Run when chatId changes (e.g., navigating from existing chat to new)
 
+  // 2. Debounce the input change handler
+  const debouncedSetPrompt = useCallback(
+    debounce((value: string) => {
+      setActiveChat(prev => ({ ...prev, prompt: value }));
+    }, 10), // Small delay that won't be noticeable but reduces render frequency
+    [setActiveChat]
+  );
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  // 3. Optimize the onChange handler
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // Update the textarea value directly for immediate feedback
+    if (textareaRef.current) {
+      textareaRef.current.value = e.target.value;
+    }
+    // Debounce the state update
+    debouncedSetPrompt(e.target.value);
+  };
+
+  // 4. Optimize the keydown handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (!loading && activeChat.prompt.trim()) {
+      if (!loading && textareaRef.current?.value.trim()) {
+        // Update state synchronously before sending
+        setActiveChat(prev => ({ ...prev, prompt: textareaRef.current?.value || '' }));
         onSend();
       }
     }
-  };
-
-  const getShortcutText = () => {
-    if (os === 'macos') {
-      return '⌘M';  // Command symbol + M for macOS
-    } else {
-      return 'Ctrl+M';  // Ctrl + M for Windows/Linux/others
-    }
-  };
+  }, [loading, onSend, setActiveChat]);
 
   const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
+
+  // 5. Optimize the global keydown handler
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      // Only proceed if not already in an input element
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      // Check if Enter key is pressed
+      if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+
+        // Handle recording state
+        if (isRecording) {
+          setEnterDuringRec(true);
+          stopRecording();
+          return;
+        }
+
+        // Send message if there's content
+        const currentValue = textareaRef.current?.value || '';
+        if (!loading && !transcribing && currentValue.trim()) {
+          // Update state synchronously before sending
+          setActiveChat(prev => ({ ...prev, prompt: currentValue }));
+          onSend();
+        }
+        return;
+      }
+
+      // Focus and type single characters
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        textareaRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [loading, onSend, isRecording, transcribing, setActiveChat]);
+
+  // Add useEffect to send message after transcription completes if Enter was pressed
+  useEffect(() => {
+    if (enterDuringRec && !transcribing && !isRecording && !recordingMode) {
+      if (!loading && activeChat.prompt.trim()) {
+        onSend();
+      }
+      setEnterDuringRec(false);
+    }
+  }, [enterDuringRec, transcribing, isRecording, recordingMode, loading, activeChat.prompt, onSend]);
 
   /* ---------- WaveSurfer logic (identical to OLD) ---------- */
   const initWaveSurfer = async () => {
@@ -226,79 +289,6 @@ export const ChatInput = memo(({
       setRecordingMode(false);
     }
   };
-
-  /* ---------- key handling ---------- */
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (!loading && activeChat.prompt.trim()) onSend();
-    }
-  };
-
-  // Modify the useEffect to ensure WaveSurfer is initialized properly
-  useEffect(() => {
-    // Initialize wavesurfer when the component mounts and waveformRef is available
-    if (waveformRef.current && recordingMode) { // Only init if needed
-      initWaveSurfer();
-    }
-
-    // Clean up function
-    return () => {
-      if (wavesurferRef.current) {
-        wavesurferRef.current.destroy();
-        wavesurferRef.current = null;
-      }
-    };
-  }, [recordingMode]); // Re-run if recordingMode changes
-
-  // Add back the useEffect for automatically focusing the chat
-  useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      // Only trigger if focus is not already on an input or contenteditable element
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
-        return;
-      }
-
-      // Check if Enter key is pressed and not with modifiers
-      if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-
-        // If recording, stop recording and flag that Enter was pressed
-        if (isRecording) {
-          setEnterDuringRec(true);
-          stopRecording();
-          return;
-        }
-
-        // Send message if there's content and not loading or transcribing
-        if (!loading && !transcribing && activeChat.prompt.trim()) {
-          onSend();
-        }
-        return;
-      }
-
-      // Check if the key is a single character and not a modifier key
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        // Focus the text area if not already focused
-        textareaRef.current?.focus();
-      }
-    };
-
-    window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [activeChat.prompt, loading, onSend, isRecording, transcribing]);
-
-  // Add useEffect to send message after transcription completes if Enter was pressed
-  useEffect(() => {
-    if (enterDuringRec && !transcribing && !isRecording && !recordingMode) {
-      if (!loading && activeChat.prompt.trim()) {
-        onSend();
-      }
-      setEnterDuringRec(false);
-    }
-  }, [enterDuringRec, transcribing, isRecording, recordingMode, loading, activeChat.prompt, onSend]);
-
 
   // Function to render mode options in the popover
   const renderModeOptions = () => {
@@ -535,8 +525,9 @@ export const ChatInput = memo(({
                 <Box className={classes.textareaContainer} style={{ position: 'relative' }}>
                   <Textarea
                     ref={textareaRef}
-                    value={activeChat.prompt}
-                    onChange={(e) => setActiveChat(prev => ({ ...prev, prompt: e.target.value }))}
+                    // 6. Use the direct value from ref instead of state for rendering
+                    defaultValue={activeChat.prompt}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder="Add context and start chatting . . ."
                     autosize
