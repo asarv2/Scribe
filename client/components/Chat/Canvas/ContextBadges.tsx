@@ -70,6 +70,11 @@ export const ContextBadges = memo(({
                             width: "auto", // Dynamically adjust width based on content
                             maxWidth: "100%", // Prevent overflow
                         }}
+                        onClick={(e) => {
+                            if (setViewerMode) {
+                                handleDocumentClick(fileId, file.id, setViewerMode, false);
+                            }
+                        }}
                     >
                         <ItemCard
                             item={{
@@ -81,7 +86,7 @@ export const ContextBadges = memo(({
                             profileId={""} // Not needed for badges
                             color={CONTENT_COLORS[file.content_type ?? "other"]}
                             contextType={file.content_type ?? "other"}
-                            addFileToChat={() => {}} // No-op for badges
+                            addFileToChat={() => { }} // No-op for badges
                             isVisible={true}
                             makeDraggable={false}
                             setViewerMode={setViewerMode}
@@ -102,6 +107,11 @@ export const ContextBadges = memo(({
                             width: "auto", // Dynamically adjust width based on content
                             maxWidth: "100%", // Prevent overflow
                         }}
+                        onClick={(e) => {
+                            if (setViewerMode) {
+                                handleDocumentClick(file.id, document.id, setViewerMode, true);
+                            }
+                        }}
                     >
                         <ItemCard
                             item={{
@@ -113,7 +123,7 @@ export const ContextBadges = memo(({
                             profileId={""} // Not needed for badges
                             color={CONTENT_COLORS[file.content_type ?? "other"]}
                             contextType={file.content_type ?? "other"}
-                            addFileToChat={() => {}} // No-op for badges
+                            addFileToChat={() => { }} // No-op for badges
                             isVisible={true}
                             makeDraggable={false}
                             setViewerMode={setViewerMode}

@@ -926,14 +926,6 @@ export function ContextPanel({
                                 flexDirection: 'column',
                                 flex: 1,
                                 overflow: 'hidden',
-                                // Use the data attribute selector for the active drop state
-                                '&[data-accept]': {
-                                    position: 'relative',
-                                    backgroundColor: 'transparent', // Keep transparent
-                                    borderRadius: '8px',
-                                    border: `4px dashed ${colorScheme === 'dark' ? '#228be6' : '#1864ab'}`,
-                                    zIndex: 1000
-                                }
                             },
                             inner: {
                                 pointerEvents: 'auto',

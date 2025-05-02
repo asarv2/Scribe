@@ -323,7 +323,7 @@ export const ChatInput = memo(({
               variant={activeChat.agentType === mode ? "light" : "subtle"}
               color={details.color}
               size="sm"
-              leftSection={<details.icon size={16} style={{ color: getColorValue(details.color) }} />}
+              leftSection={<details.icon size={16} />}
               onClick={() => {
                 setActiveChat((prev) => ({ ...prev, agentType: mode }));
                 setModePopoverOpened(false);
@@ -339,19 +339,11 @@ export const ChatInput = memo(({
       </Stack>
     );
   };
-
-  // Inside the component, add this helper function to get the color value
-  const getColorValue = (color: string) => {
-    const theme = useMantineTheme();
-    // Return the light variant color from Mantine's theme
-    return theme.colors[color][4]; // Using index 4 for a medium brightness
-  };
-
+  
   const currentModeDetails = getModeDetails(activeChat.agentType, activeChat.teacher);
   const ModeIcon = currentModeDetails.icon;
-  const modeColor = getColorValue(currentModeDetails.color);
+  const modeColor = currentModeDetails.color;
   const hasContext = activeChat.files.length > 0 || activeChat.documents.length > 0;
-
 
   return (
     // Wrap the main Stack in a Box with relative positioning
@@ -398,18 +390,20 @@ export const ChatInput = memo(({
             }}
           >
             <Popover.Target>
-              <UnstyledButton
-                className={classes.modeSelectorButton}
+              <ActionIcon
+                variant="transparent"
+                color={modeColor}
                 onMouseEnter={() => setModePopoverOpened(true)}
                 onMouseLeave={() => setModePopoverOpened(false)}
-                data-active={modePopoverOpened || undefined}
                 style={{ 
                   opacity: isInitializing ? 0.5 : 1,
                   pointerEvents: isInitializing ? 'none' : 'auto'
                 }}
+                size="lg"
+                onClick={() => setModePopoverOpened(!modePopoverOpened)}
               >
-                <ModeIcon size={28} color={modeColor} />
-              </UnstyledButton>
+                <ModeIcon size={28} />
+              </ActionIcon>
             </Popover.Target>
             <Popover.Dropdown
               className={classes.modePopoverDropdown}
