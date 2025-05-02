@@ -45,4 +45,5 @@ pydub==0.25.1
 filelock==3.13.1
 
 openai==1.76.0
-openai-agents==0.0.13
+openai-agents[litellm]==0.0.14
+
