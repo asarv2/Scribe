@@ -1,0 +1,10 @@
+/* MarkdownImage.module.css */
+.markdownImage {
+  @mixin dark {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  @mixin light {
+    filter: none;
+  }
+}

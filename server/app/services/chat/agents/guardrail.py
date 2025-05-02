@@ -10,7 +10,8 @@ from app.extensions import get_supabase
 from app.services.chat.utils.references import process_special_tags
 import json
 logger = logging.getLogger(__name__)
-
+from openai.types.responses.response_input_item_param import Message
+from openai.types.responses.response_input_image_param import ResponseInputImageParam
 
 class GuardrailAgent:
     def __init__(self, course_title: str, full_outcome_description: str | None, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None):
@@ -33,6 +34,22 @@ class GuardrailAgent:
         async def input_guardrail_function( 
             ctx: RunContextWrapper[Documents], agent: Agent, input: str | list[TResponseInputItem]
         ) -> GuardrailFunctionOutput:
+            
+            if isinstance(input, list):
+                new_input = []
+                for item in input:
+                    if isinstance(item, dict) and isinstance(item.get("content"), list):
+                        has_image = False
+                        for content_item in item.get("content"):
+                            if isinstance(content_item, dict) and content_item.get("type") == "input_image":
+                                has_image = True
+                                break
+                        if not has_image:
+                            new_input.append(item)
+                    else:
+                        new_input.append(item)
+                input = new_input
+
             result = await Runner.run(self.input_guardrail_agent, input, context=ctx.context)
             output = result.final_output_as(InitialChatOutput)
 

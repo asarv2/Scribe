@@ -84,7 +84,7 @@ async def create_summary_check(
     )
 
 async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: List[Summary]) -> List[CreateSummaryResponse]:
-    """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via LaTeX, you should create figure prompts within the create_summaries tool, and they will be added to the summary.
+    """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via LaTeX, you should create figure prompts within the create_summaries tool, and they will be added to the summary. Use markdown bullet points to make the summary more readable.
 
     To include document references in the summary, you should use [x], where x is the reference number. This helps to leave the user with a reference to the document that they can click on to view the document.
 
@@ -360,7 +360,7 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
     return responses
 
 async def create_summary(wrapper: RunContextWrapper[Documents], summary: Summary) -> CreateSummaryResponse:
-    """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via LaTeX, you should create figure prompts within the create_summaries tool, and they will be added to the summary.
+    """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via LaTeX, you should create figure prompts within the create_summaries tool, and they will be added to the summary. Use markdown bullet points to make the summary more readable.
 
     To include document references in the summary, you should use [x], where x is the reference number. This helps to leave the user with a reference to the document that they can click on to view the document.
 

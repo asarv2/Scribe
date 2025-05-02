@@ -44,21 +44,12 @@ const getModeDetails = (agentType: AgentType, isTeacher: boolean) => {
     
     // Teacher modes
     case 'analyze': return { label: 'Analyze', icon: IconChartScatter, color: 'violet' };
-    case 'report': return { label: 'Report', icon: IconReportAnalytics, color: 'grape' };
     case 'content': return { label: 'Content', icon: IconBook, color: 'pink' };
     case 'grade': return { label: 'Grade', icon: IconPresentation, color: 'orange' };
-    
-    // Common modes
-    case 'figure': return { label: 'Figure', icon: IconChartScatter, color: 'green' };
-    case 'summary': return { label: 'Summary', icon: IconReportAnalytics, color: 'yellow' };
-    case 'question': return { label: 'Question', icon: IconQuestionMark, color: 'blue' };
-    case 'syllabus': return { label: 'Syllabus', icon: IconBook, color: 'lime' };
-    
-    // Default/General
-    default: return { label: 'General', icon: IconClipboardText, color: 'orange' };
+
+    default: return { label: 'Learn', icon: IconBook, color: 'green' };
   }
 };
-
 
 export const ChatInput = memo(({
   activeChat,

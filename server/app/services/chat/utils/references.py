@@ -18,7 +18,13 @@ def clean_references(
     references: Dict[int, Dict[str, Any]]
 ) -> str:
     """
-    Replace “[n]” or “[n, m]” with one or more <DOCUMENT>doc_id</DOCUMENT> tags.
+    Replace citation references with <DOCUMENT>doc_id</DOCUMENT> tags.
+    
+    Handles multiple citation formats:
+    - "[n]" - Single reference
+    - "[n, m]" - Multiple comma-separated references
+    - "[n, p. x]" - Reference with page number (ignores page info)
+    - "[n-m]" - Range of references from n to m inclusive
     
     - If references[n]["file"] is True, we look up *all* documents whose
       .file == that file_id and emit one DOCUMENT tag per document.
@@ -47,9 +53,24 @@ def clean_references(
         for r in rows:
             file_to_docs[r["file"]].append(r["id"])
 
-    # 3) replacement function for “[1,2,…]”
+    # 3) replacement function for citation patterns
     def _replace(match: re.Match) -> str:
-        nums = [int(n.strip()) for n in match.group(1).split(",")]
+        citation_text = match.group(1)
+        nums = []
+        
+        # Check for range pattern [n-m]
+        range_match = re.match(r'(\d+)\s*-\s*(\d+)', citation_text)
+        if range_match:
+            start, end = int(range_match.group(1)), int(range_match.group(2))
+            nums = list(range(start, end + 1))  # inclusive range
+        else:
+            # Handle comma-separated references and page numbers
+            for part in citation_text.split(','):
+                # Extract just the reference number, ignoring page info
+                num_match = re.match(r'\s*(\d+)', part)
+                if num_match:
+                    nums.append(int(num_match.group(1)))
+        
         parts: list[str] = []
         for n in nums:
             entry = references.get(n)
@@ -66,7 +87,7 @@ def clean_references(
         return "".join(parts)
 
     # 4) apply across the entire text
-    return re.sub(r"\[([0-9\s,]+)\]", _replace, text)
+    return re.sub(r"\[([0-9\s,\-\.p]+)\]", _replace, text)
 
 
 async def fetch_chat_context(supabase, chat_id, class_id):
@@ -270,7 +291,7 @@ async def get_mapped_references(
                 file=False,
             ))
 
-    # 6b. any “stray” docs not under explicitly passed files
+    # 6b. any "stray" docs not under explicitly passed files
     stray = [d for d in all_docs if d["file"] not in fset]
     stray.sort(key=lambda d: (
         file_meta[d["file"]]["title"],
