@@ -332,14 +332,14 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                             <Group>
                                 <Select
                                     placeholder="Select syllabus file"
-                                    data={files?.map(file => ({ value: file.id, label: file.title })) || []}
+                                    data={files?.filter(file => file.content_type === 'syllabus').map(file => ({ value: file.id, label: file.title })) || []}
                                     value={editableClasses[classItem.id]?.syllabus}
                                     onChange={(value) => handleEditableChange(classItem.id, 'syllabus', value || '')}
                                     style={{ flexGrow: 1 }}
                                     disabled={syllabusLoading || loadingFiles}
                                     label="Syllabus"
                                 />
-                                {/* <Box pt={24}>
+                                <Box pt={24}>
                                     <Tooltip label="Import Class & Outcomes">
                                         <ActionIcon
                                             color="blue"
@@ -350,7 +350,7 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                                             <IconFileImport size={18} />
                                         </ActionIcon>
                                     </Tooltip>
-                                </Box> */}
+                                </Box>
                             </Group>
                             <Group grow>
                                 <TextInput
@@ -375,61 +375,61 @@ export default function Management({ classId, showInitialClassInfo = true }: Man
                         </Stack>}
 
                         {/* Join Code Section */}
-                        <Group gap="md" align="center">
-                            <TextInput
-                                label="Join Code"
-                                value={joinCode?.code || ''}
-                                placeholder="Click to generate code"
-                                readOnly
-                            />
-                            {joinCode ?
-                                <Group gap="xs" pt={24}>
-                                    <Tooltip label={copySuccess ? "Copied!" : "Copy to clipboard"}>
-                                        <ActionIcon
-                                            onClick={handleCopyCode}
-                                            variant="subtle"
-                                            color={copySuccess ? "green" : "blue"}
-                                        >
-                                            {copySuccess ? <IconCheck size={18} /> : <IconCopy size={18} />}
-                                        </ActionIcon>
-                                    </Tooltip>
-                                    <Tooltip label="Delete Code">
-                                        <ActionIcon
-                                            onClick={() => handleDeleteCode(joinCode?.id || '')}
-                                            variant="subtle"
-                                            color="red"
-                                            loading={deleteLoading}
-                                            disabled={deleteLoading}
-                                        >
-                                            <IconTrash size={18} />
-                                        </ActionIcon>
-                                    </Tooltip>
-                                </Group> :
-                                <Group gap="xs" pt={24}>
-                                    <Tooltip label="Generate Code">
-                                        <ActionIcon
-                                            onClick={() => handleGenerateCode(classItem.id)}
-                                            variant="outline"
-                                            color="green"
-                                            loading={generateLoading}
-                                            disabled={generateLoading}
-                                        >
-                                            <IconPlus size={18} />
-                                        </ActionIcon>
-                                    </Tooltip>
-                                </Group>}
-                        </Group>
+                        <Flex justify="space-between" align="flex-end">
+                            <Group gap="md" align="center">
+                                <TextInput
+                                    label="Join Code"
+                                    value={joinCode?.code || ''}
+                                    placeholder="Click to generate code"
+                                    readOnly
+                                />
+                                {joinCode ?
+                                    <Group gap="xs" pt={24}>
+                                        <Tooltip label={copySuccess ? "Copied!" : "Copy to clipboard"}>
+                                            <ActionIcon
+                                                onClick={handleCopyCode}
+                                                variant="subtle"
+                                                color={copySuccess ? "green" : "blue"}
+                                            >
+                                                {copySuccess ? <IconCheck size={18} /> : <IconCopy size={18} />}
+                                            </ActionIcon>
+                                        </Tooltip>
+                                        <Tooltip label="Delete Code">
+                                            <ActionIcon
+                                                onClick={() => handleDeleteCode(joinCode?.id || '')}
+                                                variant="subtle"
+                                                color="red"
+                                                loading={deleteLoading}
+                                                disabled={deleteLoading}
+                                            >
+                                                <IconTrash size={18} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    </Group> :
+                                    <Group gap="xs" pt={24}>
+                                        <Tooltip label="Generate Code">
+                                            <ActionIcon
+                                                onClick={() => handleGenerateCode(classItem.id)}
+                                                variant="outline"
+                                                color="green"
+                                                loading={generateLoading}
+                                                disabled={generateLoading}
+                                            >
+                                                <IconPlus size={18} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    </Group>}
+                            </Group>
+                            <Button
+                                onClick={() => handleSavePrompts(classItem.id)}
+                                disabled={!hasChanges}
+                                loading={saveLoading[classItem.id]}
+                            >
+                                Save
+                            </Button>
+                        </Flex>
                     </Stack>
                 </Paper>
-                <Group justify="flex-end">
-                    <Button
-                        onClick={() => handleSavePrompts(classItem.id)}
-                        variant={hasChanges ? "filled" : "light"}
-                        loading={saveLoading[classItem.id]}
-                    >
-                        Save Changes
-                    </Button>
-                </Group>
             </Stack>
         );
     };

@@ -31,6 +31,8 @@ const getContentTypeLabel = (contentType: ContentType | undefined): string => {
     switch (contentType) {
         case 'lecture': return 'Lecture';
         case 'homework': return 'Homework';
+        case 'syllabus': return 'Syllabus';
+        case 'practice': return 'Practice';
         case 'rubric': return 'Rubric';
         case 'textbook': return 'Textbook';
         default: return 'File';

@@ -100,6 +100,22 @@ export default function FileViewer({
         const file = files?.find(f => document.file === f.id);
         if (!file) return { width: 1, height: 1 }; // Default square
         
+        // First check if the file has a specific aspect_ratio set
+        if (file.aspect_ratio) {
+            switch (file.aspect_ratio) {
+                case 'square':
+                    return { width: 1.25, height: 1 }; // 1:1 square. A little wider than square
+                case 'landscape':
+                    return { width: 16, height: 9 }; // 16:9 landscape (presentations)
+                case 'portrait':
+                    return { width: 8.5, height: 11 }; // 8.5x11 portrait (papers)
+                default:
+                    // Fall through to the existing logic for 'default' or unrecognized values
+                    break;
+            }
+        }
+        
+        // Fallback to existing logic based on file type and content_type
         if (file.type !== 'other' && file.type !== 'image') {
             if (file.content_type === 'lecture') {
                 return { width: 16, height: 9 }; // Landscape 16:9 for lectures

@@ -6,7 +6,7 @@
 
 import { cookies } from "next/headers";
 import useSupabaseServer from "../supabase/supabase-server";
-import { ContentType, File, FileType, ParseStatus } from "@/types";
+import { ContentType, File, FileAspectRatio, FileType, ParseStatus } from "@/types";
 
 export const createFile = async (
     classId: string, 
@@ -237,6 +237,17 @@ export const updateFileDate = async (fileId: string, fileDate: string | null) =>
     return { success: true, error: "" };
 }
 
+export const updateFileAspectRatio = async (fileId: string, aspectRatio: FileAspectRatio) => {
+    const supabase = await useSupabaseServer(cookies());
+    const { error } = await supabase
+        .from("files")
+        .update({aspect_ratio: aspectRatio})
+        .eq("id", fileId);
+    if (error) {
+        return { success: false, error: error.message };
+    }
+    return { success: true, error: "" };
+}
 
 export const markFileIdle = async (fileId: string) => {
     const supabase = await useSupabaseServer(cookies());

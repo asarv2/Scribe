@@ -7,7 +7,7 @@
  */
 
 import { TextInput, Group, Stack, Tooltip, ActionIcon, Card, Text, Skeleton, Image, Flex, Loader, RingProgress, Menu, useMantineColorScheme } from "@mantine/core"; // Added useMantineColorScheme
-import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX, IconFileCheck, IconCloudUpload } from "@tabler/icons-react"; // Removed Chevrons
+import { IconSearch, IconRefresh, IconEye, IconUpload, IconFileTypePpt, IconFileExcel, IconBookDownload, IconFile, IconCircleX, IconFileCheck, IconCloudUpload, IconDots, IconPencil, IconClipboardList, IconClipboardText, IconCertificate, IconChalkboard, IconBook } from "@tabler/icons-react"; // Added new icons
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
@@ -78,6 +78,9 @@ export function ContextPanel({
     const firstTextbookRef = useRef<string | null>(null);
     const firstHomeworkRef = useRef<string | null>(null);
     const firstOtherRef = useRef<string | null>(null);
+    const firstSyllabusRef = useRef<string | null>(null);
+    const firstPracticeRef = useRef<string | null>(null);
+    const firstRubricRef = useRef<string | null>(null);
 
     // Initialize lastProgressUpdate state with null
     const [lastProgressUpdate, setLastProgressUpdate] = useState<number | null>(null);
@@ -363,9 +366,11 @@ export function ContextPanel({
         const contentTypeOrder = {
             'homework': 1,
             'lecture': 2,
-            'rubric': 3,
-            'textbook': 4,
-            'other': 5
+            'syllabus': 3,
+            'practice': 4,
+            'rubric': 5,
+            'textbook': 6,
+            'other': 7
         };
 
         // Filter files based on visibility rules
@@ -384,6 +389,8 @@ export function ContextPanel({
         const filesByType = {
             'homework': visibleFiles.filter(f => f.content_type === 'homework'),
             'lecture': visibleFiles.filter(f => f.content_type === 'lecture'),
+            'syllabus': visibleFiles.filter(f => f.content_type === 'syllabus'),
+            'practice': visibleFiles.filter(f => f.content_type === 'practice'),
             'rubric': visibleFiles.filter(f => f.content_type === 'rubric'),
             'textbook': visibleFiles.filter(f => f.content_type === 'textbook'),
             'other': visibleFiles.filter(f => f.content_type === 'other')
@@ -416,7 +423,9 @@ export function ContextPanel({
                     type: contentType === 'homework' ? 'homeworks' :
                         contentType === 'lecture' ? 'lectures' :
                             contentType === 'textbook' ? 'textbooks' :
-                                contentType === 'rubric' ? 'rubrics' : 'other',
+                                contentType === 'syllabus' ? 'syllabus' :
+                                    contentType === 'practice' ? 'practice' :
+                                        contentType === 'rubric' ? 'rubrics' : 'other',
                     color: CONTENT_COLORS[contentType as keyof typeof CONTENT_COLORS] || CONTENT_COLORS.other,
                 }));
 
@@ -428,6 +437,12 @@ export function ContextPanel({
                     firstTextbookRef.current = filteredFiles[0].id;
                 } else if (contentType === 'homework' && firstHomeworkRef.current === null) {
                     firstHomeworkRef.current = filteredFiles[0].id;
+                } else if (contentType === 'syllabus' && firstSyllabusRef.current === null) {
+                    firstSyllabusRef.current = filteredFiles[0].id;
+                } else if (contentType === 'practice' && firstPracticeRef.current === null) {
+                    firstPracticeRef.current = filteredFiles[0].id;
+                } else if (contentType === 'rubric' && firstRubricRef.current === null) {
+                    firstRubricRef.current = filteredFiles[0].id;
                 } else if (contentType === 'other' && firstOtherRef.current === null) {
                     firstOtherRef.current = filteredFiles[0].id;
                 }
@@ -447,6 +462,9 @@ export function ContextPanel({
     const firstLectureItem = allContentItems.find(item => item.type === 'lectures');
     const firstChapterItem = allContentItems.find(item => item.type === 'textbooks');
     const firstHomeworkItem = allContentItems.find(item => item.type === 'homeworks');
+    const firstSyllabusItem = allContentItems.find(item => item.type === 'syllabus');
+    const firstPracticeItem = allContentItems.find(item => item.type === 'practice');
+    const firstRubricItem = allContentItems.find(item => item.type === 'rubrics');
     const firstOtherItem = allContentItems.find(item => item.type === 'other');
     // Virtualized list setup with improved measurement
     const rowVirtualizer = useVirtualizer({
@@ -759,9 +777,9 @@ export function ContextPanel({
                                                 </ActionIcon>
                                             </Menu.Target>
                                             <Menu.Dropdown>
-                                                <Menu.Label>Upload Content</Menu.Label>
+                                                <Menu.Label>Course Materials</Menu.Label>
                                                 <Menu.Item
-                                                    leftSection={<IconFileTypePpt size={14} />}
+                                                    leftSection={<IconChalkboard size={14} />}
                                                     onClick={() => {
                                                         contentTypeRef.current = 'lecture';
                                                         if (openRef.current) {
@@ -772,7 +790,18 @@ export function ContextPanel({
                                                     Lecture
                                                 </Menu.Item>
                                                 <Menu.Item
-                                                    leftSection={<IconBookDownload size={14} />}
+                                                    leftSection={<IconClipboardText size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'syllabus';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Syllabus
+                                                </Menu.Item>
+                                                <Menu.Item
+                                                    leftSection={<IconBook size={14} />}
                                                     onClick={() => {
                                                         contentTypeRef.current = 'textbook';
                                                         if (openRef.current) {
@@ -782,8 +811,11 @@ export function ContextPanel({
                                                 >
                                                     Textbook
                                                 </Menu.Item>
+
+                                                <Menu.Divider />
+                                                <Menu.Label>Assignments</Menu.Label>
                                                 <Menu.Item
-                                                    leftSection={<IconFileExcel size={14} />}
+                                                    leftSection={<IconClipboardList size={14} />}
                                                     onClick={() => {
                                                         contentTypeRef.current = 'homework';
                                                         if (openRef.current) {
@@ -794,7 +826,21 @@ export function ContextPanel({
                                                     Homework
                                                 </Menu.Item>
                                                 <Menu.Item
-                                                    leftSection={<IconFileCheck size={14} />}
+                                                    leftSection={<IconPencil size={14} />}
+                                                    onClick={() => {
+                                                        contentTypeRef.current = 'practice';
+                                                        if (openRef.current) {
+                                                            openRef.current.click();
+                                                        }
+                                                    }}
+                                                >
+                                                    Practice
+                                                </Menu.Item>
+
+                                                <Menu.Divider />
+                                                <Menu.Label>Evaluation</Menu.Label>
+                                                <Menu.Item
+                                                    leftSection={<IconCertificate size={14} />}
                                                     onClick={() => {
                                                         contentTypeRef.current = 'rubric';
                                                         if (openRef.current) {
@@ -804,8 +850,11 @@ export function ContextPanel({
                                                 >
                                                     Rubric
                                                 </Menu.Item>
+
+                                                <Menu.Divider />
+                                                <Menu.Label>Other</Menu.Label>
                                                 <Menu.Item
-                                                    leftSection={<IconFile size={14} />}
+                                                    leftSection={<IconDots size={14} />}
                                                     onClick={() => {
                                                         contentTypeRef.current = 'other';
                                                         if (openRef.current) {
@@ -955,7 +1004,10 @@ export function ContextPanel({
                                                     (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
                                                     (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
                                                     (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
-                                                    (item.type === 'other' && item.id === firstOtherItem?.id);
+                                                    (item.type === 'other' && item.id === firstOtherItem?.id) ||
+                                                    (item.type === 'syllabus' && item.id === firstSyllabusItem?.id) ||
+                                                    (item.type === 'practice' && item.id === firstPracticeItem?.id) ||
+                                                    (item.type === 'rubric' && item.id === firstRubricItem?.id);
 
                                                 return (
                                                     <div
@@ -1029,6 +1081,9 @@ export function ContextPanel({
                         <div id="lectures-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="textbooks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="homeworks-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="syllabus-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="practice-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
+                        <div id="rubric-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
                         <div id="other-section" style={{ position: 'absolute', top: 0, height: 0 }}></div>
 
                         {allContentItems.length > 0 ? (
@@ -1047,6 +1102,9 @@ export function ContextPanel({
                                     // Add section-specific IDs to the first item of each type
                                     const isFirstOfType =
                                         (item.type === 'lectures' && item.id === firstLectureItem?.id) ||
+                                        (item.type === 'syllabus' && item.id === firstSyllabusItem?.id) ||
+                                        (item.type === 'practice' && item.id === firstPracticeItem?.id) ||
+                                        (item.type === 'rubric' && item.id === firstRubricItem?.id) ||
                                         (item.type === 'textbooks' && item.id === firstChapterItem?.id) ||
                                         (item.type === 'homeworks' && item.id === firstHomeworkItem?.id) ||
                                         (item.type === 'other' && item.id === firstOtherItem?.id);

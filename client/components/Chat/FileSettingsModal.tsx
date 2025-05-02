@@ -15,8 +15,8 @@ import { useStudentMode } from "../StudentModeContext";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { IconSettings } from "@tabler/icons-react";
-import { ContentType, File } from "@/types";
-import { updateFileContentType, updateFileName, updateFileDate } from "@/utils/services/file";
+import { ContentType, File, FileAspectRatio } from "@/types";
+import { updateFileContentType, updateFileName, updateFileDate, updateFileAspectRatio } from "@/utils/services/file";
 import { notifications } from "@mantine/notifications";
 import { DatePickerInput } from "@mantine/dates";
 
@@ -31,6 +31,7 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
     const [title, setTitle] = useState("");
     const [contentType, setContentType] = useState<ContentType>("other");
     const [fileDate, setFileDate] = useState<Date | null>(null);
+    const [aspectRatio, setAspectRatio] = useState<FileAspectRatio>("default");
 
     // User and profile data
     const { data: user, isLoading: loadingUser } = useQuery({
@@ -55,6 +56,7 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
             setTitle(file.title || "");
             setContentType(file.content_type || "other");
             setFileDate(file.file_date ? new Date(file.file_date) : null);
+            setAspectRatio(file.aspect_ratio || "default");
         }
     }, [file]);
 
@@ -81,6 +83,11 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
                 throw new Error(`Failed to update date: ${dateResult.error}`);
             }
 
+            // Update aspect ratio
+            const aspectRatioResult = await updateFileAspectRatio(fileId, aspectRatio);
+            if (!aspectRatioResult.success) {
+                throw new Error(`Failed to update aspect ratio: ${aspectRatioResult.error}`);
+            }
 
             // Invalidate queries to refresh data
             queryClient.invalidateQueries({ queryKey: ["file", fileId] });
@@ -111,6 +118,10 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
                 return `Lecture`
             case 'homework':
                 return `Homework`
+            case 'syllabus':
+                return `Syllabus`
+            case 'practice':
+                return `Practice`
             case 'rubric':
                 return `Rubric`
             case 'textbook':
@@ -158,11 +169,26 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
                         data={[
                             { value: 'lecture', label: 'Lecture' },
                             { value: 'homework', label: 'Homework' },
-                            { value: 'textbook', label: 'Textbook' },
+                            { value: 'syllabus', label: 'Syllabus' },
+                            { value: 'practice', label: 'Practice' },
                             { value: 'rubric', label: 'Rubric' },
+                            { value: 'textbook', label: 'Textbook' },
                             { value: 'other', label: 'Other' },
                         ]}
                         required
+                    />
+                    
+                    <Select
+                        label="Page Orientation"
+                        placeholder="Select page orientation"
+                        value={aspectRatio}
+                        onChange={(value) => setAspectRatio(value as FileAspectRatio)}
+                        data={[
+                            { value: 'default', label: 'Default' },
+                            { value: 'landscape', label: 'Landscape' },
+                            { value: 'portrait', label: 'Portrait' },
+                            { value: 'square', label: 'Square' },
+                        ]}
                     />
 
                     <DatePickerInput
