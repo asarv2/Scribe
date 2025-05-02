@@ -29,6 +29,7 @@ export type ParseStatus = Database[SchemaName]["Enums"]["parse_status"];
 export type FileType = Database[SchemaName]["Enums"]["file_type"];
 export type ContentType = Database[SchemaName]["Enums"]["content_type"];
 export type AgentType = Database[SchemaName]["Enums"]["agent"];
+export type FileAspectRatio = Database[SchemaName]["Enums"]["file_aspect_ratio"];
 
 export type OneDrive = Database[SchemaName]["Tables"]["onedrive"]["Row"];
 

@@ -155,6 +155,35 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
         }
     };
 
+    // Add this function to determine aspect ratio
+    const getAspectRatio = () => {
+        if (!fileData) return { width: 1, height: 1 }; // Default square
+        
+        // First check if the file has a specific aspect_ratio set
+        if (fileData.aspect_ratio) {
+            switch (fileData.aspect_ratio) {
+                case 'square':
+                    return { width: 1, height: 1 }; // 1:1 square
+                case 'landscape':
+                    return { width: 16, height: 9 }; // 16:9 landscape
+                case 'portrait':
+                    return { width: 8.5, height: 11 }; // 8.5x11 portrait
+                default:
+                    // Fall through to content type logic
+                    break;
+            }
+        }
+        
+        // Fallback to content type
+        if (fileData.content_type === 'lecture') {
+            return { width: 16, height: 9 }; // Landscape for lectures
+        } else if (['textbook', 'homework', 'rubric'].includes(fileData.content_type || '')) {
+            return { width: 8.5, height: 11 }; // Portrait for text-heavy content
+        }
+        
+        return { width: 1, height: 1 }; // Square for all other cases
+    };
+
     return (
         <Modal
             opened={viewerMode.showPageDetails}
@@ -175,6 +204,11 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                 },
                 title: {
                     fontWeight: 600
+                },
+                body: {
+                    height: '80vh', // Ensure consistent height
+                    display: 'flex',
+                    flexDirection: 'column'
                 }
             }}
         >
@@ -183,7 +217,7 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    height: '80vh',
+                    flex: 1,
                     width: '100%',
                     border: 'none',
                     position: 'relative'
@@ -193,7 +227,7 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
             >
-                {/* Navigation Controls - Now with subtle styling */}
+                {/* Navigation Controls - Now with better positioning */}
                 <Group style={{ 
                     width: '100%', 
                     position: 'absolute', 
@@ -205,10 +239,12 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0 0'
+                    padding: '0 10px'
                 }}>
                     <ActionIcon 
-                        variant="subtle"
+                        variant="filled"
+                        color="gray"
+                        opacity={0.7}
                         onClick={() => navigateToPage('prev')}
                         disabled={!documents || documents.length <= 1}
                         style={{ cursor: 'pointer' }}
@@ -217,7 +253,9 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                     </ActionIcon>
                     
                     <ActionIcon 
-                        variant="subtle"
+                        variant="filled"
+                        color="gray"
+                        opacity={0.7}
                         onClick={() => navigateToPage('next')}
                         disabled={!documents || documents.length <= 1}
                         style={{ cursor: 'pointer' }}
@@ -227,26 +265,42 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                 </Group>
                 
                 {mediaType === 'image' && (
-                    <Image
-                        src={mediaUrl || "/placeholder_image.svg"}
-                        alt={`Page ${activeDocument?.page}`}
-                        width={1200}
-                        height={1200}
+                    <Box 
                         style={{
-                            maxWidth: '100%',
-                            maxHeight: '60%',
-                            objectFit: "contain"
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            height: '100%',
+                            padding: '0 40px', // Make room for navigation arrows
+                            boxSizing: 'border-box'
                         }}
-                        sizes="100vw"
-                    />
+                    >
+                        <Image
+                            src={mediaUrl || "/placeholder_image.svg"}
+                            alt={`Page ${activeDocument?.page}`}
+                            width={1200}
+                            height={1200}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: "contain",
+                                // Use aspect ratio to determine dimensions
+                                ...(getAspectRatio().width > getAspectRatio().height 
+                                    ? { width: 'auto', height: '90%' } // Landscape
+                                    : { width: '90%', height: 'auto' }) // Portrait or square
+                            }}
+                            sizes="100vw"
+                        />
+                    </Box>
                 )}
                 
                 {mediaType === 'video' && (
-                    <Box style={{ width: '100%', maxHeight: '60%' }}>
+                    <Box style={{ width: '100%', height: '70%', padding: '0 40px' }}>
                         <video 
                             ref={videoRef}
                             controls
-                            style={{ width: '100%', maxHeight: '100%' }}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                         >
                             <source src={mediaUrl} type="video/mp4" />
                             Your browser does not support the video tag.
@@ -255,19 +309,26 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                 )}
                 
                 {mediaType === 'audio' && (
-                    <Box style={{ width: '100%' }}>
-                        <Image
-                            src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${activeDocumentId}.png`}
-                            alt={`Audio waveform`}
-                            width={800}
-                            height={300}
-                            style={{
-                                maxWidth: '100%',
-                                maxHeight: '300px',
-                                objectFit: "contain"
-                            }}
-                            sizes="100vw"
-                        />
+                    <Box style={{ width: '100%', height: '70%', padding: '0 40px' }}>
+                        <Box style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            height: 'calc(100% - 60px)' // Leave room for audio controls
+                        }}>
+                            <Image
+                                src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/files/${classId}/${fileId}/${activeDocumentId}.png`}
+                                alt={`Audio waveform`}
+                                width={800}
+                                height={300}
+                                style={{
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
+                                    objectFit: "contain"
+                                }}
+                                sizes="100vw"
+                            />
+                        </Box>
                         <audio 
                             ref={audioRef}
                             controls
@@ -283,15 +344,16 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                     <Card 
                         style={{ 
                             width: '100%', 
-                            maxHeight: '40%', 
+                            maxHeight: '30%', 
                             overflowY: 'auto',
                             padding: '15px',
                             borderRadius: '8px',
-                            border: '2px solid #DAF7A6' // Light green border
+                            border: '2px solid #DAF7A6', // Light green border
+                            marginTop: 'auto' // Push to bottom
                     }}
-                >
-                    <Latex>
-                        {getActiveDocumentText()}
+                    >
+                        <Latex>
+                            {getActiveDocumentText()}
                         </Latex>
                     </Card>
                 )}

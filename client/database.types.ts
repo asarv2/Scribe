@@ -23,6 +23,8 @@ export type Database = {
           teacher: boolean
           trace: string | null
           type: Database["prod"]["Enums"]["chat_type"]
+          used_documents: string[]
+          used_files: string[]
         }
         Insert: {
           chat_type?: Database["prod"]["Enums"]["chat_type_2"]
@@ -37,6 +39,8 @@ export type Database = {
           teacher?: boolean
           trace?: string | null
           type?: Database["prod"]["Enums"]["chat_type"]
+          used_documents?: string[]
+          used_files?: string[]
         }
         Update: {
           chat_type?: Database["prod"]["Enums"]["chat_type_2"]
@@ -51,6 +55,8 @@ export type Database = {
           teacher?: boolean
           trace?: string | null
           type?: Database["prod"]["Enums"]["chat_type"]
+          used_documents?: string[]
+          used_files?: string[]
         }
         Relationships: [
           {
@@ -408,6 +414,7 @@ export type Database = {
         Row: {
           active: boolean
           additional_info: string
+          aspect_ratio: Database["prod"]["Enums"]["file_aspect_ratio"]
           class: string
           compression_progress: number
           content_type: Database["prod"]["Enums"]["content_type"]
@@ -435,6 +442,7 @@ export type Database = {
         Insert: {
           active?: boolean
           additional_info?: string
+          aspect_ratio?: Database["prod"]["Enums"]["file_aspect_ratio"]
           class?: string
           compression_progress?: number
           content_type?: Database["prod"]["Enums"]["content_type"]
@@ -462,6 +470,7 @@ export type Database = {
         Update: {
           active?: boolean
           additional_info?: string
+          aspect_ratio?: Database["prod"]["Enums"]["file_aspect_ratio"]
           class?: string
           compression_progress?: number
           content_type?: Database["prod"]["Enums"]["content_type"]
@@ -505,33 +514,46 @@ export type Database = {
       }
       google: {
         Row: {
+          chat: string | null
           created_at: string
           deleted: boolean
           document: string | null
-          expires_at: string
+          expires_at: string | null
           file: string | null
           google_id: string
           id: string
+          tokens: number
         }
         Insert: {
+          chat?: string | null
           created_at?: string
           deleted?: boolean
           document?: string | null
-          expires_at: string
+          expires_at?: string | null
           file?: string | null
           google_id: string
           id?: string
+          tokens?: number
         }
         Update: {
+          chat?: string | null
           created_at?: string
           deleted?: boolean
           document?: string | null
-          expires_at?: string
+          expires_at?: string | null
           file?: string | null
           google_id?: string
           id?: string
+          tokens?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "google_chat_fkey"
+            columns: ["chat"]
+            isOneToOne: false
+            referencedRelation: "chats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "google_document_fkey"
             columns: ["document"]
@@ -961,6 +983,7 @@ export type Database = {
       }
       reports: {
         Row: {
+          class: string
           content: string
           created_at: string
           figures: string[]
@@ -973,6 +996,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          class: string
           content?: string
           created_at?: string
           figures?: string[]
@@ -985,6 +1009,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          class?: string
           content?: string
           created_at?: string
           figures?: string[]
@@ -997,6 +1022,13 @@ export type Database = {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "reports_class_fkey"
+            columns: ["class"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reports_message_fkey"
             columns: ["message"]
@@ -1181,6 +1213,7 @@ export type Database = {
         | "summary"
         | "question"
       content_type: "lecture" | "textbook" | "homework" | "rubric" | "other"
+      file_aspect_ratio: "square" | "landscape" | "portrait" | "default"
       file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
       generation_type: "problem" | "summary" | "chat"
@@ -1347,6 +1380,7 @@ export const Constants = {
         "question",
       ],
       content_type: ["lecture", "textbook", "homework", "rubric", "other"],
+      file_aspect_ratio: ["square", "landscape", "portrait", "default"],
       file_type: ["audio", "video", "other", "image", "pdf"],
       generation_status: ["idle", "error", "complete", "generating"],
       generation_type: ["problem", "summary", "chat"],
