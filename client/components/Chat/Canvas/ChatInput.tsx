@@ -1,5 +1,5 @@
 import React, { memo, useRef, useState, useEffect, useCallback, useMemo } from "react"; // Removed useCallback
-import { ChatMessage, Document, File, ViewerMode, AgentType } from "@/types";
+import { ChatMessage, Document, File, ViewerMode, AgentType, Message } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton, Popover, UnstyledButton } from "@mantine/core"; // Import Badge
 import { ContextBadges } from "./ContextBadges";
 import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash, IconClipboardText, IconChartScatter, IconReportAnalytics, IconQuestionMark, IconChevronDown } from "@tabler/icons-react";
@@ -14,6 +14,7 @@ import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import { getFiles } from "@/utils/queries/get-files";
 import { debounce } from "lodash";
+import { getMessages } from "@/utils/queries/get-messages";
 
 interface ChatInputProps {
   activeChat: ChatMessage;
@@ -28,9 +29,7 @@ interface ChatInputProps {
   setViewerMode?: React.Dispatch<React.SetStateAction<ViewerMode>>
   setActiveChat: React.Dispatch<React.SetStateAction<ChatMessage>>
   files?: File[];
-  fileDocuments?: Document[];
-  onAddFileContext: (fileId: string) => void;
-  onAddDocumentContext: (documentId: string) => void;
+  messages?: Message[];
   // Removed animation props
 }
 
@@ -41,7 +40,7 @@ const getModeDetails = (agentType: AgentType, isTeacher: boolean) => {
     case 'learn': return { label: 'Learn', icon: IconBook, color: 'green' };
     case 'homework': return { label: 'Homework', icon: IconFile, color: 'indigo' };
     case 'review': return { label: 'Review', icon: IconClipboardText, color: 'teal' };
-    
+
     // Teacher modes
     case 'analyze': return { label: 'Analyze', icon: IconChartScatter, color: 'violet' };
     case 'content': return { label: 'Content', icon: IconBook, color: 'pink' };
@@ -64,9 +63,7 @@ export const ChatInput = memo(({
   setActiveChat,
   isInitializing = false,
   files,
-  fileDocuments,
-  onAddFileContext,
-  onAddDocumentContext,
+  messages
 }: ChatInputProps) => {
   const supabase = useSupabaseBrowser();
 
@@ -83,40 +80,6 @@ export const ChatInput = memo(({
   const [recordingMode, setRecordingMode] = useState(false);   // 👈 back from OLD
   const [enterDuringRec, setEnterDuringRec] = useState(false);
 
-  const os = useOs();
-
-  const { data: user } = useQuery({
-      queryKey: ["user"],
-      queryFn: () => getUser(supabase)
-  });
-
-  const { data: profile } = useQuery({
-      queryKey: ["profile", user?.id],
-      queryFn: () => getProfile(supabase, user!.id),
-      enabled: !!user?.id
-  });
-
-
-  const { data: filesData, isLoading: loadingFiles } = useQuery({
-      queryKey: ["files", classId],
-      // Use the 'files' prop if available, otherwise fetch (or adjust logic as needed)
-      queryFn: () => files ?? getFiles(supabase, classId!),
-      enabled: !!profile && !files // Only fetch if files prop isn't provided
-  });
-
-  // Use fileDocuments prop if available
-  const documentsData = fileDocuments;
-
-
-  // Add state to track if Enter was pressed during recording
-  const [enterPressedDuringRecording, setEnterPressedDuringRecording] = useState(false);
-
-  // useEffect to open popover on mount for new chats
-  // useEffect(() => {
-  //   if (chatId === "new") {
-  //     setModePopoverOpened(true);
-  //   }
-  // }, [chatId]); // Run when chatId changes (e.g., navigating from existing chat to new)
 
   // Modify the debounced input handler to use useMemo instead of useCallback
   const debouncedSetPrompt = useMemo(
@@ -133,12 +96,12 @@ export const ChatInput = memo(({
     // Sync the last keystroke into state before sending
     const text = textareaRef.current?.value.trim() ?? "";
     setActiveChat(prev => ({ ...prev, prompt: text }));
-    
+
     await onSend();
-    
+
     // Cancel any pending debounced updates
     debouncedSetPrompt.cancel();
-    
+
     // Clear the DOM input
     if (textareaRef.current) {
       textareaRef.current.value = '';
@@ -279,13 +242,13 @@ export const ChatInput = memo(({
       fd.append('task', 'transcribe');
       const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/parse/audio`, { method: 'POST', body: fd });
       const { text } = await r.json();
-      
+
       // Update the textarea directly
       if (textareaRef.current) {
         const currentValue = textareaRef.current.value;
         const newValue = currentValue + text.trim();
         textareaRef.current.value = newValue;
-        
+
         // Also update the state
         debouncedSetPrompt(newValue);
       }
@@ -335,8 +298,11 @@ export const ChatInput = memo(({
       </Stack>
     );
   };
-  
-  const currentModeDetails = getModeDetails(activeChat.agentType, activeChat.teacher);
+
+  const currentModeDetails = getModeDetails(
+    activeChat.agentType,
+    activeChat.teacher
+  )
   const ModeIcon = currentModeDetails.icon;
   const modeColor = currentModeDetails.color;
   const hasContext = activeChat.files.length > 0 || activeChat.documents.length > 0;
@@ -391,7 +357,7 @@ export const ChatInput = memo(({
                 color={modeColor}
                 onMouseEnter={() => setModePopoverOpened(true)}
                 onMouseLeave={() => setModePopoverOpened(false)}
-                style={{ 
+                style={{
                   opacity: isInitializing ? 0.5 : 1,
                   pointerEvents: isInitializing ? 'none' : 'auto'
                 }}
@@ -410,7 +376,7 @@ export const ChatInput = memo(({
               {renderModeOptions()}
             </Popover.Dropdown>
           </Popover>
-        
+
           {isInitializing ? (
             <Box p={"xs"} style={{ flexGrow: 1 }}>
               <Skeleton height={60} />
@@ -419,9 +385,9 @@ export const ChatInput = memo(({
             // Recording UI - Fixed height to prevent shaking
             <Box
               className={classes.recordingBox}
-              style={{ 
-                flexGrow: 1, 
-                marginLeft: 8, 
+              style={{
+                flexGrow: 1,
+                marginLeft: 8,
                 position: 'relative',
                 height: 120, // Fixed height to prevent layout shifts
                 display: 'flex',
@@ -433,7 +399,7 @@ export const ChatInput = memo(({
             >
               {/* Timer in top left corner */}
               {isRecording && (
-                <Text 
+                <Text
                   className={classes.timer}
                   style={{
                     position: 'absolute',
@@ -448,21 +414,21 @@ export const ChatInput = memo(({
                   {formatTime(recordTime * 1000)}
                 </Text>
               )}
-              
+
               {/* Waveform visualization */}
-              <div 
-                ref={waveformRef} 
-                style={{ 
-                  width: '100%', 
+              <div
+                ref={waveformRef}
+                style={{
+                  width: '100%',
                   height: '60px',
                   opacity: transcribing ? 0.3 : 1,
                   transition: 'opacity 0.3s ease'
-                }} 
+                }}
               />
-              
+
               {/* Pulsing recording indicator */}
               {isRecording && (
-                <Box 
+                <Box
                   className={classes.recordingIndicator}
                   style={{
                     position: 'absolute',
@@ -476,10 +442,10 @@ export const ChatInput = memo(({
                   }}
                 />
               )}
-              
+
               {/* Transcribing loader */}
               {transcribing && (
-                <Box 
+                <Box
                   style={{
                     position: 'absolute',
                     top: '50%',
@@ -491,7 +457,7 @@ export const ChatInput = memo(({
                     gap: 8
                   }}
                 >
-                  <Box 
+                  <Box
                     className={classes.loadingDots}
                     style={{
                       display: 'flex',
@@ -504,7 +470,7 @@ export const ChatInput = memo(({
                   </Box>
                 </Box>
               )}
-              
+
               {/* Stop button - always in the same position */}
               <ActionIcon
                 onClick={toggleRecording}
@@ -513,10 +479,10 @@ export const ChatInput = memo(({
                 variant="filled"
                 disabled={transcribing}
                 loading={transcribing}
-                style={{ 
-                  position: 'absolute', 
-                  bottom: 10, 
-                  right: 10, 
+                style={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
                   zIndex: 10,
                   pointerEvents: 'auto'
                 }}
