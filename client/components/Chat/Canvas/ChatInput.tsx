@@ -302,63 +302,20 @@ export const ChatInput = memo(({
 
   // Function to render mode options in the popover
   const renderModeOptions = () => {
-    const studentModes: AgentType[] = ['learn', 'homework', 'review'];
-    const teacherModes: AgentType[] = ['analyze', 'report', 'content', 'grade'];
-    const commonModes: AgentType[] = ['figure', 'summary', 'question', 'syllabus'];
+    const studentModes: AgentType[] = ['learn', 'review', 'homework'];
+    const teacherModes: AgentType[] = ['content', 'analyze', 'grade'];
 
     // Get the appropriate role-specific modes
     const roleModes = activeChat.teacher ? teacherModes : studentModes;
-    const defaultType = 'general';
 
     return (
       <Stack gap="xs">
-        {/* General Option */}
-        <Button
-          variant={activeChat.agentType === defaultType ? "light" : "subtle"}
-          color="orange"
-          size="sm"
-          leftSection={<IconClipboardText size={16} style={{ color: getColorValue('orange') }} />}
-          onClick={() => {
-            setActiveChat((prev) => ({ ...prev, agentType: defaultType }));
-            setModePopoverOpened(false);
-          }}
-          fullWidth
-          justify="flex-start"
-          data-active={activeChat.agentType === defaultType || undefined}
-        >
-          General
-        </Button>
-
         {/* Role-specific Modes */}
         {roleModes.map((mode) => {
           // Special check for homework mode availability
           if (mode === 'homework' && !(files && files.some(file => file.content_type === 'homework'))) {
             return null;
           }
-          const details = getModeDetails(mode, activeChat.teacher);
-          return (
-            <Button
-              key={mode}
-              variant={activeChat.agentType === mode ? "light" : "subtle"}
-              color={details.color}
-              size="sm"
-              leftSection={<details.icon size={16} style={{ color: getColorValue(details.color) }} />}
-              onClick={() => {
-                setActiveChat((prev) => ({ ...prev, agentType: mode }));
-                setModePopoverOpened(false);
-              }}
-              fullWidth
-              justify="flex-start"
-              data-active={activeChat.agentType === mode || undefined}
-            >
-              {details.label}
-            </Button>
-          );
-        })}
-
-        {/* Common Modes - Available to both teachers and students */}
-        <Text size="xs" fw={500} c="dimmed" mt="xs" mb="xxs">Common Modes</Text>
-        {commonModes.map((mode) => {
           const details = getModeDetails(mode, activeChat.teacher);
           return (
             <Button

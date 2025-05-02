@@ -5,7 +5,7 @@ from agents.tool import function_tool
 from typing import List
 from app.extensions import get_supabase
 from app.services.chat.models.main import Documents, Question, CreateQuestionResponse, CreateFigureResponse
-from app.services.chat.agents.tools.figure.hooks import create_figures
+from app.services.chat.agents.tools.figure import create_figures
 import logging
 
 logger = logging.getLogger(__name__)

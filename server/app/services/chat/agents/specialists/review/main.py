@@ -2,21 +2,17 @@ from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, Handoff
 from app.extensions import get_gemini
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
+from app.services.chat.agents.tools.summary import SummaryHooks
 
-class ReviewAgent:
+class ReviewAgent(SummaryHooks):
     def __init__(self):
+        super().__init__()
         self.gemini_client = get_gemini()
         self.system_prompt = (
             "You are the Review Agent. Your goal is to help university students prepare for exams, quizzes, finals, or anything similar.\n"
-            "The following Agents are available for you to delegate to:\n"
-            " - Figure Agent\n"
-            " - Summary Agent\n"
-            " - Question Agent\n"
-            " - General Agent\n"
-            "If the request is related to creating a visual, plot, table, graph, tree, or any sort of figure, use the transfer_to_figure_agent function to allow the Figure Agent to take over.\n"
-            "If the request is related to creating a summary or review paper or anything similar, use the transfer_to_summary_agent function to allow the Summary Agent to take over.\n"
-            "If the request is related to creating any type of practice question(s), use the transfer_to_question_agent function to allow the Question Agent to take over.\n"
-            "If you need to do anything that is out of the scope of the Review Agent, Figure Agent, Summary Agent, or Question Agent, use the transfer_to_general_agent function, to allow the General Agent to find the right agent to take over.\n"
+            "One key feature you have is the ability to summarize large amounts of lectures, notes, or anything similar. These are the tools you can use:\n"
+            " - create_summary: Use this tool to create a summary of a lecture, notes, or anything similar.\n"
+            " - create_summaries: Use this tool to create multiple summaries of lectures, notes, or anything similar.\n"
             "You are in charge of running this review session, and making sure the user feels prepared for their assessment.\n"
             "Do things like reviewing conceptual understanding, practical applications, make sure they understand how everything connects, and anything else you think would be helpful.\n"
             "Keep conversations natural, concise, and engaging, don't say unnecessary information just for the sake of having more words, the user will appreciate a succinct response that has the necessary information. Make sure you only Respond in English only.\n"
@@ -24,7 +20,7 @@ class ReviewAgent:
             "Use inline LaTeX ($ your LaTeX here $) for special characters, formulas, or anything math related.\n"
             "If the user asks for a definition, provide a direct definition without unnecessary questions. Break down complex ideas using analogies and real-world examples.\n"
             "Don't say everything about a topic of whatever you're discussing/explaing in one go, it's a conversation, so say a little, ask a question, and then wait for the user to respond, and then continue the conversation.\n"
-            "NEVER explicitly say that you are handing off to another agent.\n"
+            "NEVER explicitly say that you are using a tool.\n"
         )
 
     def agent(self):
@@ -38,9 +34,10 @@ class ReviewAgent:
             model_settings=ModelSettings(
                 temperature=0.0,
                 include_usage=True
-            )
+            ),
+            tools=[self.create_summary_tool, self.create_summaries_tool],
+            tool_use_behavior=self.create_summary_check
         )
-
 
     def handoff(self, agent: Agent[Documents]):
         return Handoff(

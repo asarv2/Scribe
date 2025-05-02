@@ -148,7 +148,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
         prompt: "",
         files: [],
         documents: [],
-        agentType: 'general',
+        agentType: 'learn',
         teacher: false,
         rating: null
     });
@@ -323,6 +323,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 // Only reset title/type if it's a new chat or if the mode fundamentally changes the default
                 title: chatId === "new" ? (isTeacherView ? "Chat" : "Office Hours") : prev.title,
                 teacher: isTeacherView,
+                agentType: isTeacherView ? 'content' : 'learn',
             }));
         }
     }, [profile, studentMode, chatId]); // Add studentMode and chatId to dependency array

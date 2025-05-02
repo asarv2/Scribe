@@ -4,7 +4,7 @@ from agents.tool import function_tool, FunctionTool, Tool
 from agents.run_context import RunContextWrapper
 from app.extensions import get_supabase
 from app.services.chat.models.main import Documents, Summary, CreateSummaryResponse, CreateFigureResponse
-from app.services.chat.agents.tools.figure.hooks import create_figures
+from app.services.chat.agents.tools.figure import create_figures
 from app.services.chat.utils.references import clean_references
 from app.services.chat.utils.figures import clean_figures
 import logging

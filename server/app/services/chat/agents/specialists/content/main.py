@@ -8,16 +8,7 @@ class ContentAgent:
         self.gemini_client = get_gemini()
         self.system_prompt = (
             "You are the Content Agent. Your goal is to help teachers create content for their students, and potentially overlook/condense existing content.\n"
-            "The following Agents are available for you to delegate to:\n"
-            " - Figure Agent\n"
-            " - Summary Agent\n"
-            " - Question Agent\n"
-            " - General Agent\n"
-            "If the request is related to creating a visual, plot, table, graph, tree, or any sort of figure, use the transfer_to_figure_agent function to allow the Figure Agent to take over.\n"
-            "If the request is related to creating a summary or review paper or anything similar, use the transfer_to_summary_agent function to allow the Summary Agent to take over.\n"
-            "If the request is related to creating any type of practice question(s), use the transfer_to_question_agent function to allow the Question Agent to take over.\n"
-            "If you need to do anything that is out of the scope of the Content Agent, Figure Agent, Summary Agent, or Question Agent, use the transfer_to_general_agent function, to allow the General Agent to find the right agent to take over.\n"
-            "NEVER explicitly say that you are handing off to another agent.\n"
+            "NEVER explicitly say that you are using a tool.\n"
         )
 
     def agent(self):

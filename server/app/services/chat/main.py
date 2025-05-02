@@ -6,7 +6,7 @@ from agents import Agent, Runner, trace, RunHooks, Tool, RunContextWrapper, RawR
 from app.services.chat.models.main import Documents, CreateFigureResponse, CreateQuestionResponse, CreateSummaryResponse, CreateReportResponse, ChatAgents, Reference
 from app.services.chat.utils.references import process_special_tags, clean_references
 from agents.items import TResponseInputItem
-from openai.types.responses import ResponseTextDeltaEvent
+from openai.types.responses import ResponseTextDeltaEvent, ResponseFunctionCallArgumentsDeltaEvent
 import logging
 import asyncio
 from app.services.chat.agents.guardrail import GuardrailAgent
@@ -137,6 +137,23 @@ class ChatProcessor(RunHooks):
         elif agent.name == "Report Agent":
             await self.stream_callback(f"<REPORT_GENERATING>")
 
+
+    async def on_tool_start(
+        self,
+        context: RunContextWrapper[Documents],
+        agent: Agent[Documents],
+        tool: Tool,
+    ) -> None:
+        """Called before a tool is invoked."""
+        if tool.name == "create_figure" or tool.name == "create_figures":
+            await self.stream_callback(f"<FIGURE_GENERATING>")
+        elif tool.name == "create_question" or tool.name == "create_questions":
+            await self.stream_callback(f"<QUESTION_GENERATING>")
+        elif tool.name == "create_summary" or tool.name == "create_summaries":
+            await self.stream_callback(f"<SUMMARY_GENERATING>")
+        elif tool.name == "create_report" or tool.name == "create_reports":
+            await self.stream_callback(f"<REPORT_GENERATING>")
+
     async def on_tool_end(
         self,
         context: RunContextWrapper[Documents],
@@ -210,17 +227,7 @@ class ChatProcessor(RunHooks):
         """Called when the agent produces a final output."""
         chat_id = wrapper.context.chat_id
         message_id = wrapper.context.message_id
-        if agent.name == "General Agent":
-            await self.update_end_agent(message_id, "general")
-        elif agent.name == "Syllabus Agent":
-            await self.update_end_agent(message_id, "syllabus")
-        elif agent.name == "Figure Agent":
-            await self.update_end_agent(message_id, "figure")
-        elif agent.name == "Summary Agent":
-            await self.update_end_agent(message_id, "summary")
-        elif agent.name == "Question Agent":
-            await self.update_end_agent(message_id, "question")
-        elif agent.name == "Learn Agent":
+        if agent.name == "Learn Agent":
             await self.update_end_agent(message_id, "learn")
         elif agent.name == "Review Agent":
             await self.update_end_agent(message_id, "review")
@@ -232,8 +239,6 @@ class ChatProcessor(RunHooks):
             await self.update_end_agent(message_id, "analyze")
         elif agent.name == "Grade Agent":
             await self.update_end_agent(message_id, "grade")
-        elif agent.name == "Report Agent":
-            await self.update_end_agent(message_id, "report")
         else:
             logger.error(f"Unknown agent: {agent.name}")
 
@@ -294,7 +299,7 @@ class ChatProcessor(RunHooks):
 
                 # Process streaming events
                 async for event in result.stream_events():
-                    if event.type == "raw_response_event" and isinstance(event, RawResponsesStreamEvent):
+                    if event.type == "raw_response_event":
                         if isinstance(event.data, ResponseTextDeltaEvent):
                             chunk = event.data.delta
                             cleaned_chunk = clean_references(chunk, documents.references)

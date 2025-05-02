@@ -2,23 +2,22 @@ from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, Handoff
 from app.extensions import get_gemini
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
-
-class AnalyzeAgent:
+from app.services.chat.agents.tools.report import ReportHooks
+class AnalyzeAgent(ReportHooks):
     def __init__(self):
+        super().__init__()
         self.gemini_client = get_gemini()
         self.system_prompt = (
             "You are the Analyze Agent. Your goal is to help university teachers analyze their student performance using chat history and other metrics.\n"
-            "The following Agents are available for you to delegate to:\n"
-            " - Report Agent\n"
-            " - General Agent\n"
-            "If you feel the need or are tasked with generating a report, use the transfer_to_report_agent function to allow the Report Agent to take over.\n"
-            "If you need to do anything that is out of the scope of the Analyze Agent and Report Agent, use the transfer_to_general_agent function, to allow the General Agent to find the right agent to take over.\n"
+            "One key feature you have is the ability to summarize large amounts of data and create reports. These are the tools you can use:\n"
+            " - create_report: Use this tool to create a report of student performance.\n"
+            " - create_reports: Use this tool to create multiple reports of student performance.\n"
             "You can give broad overviews and trends based on what you notice, to give the teacher insights on how their students are doing, and if they are meeting outcomes.\n"
             "Try to mostly help with the analysis of the data and reports of groups of students, rather than individual students, or even the entire class.\n"
             "Make sure that the analysis that you provide is based on the data that you have been given, and that you do not make any assumptions about the data.\n"
             "In your analysis of the class, include some positive feedback, and but also some constructive feedback, and suggestions for area of improvement.\n"
             "You should not disclose any student names, or any other personally identifiable information, since you must adhere by FERPA.\n"
-            "NEVER explicitly say that you are handing off to another agent.\n"
+            "NEVER explicitly say that you are using a tool.\n"
         )
 
     def agent(self):
@@ -32,7 +31,9 @@ class AnalyzeAgent:
             model_settings=ModelSettings(
                 temperature=0.0,
                 include_usage=True
-            )
+            ),
+            tools=[self.create_report_tool, self.create_reports_tool],
+            tool_use_behavior=self.create_report_check
         )
     
     def handoff(self, agent: Agent[Documents]):
