@@ -160,8 +160,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     // Handle FRQ answer input
     const handleFrqAnswerChange = (questionId: string, value: string) => {
         setFrqAnswers(prev => ({ ...prev, [questionId]: value }));
-        // Reset checked status when answer changes
-        setCheckedAnswers(prev => ({ ...prev, [questionId]: false }));
     };
 
     const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = true) => {
@@ -318,10 +316,11 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                 }
                                 
                                 const showFeedback = checkedAnswers[question.id];
+                                const isSelected = selectedAnswers[question.id]?.[0] === String(index);
 
                                 // Determine the style for the option based on whether it's checked and correct
                                 let optionStyle = {};
-                                if (showFeedback) {
+                                if (showFeedback && isSelected) {
                                     if (isCorrectAnswer) {
                                         optionStyle = { backgroundColor: 'rgba(0,200,0,0.1)', padding: '8px', borderRadius: '4px' };
                                     } else {
@@ -343,7 +342,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                             }}
                                         />
 
-                                        {showFeedback && (
+                                        {showFeedback && isSelected && (
                                             <Text size="sm" mt="xs" ml="2rem" c={isCorrectAnswer ? "green.7" : "red.7"}>
                                                 <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
                                                     question.explanations?.[index],
@@ -361,19 +360,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
                     </Box>
                 }
-
-                {/* Check/Reset Answer Button */}
-                <Group justify="flex-end" mt="md">
-                    <Button
-                        onClick={() => setCheckedAnswers(prev => ({ ...prev, [question.id]: !prev[question.id] }))}
-                        disabled={
-                            (question.frq && !frqAnswers[question.id]) ||
-                            (!question.frq && !selectedAnswers[question.id])
-                        }
-                    >
-                        {checkedAnswers[question.id] ? "Hide Feedback" : "Check Answer"}
-                    </Button>
-                </Group>
             </>
         )
     }
@@ -456,6 +442,21 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                         )}
                     </Group>
                     <Group gap="xs">
+                        <Tooltip label={checkedAnswers[question.id] ? "Hide Answer" : "Show Answer"}>
+                            <ActionIcon
+                                variant="subtle"
+                                size="md"
+                                onClick={() => setCheckedAnswers(prev => ({ ...prev, [question.id]: !prev[question.id] }))}
+                                disabled={
+                                    !checkedAnswers[question.id] && (
+                                        (question.frq && !frqAnswers[question.id]) ||
+                                        (!question.frq && !selectedAnswers[question.id])
+                                    )
+                                }
+                            >
+                                {checkedAnswers[question.id] ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                            </ActionIcon>
+                        </Tooltip>
                         <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
                                 <Tooltip label={downloadLoading ? "Downloading..." : "Download Questions"}>

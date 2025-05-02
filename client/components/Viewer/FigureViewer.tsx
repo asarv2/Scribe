@@ -341,7 +341,7 @@ export default function FigureViewer({
                 <IconChevronRight size={20} />
               </ActionIcon>
             </Group>
-            <Text size="sm" c="dimmed">{figure.title}</Text>
+            {showDownloadMenu && <Text size="sm" c="dimmed">{figure.title}</Text>}
             {figure.generation_status === 'generating' && (
               <Text size="sm" c="blue" fw={500}>Generating...</Text>
             )}
@@ -416,7 +416,7 @@ export default function FigureViewer({
         /* Header for single figure with title and download button */
         <Group justify="space-between" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 10, padding: '0 10px' }}>
           <Text size="sm" c="dimmed" p="xs" style={{ borderRadius: '4px' }}>
-            {figure.title}
+            {showDownloadMenu && figure.title}
             {figure.generation_status === 'generating' && (
               <Text span ml="xs" c="blue" fw={500}>Generating...</Text>
             )}

@@ -87,14 +87,18 @@ async def create_question_check(
 async def create_questions(wrapper: RunContextWrapper[Documents], questions: List[Question]) -> List[CreateQuestionResponse]:
     """Generates a list of questions given the questions. This will return the ids of the questions, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
 
+    If you are creating a multiple choice question, you should fill in the options and explanations field to accompany the question. Provide the answer in the answer field. Do not include things like "A", or a) in your options, explanations, or answer as this will automatically be added by the system. The answer should be the exact text of the option that is correct.
+
+    If you are creating a free response question, you should leave the options and explanations field empty, and just provide your full solution in the answer field.
+
     Args:
         List[Question]: 
             title: str = Field(default="") # The title of the question
             question_type: Literal["mcq", "frq"] = "mcq" # The type of question, either "mcq" or "frq"
             question: str = Field(default="") # The question text
-            options: List[str] = Field(default_factory=list) # The options for the question
-            answer: str = Field(default="") # The answer to the question
-            explanations: List[str] = Field(default_factory=list) # The explanations for the question
+            options: List[str] = Field(default_factory=list) # The options for the question. Blank for frq
+            answer: str = Field(default="") # The answer to the question. Full answer for frq
+            explanations: List[str] = Field(default_factory=list) # The explanations for the question. Blank for frq
             references: List[int] = Field(default_factory=list) # The references for the question
             figures: List[Figure] = Field(default_factory=list) # The figures for the question
             message: str = Field(default="") # The message to be displayed to the user after the tool is run
@@ -349,6 +353,11 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
                 question_text = question.question  # Rename to avoid overwriting the question object
                 answer = question.answer
                 figures = question.figures
+                explanations = question.explanations
+
+                # check if answer is empty, and if so, concatenate the explanations
+                if not answer:
+                    answer = "\n".join(explanations)
 
                 # Get references
                 references = [wrapper.context.references.get(ref, None) for ref in question.references]
@@ -412,14 +421,18 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
 async def create_question(wrapper: RunContextWrapper[Documents], question: Question) -> CreateQuestionResponse:
     """Generates a list of questions given the questions. This will return the ids of the questions, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
 
+    If you are creating a multiple choice question, you should fill in the options and explanations field to accompany the question. Provide the answer in the answer field. Do not include things like "A", or a) in your options, explanations, or answer as this will automatically be added by the system. The answer should be the exact text of the option that is correct.
+
+    If you are creating a free response question, you should leave the options and explanations field empty, and just provide your full solution in the answer field.
+
     Args:
         Question: 
             title: str = Field(default="") # The title of the question
             question_type: Literal["mcq", "frq"] = "mcq" # The type of question, either "mcq" or "frq"
             question: str = Field(default="") # The question text
-            options: List[str] = Field(default_factory=list) # The options for the question
-            answer: str = Field(default="") # The answer to the question
-            explanations: List[str] = Field(default_factory=list) # The explanations for the question
+            options: List[str] = Field(default_factory=list) # The options for the question. Blank for frq
+            answer: str = Field(default="") # The answer to the question. Full answer for frq
+            explanations: List[str] = Field(default_factory=list) # The explanations for the question. Blank for frq
             references: List[int] = Field(default_factory=list) # The references for the question
             figures: List[Figure] = Field(default_factory=list) # The figures for the question
             message: str = Field(default="") # The message to be displayed to the user after the tool is run

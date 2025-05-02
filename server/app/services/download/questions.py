@@ -407,6 +407,14 @@ class QuestionsDownloader:
         
             doc.append(NoEscape(r'\end{enumerate}'))
         elif part.get("question_type") == "frq" and "solution" in part:
-            doc.append(NoEscape(f'Solution: {self._clean_content(part["solution"])}'))
+            # Add a line break after the question text
+            doc.append(NoEscape(r'\\'))
+            
+            # Format FRQ solution with a distinct section and color
+            doc.append(NoEscape(r'\vspace{1em}'))  # Increased vertical space before solution
+            doc.append(NoEscape(r'\textbf{Solution:}'))
+            doc.append(NoEscape(r'\begin{quote}'))
+            doc.append(NoEscape(f'\\correct{{{self._clean_content(part["solution"])}}}'))
+            doc.append(NoEscape(r'\end{quote}'))
         
         doc.append(NoEscape(r'\vspace{0.5em}'))

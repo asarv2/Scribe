@@ -318,7 +318,10 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
             preamble = clean_references(preamble, wrapper.context.references)
             body = clean_references(body, wrapper.context.references)
             conclusion = clean_references(conclusion, wrapper.context.references)
-
+            
+            # Fix markdown bullet points by ensuring proper line breaks
+            body = body.replace("\\n-", "\\n\n-")
+            
             # Filter out None values from figure_errors
             figure_errors = [r.error or "Unknown error" for r in figure_responses if not r.success]
 

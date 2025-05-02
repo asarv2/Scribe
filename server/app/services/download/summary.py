@@ -32,9 +32,9 @@ class SummaryDownloader:
                 content += "\n\n" + "-" * 50 + "\n\n"
             
             content += f"# {summary['title']}\n\n"
-            content += summary['preamble'] + "\n\n" 
+            content += self._clean_content(summary['preamble']) + "\n\n" 
             content += self._clean_content(summary['content']) + "\n\n" 
-            content += summary['conclusion']
+            content += self._clean_content(summary['conclusion'])
         
         # Create a safe filename
         safe_name = re.sub(r'[^\w\-_\. ]', '_', combined_title)
