@@ -77,14 +77,8 @@ export const CONTENT_COLORS: Record<ContentType, string> = {
     lecture: 'blue',
     textbook: 'green',
     homework: 'orange',
+    syllabus: 'grape',
+    practice: 'pink',
     rubric: 'yellow',
     other: 'violet',
-};
-
-export const CONTENT_PLURAL: Record<ContentType, string> = {
-    lecture: 'Lectures',
-    textbook: 'Textbooks',
-    homework: 'Homeworks',
-    rubric: 'Rubrics',
-    other: 'Files',
 };

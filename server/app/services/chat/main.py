@@ -268,14 +268,12 @@ class ChatProcessor(RunHooks):
                     documents=documents,
                 )
 
-                input_guardrails = [self.input_guardrail] if len(self.chat_history) == 0 else []
-
                 # Create a new run configuration for each attempt
                 run_config = RunConfig(
                     group_id=chat_id,
                     trace_id=self.trace_id,
-                    input_guardrails=input_guardrails,
-                    # output_guardrails=[self.output_guardrail]
+                    input_guardrails=[self.input_guardrail],
+                    output_guardrails=[self.output_guardrail]
                 )
                 
                 # Run the agent with the current context

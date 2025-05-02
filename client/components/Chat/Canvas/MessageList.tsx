@@ -156,14 +156,14 @@ export const MessageList = memo(({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    
+
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
       // Show button whenever user is not at the bottom
       const isScrolledUp = scrollHeight - scrollTop - clientHeight > 100;
       setShowScrollButton(isScrolledUp);
     };
-    
+
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
@@ -674,8 +674,9 @@ export const MessageList = memo(({
                           border: "1px solid #fa5252",
                         }}
                       >
-                        <Text c="red" fw={500}>
-                          We ran into an issue while creating your response. Try again, or{' '}
+                        <Text c="red" size="sm" fw={500}>
+                          We ran into an issue while creating your response
+                          {message.generation_error ? `: ${message.generation_error}` : ""}{message.generation_error && message.generation_error.endsWith(".") ? "" : "."} Try again, or{' '}
                           <Text span c="red" fw={700} style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => handleBugReport(message)}>
                             press here
                           </Text>{' '}
@@ -795,7 +796,7 @@ export const MessageList = memo(({
         </>
       )}
       <div ref={messagesEndRef} />
-      
+
       {/* Scroll to bottom button - centered and sticky */}
       {showScrollButton && (
         <ActionIcon

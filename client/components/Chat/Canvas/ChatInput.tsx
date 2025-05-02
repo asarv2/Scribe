@@ -1,5 +1,5 @@
 import React, { memo, useRef, useState, useEffect } from "react"; // Removed useCallback
-import { ChatMessage, Document, File, ViewerMode, CONTENT_COLORS, AgentType } from "@/types"; // Import CONTENT_COLORS
+import { ChatMessage, Document, File, ViewerMode, AgentType } from "@/types";
 import { Textarea, Button, Group, Stack, Tooltip, ActionIcon, Box, Text, Progress, useMantineTheme, ScrollArea, Skeleton, Popover, UnstyledButton } from "@mantine/core"; // Import Badge
 import { ContextBadges } from "./ContextBadges";
 import { IconSend, IconMicrophone, IconPlayerStop, IconPlus, IconPlayerPlay, IconPlayerSkipForward, IconPlayerSkipBack, IconVideo, IconX, IconBook, IconFile, IconPencil, IconPresentation, IconTrash, IconClipboardText, IconChartScatter, IconReportAnalytics, IconQuestionMark, IconChevronDown } from "@tabler/icons-react";

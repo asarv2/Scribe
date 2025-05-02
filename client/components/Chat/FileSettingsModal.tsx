@@ -118,6 +118,10 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
                 return `Lecture`
             case 'homework':
                 return `Homework`
+            case 'syllabus':
+                return `Syllabus`
+            case 'practice':
+                return `Practice`
             case 'rubric':
                 return `Rubric`
             case 'textbook':
@@ -165,8 +169,10 @@ export default function FileSettingsModal({ fileId, classId }: { fileId: string,
                         data={[
                             { value: 'lecture', label: 'Lecture' },
                             { value: 'homework', label: 'Homework' },
-                            { value: 'textbook', label: 'Textbook' },
+                            { value: 'syllabus', label: 'Syllabus' },
+                            { value: 'practice', label: 'Practice' },
                             { value: 'rubric', label: 'Rubric' },
+                            { value: 'textbook', label: 'Textbook' },
                             { value: 'other', label: 'Other' },
                         ]}
                         required

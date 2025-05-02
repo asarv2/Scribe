@@ -1191,6 +1191,7 @@ export type Database = {
         | "grade"
         | "analyze"
         | "report"
+      agent2: "general" | "learn" | "content" | "think"
       chat_type:
         | "homework-student"
         | "homework-professor"
@@ -1212,7 +1213,14 @@ export type Database = {
         | "figure"
         | "summary"
         | "question"
-      content_type: "lecture" | "textbook" | "homework" | "rubric" | "other"
+      content_type:
+        | "lecture"
+        | "textbook"
+        | "homework"
+        | "practice"
+        | "syllabus"
+        | "rubric"
+        | "other"
       file_aspect_ratio: "square" | "landscape" | "portrait" | "default"
       file_type: "audio" | "video" | "other" | "image" | "pdf"
       generation_status: "idle" | "error" | "complete" | "generating"
@@ -1356,6 +1364,7 @@ export const Constants = {
         "analyze",
         "report",
       ],
+      agent2: ["general", "learn", "content", "think"],
       chat_type: [
         "homework-student",
         "homework-professor",
@@ -1379,7 +1388,15 @@ export const Constants = {
         "summary",
         "question",
       ],
-      content_type: ["lecture", "textbook", "homework", "rubric", "other"],
+      content_type: [
+        "lecture",
+        "textbook",
+        "homework",
+        "practice",
+        "syllabus",
+        "rubric",
+        "other",
+      ],
       file_aspect_ratio: ["square", "landscape", "portrait", "default"],
       file_type: ["audio", "video", "other", "image", "pdf"],
       generation_status: ["idle", "error", "complete", "generating"],

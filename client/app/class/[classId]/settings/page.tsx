@@ -30,8 +30,6 @@ export default function SettingsPage({ params }: { params: Promise<{ classId: st
 
         </Box>
 
-        <Divider />
-
         <Box>
           <Group justify="space-between">
             <Text size="xl" fw={700}>Outcomes</Text>
