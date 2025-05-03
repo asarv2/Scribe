@@ -44,6 +44,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
     });
 
     useEffect(() => {
+        if (chatId === "new") return;
         const channel = supabase
             .channel(`realtime-chats-${classId}`)
             .on(
@@ -72,6 +73,7 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
     }, [queryClient, supabase, classId, chatId]);
 
     useEffect(() => {
+        if (chatId === "new") return;
         const channel = supabase
             .channel(`realtime-messages-${chatId}`)
             .on(
@@ -83,8 +85,8 @@ export default function ChatPage({ params }: { params: Promise<{ classId: string
                     filter: `chat=eq.${chatId}`
                 },
                 async (payload) => {
-                    const newMessage = payload.new as Message
-                    console.log("messages changed: ", newMessage);
+                    // const newMessage = payload.new as Message
+                    // console.log("messages changed: ", newMessage);
                     queryClient.invalidateQueries({
                         queryKey: ["messages", chatId]
                     });
