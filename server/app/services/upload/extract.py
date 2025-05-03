@@ -39,52 +39,38 @@ class FileExtractor:
     def extract_pdf(self, file_path: str, progress_callback=None) -> List[FileExtractChunk]:
         chunks = []
         try:
-            # Open the PDF file
-            pdf_document = fitz.open(file_path)
-            
-            # Get total pages
-            total_pages = len(pdf_document)
-            
-            # Initial progress update
+            pdf = fitz.open(file_path)
+            total = len(pdf)
             if progress_callback:
-                progress_callback(5.0, "analyzing", f"Analyzing {total_pages} page PDF")
-            
-            # Process each page
-            for page_num, page in enumerate(pdf_document):
-                # Extract text
+                progress_callback(5.0, "analyzing", f"Analyzing {total} pages")
+
+            # render at 300 dpi
+            dpi = 300
+            scale = dpi / 72
+            mat = fitz.Matrix(scale, scale)
+
+            for i, page in enumerate(pdf):
                 text = page.get_text()
-                
-                # Get page as image
-                pix = page.get_pixmap()
-                img_data = pix.tobytes()
-                
-                # Create chunk
-                chunk = FileExtractChunk(
+                pix  = page.get_pixmap(matrix=mat, alpha=False, colorspace=fitz.csRGB)
+                img_data = pix.tobytes("png")
+
+                chunks.append(FileExtractChunk(
                     text=text,
-                    page=page_num + 1,  # 1-based page numbering
+                    page=i+1,
                     image_data=img_data,
                     type='pdf_page'
-                )
-                chunks.append(chunk)
-                
-                # Update progress (5-95%)
+                ))
+
                 if progress_callback:
-                    progress = 5.0 + ((page_num + 1) / total_pages * 90.0)
-                    progress_callback(progress, "processing", f"Processing page {page_num + 1}/{total_pages}")
-            
-            pdf_document.close()
-            
-            # Final progress update
+                    prog = 5.0 + ((i+1)/total)*90.0
+                    progress_callback(prog, "processing", f"Page {i+1}/{total}")
+
+            pdf.close()
             if progress_callback:
                 progress_callback(100.0, "complete", f"Extracted {len(chunks)} pages")
-                
         except Exception as e:
-            logger.error(f"Error parsing PDF: {e}")
-            
-            # Error progress update
             if progress_callback:
-                progress_callback(0.0, "error", f"Error: {str(e)}")
-        
+                progress_callback(0.0, "error", f"Error: {e}")
         return chunks
 
     def extract_audio_or_video(self, file_path: str, progress_callback=None) -> List[FileExtractChunk]:
