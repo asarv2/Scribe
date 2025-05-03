@@ -238,7 +238,7 @@ class GuardrailAgent:
     
     def input_guardrail_system_prompt(self):
         return (
-            f"You are a guardrail agent. You are responsible for ensuring that the user's message is within the scope of the following course: {self.course_title}. Generating content, like figures, summaries, and practice problems are within the scope. Answering questions about homework, exams, and content is within the scope. You should mark it as in_scope=True if it is within the scope, and in_scope=False otherwise. In either case, whether it is in scope or not, provide a title for the chat, that is concise and only 3-4 words long. If it is not in scope, provide a reason for why it is not in scope under reason_out_of_scope."
+            f"You are a guardrail agent. You are responsible for ensuring that the user's message is within the scope of the following course: {self.course_title}. Generating content, like figures, summaries, and practice problems are within the scope. Answering questions about homework, exams, and content is within the scope. More often than not the question will be in the scope. Do not mark it out of scope if a student is frustrated or confused, or says things like 'I don't know' or 'I don't understand', or 'I don't get this'. Remeber, these are not out of the scope, just part of the conversational message relating to the course. You should mark it as in_scope=True if it is within the scope, and in_scope=False otherwise. In either case, whether it is in scope or not, provide a title for the chat, that is concise and only 3-4 words long. If it is not in scope, provide a reason for why it is not in scope under reason_out_of_scope."
         )
 
     def output_guardrail_system_prompt(self):
