@@ -230,6 +230,11 @@
     "@babel/runtime" "^7.12.5"
     tslib "^2.2.0"
 
+"@microsoft/microsoft-graph-types@^2.40.0":
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/microsoft-graph-types/-/microsoft-graph-types-2.40.0.tgz#65f51600ab45ace97d7b1368c47f9e0f835fddca"
+  integrity sha512-1fcPVrB/NkbNcGNfCy+Cgnvwxt6/sbIEEFgZHFBJ670zYLegENYJF8qMo7x3LqBjWX2/Eneq5BVVRCLTmlJN+g==
+
 "@next/env@15.3.1":
   version "15.3.1"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-15.3.1.tgz#fca98dcb90d92d555972cdbf03adf9aa982e2115"
