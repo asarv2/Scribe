@@ -78,8 +78,11 @@ async def handle_chat(
         questions = chat_context.get('questions', [])
         outcomes = chat_context.get('outcomes', [])
 
+        all_file_ids = used_files + file_ids
+        all_document_ids = used_documents + document_ids
+
         # get the mapped references
-        references_list, mapped_references = await get_mapped_references(supabase_client, file_ids, document_ids)
+        references_list, mapped_references = await get_mapped_references(supabase_client, all_file_ids, all_document_ids)
 
         # get the mapped outcomes   
         mapped_outcomes, full_outcome_description, outcomes_description = await get_mapped_outcomes(supabase_client, class_id, outcomes)
@@ -106,12 +109,13 @@ async def handle_chat(
                 "trace": trace_id
             }).eq("id", chat_id).execute()
 
-        async def update_chat_usage(chat_id: str, profile_id: str, input_tokens: int, output_tokens: int):
+        async def update_chat_usage(chat_id: str, profile_id: str, input_tokens: int, output_tokens: int, cached_input_tokens: int):
             supabase_client.table("usage").insert({
                 "chat": chat_id,
                 "profile": profile_id,
                 "input_tokens": input_tokens,
-                "output_tokens": output_tokens
+                "output_tokens": output_tokens,
+                "cached_input_tokens": cached_input_tokens
             }).execute()
 
         async def update_chat_title(chat_id: str, title: str):
@@ -134,9 +138,13 @@ async def handle_chat(
 
         # Initialize processor and response
         processor = ChatProcessor(
+            chat_id=chat_id,
             teacher=teacher,
             starting_agent=current_message['start_agent'],
             course_title=class_title,
+            all_file_ids=all_file_ids,
+            all_document_ids=all_document_ids,
+            references_mapping=mapped_references,
             references=references_list,
             question=current_message['bare_question'],
             past_messages=past_messages,

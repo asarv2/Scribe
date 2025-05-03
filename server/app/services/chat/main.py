@@ -11,17 +11,21 @@ import logging
 import asyncio
 from app.services.chat.agents.guardrail import GuardrailAgent
 from app.services.chat.utils.graph import AgentGraph
-from app.services.chat.utils.references import emit_user_references, emit_google_references
+from app.services.chat.utils.references import emit_user_references, emit_google_references, get_cached_tokens
 
 logger = logging.getLogger(__name__)
 
 class ChatProcessor(RunHooks):
     def __init__(
         self,
+        chat_id: str,
         starting_agent: ChatAgents,
         teacher: bool,
         course_title: str,
         question: str,
+        all_file_ids: List[str],
+        all_document_ids: List[str],
+        references_mapping: Dict[int, Dict[str, Any]],
         references: List[Reference], # current references
         past_messages: List[Tuple[str, str, str]],  # List of (id, question, response)
         past_references: List[List[Reference]], # Will be a 2D array of references, where each sub-array is a list of references for a single message
@@ -29,18 +33,22 @@ class ChatProcessor(RunHooks):
         stream_callback: Optional[Callable[[str], Awaitable[None]]] = None,
         update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None,
         update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str,
-        update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None,
+        update_chat_usage: Optional[Callable[[str, str, int, int, int], Awaitable[None]]] = None,
         update_end_agent: Optional[Callable[[str, ChatAgents], Awaitable[None]]] = None,
         update_chat_files: Optional[Callable[[str, List[str], List[str]], Awaitable[None]]] = None,
         full_outcome_description: Optional[str] = None,
     ):
         super().__init__()
+        self.chat_id = chat_id
         self.supabase_client = get_supabase()
         self.gemini_client = get_gemini()
         self.course_title = course_title
         self.teacher = teacher
         self.trace_id = trace_id
         self.current_question = question
+        self.references_mapping = references_mapping
+        self.all_file_ids = all_file_ids
+        self.all_document_ids = all_document_ids
         self.current_references = emit_user_references(references)
         self.current_references_google = emit_google_references(references)
         self.chat_history = []
@@ -74,8 +82,20 @@ class ChatProcessor(RunHooks):
         self.update_end_agent = update_end_agent
         self.update_chat_files = update_chat_files
 
-        graph = AgentGraph(self.teacher, self.starting_agent)
+        # Combine current and past references
+        all_references = references.copy()
+        for refs in past_references:
+            all_references.extend(refs)
+        graph = AgentGraph(self.chat_id, all_references, self.references_mapping, self.teacher, self.starting_agent)
         self.starting_agent = graph.forward()
+        model_body = self.starting_agent.model_settings.extra_body
+        if model_body and isinstance(model_body, dict) and "cached_content" in model_body:
+            cache_name = model_body.get("cached_content")
+            self.cached_tokens = get_cached_tokens(cache_name)
+            self.is_caching = True
+        else:
+            self.cached_tokens = 0
+            self.is_caching = False
 
         # check if this is a new chat
         new_chat = len(self.chat_history) == 0
@@ -89,7 +109,7 @@ class ChatProcessor(RunHooks):
         context_summary = [{"role": "user", "content": f"I am a {'teacher' if self.teacher else 'student'} at a university. The class you are to help me with is {self.course_title}. You should center your responses around this class only, refraining from creating content that does not pertain to this class.{len(outcomes_description) > 0 and ' The following are the outcomes of the class that you should try to follow in your responses: ' + outcomes_description or ''}\n\nEmphasize the use of inline LaTeX when referencing equations, formulas, and other mathematical content ($ your latex here $). To cite any references, you can create inline citations with [x], where x is the reference number. \n\n You can tell that a reference is a full file if file=True, and otherwise it is a single page number (file=False). If I add references, more likely than not, you should use them. When handing off to another agent, you should prioritize adding the reference to the full file with all the page numbers, instead of each page individually (to save space). Those files from the reference handoff will appear after this message as the chat progresses. When citing your sources to me, you should prioritize the individual page number over the general file reference (for specificity)."}]
 
         # add the google references at the start
-        if self.google_references:
+        if self.google_references and not self.is_caching:
             context_summary.extend(self.google_references)
         
         # Add conversation history
@@ -102,7 +122,7 @@ class ChatProcessor(RunHooks):
             if self.chat_history[i] != "":
                 user_message_context = []
                 # Only add references if they exist for this message
-                if message_index < reference_count:
+                if message_index < reference_count and not self.is_caching:
                     user_message_context.extend(self.chat_references[message_index])
                 user_message_context.append({"role": "user", "content": self.chat_history[i]})
                 context_summary.extend(user_message_context)
@@ -115,9 +135,9 @@ class ChatProcessor(RunHooks):
         if add_current:
             # Add the current question
             user_message_context = []
-            if self.current_references:
+            if self.current_references and not self.is_caching:
                 user_message_context.extend(self.current_references)
-            if self.current_references_google:
+            if self.current_references_google and not self.is_caching:
                 user_message_context.append({"role": "user", "content": self.current_references_google})
             user_message_context.append({"role": "user", "content": self.current_question})
             context_summary.extend(user_message_context)
@@ -242,8 +262,8 @@ class ChatProcessor(RunHooks):
         else:
             logger.error(f"Unknown agent: {agent.name}")
 
-        # update the chat with the used files and documents
-        await self.update_chat_files(chat_id, wrapper.context.used_files, wrapper.context.used_documents)
+        # just update the chat with the current files and documents, according to the references
+        await self.update_chat_files(chat_id, self.all_file_ids, self.all_document_ids)
     
     async def process_message(
         self,
@@ -313,7 +333,8 @@ class ChatProcessor(RunHooks):
                         documents.chat_id, 
                         documents.profile_id, 
                         usage.input_tokens, 
-                        usage.output_tokens
+                        usage.output_tokens,
+                        self.cached_tokens
                     )
                 
                 # If we get here, processing was successful

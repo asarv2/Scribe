@@ -14,7 +14,7 @@ from openai.types.responses.response_input_item_param import Message
 from openai.types.responses.response_input_image_param import ResponseInputImageParam
 
 class GuardrailAgent:
-    def __init__(self, course_title: str, full_outcome_description: str | None, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int], Awaitable[None]]] = None):
+    def __init__(self, course_title: str, full_outcome_description: str | None, update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str, update_chat_usage: Optional[Callable[[str, str, int, int, int], Awaitable[None]]] = None):
         """
         course_title: the title of the course
         outcomes_description: the text description of the outcomes of the course, with the description of each outcome
@@ -63,7 +63,8 @@ class GuardrailAgent:
                 await self.update_chat_usage(ctx.context.chat_id, 
                         ctx.context.profile_id, 
                         ctx.usage.input_tokens, 
-                        ctx.usage.output_tokens)
+                        ctx.usage.output_tokens, 
+                        0)
 
             return GuardrailFunctionOutput(
                 output_info={
@@ -187,7 +188,8 @@ class GuardrailAgent:
                 await self.update_chat_usage(ctx.context.chat_id, 
                         ctx.context.profile_id, 
                         ctx.usage.input_tokens, 
-                        ctx.usage.output_tokens)
+                        ctx.usage.output_tokens,
+                        0)
 
             return GuardrailFunctionOutput(
                 output_info={

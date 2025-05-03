@@ -3,6 +3,7 @@ import logging
 from dotenv import load_dotenv
 from openai import AsyncOpenAI, OpenAI
 from google import genai
+from app.services.chat.models.litellm import LitellmModel
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ load_dotenv()
 supabase_client = None
 gemini_client = None
 google_client = None
+litellm_client = None
 
 # Set paths based on environment
 BASE_FOLDER = "/app" if os.getenv('DOCKER_ENV') else os.path.dirname(os.path.dirname(__file__))
@@ -38,7 +40,7 @@ create_directories()
 
 # Initialize clients function - will be called explicitly when needed
 def initialize_clients():
-    global supabase_client, gemini_client, google_client
+    global supabase_client, gemini_client, google_client, litellm_client
     
     # Initialize Supabase client only if credentials are available
     if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_PRIVATE_KEY") and supabase_client is None:
@@ -61,6 +63,14 @@ def initialize_clients():
     elif google_client is None and os.getenv("GOOGLE_API_KEY"):
         logger.warning("Warning: Google API key not found, running without Google client")
 
+    if os.getenv("GOOGLE_API_KEY") and litellm_client is None:
+        litellm_client = LitellmModel(
+            model="gemini/gemini-1.5-flash-002", # only model with context caching
+            api_key=os.getenv("GOOGLE_API_KEY")
+        )
+    elif litellm_client is None and os.getenv("GOOGLE_API_KEY"):
+        logger.warning("Warning: Google API key not found, running without Litellm client")
+
 # Get supabase client
 def get_supabase():
     global supabase_client
@@ -74,6 +84,13 @@ def get_gemini():
     if gemini_client is None:
         initialize_clients()
     return gemini_client
+
+# Get litellm client
+def get_litellm():
+    global litellm_client
+    if litellm_client is None:
+        initialize_clients()
+    return litellm_client
 
 def get_google():
     global google_client

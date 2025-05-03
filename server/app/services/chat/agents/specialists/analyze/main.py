@@ -1,11 +1,18 @@
 from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, Handoff
-from app.extensions import get_gemini
+from app.extensions import get_gemini, get_litellm
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
 from app.services.chat.agents.tools.report import ReportHooks
+from typing import List, Dict, Any
+from app.services.chat.models.main import Reference
+from app.services.chat.utils.references import emit_google_cache
+
 class AnalyzeAgent(ReportHooks):
-    def __init__(self):
+    def __init__(self, chat_id: str, references: List[Reference], references_mapping: Dict[int, Dict[str, Any]]):
         super().__init__()
+        self.chat_id = chat_id
+        self.references = references
+        self.references_mapping = references_mapping
         self.gemini_client = get_gemini()
         self.system_prompt = (
             "You are the Analyze Agent. Your goal is to help university teachers analyze their student performance using chat history and other metrics.\n"
@@ -21,20 +28,33 @@ class AnalyzeAgent(ReportHooks):
         )
 
     def agent(self):
-        return Agent[Documents](
-            name="Analyze Agent",
-            instructions=self.system_prompt,
-            model=OpenAIChatCompletionsModel( 
-                model="gemini-2.5-flash-preview-04-17",
-                openai_client=self.gemini_client,
-            ),
-            model_settings=ModelSettings(
-                temperature=0.0,
-                include_usage=True
-            ),
-            tools=[self.create_report_tool, self.create_reports_tool],
-            tool_use_behavior=self.create_report_check
-        )
+        litellm_client = get_litellm()
+        cache_name = emit_google_cache(self.chat_id, litellm_client.model, self.system_prompt, self.references, self.references_mapping)
+        if cache_name:
+            return Agent[Documents](
+                name="Analyze Agent",
+                model=litellm_client,
+                model_settings=ModelSettings(
+                    temperature=0.0,
+                    include_usage=True,
+                    extra_body={"cached_content": cache_name}
+                )
+            )
+        else:
+            return Agent[Documents](
+                name="Analyze Agent",
+                instructions=self.system_prompt,
+                model=OpenAIChatCompletionsModel( 
+                    model="gemini-2.5-flash-preview-04-17",
+                    openai_client=self.gemini_client,
+                ),
+                model_settings=ModelSettings(
+                    temperature=0.0,
+                    include_usage=True
+                ),
+                tools=[self.create_report_tool, self.create_reports_tool],
+                tool_use_behavior=self.create_report_check
+            )
     
     def handoff(self, agent: Agent[Documents]):
         return Handoff(

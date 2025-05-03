@@ -221,7 +221,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                     classId,
                     activeChat.title,
                     profileId,
-                    activeChat.teacher,
+                    activeChat.teacher
                 );
                 newChatId = chat.id;
             }

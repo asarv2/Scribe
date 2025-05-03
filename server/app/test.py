@@ -65,6 +65,15 @@ def create_cache():
         print(f"Error creating cache: {str(e)}")
         print("This might be due to quota limitations or API access restrictions.")
 
+async def delete_cache(cache_names):
+    client = genai.Client()
+    for cache_name in cache_names:
+        try:
+            client.caches.delete(name=cache_name)
+            print(f"Deleted cache: {cache_name}")
+        except Exception as e:
+            print(f"Error deleting cache {cache_name}: {str(e)}")
+
 async def run_agent(cache_name):
     gemini_client = AsyncOpenAI(base_url="https://generativelanguage.googleapis.com/v1beta/openai", api_key=os.getenv("GOOGLE_API_KEY"))
 
@@ -263,5 +272,20 @@ if __name__ == "__main__":
     # create_cache()  # Commented out to first check model capabilities
     # asyncio.run(run_agent("cachedContents/4eaq4q3m90db"))
     # asyncio.run(run_agent_new("cachedContents/kfiy51m5q2zc"))
-    asyncio.run(run_agent_litellm("cachedContents/34jopukfx5di"))
+    # asyncio.run(run_agent_litellm("cachedContents/34jopukfx5di"))
     # google_test()
+    caches = [
+        "cachedContents/mh2v95ub1v6t",
+        "cachedContents/byv86z83vg9e",
+        "cachedContents/wdp8wil9fb44",
+        "cachedContents/9b6nd9qfuebw",
+        "cachedContents/lqw5dohjykfe",
+        "cachedContents/lh4ifj4bnxme",
+        "cachedContents/x87wqd4zywsw",
+        "cachedContents/ju8qhcs1sjff",
+        "cachedContents/a0y5a8x6m6eo",
+        "cachedContents/33ltx8kqyn6r",
+        "cachedContents/5nhob4gtk9e1",
+        "cachedContents/3ld9bzc19l8g"
+    ]
+    asyncio.run(delete_cache(caches))

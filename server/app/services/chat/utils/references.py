@@ -1,12 +1,14 @@
 import re
 from collections import defaultdict
+import time
 from typing import Dict, List, Tuple, Any, Callable
 import json
 import logging
 import math
 from app.services.chat.utils.google import GoogleFiles
 from app.services.chat.models.main import Reference, ReferencesOutputSchema
-from app.extensions import get_supabase
+from app.extensions import get_supabase, get_google
+from google.genai import types
 
 logger = logging.getLogger(__name__)
 
@@ -276,6 +278,7 @@ async def get_mapped_references(
             number=file_no,
             title=title,
             url=url,
+            stray=False,
             file=True,
         ))
 
@@ -288,6 +291,7 @@ async def get_mapped_references(
                 number=doc_no,
                 title=reference_title(doc, ftype, file_meta[fid]["title"]),
                 url=document_google.get(did, ""),
+                stray=False,
                 file=False,
             ))
 
@@ -307,6 +311,7 @@ async def get_mapped_references(
             number=doc_no,
             title=reference_title(doc, ftype, file_meta[fid]["title"]),
             url=document_google.get(did, ""),
+            stray=True,
             file=False,
         ))
 
@@ -356,6 +361,136 @@ def emit_google_references(references: List[Reference]) -> List[Dict[str, Any]]:
                 "text": f"Reference {reference.number}: {reference.title}"
             })
     return inputs
+
+def emit_google_cache(
+    chat_id: str,
+    model: str,
+    system_prompt: str,
+    references: List[Reference],
+    references_mapping: Dict[int, Dict[str, Any]],
+    token_limit: int = 50_000
+) -> str | None:
+    """
+    Creates/refreshes a Google Gemini cache for a chat only when:
+      - the existing cache is expired/absent, OR
+      - we see new file/document references since last time.
+    Returns the (possibly reused) cache name, or None if no cache is needed.
+    """
+    supabase = get_supabase()
+    google   = get_google()
+
+    # ————————————————
+    # 1) Load existing cache row (if any)
+    rows = (
+        supabase
+        .table("google")
+        .select("*")
+        .eq("chat", chat_id)
+        .execute()
+        .data or []
+    )
+
+    upsert_data: Dict[str, Any] = {"chat": chat_id}
+
+    old_cache_name = None
+    if rows:
+        old = rows[0]
+        upsert_data["id"]        = old["id"]            # ensure update, not insert
+        old_cache_name           = old.get("google_id")
+
+    # ————————————————
+    # 2) Load the previously stored reference IDs
+    meta = (
+        supabase
+        .table("chats")                      # assume your chat metadata sits here
+        .select("used_files,used_documents")
+        .eq("id", chat_id)
+        .execute()
+        .data or []
+    )
+
+    used_files     = meta[0].get("used_files", [])     if meta else []
+    used_documents = meta[0].get("used_documents", []) if meta else []
+
+    # Build lists of incoming IDs
+    file_ids = [references_mapping[ref.number]["id"] for ref in references if ref.file]
+    doc_ids  = [references_mapping[ref.number]["id"] for ref in references if not ref.file and ref.stray]
+
+    # ————————————————
+    # 3) If we have an old cache, and no new references, and it's still unexpired → reuse
+    if old_cache_name and set(file_ids).issubset(used_files) and set(doc_ids).issubset(used_documents):
+        try:
+            cache_obj = google.caches.get(name=old_cache_name)
+            # assume expire_time is a datetime with .timestamp()
+            if cache_obj.expire_time.timestamp() > time.time() + 20:
+                logger.info(f"Reusing cache {old_cache_name}; no new refs")
+                return old_cache_name
+        except Exception:
+            # expired / missing → fall through to create new
+            logger.info(f"Existing cache {old_cache_name} invalid or expired")
+
+    # ————————————————
+    # 4) Fetch all File objects (only those with ref.file=True)
+    file_objects = []
+    for ref in references:
+        if ref.file and ref.url:
+            try:
+                f = google.files.get(name=ref.url)
+                file_objects.append(f)
+            except Exception as e:
+                logger.error(f"Couldn’t fetch {ref.url}: {e}")
+
+    if not file_objects:
+        return None
+
+    # 5) Count tokens; bail if under threshold
+    tc = google.models.count_tokens(
+        model=model.replace("gemini/", ""),
+        contents=[system_prompt] + file_objects
+    )
+    # `tc.total_tokens` if the SDK returns a usage object
+    total = getattr(tc, "total_tokens", tc)
+    if total < token_limit:
+        logger.info(f"Only {total} tokens; below {token_limit}, no cache needed")
+        return None
+
+    # ————————————————
+    # 6) Create new cache
+    cache = google.caches.create(
+        model=model.replace("gemini/", ""),
+        config=types.CreateCachedContentConfig(
+            system_instruction=system_prompt,
+            contents=file_objects,
+            ttl="300s"
+        )
+    )
+    logger.info(f"Created cache {cache.name}; tokens used={cache.usage_metadata.total_token_count}")
+
+    # 7) Upsert cache info *and* update used_files/used_documents
+    upsert_data.update({
+        "google_id":      cache.name,
+        "tokens":         cache.usage_metadata.total_token_count
+    })
+    supabase.table("google").upsert(upsert_data).execute()
+
+    return cache.name
+
+
+
+
+def get_cached_tokens(cache_name: str) -> int:
+    supabase_client = get_supabase()
+    rows = (
+        supabase_client
+        .table("google")
+        .select("*")
+        .eq("google_id", cache_name)
+        .execute()
+        .data or []
+    )
+    if not rows:
+        return 0
+    return rows[0].get("tokens", 0)
 
 # ── Generic small utilities ────────────────────────────────────────────────
 def _get_refs_rev(documents) -> Dict[str, int]:
