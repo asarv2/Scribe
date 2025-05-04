@@ -59,17 +59,21 @@ export const getQuestionDownloadUrl = (chatId: string, questionIds: string[], fo
     return url.toString();
 };
 
-export const getFigureDownloadUrl = (chatId: string, figureIds: string[], format: 'png' | 'pdf' | 'latex') => {
-    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/figure`;
+export const getFigureDownloadUrl = (
+    chatId: string,
+    figureIds: string[],
+    format: 'png' | 'pdf' | 'latex',
+    zip: boolean,
+  ) => {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/download/figure`;   // <— new path
     const url = new URL(baseUrl, window.location.origin);
+  
     url.searchParams.append('chat_id', chatId);
-    figureIds.forEach(id => {
-        url.searchParams.append('figure_ids', id);
-    });
+    figureIds.forEach(id => url.searchParams.append('figure_ids', id));
     url.searchParams.append('format', format);
+    if (zip) url.searchParams.append('zip', 'true');               // backend treats absense as false
     return url.toString();
-}
-
+  };
 
 
 

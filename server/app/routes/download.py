@@ -11,134 +11,66 @@ from app.services.download.questions import QuestionsDownloader
 from app.services.download.grade import GradeDownloader
 from app.services.download.figure import FigureDownloader
 import re
+from typing import Literal
 import httpx
-
 
 # Get logger for this module
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-@router.get('/figure')
+@router.get("/figure")
 async def download_figure_get(
     request: Request,
     figure_ids: list[str] = Query(...),
-    chat_id: str = Query(None),
-    format: str = Query(...),  # 'png', 'pdf', or 'latex'
+    chat_id: str | None      = Query(None),
+    format: Literal["png", "pdf", "latex"] = Query(...),
+    zip: bool = Query(False)
 ):
-    """Download figures for given figure IDs using GET method."""
-    try:
-        supabase_client = get_supabase()
-        
-        # Get chat data
-        chat_response = supabase_client.table("chats").select("*").eq("id", chat_id).execute()
+    supabase = get_supabase()
 
-        if not chat_response.data:
-            raise HTTPException(status_code=404, detail="Chat not found")
+    # ----- validate chat / figures -----------------------------------------
+    chat = supabase.table("chats").select("*").eq("id", chat_id).execute().data
+    if not chat:
+        raise HTTPException(404, "Chat not found")
+    class_id = chat[0]["class"]
 
-        class_id = chat_response.data[0].get('class')
+    figs = supabase.table("figures").select("*").in_("id", figure_ids).execute().data
+    if not figs:
+        raise HTTPException(404, "Figures not found")
 
-        # Get questions data for the selected questions
-        figures_response = supabase_client.table("figures").select("*").in_("id", figure_ids).execute()
-        
-        if not figures_response.data:
-            raise HTTPException(status_code=404, detail="Figures not found")
-        
-        figures = [{
-            "id": figure.get('id'),
-            "title": figure.get('title', 'Figure'),
-            "code": figure.get('code', ''),
-            "references": figure.get('references', [])
-        } for figure in figures_response.data]
-        
-        # Create downloader with all figures
-        downloader = FigureDownloader(figures)
+    downloader = FigureDownloader(figs)
 
-         # Get titles for the selected questions
-        figure_titles = []
-        for figure in figures:
-            # Use the title attribute instead of the problem text
-            title = figure.get('title', '')
-            if not title:
-                # Fall back to problem text if title is empty
-                problem_text = figure.get('code', '')
-                title = problem_text[:30].strip()
-                if len(problem_text) > 30:
-                    title += "..."
-            figure_titles.append(title)
-        
-        # Create a combined title
-        if len(figure_titles) == 1:
-            combined_title = figure_titles[0]
-        elif len(figure_titles) == 2:
-            combined_title = f"{figure_titles[0]} and {figure_titles[1]}"
+    # ----- dispatch ---------------------------------------------------------
+    if format == "png":
+        if zip:
+            path, fname = await downloader.zip_pngs(class_id)
+            mtype = "application/zip"
         else:
-            combined_title = f"{figure_titles[0]}, {figure_titles[1]} and more"
-        
-        if format == 'png':
-            # For PNG, create a zip file with all figures or return single PNG
-            zip_result = await downloader.create_png_zip(class_id, chat_id, combined_title)
-            
-            if not zip_result or not os.path.exists(zip_result[0]):
-                raise HTTPException(status_code=500, detail="Failed to create PNG file")
-            
-            zip_path, filename = zip_result
-            
-            # Determine media type based on filename extension
-            media_type = 'application/zip' if filename.endswith('.zip') else 'image/png'
-            
-            return FileResponse(
-                path=zip_path,
-                filename=filename,
-                media_type=media_type,
-                headers={"Content-Disposition": f"attachment; filename={filename}"}
-            )
-        
-        elif format == 'pdf':
-            # Generate PDF file with all figures
-            pdf_result = downloader.download_pdf(combined_title)
-            
-            if not pdf_result or not os.path.exists(pdf_result[0]):
-                raise HTTPException(status_code=500, detail=f"Failed to generate PDF file")
-            
-            filepath, filename = pdf_result
-            
-            return FileResponse(
-                path=filepath,
-                filename=filename,
-                media_type='application/pdf',
-                headers={"Content-Disposition": f"attachment; filename={filename}"}
-            )
-        
-        elif format == 'latex':
-            # Generate LaTeX file with all figures
-            latex_result = downloader.download_latex(combined_title)
-            
-            if not latex_result or not os.path.exists(latex_result[0]):
-                raise HTTPException(status_code=500, detail=f"Failed to generate LaTeX file")
-            
-            filepath, filename = latex_result
-            
-            return FileResponse(
-                path=filepath,
-                filename=filename,
-                media_type='application/x-tex',
-                headers={"Content-Disposition": f"attachment; filename={filename}"}
-            )
-        else:
-            raise HTTPException(status_code=400, detail="Invalid format. Supported formats: 'png', 'pdf', 'latex'")
+            path, fname = await downloader.combine_pngs(class_id)
+            mtype = "image/png"
 
-    except Exception as e:
-        logger.error(f"Error in download-figure-get function: {str(e)}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": str(e),
-                "stack": traceback.format_exc(),
-                "name": type(e).__name__
-            }
-        )
+    elif format == "latex":
+        if zip:
+            path, fname = downloader.zip_latexs()
+            mtype = "application/zip"
+        else:
+            path, fname = downloader.combine_latex()
+            mtype = "application/x-tex"
+
+    elif format == "pdf":
+        path, fname = downloader.combine_pdf()     # new helper below
+        mtype = "application/pdf"
+
+    else:
+        raise HTTPException(400, "format must be png, pdf, or latex")
+
+    return FileResponse(
+        path,
+        filename=fname,
+        media_type=mtype,
+        headers={"Content-Disposition": f"attachment; filename={fname}"}
+    )
 
 @router.get('/summary')
 async def download_summary_get(
