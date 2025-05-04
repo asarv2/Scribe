@@ -174,148 +174,131 @@ def _page_range_for_file(docs: List[dict]) -> str:
         return ""
     return f" (pages {pages[0]}-{pages[-1]})"
 
-# ─── main refactor ────────────────────────────────────────────────────
+# ─── helper that yields (expanded, all, mapping) ─────────────────────────
 async def get_mapped_references(
     supabase,
-    file_ids: List[str] | None,
-    document_ids: List[str] | None
+    file_ids: List[str] | None,            # files in *this* message
+    document_ids: List[str] | None,        # pages in *this* message
+    all_file_ids: List[str] | None,        # files seen in the chat
+    all_document_ids: List[str] | None,    # pages seen in the chat
 ) -> Tuple[
-        List[Reference],                   
-        Dict[int, Dict[str, Any]]         
+        List[Reference],       # expanded_refs   (this‑turn + pages)
+        List[Reference],       # all_refs        (whole‑chat)
+        Dict[int, Dict[str, Any]]
     ]:
-    # 0. init
-    next_ref = 1
-    mapping: Dict[int, Dict[str, Any]] = {}
-    def assign_ref(id_: str, is_file: bool) -> int:
-        nonlocal next_ref
-        mapping[next_ref] = {"id": id_, "file": is_file}
-        next_ref += 1
-        return next_ref - 1
 
-    # 1. gather IDs
-    fids = file_ids or []
-    dids = document_ids or []
-    fset, dset = set(fids), set(dids)
+    # ------------------------------------------------------------------ #
+    # 0) normalise sets
+    cur_fset = set(file_ids or [])
+    cur_dset = set(document_ids or [])
+    all_fset = set(all_file_ids or []) | cur_fset
+    all_dset = set(all_document_ids or []) | cur_dset
+    if not (all_fset or all_dset):
+        return [], [], {}
 
-    if not (fset or dset):
-        return [], {}
-
-    # 2. fetch all matching docs
+    # ------------------------------------------------------------------ #
+    # 1) pull every document row we need (for the *whole* chat)
     or_clauses = []
-    if dset:
-        or_clauses.append(f"id.in.({','.join(dset)})")
-    if fset:
-        or_clauses.append(f"file.in.({','.join(fset)})")
+    if all_dset:
+        or_clauses.append(f"id.in.({','.join(all_dset)})")
+    if all_fset:
+        or_clauses.append(f"file.in.({','.join(all_fset)})")
 
-    docs_q = supabase.table("documents").select("*")
-    if or_clauses:
-        docs_q = docs_q.or_(",".join(or_clauses))
-    all_docs = docs_q.execute().data or []
-
-    # 2a. compute every doc-ID + file-ID we actually need
-    all_doc_ids  = [d["id"] for d in all_docs]
-    all_file_ids = {d["file"] for d in all_docs} | fset
-
-    logger.debug("all_doc_ids = %r", all_doc_ids)
-    logger.debug("all_file_ids = %r", all_file_ids)
-
-    # 3. wire up GoogleFiles and actually upload/check
-    # only upload the documents the user originally passed in:
-    orig_doc_ids = list(dset)  
-
-    logger.debug("uploading only these docs:", orig_doc_ids)
-
-    gf = GoogleFiles(
-        file_ids=list(all_file_ids),
-        document_ids=orig_doc_ids,
-        supabase_client=supabase
+    doc_rows = (
+        supabase.table("documents").select("*")
+        .or_(",".join(or_clauses))
+        .execute()
+        .data
+        or []
     )
-
-    # triggers your upload logic + logs
-    new_file_google_ids     = gf.get_files()
-    new_document_google_ids = gf.get_documents()
-
-    # now file_google has every file → Google ID
-    file_google = {
-        meta["file_id"]: gid
-        for meta, gid in zip(gf.files_data, new_file_google_ids)
-    }
-
-    # and document_google has *only* your original docs → Google ID
-    document_google = {
-        meta["document_id"]: gid
-        for meta, gid in zip(gf.documents_data, new_document_google_ids)
-    }
-
-    # 4. group docs by file (for page‐ranges, ordering, etc)
     docs_by_file: Dict[str, List[dict]] = defaultdict(list)
-    for d in all_docs:
-        docs_by_file[d["file"]].append(d)
+    for r in doc_rows:
+        docs_by_file[r["file"]].append(r)
 
-    # 5. fetch file metadata
     file_rows = (
         supabase.table("files")
-                .select("*")
-                .in_("id", list(all_file_ids))
-                .execute().data
+        .select("*")
+        .in_("id", list({r["file"] for r in doc_rows} | all_fset))
+        .execute()
+        .data
         or []
     )
     file_meta = {f["id"]: f for f in file_rows}
 
-    # 6. build your Reference list
-    refs: List[Reference] = []
+    # ------------------------------------------------------------------ #
+    # 2) upload to Google (only pages referenced *this* turn)
+    gf = GoogleFiles(
+        file_ids=list({r["file"] for r in doc_rows} | all_fset),
+        document_ids=list(cur_dset),
+        supabase_client=supabase,
+    )
+    file_gids     = dict(zip((m["file_id"]     for m in gf.files_data),
+                             gf.get_files()))
+    document_gids = dict(zip((m["document_id"] for m in gf.documents_data),
+                             gf.get_documents()))
 
-    # 6a. explicitly passed files
-    for fid in sorted(fset, key=lambda i: file_meta[i]["title"]):
-        ftype  = file_meta[fid]["type"]
-        file_no = assign_ref(fid, True)
+    # ------------------------------------------------------------------ #
+    # 3) build all_refs + global mapping
+    next_num = 1
+    mapping_all: Dict[int, Dict[str, Any]] = {}
+    all_refs:   List[Reference]            = []
 
-        suffix = _page_range_for_file(docs_by_file[fid])
-        title  = file_meta[fid]["title"] + suffix
-        url    = file_google.get(fid, "")
+    def _assign(id_: str, is_file: bool) -> int:
+        nonlocal next_num
+        mapping_all[next_num] = {"id": id_, "file": is_file}
+        next_num += 1
+        return next_num - 1
 
-        refs.append(Reference(
-            number=file_no,
-            title=title,
-            url=url,
-            stray=False,
-            file=True,
-        ))
+    for fid in sorted({r["file"] for r in doc_rows} | all_fset,
+                      key=lambda i: file_meta[i]["title"]):
+        meta  = file_meta[fid]
+        ftype = meta["type"]
 
-        key_fn = (lambda d: d.get("start_time") or 0.0) if ftype in {"audio","video"} \
-                 else (lambda d: d.get("page",0))
+        num = _assign(fid, True)
+        all_refs.append(
+            Reference(
+                number=num,
+                title=meta["title"] + _page_range_for_file(docs_by_file[fid]),
+                url=file_gids.get(fid, ""),
+                file=True,
+            )
+        )
+
+        key_fn = (lambda d: d.get("start_time") or 0) if ftype in {"audio","video"} \
+                 else (lambda d: d.get("page", 0))
         for doc in sorted(docs_by_file[fid], key=key_fn):
-            did    = doc["id"]
-            doc_no = assign_ref(did, False)
-            refs.append(Reference(
-                number=doc_no,
-                title=reference_title(doc, ftype, file_meta[fid]["title"]),
-                url=document_google.get(did, ""),
-                stray=False,
-                file=False,
-            ))
+            did  = doc["id"]
+            dnum = _assign(did, False)
+            all_refs.append(
+                Reference(
+                    number=dnum,
+                    title=reference_title(doc, ftype, meta["title"]),
+                    url=document_gids.get(did, ""),
+                    file=False,
+                )
+            )
 
-    # 6b. any "stray" docs not under explicitly passed files
-    stray = [d for d in all_docs if d["file"] not in fset]
-    stray.sort(key=lambda d: (
-        file_meta[d["file"]]["title"],
-        (d.get("start_time") if file_meta[d["file"]]["type"] in {"audio","video"} 
-           else d.get("page",0))
-    ))
-    for doc in stray:
-        fid    = doc["file"]
-        ftype  = file_meta[fid]["type"]
-        did    = doc["id"]
-        doc_no = assign_ref(did, False)
-        refs.append(Reference(
-            number=doc_no,
-            title=reference_title(doc, ftype, file_meta[fid]["title"]),
-            url=document_google.get(did, ""),
-            stray=True,
-            file=False,
-        ))
+    # after you finish building mapping_all + all_refs  ────────────────
+    id_to_num = {entry["id"]: num for num, entry in mapping_all.items()}
 
-    return refs, mapping
+    expanded_nums: set[int] = set()
+
+    # — direct hits (whatever was attached this turn) ------------------
+    for n, entry in mapping_all.items():
+        if (entry["file"] and entry["id"] in cur_fset) or \
+        (not entry["file"] and entry["id"] in cur_dset):
+            expanded_nums.add(n)
+
+    # — add every page that belongs to those files ---------------------
+    for fid in cur_fset:                       # each file uploaded *this* turn
+        for doc in docs_by_file[fid]:          # every page row of that file
+            num = id_to_num.get(doc["id"])
+            if num:
+                expanded_nums.add(num)
+
+    expanded_refs = [r for r in all_refs if r.number in expanded_nums]
+
+    return expanded_refs, all_refs, mapping_all
 
 
 
@@ -366,8 +349,8 @@ def emit_google_cache(
     chat_id: str,
     model: str,
     system_prompt: str,
-    references: List[Reference],
-    references_mapping: Dict[int, Dict[str, Any]],
+    new_references: bool,
+    all_references: List[Reference], # references for all messages in the chat
     token_limit: int = 50_000
 ) -> str | None:
     """
@@ -395,30 +378,12 @@ def emit_google_cache(
     old_cache_name = None
     if rows:
         old = rows[0]
-        upsert_data["id"]        = old["id"]            # ensure update, not insert
-        old_cache_name           = old.get("google_id")
+        upsert_data["id"] = old["id"]            # ensure update, not insert
+        old_cache_name = old.get("google_id")
 
     # ————————————————
-    # 2) Load the previously stored reference IDs
-    meta = (
-        supabase
-        .table("chats")                      # assume your chat metadata sits here
-        .select("used_files,used_documents")
-        .eq("id", chat_id)
-        .execute()
-        .data or []
-    )
-
-    used_files     = meta[0].get("used_files", [])     if meta else []
-    used_documents = meta[0].get("used_documents", []) if meta else []
-
-    # Build lists of incoming IDs
-    file_ids = [references_mapping[ref.number]["id"] for ref in references if ref.file]
-    doc_ids  = [references_mapping[ref.number]["id"] for ref in references if not ref.file and ref.stray]
-
-    # ————————————————
-    # 3) If we have an old cache, and no new references, and it's still unexpired → reuse
-    if old_cache_name and set(file_ids).issubset(used_files) and set(doc_ids).issubset(used_documents):
+    # 3) If we have an old cache and no new references and it's still unexpired → reuse
+    if old_cache_name and not new_references:
         try:
             cache_obj = google.caches.get(name=old_cache_name)
             # assume expire_time is a datetime with .timestamp()
@@ -430,15 +395,15 @@ def emit_google_cache(
             logger.info(f"Existing cache {old_cache_name} invalid or expired")
 
     # ————————————————
-    # 4) Fetch all File objects (only those with ref.file=True)
+    # 4) Fetch all File objects
     file_objects = []
-    for ref in references:
-        if ref.file and ref.url:
+    for ref in all_references:
+        if ref.url:
             try:
                 f = google.files.get(name=ref.url)
                 file_objects.append(f)
             except Exception as e:
-                logger.error(f"Couldn’t fetch {ref.url}: {e}")
+                logger.error(f"Couldn't fetch {ref.url}: {e}")
 
     if not file_objects:
         return None
@@ -513,17 +478,17 @@ def _replace_tags(text: str,
     return text
 
 def _process_doc_tags(text: str, refs_rev: Dict[str, int]) -> str:
-    return _replace_tags(
-        text,
+    return re.sub(
         r'<DOCUMENT>(.*?)</DOCUMENT>',
-        lambda full: f"[{refs_rev.get(full[10:-11], 'unknown')}]"
+        lambda m: f"[{refs_rev.get(m.group(1), 'unknown')}]",
+        text,
     )
 
 def _process_fig_tags(text: str, figs_rev: Dict[str, int]) -> str:
-    return _replace_tags(
-        text,
+    return re.sub(
         r'<FIGURE>(.*?)</FIGURE>',
-        lambda full: f"{{{figs_rev.get(full[8:-9], 'unknown figure')}}}"
+        lambda m: f"{{{figs_rev.get(m.group(1), 'unknown figure')}}}",
+        text,
     )
 
 # ── DB → model mappers  (all ≤ 6 lines each) ──────────────────────────────

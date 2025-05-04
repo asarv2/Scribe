@@ -52,6 +52,13 @@ async def handle_chat(
         current_message = next((msg for msg in messages if msg['id'] == message_id), None)
         past_messages = [(msg['id'], msg['bare_question'], msg.get('bare_response', '')) for msg in messages if msg['id'] != message_id]
 
+        # Get resource IDs from the message
+        file_ids = current_message.get('files', []) or []
+        document_ids = current_message.get('documents', []) or []
+
+        all_file_ids = used_files + file_ids
+        all_document_ids = used_documents + document_ids
+
         # ——— NEW: build a 2D list of mapped references for each past message ———
         past_references: List[List[Reference]] = []
         for msg in messages:
@@ -60,16 +67,14 @@ async def handle_chat(
                 d_ids = msg.get('documents') or []
                 
                 # reuse your mapping helper
-                past_references_for_msg, _ = await get_mapped_references(
+                past_references_for_msg, _,  _ = await get_mapped_references(
                     supabase_client,
                     f_ids,
-                    d_ids
+                    d_ids,
+                    all_file_ids,
+                    all_document_ids
                 )
                 past_references.append(past_references_for_msg)
-
-        # Get resource IDs from the message
-        file_ids = current_message.get('files', []) or []
-        document_ids = current_message.get('documents', []) or []
 
         # Fetch chat context
         chat_context = await fetch_chat_context(supabase_client, chat_id, class_id)
@@ -78,11 +83,8 @@ async def handle_chat(
         questions = chat_context.get('questions', [])
         outcomes = chat_context.get('outcomes', [])
 
-        all_file_ids = used_files + file_ids
-        all_document_ids = used_documents + document_ids
-
         # get the mapped references
-        references_list, mapped_references = await get_mapped_references(supabase_client, all_file_ids, all_document_ids)
+        expanded_references, all_references, mapped_references = await get_mapped_references(supabase_client, file_ids, document_ids, all_file_ids, all_document_ids)
 
         # get the mapped outcomes   
         mapped_outcomes, full_outcome_description, outcomes_description = await get_mapped_outcomes(supabase_client, class_id, outcomes)
@@ -109,10 +111,11 @@ async def handle_chat(
                 "trace": trace_id
             }).eq("id", chat_id).execute()
 
-        async def update_chat_usage(chat_id: str, profile_id: str, input_tokens: int, output_tokens: int, cached_input_tokens: int):
+        async def update_chat_usage(chat_id: str, profile_id: str, model: str, input_tokens: int, output_tokens: int, cached_input_tokens: int):
             supabase_client.table("usage").insert({
                 "chat": chat_id,
                 "profile": profile_id,
+                "model": model,
                 "input_tokens": input_tokens,
                 "output_tokens": output_tokens,
                 "cached_input_tokens": cached_input_tokens
@@ -130,10 +133,12 @@ async def handle_chat(
                 "end_agent": end_agent
             }).eq("id", message_id).execute()
 
-        async def update_chat_files(chat_id: str, used_files: List[str], used_documents: List[str]):
+        async def update_chat_files(chat_id: str):
+            all_file_ids = used_files + file_ids
+            all_document_ids = used_documents + document_ids
             supabase_client.table("chats").update({
-                "used_files": used_files,
-                "used_documents": used_documents
+                "used_files": all_file_ids,
+                "used_documents": all_document_ids
             }).eq("id", chat_id).execute()
 
         # Initialize processor and response
@@ -142,10 +147,8 @@ async def handle_chat(
             teacher=teacher,
             starting_agent=current_message['start_agent'],
             course_title=class_title,
-            all_file_ids=all_file_ids,
-            all_document_ids=all_document_ids,
-            references_mapping=mapped_references,
-            references=references_list,
+            all_references=all_references,
+            expanded_references=expanded_references,
             question=current_message['bare_question'],
             past_messages=past_messages,
             past_references=past_references,

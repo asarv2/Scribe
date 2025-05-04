@@ -19,7 +19,6 @@ class Reference(BaseModel):
     number: int
     title: str
     url: str
-    stray: bool
     file: bool
 
 class ReferencesOutputSchema(BaseModel):

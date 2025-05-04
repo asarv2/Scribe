@@ -8,11 +8,9 @@ from app.services.chat.utils.references import emit_google_cache
 from app.services.chat.models.main import Reference
 
 class HomeworkAgent(QuestionHooks):
-    def __init__(self, chat_id: str, references: List[Reference], references_mapping: Dict[int, Dict[str, Any]]):
+    def __init__(self, chat_id: str):
         super().__init__()
         self.chat_id = chat_id
-        self.references = references
-        self.references_mapping = references_mapping
         self.gemini_client = get_gemini()
         self.system_prompt = (
             "You are the Homework Agent.\n"
@@ -38,9 +36,9 @@ class HomeworkAgent(QuestionHooks):
             "NEVER explicitly say that you are using a tool.\n"
         )
 
-    def agent(self):
+    def agent(self, new_references: bool, all_references: List[Reference]):
         litellm_client = get_litellm()
-        cache_name = emit_google_cache(self.chat_id, litellm_client.model, self.system_prompt, self.references, self.references_mapping)
+        cache_name = emit_google_cache(self.chat_id, litellm_client.model, self.system_prompt, new_references, all_references)
         if cache_name:
             return Agent[Documents](
                 name="Homework Agent",
