@@ -85,16 +85,18 @@ class FigureDownloader:
 
     # -------------------------------------------------------------- LaTeX --
     def combine_latex(self) -> tuple[str, str]:
-        combined_body = "\n".join(self._figure_block(f) for f in self.figures)
-        doc = self._minimal_doc(combined_body)
+        combined_body = "\n".join(
+            self._figure_block(f["code"], f["title"]) for f in self.figures
+        )
+        doc = self._minimal_doc(preamble_code="", body_code=combined_body)
         return self._write(doc, "combined.tex")
 
     def zip_latexs(self) -> tuple[str, str]:
         bio = io.BytesIO()
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as zf:
             for f in self.figures:
-                body = self._figure_block(f, caption=False)  # keep raw if desired
-                tex = self._minimal_doc(body)
+                body = self._figure_block(f["code"], f["title"], caption=False)
+                tex = self._minimal_doc(preamble_code="", body_code=body)
                 zf.writestr(self._safe(f["title"]) + ".tex", tex)
         bio.seek(0)
         out_dir = self._out_dir()
@@ -198,4 +200,4 @@ class FigureDownloader:
 
     @staticmethod
     def _safe(name: str) -> str:
-        return re.sub(r"[^\w\-\.]", "_", name)
+        return re.sub(r"[^\w\.]", "_", name)
