@@ -94,34 +94,16 @@ def client(monkeypatch, tmp_path):
     # 1) write a stub file & return True
     def fake_save(self, directory, summaries, base, title, pdf=True):
         Path(directory).mkdir(parents=True, exist_ok=True)
-        ext = "pdf" if pdf else "tex"
-        stub = Path(directory) / f"{base}.{ext}"
-        stub.write_bytes(
-            b"%PDF-STUB\n" if ext == "pdf" else b"\\documentclass{article}"
-        )
+        ext  = "pdf" if pdf else "tex"
+        path = Path(directory) / f"{base}.{ext}"
+        header = b"%PDF-STUB\n" if pdf else b"\\documentclass{article}\n"
+        path.write_bytes(header + title.encode())
         return True
 
     monkeypatch.setattr(smod.SummaryDownloader, "save", fake_save)
 
-    # 2) stub the whole zip helpers (they write an in‑memory archive)
-    def fake_zip_pdfs(self, title):
-        bio = io.BytesIO()
-        with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
-            for s in self.summaries:
-                fname = re.sub(r"[^\w\-_\. ]", "_", s["title"]).replace(" ", "_")
-                z.writestr(f"{fname}.pdf", b"%PDF-STUB\n")
-        return self._write_zip(bio, title, "summaries_pdf.zip")
-
-    def fake_zip_latexs(self, title):
-        bio = io.BytesIO()
-        with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
-            for s in self.summaries:
-                fname = re.sub(r"[^\w\-_\. ]", "_", s["title"]).replace(" ", "_")
-                z.writestr(f"{fname}.tex", b"\\documentclass{article}")
-        return self._write_zip(bio, title, "summaries_tex.zip")
-
-    monkeypatch.setattr(smod.SummaryDownloader, "zip_pdfs", fake_zip_pdfs)
-    monkeypatch.setattr(smod.SummaryDownloader, "zip_latexs", fake_zip_latexs)
+    # 2) DO NOT stub zip_* — we want to exercise the real logic that now
+    #    builds each summary in its own downloader.
 
     from app.main import app
 
@@ -164,6 +146,22 @@ def test_download_variants(client, fmt, ctype, zip_flag):
     else:
         assert r.content.startswith(b"%PDF")
 
+def test_zip_individual_files_are_singleton_summaries(client):
+    # ask for two summaries zipped
+    r = _sget(client, "pdf", ["s1", "s2"], zip=True)
+    assert r.status_code == 200
+
+    with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+        # file names are sane
+        names = sorted(z.namelist())
+        assert names == ["First_Summary.pdf", "Second_Summary.pdf"]
+
+        first  = z.read("First_Summary.pdf")
+        second = z.read("Second_Summary.pdf")
+
+        # each stub PDF must mention ONLY its own title
+        assert b"First Summary"  in first and b"Second Summary" not in first
+        assert b"Second Summary" in second and b"First Summary"  not in second
 
 def test_chat_not_found(client, monkeypatch):
     empty_tables = {

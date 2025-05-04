@@ -53,11 +53,15 @@ class SummaryDownloader:
         return f"[{file['title']} p.{rng or doc['page']}]"
 
     # ---------- public helpers for zip ------------------------------------
-    def zip_pdfs(self, title) -> tuple[str, str]:
+    def zip_pdfs(self, title):
         bio = io.BytesIO()
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
             for s in self.summaries:
-                fp = self.download_pdf(s["title"])
+                single = SummaryDownloader(
+                    [s], self.figures, self.documents, self.files,
+                    class_id=self.class_id, chat_id=self.chat_id
+                )
+                fp = single.download_pdf(s["title"])
                 if fp:
                     z.write(fp, os.path.basename(fp))
         return self._write_zip(bio, title, "summaries_pdf.zip")
@@ -66,7 +70,11 @@ class SummaryDownloader:
         bio = io.BytesIO()
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
             for s in self.summaries:
-                fp = self.download_latex(s["title"])
+                single = SummaryDownloader(
+                    [s], self.figures, self.documents, self.files,
+                    class_id=self.class_id, chat_id=self.chat_id
+                )
+                fp = single.download_latex(s["title"])
                 if fp:
                     z.write(fp, os.path.basename(fp))
         return self._write_zip(bio, title, "summaries_tex.zip")
