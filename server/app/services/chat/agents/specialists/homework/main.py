@@ -8,6 +8,7 @@ from app.services.chat.utils.references import emit_google_cache
 from app.services.chat.models.main import Reference
 from openai.types import Reasoning
 
+
 class HomeworkAgent(QuestionHooks):
     def __init__(self, chat_id: str):
         super().__init__()
@@ -39,7 +40,13 @@ class HomeworkAgent(QuestionHooks):
 
     def agent(self, new_references: bool, all_references: List[Reference]):
         litellm_client = get_litellm()
-        cache_name = emit_google_cache(self.chat_id, litellm_client.model, self.system_prompt, new_references, all_references)
+        cache_name = emit_google_cache(
+            self.chat_id,
+            litellm_client.model,
+            self.system_prompt,
+            new_references,
+            all_references,
+        )
         if cache_name:
             return Agent[Documents](
                 name="Homework Agent",
@@ -47,28 +54,26 @@ class HomeworkAgent(QuestionHooks):
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    extra_body={"cached_content": cache_name}
-                )
+                    extra_body={"cached_content": cache_name},
+                ),
             )
         else:
             return Agent[Documents](
                 name="Homework Agent",
                 instructions=self.system_prompt,
-                model=OpenAIChatCompletionsModel( 
+                model=OpenAIChatCompletionsModel(
                     model="gemini-2.5-flash-preview-04-17",
                     openai_client=self.gemini_client,
                 ),
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    reasoning=Reasoning(
-                        effort="low"
-                    )
+                    reasoning=Reasoning(effort="low"),
                 ),
                 tools=[self.create_question_tool, self.create_questions_tool],
-                tool_use_behavior=self.create_question_check
+                tool_use_behavior=self.create_question_check,
             )
-    
+
     def handoff(self, agent: Agent[Documents]):
         return Handoff(
             tool_name="transfer_to_homework_agent",
@@ -77,7 +82,5 @@ class HomeworkAgent(QuestionHooks):
             input_filter=handoff_input_filter,
             on_invoke_handoff=invoke_handoff(agent),
             agent_name="Homework Agent",
-            strict_json_schema=True
+            strict_json_schema=True,
         )
-
-    

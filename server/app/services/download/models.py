@@ -1,5 +1,6 @@
 from typing import List, Literal, TypedDict
 
+
 class Grade(TypedDict):
     id: str
     title: str
@@ -8,11 +9,13 @@ class Grade(TypedDict):
     references: List[str]
     figures: List[str]
 
+
 class Figure(TypedDict):
     id: str
     title: str
     code: str
     references: List[str]
+
 
 class Summary(TypedDict):
     id: str
@@ -22,6 +25,7 @@ class Summary(TypedDict):
     conclusion: str
     references: List[str]
     figures: List[str]
+
 
 class MCQQuestion(TypedDict):
     id: str
@@ -33,6 +37,7 @@ class MCQQuestion(TypedDict):
     explanations: List[str]
     references: List[str]
     figures: List[str]
+
 
 class FRQQuestion(TypedDict):
     id: str

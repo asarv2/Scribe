@@ -9,6 +9,7 @@ from app.extensions import get_google
 
 logger = logging.getLogger(__name__)
 
+
 class GoogleFiles:
     def __init__(
         self,
@@ -38,11 +39,10 @@ class GoogleFiles:
 
         logger.info(f"Fetching meta for files {file_ids}")
         files_resp = (
-            self.supabase
-                .table("files")
-                .select("id", "class", "type", "extension")
-                .in_("id", file_ids)
-                .execute()
+            self.supabase.table("files")
+            .select("id", "class", "type", "extension")
+            .in_("id", file_ids)
+            .execute()
         )
         if not files_resp.data:
             logger.warning(f"No files found for {file_ids}")
@@ -50,12 +50,11 @@ class GoogleFiles:
 
         # now grab the google-table PK too
         google_resp = (
-            self.supabase
-                .table("google")
-                .select("id,file,google_id")
-                .in_("file", file_ids)
-                .order("created_at", desc=True)
-                .execute()
+            self.supabase.table("google")
+            .select("id,file,google_id")
+            .in_("file", file_ids)
+            .order("created_at", desc=True)
+            .execute()
         )
 
         # map file_id → (google_id, google_table_id)
@@ -64,20 +63,22 @@ class GoogleFiles:
             fid = rec["file"]
             if fid not in google_map:
                 google_map[fid] = {
-                    "google_id":       rec["google_id"],
+                    "google_id": rec["google_id"],
                     "google_table_id": rec["id"],
                 }
 
         out = []
         for f in files_resp.data:
             gm = google_map.get(f["id"], {})
-            out.append({
-                "file_id":          f["id"],
-                "class_id":         f["class"],
-                "extension":        f["extension"],
-                "google_id":        gm.get("google_id"),
-                "google_table_id":  gm.get("google_table_id"),  # may be None
-            })
+            out.append(
+                {
+                    "file_id": f["id"],
+                    "class_id": f["class"],
+                    "extension": f["extension"],
+                    "google_id": gm.get("google_id"),
+                    "google_table_id": gm.get("google_table_id"),  # may be None
+                }
+            )
         return out
 
     def _fetch_documents_data(self, document_ids: List[str]) -> List[dict]:
@@ -86,11 +87,10 @@ class GoogleFiles:
             return []
 
         docs_resp = (
-            self.supabase
-                .table("documents")
-                .select("id", "class", "file", "extension")
-                .in_("id", document_ids)
-                .execute()
+            self.supabase.table("documents")
+            .select("id", "class", "file", "extension")
+            .in_("id", document_ids)
+            .execute()
         )
         if not docs_resp.data:
             logger.warning(f"No documents found for {document_ids}")
@@ -98,12 +98,11 @@ class GoogleFiles:
 
         # Grab both google_id and the google‐table PK
         google_resp = (
-            self.supabase
-                .table("google")
-                .select("id,document,google_id")
-                .in_("document", document_ids)
-                .order("created_at", desc=True)
-                .execute()
+            self.supabase.table("google")
+            .select("id,document,google_id")
+            .in_("document", document_ids)
+            .order("created_at", desc=True)
+            .execute()
         )
 
         # map document → (google_id, google_table_id)
@@ -113,21 +112,23 @@ class GoogleFiles:
             # only take the first (latest) record
             if did not in google_map:
                 google_map[did] = {
-                    "google_id":        rec["google_id"],
-                    "google_table_id":  rec["id"],
+                    "google_id": rec["google_id"],
+                    "google_table_id": rec["id"],
                 }
 
         out = []
         for d in docs_resp.data:
             gm = google_map.get(d["id"], {})
-            out.append({
-                "document_id":      d["id"],
-                "file_id":          d["file"],
-                "class_id":         d["class"],
-                "extension":        d["extension"],
-                "google_id":        gm.get("google_id"),
-                "google_table_id":  gm.get("google_table_id"),   # may be None
-            })
+            out.append(
+                {
+                    "document_id": d["id"],
+                    "file_id": d["file"],
+                    "class_id": d["class"],
+                    "extension": d["extension"],
+                    "google_id": gm.get("google_id"),
+                    "google_table_id": gm.get("google_table_id"),  # may be None
+                }
+            )
         return out
 
     def _is_google_file_active(self, google_id: str) -> bool:
@@ -141,10 +142,14 @@ class GoogleFiles:
             state = getattr(info.state, "name", info.state)
             return state == "ACTIVE"
         except ClientError as e:
-            logger.warning(f"GenAI client error ({e.code} {e.status}); reuploading: {e.message}")
+            logger.warning(
+                f"GenAI client error ({e.code} {e.status}); reuploading: {e.message}"
+            )
             return False
         except ServerError as e:
-            logger.warning(f"GenAI server error ({e.code}); treating as inactive: {e.message}")
+            logger.warning(
+                f"GenAI server error ({e.code}); treating as inactive: {e.message}"
+            )
             return False
         except APIError as e:
             logger.warning(f"Other GenAI error ({e.code}); will reupload: {e.message}")
@@ -185,7 +190,7 @@ class GoogleFiles:
                     meta["file_id"],
                     meta["document_id"],
                     meta["class_id"],
-                    meta["extension"]
+                    meta["extension"],
                 )
                 if media:
                     gid = media.name
@@ -193,24 +198,23 @@ class GoogleFiles:
         return out_ids
 
     def _upload_file_from_supabase(
-        self,
-        file_id: str,
-        class_id: str,
-        extension: str
+        self, file_id: str, class_id: str, extension: str
     ) -> Optional[File]:
         """Download a file from Supabase and upload it to Google."""
-        temp_dir = os.path.join(os.getcwd(), "temp")
+        temp_dir = os.path.join(os.getcwd(), "cache", "temp")
         os.makedirs(temp_dir, exist_ok=True)
         local_path = os.path.join(temp_dir, f"{file_id}.{extension}")
 
         # try download
         try:
             try:
-                res = self.supabase.storage.from_("files") \
-                    .download(f"{class_id}/{file_id}.{extension}")
+                res = self.supabase.storage.from_("files").download(
+                    f"{class_id}/{file_id}.{extension}"
+                )
             except Exception:
-                res = self.supabase.storage.from_("files") \
-                    .download(f"{class_id}/{file_id}")
+                res = self.supabase.storage.from_("files").download(
+                    f"{class_id}/{file_id}"
+                )
             with open(local_path, "wb") as f:
                 f.write(res)
         except Exception as e:
@@ -241,26 +245,24 @@ class GoogleFiles:
 
         # record in Supabase
         google_id = media.name
-        
+
         # lookup the row‐PK we fetched earlier
-        meta = next(
-            (m for m in self.files_data if m["file_id"] == file_id),
-            {}
-        )
+        meta = next((m for m in self.files_data if m["file_id"] == file_id), {})
         pk = meta.get("google_table_id")
-        
+
         try:
             if pk:
                 # update existing record by primary key
-                self.supabase.table("google") \
-                    .update({"google_id": google_id}) \
-                    .eq("id", pk) \
-                    .execute()
+                self.supabase.table("google").update({"google_id": google_id}).eq(
+                    "id", pk
+                ).execute()
             else:
                 # insert and capture new PK
-                resp = self.supabase.table("google") \
-                    .insert({"file": file_id, "google_id": google_id}) \
+                resp = (
+                    self.supabase.table("google")
+                    .insert({"file": file_id, "google_id": google_id})
                     .execute()
+                )
                 new_pk = resp.data[0]["id"]
                 meta["google_table_id"] = new_pk
         except Exception as e:
@@ -270,25 +272,23 @@ class GoogleFiles:
         return media
 
     def _upload_document_from_supabase(
-        self,
-        file_id: str,
-        document_id: str,
-        class_id: str,
-        extension: str
+        self, file_id: str, document_id: str, class_id: str, extension: str
     ) -> Optional[File]:
         """Download a document from Supabase (raw bytes) and upload it to Google."""
-        temp_dir = os.path.join(os.getcwd(), "temp")
+        temp_dir = os.path.join(os.getcwd(), "cache", "temp")
         os.makedirs(temp_dir, exist_ok=True)
         local_path = os.path.join(temp_dir, f"{document_id}.{extension}")
 
         # 1) Download from Supabase (returns bytes, or throws)
         try:
             try:
-                data = self.supabase.storage.from_("files") \
-                        .download(f"{class_id}/{file_id}/{document_id}.{extension}")
+                data = self.supabase.storage.from_("files").download(
+                    f"{class_id}/{file_id}/{document_id}.{extension}"
+                )
             except Exception:
-                data = self.supabase.storage.from_("files") \
-                        .download(f"{class_id}/{file_id}/{document_id}")
+                data = self.supabase.storage.from_("files").download(
+                    f"{class_id}/{file_id}/{document_id}"
+                )
 
             # write raw bytes straight to disk
             with open(local_path, "wb") as f:
@@ -304,45 +304,41 @@ class GoogleFiles:
         try:
             with open(local_path, "rb") as f:
                 media = self.google.files.upload(
-                    file=f,
-                    config=UploadFileConfig(mime_type=mime_type)
+                    file=f, config=UploadFileConfig(mime_type=mime_type)
                 )
             media = self._wait_for_file_activation(media)
             if not media:
                 logger.error(f"{document_id} never became ACTIVE")
                 return None
-            
 
             google_id = media.name
 
             # find the metadata entry so we know the google_table_id
             meta = next(
-                (m for m in self.documents_data 
-                    if m["document_id"] == document_id),
-                {}
+                (m for m in self.documents_data if m["document_id"] == document_id), {}
             )
             pk = meta.get("google_table_id")
 
             try:
                 if pk:
                     # update the existing row by its PK
-                    self.supabase.table("google") \
-                        .update({"google_id": google_id}) \
-                        .eq("id", pk) \
-                        .execute()
+                    self.supabase.table("google").update({"google_id": google_id}).eq(
+                        "id", pk
+                    ).execute()
                 else:
                     # insert & capture the new PK
-                    resp = self.supabase.table("google") \
-                        .insert({
-                            "document":   document_id,
-                            "google_id":  google_id
-                        }) \
+                    resp = (
+                        self.supabase.table("google")
+                        .insert({"document": document_id, "google_id": google_id})
                         .execute()
+                    )
                     # resp.data[0]["id"] is the new row's PK
                     new_pk = resp.data[0]["id"]
                     meta["google_table_id"] = new_pk
             except Exception as e:
-                logger.error(f"Error upserting google record for doc {document_id}: {e}")
+                logger.error(
+                    f"Error upserting google record for doc {document_id}: {e}"
+                )
                 logger.error(traceback.format_exc())
 
             return media
@@ -352,33 +348,28 @@ class GoogleFiles:
             except OSError:
                 pass
 
-
-
     def _get_mime_type(self, extension: str) -> str:
         """Map file extension to MIME type."""
-        if not extension.startswith('.'):
+        if not extension.startswith("."):
             extension = f".{extension}"
         ext = extension.lower()
         return {
-            '.pdf':  'application/pdf',
-            '.jpg':  'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.png':  'image/png',
-            '.gif':  'image/gif',
-            '.mp4':  'video/mp4',
-            '.mov':  'video/quicktime',
-            '.mp3':  'audio/mpeg',
-            '.wav':  'audio/wav',
-            '.txt':  'text/plain',
-            '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        }.get(ext, 'application/octet-stream')
+            ".pdf": "application/pdf",
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".png": "image/png",
+            ".gif": "image/gif",
+            ".mp4": "video/mp4",
+            ".mov": "video/quicktime",
+            ".mp3": "audio/mpeg",
+            ".wav": "audio/wav",
+            ".txt": "text/plain",
+            ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }.get(ext, "application/octet-stream")
 
     def _wait_for_file_activation(
-        self,
-        media: File,
-        max_attempts: int = 10,
-        base_delay: float = 0.5
+        self, media: File, max_attempts: int = 10, base_delay: float = 0.5
     ) -> Optional[File]:
         """
         Poll until the Google file becomes ACTIVE.
@@ -390,17 +381,19 @@ class GoogleFiles:
                 info = self.google.files.get(name=file_id)
                 state = getattr(info.state, "name", info.state)
                 if state == "ACTIVE":
-                    logger.info(f"{file_id} is ACTIVE after {attempt+1} attempts")
+                    logger.info(f"{file_id} is ACTIVE after {attempt + 1} attempts")
                     return info
                 if state == "FAILED":
                     logger.error(f"{file_id} processed FAILED")
                     return None
 
-                wait = base_delay * (2 ** attempt)
-                logger.info(f"{file_id} not ACTIVE yet ({state}); retrying in {wait:.2f}s")
+                wait = base_delay * (2**attempt)
+                logger.info(
+                    f"{file_id} not ACTIVE yet ({state}); retrying in {wait:.2f}s"
+                )
                 time.sleep(wait)
             except Exception as e:
                 logger.warning(f"Check failed for {file_id}: {e}")
-                time.sleep(base_delay * (2 ** attempt))
+                time.sleep(base_delay * (2**attempt))
         logger.error(f"{file_id} never became ACTIVE")
         return None

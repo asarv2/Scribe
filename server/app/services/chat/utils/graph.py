@@ -9,6 +9,7 @@ from app.services.chat.models.main import ChatAgents
 from typing import List
 from app.services.chat.models.main import Reference
 
+
 class AgentGraph:
     def __init__(self, chat_id: str, teacher: bool, starting_agent: ChatAgents):
         self.chat_id = chat_id
@@ -17,7 +18,7 @@ class AgentGraph:
 
         # Student
         self.review = ReviewAgent(self.chat_id)
-        self.homework = HomeworkAgent(self.chat_id) 
+        self.homework = HomeworkAgent(self.chat_id)
         self.learn = LearnAgent(self.chat_id)
         # Teacher
         self.content = ContentAgent(self.chat_id)

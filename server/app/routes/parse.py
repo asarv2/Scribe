@@ -12,15 +12,19 @@ router = APIRouter()
 
 logger = logging.getLogger(__name__)
 
+
 @router.post("/syllabus")
-async def parse_syllabus(
-    class_id: str = Form(...)
-):
+async def parse_syllabus(class_id: str = Form(...)):
     try:
         supabase_client = get_supabase()
 
         # getting the class in supabase
-        class_result = await supabase_client.table("classes").select("*").eq("id", class_id).execute()
+        class_result = (
+            await supabase_client.table("classes")
+            .select("*")
+            .eq("id", class_id)
+            .execute()
+        )
         class_data = class_result.data[0]
 
         # save non-empty data, so we know what to update
@@ -33,54 +37,78 @@ async def parse_syllabus(
             raise HTTPException(status_code=400, detail="No syllabus file found")
 
         # get existing outcomes
-        outcomes_result = await supabase_client.table("outcomes").select("*").eq("class", class_id).execute()
+        outcomes_result = (
+            await supabase_client.table("outcomes")
+            .select("*")
+            .eq("class", class_id)
+            .execute()
+        )
         outcomes = outcomes_result.data
         prev_outcomes = [outcome.get("title") for outcome in outcomes]
 
         # getting the google file in supabase
-        google_file_result = await supabase_client.table("google_files").select("*").eq("file", syllabus_file_id).execute()
+        google_file_result = (
+            await supabase_client.table("google_files")
+            .select("*")
+            .eq("file", syllabus_file_id)
+            .execute()
+        )
         google_file_data = google_file_result.data[0]
         google_file_id = google_file_data.get("google_id")
 
         file_parser = FileParser(supabase_client, class_id, syllabus_file_id)
 
-        class_name, class_code, class_description, outcomes = await file_parser.parse_syllabus(google_file_id, prev_class_name, prev_class_code, prev_class_description, prev_outcomes)
+        (
+            class_name,
+            class_code,
+            class_description,
+            outcomes,
+        ) = await file_parser.parse_syllabus(
+            google_file_id,
+            prev_class_name,
+            prev_class_code,
+            prev_class_description,
+            prev_outcomes,
+        )
 
-        logger.info(f"Parsed syllabus for class {class_id}: {class_name}, {class_code}, {class_description}, {', '.join(outcomes)}")
+        logger.info(
+            f"Parsed syllabus for class {class_id}: {class_name}, {class_code}, {class_description}, {', '.join(outcomes)}"
+        )
 
         return HTTPException(status_code=200, detail="Syllabus parsed successfully")
     except Exception as e:
         logger.error(f"Error parsing syllabus: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error parsing syllabus: {str(e)}")
 
-@router.post('/audio', response_model=TranscriptionResponse)
+
+@router.post("/audio", response_model=TranscriptionResponse)
 async def transcribe_audio(
     audio_file: UploadFile = File(...),
-    task: str = "transcribe"  # Can be "transcribe" or "translate"
+    task: str = "transcribe",  # Can be "transcribe" or "translate"
 ):
     """
     Transcribe or translate audio from a streaming upload.
-    
+
     Args:
         audio_file: The audio file to transcribe
         task: Either "transcribe" (default) or "translate" to English
-    
+
     Returns:
         TranscriptionResponse with the transcribed text
     """
     if not audio_file.filename:
         raise HTTPException(status_code=400, detail="No audio file provided")
-    
+
     # Check file extension
-    valid_extensions = ['.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm']
+    valid_extensions = [".mp3", ".mp4", ".mpeg", ".mpga", ".m4a", ".wav", ".webm"]
     file_ext = os.path.splitext(audio_file.filename)[1].lower()
 
     if file_ext not in valid_extensions:
         raise HTTPException(
-            status_code=400, 
-            detail=f"Unsupported file format. Supported formats: {', '.join(valid_extensions)}"
+            status_code=400,
+            detail=f"Unsupported file format. Supported formats: {', '.join(valid_extensions)}",
         )
-    
+
     try:
         # Create a temporary file to store the uploaded audio
         with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as temp_file:
@@ -90,39 +118,33 @@ async def transcribe_audio(
             temp_file_path = temp_file.name
 
         whisper_model = model_manager.get_whisper_model()
-        
+
         # The model handles various audio formats automatically
         result = whisper_model.transcribe(
             temp_file_path,
             task=task,
-            fp16=torch.cuda.is_available()  # Use fp16 if on GPU
+            fp16=torch.cuda.is_available(),  # Use fp16 if on GPU
         )
 
         # Clean up the temporary file
         os.unlink(temp_file_path)
-        
+
         # Return the transcription result
         return TranscriptionResponse(
             text=result["text"],
             language=result.get("language"),
-            segments=[{
-                "id": s["id"],
-                "start": s["start"],
-                "end": s["end"],
-                "text": s["text"]
-            } for s in result.get("segments", [])]
+            segments=[
+                {"id": s["id"], "start": s["start"], "end": s["end"], "text": s["text"]}
+                for s in result.get("segments", [])
+            ],
         )
-        
+
     except Exception as e:
         # Clean up temp file if it exists
-        if 'temp_file_path' in locals():
+        if "temp_file_path" in locals():
             try:
                 os.unlink(temp_file_path)
-            except:
-                pass
-        
+            except Exception as e:
+                logger.error(f"Error cleaning up temp file: {str(e)}")
+
         raise HTTPException(status_code=500, detail=f"Error processing audio: {str(e)}")
-    
-
-
-

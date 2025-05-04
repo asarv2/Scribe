@@ -1,4 +1,3 @@
-import os
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,7 +13,7 @@ logger.info(f"Using {workers} workers")
 preload_app = False
 
 # Use uvicorn worker for FastAPI
-worker_class = 'uvicorn.workers.UvicornWorker'
+worker_class = "uvicorn.workers.UvicornWorker"
 
 # Threads per worker
 threads = 4
@@ -27,16 +26,19 @@ keepalive = 65
 
 # Logging configuration
 accesslog = "-"  # Log to stdout
-errorlog = "-"   # Log errors to stdout
+errorlog = "-"  # Log errors to stdout
 loglevel = "info"
 logconfig = None  # Use default logging config
+
 
 def when_ready(server):
     logger.info(f"Gunicorn server is ready. Running {workers} workers")
 
+
 def on_starting(server):
     """Log when the master process is starting."""
     logger.info("Gunicorn master process is starting")
+
 
 def post_fork(server, worker):
     # Simple worker ID assignment based on PID

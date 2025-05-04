@@ -1,11 +1,9 @@
 import re
-from collections import defaultdict
-from typing import Dict, List, Tuple
-import json
+from typing import Dict
 import logging
-import math
 
 logger = logging.getLogger(__name__)
+
 
 def clean_figures(text: str, fig_by_index: Dict[int, str]) -> str:
     """
@@ -14,12 +12,12 @@ def clean_figures(text: str, fig_by_index: Dict[int, str]) -> str:
     """
 
     def _sub(match: re.Match) -> str:
-        nums = (int(n) for n in match.group(1).split(','))
+        nums = (int(n) for n in match.group(1).split(","))
         embeds = [
             f"<FIGURE>{fig_by_index[i]}</FIGURE>"
             for i in nums
-            if i in fig_by_index               # keep only successes
+            if i in fig_by_index  # keep only successes
         ]
-        return "".join(embeds)                 # empty string if none survived
+        return "".join(embeds)  # empty string if none survived
 
     return re.sub(r"\{([\d\s,]+)\}", _sub, text)

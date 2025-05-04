@@ -8,6 +8,7 @@ from app.services.chat.utils.references import emit_google_cache
 from app.services.chat.models.main import Reference
 from openai.types import Reasoning
 
+
 class ReviewAgent(SummaryHooks):
     def __init__(self, chat_id: str):
         super().__init__()
@@ -31,7 +32,13 @@ class ReviewAgent(SummaryHooks):
 
     def agent(self, new_references: bool, all_references: List[Reference]):
         litellm_client = get_litellm()
-        cache_name = emit_google_cache(self.chat_id, litellm_client.model, self.system_prompt, new_references, all_references)
+        cache_name = emit_google_cache(
+            self.chat_id,
+            litellm_client.model,
+            self.system_prompt,
+            new_references,
+            all_references,
+        )
         if cache_name:
             return Agent[Documents](
                 name="Review Agent",
@@ -39,28 +46,25 @@ class ReviewAgent(SummaryHooks):
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    extra_body={"cached_content": cache_name}
-                )
+                    extra_body={"cached_content": cache_name},
+                ),
             )
         else:
             return Agent[Documents](
                 name="Review Agent",
                 instructions=self.system_prompt,
-                model=OpenAIChatCompletionsModel( 
+                model=OpenAIChatCompletionsModel(
                     model="gemini-2.5-flash-preview-04-17",
                     openai_client=self.gemini_client,
                 ),
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    reasoning=Reasoning(
-                        effort="low"
-                    )
+                    reasoning=Reasoning(effort="low"),
                 ),
                 tools=[self.create_summary_tool, self.create_summaries_tool],
-                tool_use_behavior=self.create_summary_check
+                tool_use_behavior=self.create_summary_check,
             )
-    
 
     def handoff(self, agent: Agent[Documents]):
         return Handoff(
@@ -70,6 +74,5 @@ class ReviewAgent(SummaryHooks):
             input_filter=handoff_input_filter,
             on_invoke_handoff=invoke_handoff(agent),
             agent_name="Review Agent",
-            strict_json_schema=True
+            strict_json_schema=True,
         )
-    

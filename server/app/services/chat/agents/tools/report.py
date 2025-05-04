@@ -1,9 +1,19 @@
-from agents import AgentHooks, RunContextWrapper, Agent, ToolsToFinalOutputResult, FunctionToolResult
+from agents import (
+    AgentHooks,
+    RunContextWrapper,
+    Agent,
+    ToolsToFinalOutputResult,
+    FunctionToolResult,
+)
 from typing import List, Dict
-from agents.tool import function_tool, FunctionTool, Tool
-from agents.run_context import RunContextWrapper
+from agents.tool import function_tool
 from app.extensions import get_supabase
-from app.services.chat.models.main import Documents, Report, CreateReportResponse, CreateFigureResponse
+from app.services.chat.models.main import (
+    Documents,
+    Report,
+    CreateReportResponse,
+    CreateFigureResponse,
+)
 from app.services.chat.agents.tools.figure import create_figures
 from app.services.chat.utils.references import clean_references
 from app.services.chat.utils.figures import clean_figures
@@ -11,11 +21,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class ReportHooks(AgentHooks):
 
+class ReportHooks(AgentHooks):
     def __init__(self):
-        self.create_report_tool = function_tool(create_report, name_override="create_report")
-        self.create_reports_tool = function_tool(create_reports, name_override="create_reports")
+        self.create_report_tool = function_tool(
+            create_report, name_override="create_report"
+        )
+        self.create_reports_tool = function_tool(
+            create_reports, name_override="create_reports"
+        )
         self.create_report_check = create_report_check
 
     async def on_handoff(
@@ -28,13 +42,13 @@ class ReportHooks(AgentHooks):
         off to this agent."""
         message_id = wrapper.context.message_id
         # update the status text
-        self.supabase_client.table("messages").update({
-            "status_text": f"Getting ready to create reports..."
-        }).eq("id", message_id).execute()
+        self.supabase_client.table("messages").update(
+            {"status_text": "Getting ready to create reports..."}
+        ).eq("id", message_id).execute()
+
 
 async def create_report_check(
-    wrapper: RunContextWrapper[Documents],
-    results: list[FunctionToolResult]
+    wrapper: RunContextWrapper[Documents], results: list[FunctionToolResult]
 ) -> ToolsToFinalOutputResult:
     # 1⃣  Collect *all* CreateReportResponse objects
     all_responses: list[CreateReportResponse] = []
@@ -50,7 +64,7 @@ async def create_report_check(
     # 2⃣  Build a success map keyed by summary_id
     report_success: dict[str, bool] = {}
     for resp in all_responses:
-        rid = resp.report_id or ""          # empty string if not provided
+        rid = resp.report_id or ""  # empty string if not provided
         # Initialise to False; upgrade to True if any success comes in
         report_success[rid] = report_success.get(rid, False) or resp.success
 
@@ -58,32 +72,34 @@ async def create_report_check(
     all_success = bool(report_success) and all(report_success.values())
 
     # 4⃣  Decide finality based on the *last* tool invoked
-    final_tool       = results[-1].tool
+    final_tool = results[-1].tool
     final_output_raw = results[-1].output
 
     if final_tool.name == "create_report":
         # Single-report call: final iff that single ID succeeded
-        is_final = isinstance(final_output_raw, CreateReportResponse) \
-                   and final_output_raw.success
+        is_final = (
+            isinstance(final_output_raw, CreateReportResponse)
+            and final_output_raw.success
+        )
         return ToolsToFinalOutputResult(
-            is_final_output=is_final,
-            final_output=final_output_raw
+            is_final_output=is_final, final_output=final_output_raw
         )
 
     elif final_tool.name == "create_reports":
         # Multi-summary call: final only if *all* unique IDs succeeded
         return ToolsToFinalOutputResult(
-            is_final_output=all_success,
-            final_output=final_output_raw
+            is_final_output=all_success, final_output=final_output_raw
         )
 
     # Fallback: not a question-creation tool
     return ToolsToFinalOutputResult(
-        is_final_output=False,
-        final_output=final_output_raw
+        is_final_output=False, final_output=final_output_raw
     )
 
-async def create_reports(wrapper: RunContextWrapper[Documents], reports: List[Report]) -> List[CreateReportResponse]:
+
+async def create_reports(
+    wrapper: RunContextWrapper[Documents], reports: List[Report]
+) -> List[CreateReportResponse]:
     """Generates a report object given the content. If you need any figures generated via LaTeX, you should create figure prompts within the create_reports tool, and they will be added to the report.
 
     To include document references in the report, you should use [x], where x is the reference number. This helps to leave the user with a reference to the document that they can click on to view the document.
@@ -92,7 +108,7 @@ async def create_reports(wrapper: RunContextWrapper[Documents], reports: List[Re
 
     You should aim to output in inline LaTeX, as this will be easier for the user to read. Moreover, you can use markdown bullet points to make the summary more readable.
 
-    This function will return the id of the report, which will then be replaced by the actual report of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the report id itself, as this is unknown to the user. 
+    This function will return the id of the report, which will then be replaced by the actual report of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the report id itself, as this is unknown to the user.
 
     Args:
         reports: List[Report]
@@ -234,18 +250,30 @@ async def create_reports(wrapper: RunContextWrapper[Documents], reports: List[Re
             content = report.content
             figures = report.figures
 
-            references = [wrapper.context.references.get(ref, None) for ref in report.references]
-            references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
+            references = [
+                wrapper.context.references.get(ref, None) for ref in report.references
+            ]
+            references = [
+                ref.get("id")
+                for ref in references
+                if ref is not None and ref.get("file") is False
+            ]
 
             # insert a summary in the database, with the generation status set to generating
-            report_response = supabase_client.table('reports').insert({
-                'generation_status': 'generating',
-                'message': message_id,
-                'title': title,
-                'references': references,
-                'class': class_id
-            }).execute()
-            report_id = report_response.data[0]['id']
+            report_response = (
+                supabase_client.table("reports")
+                .insert(
+                    {
+                        "generation_status": "generating",
+                        "message": message_id,
+                        "title": title,
+                        "references": references,
+                        "class": class_id,
+                    }
+                )
+                .execute()
+            )
+            report_id = report_response.data[0]["id"]
 
             # create any figures that are needed
             figure_responses = await create_figures(wrapper, figures)
@@ -268,42 +296,79 @@ async def create_reports(wrapper: RunContextWrapper[Documents], reports: List[Re
             content = clean_references(content, wrapper.context.references)
 
             # Filter out None values from figure_errors
-            figure_errors = [r.error or "Unknown error" for r in figure_responses if not r.success]
+            figure_errors = [
+                r.error or "Unknown error" for r in figure_responses if not r.success
+            ]
 
             if figure_errors:
-                raise Exception("Failed to create figures with the following errors: " + ", ".join(figure_errors))
+                raise Exception(
+                    "Failed to create figures with the following errors: "
+                    + ", ".join(figure_errors)
+                )
             else:
                 report_update_data = {
                     "figures": figure_ids,
-                    'content': content,
-                    "generation_status": "complete"
+                    "content": content,
+                    "generation_status": "complete",
                 }
 
                 if report_id is None:
-                    raise Exception("Failed to create report: No ID returned from database")
+                    raise Exception(
+                        "Failed to create report: No ID returned from database"
+                    )
 
                 # Insert the question into the database
-                report_update_response = supabase_client.table('reports').update(report_update_data).eq("id", report_id).execute()
+                report_update_response = (
+                    supabase_client.table("reports")
+                    .update(report_update_data)
+                    .eq("id", report_id)
+                    .execute()
+                )
 
-                if not (report_update_response.data and len(report_update_response.data) > 0):
-                    raise Exception("Failed to update report: No ID returned from database")
-                
-                responses.append(CreateReportResponse(success=True, report_id=report_id, message=report.message))
-        
+                if not (
+                    report_update_response.data and len(report_update_response.data) > 0
+                ):
+                    raise Exception(
+                        "Failed to update report: No ID returned from database"
+                    )
+
+                responses.append(
+                    CreateReportResponse(
+                        success=True, report_id=report_id, message=report.message
+                    )
+                )
+
         except Exception as e:
             if report_id is not None:
                 # update the report into the database
-                report_update_response = supabase_client.table('reports').update({
-                    'content': content,
-                    "generation_status": "error",
-                    "generation_error": str(e)
-                }).eq("id", report_id).execute()
+                report_update_response = (
+                    supabase_client.table("reports")
+                    .update(
+                        {
+                            "content": content,
+                            "generation_status": "error",
+                            "generation_error": str(e),
+                        }
+                    )
+                    .eq("id", report_id)
+                    .execute()
+                )
 
-            responses.append(CreateReportResponse(success=False, error=str(e), report_id=report_id or "", message=report.message))
+            responses.append(
+                CreateReportResponse(
+                    success=False,
+                    error=str(e),
+                    report_id=report_id or "",
+                    message=report.message,
+                )
+            )
 
     return responses
 
-async def create_report(wrapper: RunContextWrapper[Documents], report: Report) -> CreateReportResponse:
+
+async def create_report(
+    wrapper: RunContextWrapper[Documents], report: Report
+) -> CreateReportResponse:
     """Generates a report object given the content. If you need any figures generated via LaTeX, you should create figure prompts within the create_reports tool, and they will be added to the report.
 
     To include document references in the report, you should use [x], where x is the reference number. This helps to leave the user with a reference to the document that they can click on to view the document.
@@ -312,7 +377,7 @@ async def create_report(wrapper: RunContextWrapper[Documents], report: Report) -
 
     You should aim to output in inline LaTeX, as this will be easier for the user to read. Moreover, you can use markdown bullet points to make the report more readable.
 
-    This function will return the id of the report, which will then be replaced by the actual report of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the report id itself, as this is unknown to the user. 
+    This function will return the id of the report, which will then be replaced by the actual report of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the report id itself, as this is unknown to the user.
 
     Args:
         report: Report
@@ -332,7 +397,7 @@ async def create_report(wrapper: RunContextWrapper[Documents], report: Report) -
             report_id: The id of the report.
             error: The error message if the report was not created successfully.
             message: The message to be displayed to the user after the tool is run.
-    
+
     Example Report:
         {
             "title": "Analytics Report │ Learning Outcome - Proof Writing",

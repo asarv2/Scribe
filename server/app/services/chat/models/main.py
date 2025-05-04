@@ -1,25 +1,31 @@
 # creating the output types
-import re
-from collections import defaultdict
-from typing import Dict, List, Tuple, Set, Optional, Literal, Any
-from pydantic import BaseModel, Field
-import json
+from typing import Dict, List, Optional, Literal, Any
 import logging
-from collections import defaultdict
-from typing import Dict, List, Tuple, Set
-import math
-from agents import AgentOutputSchemaBase
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
+ChatAgents = Literal[
+    "general",
+    "review",
+    "homework",
+    "learn",
+    "question",
+    "summary",
+    "figure",
+    "syllabus",
+    "content",
+    "grade",
+    "analyze",
+]
 
-ChatAgents = Literal["general", "review", "homework", "learn", "question", "summary", "figure", "syllabus", "content", "grade", "analyze"]
 
 class Reference(BaseModel):
     number: int
     title: str
     url: str
     file: bool
+
 
 class ReferencesOutputSchema(BaseModel):
     references: List[Reference] = Field(default_factory=list)
@@ -28,22 +34,27 @@ class ReferencesOutputSchema(BaseModel):
 class HandoffInputSchema(BaseModel):
     references: List[int] = Field(default_factory=list)
 
+
 class ContextFile(BaseModel):
     file_id: str
+
 
 class InitialChatOutput(BaseModel):
     in_scope: bool = Field(default=True)
     title: str = Field(default="")
     reason_out_of_scope: str = Field(default="")
 
+
 class OutcomeObjectives(BaseModel):
-    number: int               # “Outcome 1”, “Outcome 2”, …
-    objectives: List[str]     # 1–2-word strings
+    number: int  # “Outcome 1”, “Outcome 2”, …
+    objectives: List[str]  # 1–2-word strings
+
 
 class AfterChatOutput(BaseModel):
     outcomes: List[OutcomeObjectives] = Field(default_factory=list)
     correct: bool = Field(default=True)
     reason: str = Field(default="")
+
 
 class Figure(BaseModel):
     title: str = Field(default="")
@@ -51,11 +62,13 @@ class Figure(BaseModel):
     references: List[int] = Field(default=[])
     message: str = Field(default="")
 
+
 class CreateFigureResponse(BaseModel):
     success: bool = Field(default=False)
     error: Optional[str] = Field(default="")
     figure_id: str = Field(default="")
     message: str = Field(default="")
+
 
 class Question(BaseModel):
     title: str = Field(default="")
@@ -68,11 +81,13 @@ class Question(BaseModel):
     figures: List[Figure] = Field(default_factory=list)
     message: str = Field(default="")
 
+
 class CreateQuestionResponse(BaseModel):
     success: bool = Field(default=False)
     error: Optional[str] = Field(default="")
     question_id: str = Field(default="")
     message: str = Field(default="")
+
 
 class Summary(BaseModel):
     title: str = Field(default="")
@@ -82,11 +97,14 @@ class Summary(BaseModel):
     references: List[int] = Field(default=[])
     figures: List[Figure] = Field(default=[])
     message: str = Field(default="")
+
+
 class CreateSummaryResponse(BaseModel):
     success: bool = Field(default=False)
     error: Optional[str] = Field(default="")
-    summary_id: str = Field(default="") 
+    summary_id: str = Field(default="")
     message: str = Field(default="")
+
 
 class Report(BaseModel):
     title: str = Field(default="")
@@ -95,19 +113,23 @@ class Report(BaseModel):
     figures: List[Figure] = Field(default=[])
     message: str = Field(default="")
 
+
 class CreateReportResponse(BaseModel):
     success: bool = Field(default=False)
     error: Optional[str] = Field(default="")
-    report_id: str = Field(default="") 
+    report_id: str = Field(default="")
     message: str = Field(default="")
+
 
 class Documents(BaseModel):
     class_id: str
     profile_id: str
     chat_id: str
     message_id: str
-    references: Dict[int, Dict[str, Any]] # maps number found in text to the id in supabase
-    outcomes: Dict[int, str] # maps outcome number to outcome id in supabase
+    references: Dict[
+        int, Dict[str, Any]
+    ]  # maps number found in text to the id in supabase
+    outcomes: Dict[int, str]  # maps outcome number to outcome id in supabase
     used_files: List[str] = []
     used_documents: List[str] = []
     figures: List[str] = []

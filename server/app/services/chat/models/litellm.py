@@ -5,8 +5,6 @@ import time
 from collections.abc import AsyncIterator
 from typing import Any, Literal, cast, overload
 
-import litellm.types
-
 from agents.exceptions import ModelBehaviorError
 
 try:
@@ -116,7 +114,9 @@ class LitellmModel(Model):
                 logger.warning("No usage information returned from Litellm")
 
             if tracing.include_data():
-                span_generation.span_data.output = [response.choices[0].message.model_dump()]
+                span_generation.span_data.output = [
+                    response.choices[0].message.model_dump()
+                ]
             span_generation.span_data.usage = {
                 "input_tokens": usage.input_tokens,
                 "output_tokens": usage.output_tokens,
@@ -217,7 +217,10 @@ class LitellmModel(Model):
         span: Span[GenerationSpanData],
         tracing: ModelTracing,
         stream: bool = False,
-    ) -> litellm.types.utils.ModelResponse | tuple[Response, AsyncStream[ChatCompletionChunk]]:
+    ) -> (
+        litellm.types.utils.ModelResponse
+        | tuple[Response, AsyncStream[ChatCompletionChunk]]
+    ):
         converted_messages = Converter.items_to_messages(input)
 
         if system_instructions:
@@ -241,7 +244,9 @@ class LitellmModel(Model):
         tool_choice = Converter.convert_tool_choice(model_settings.tool_choice)
         response_format = Converter.convert_response_format(output_schema)
 
-        converted_tools = [Converter.tool_to_openai(tool) for tool in tools] if tools else []
+        converted_tools = (
+            [Converter.tool_to_openai(tool) for tool in tools] if tools else []
+        )
 
         for handoff in handoffs:
             converted_tools.append(Converter.convert_handoff_tool(handoff))
@@ -258,7 +263,9 @@ class LitellmModel(Model):
                 f"Response format: {response_format}\n"
             )
 
-        reasoning_effort = model_settings.reasoning.effort if model_settings.reasoning else None
+        reasoning_effort = (
+            model_settings.reasoning.effort if model_settings.reasoning else None
+        )
 
         stream_options = None
         if stream and model_settings.include_usage is not None:
@@ -328,14 +335,19 @@ class LitellmConverter:
             raise ModelBehaviorError(f"Unsupported role: {message.role}")
 
         tool_calls = (
-            [LitellmConverter.convert_tool_call_to_openai(tool) for tool in message.tool_calls]
+            [
+                LitellmConverter.convert_tool_call_to_openai(tool)
+                for tool in message.tool_calls
+            ]
             if message.tool_calls
             else None
         )
 
         provider_specific_fields = message.get("provider_specific_fields", None)
         refusal = (
-            provider_specific_fields.get("refusal", None) if provider_specific_fields else None
+            provider_specific_fields.get("refusal", None)
+            if provider_specific_fields
+            else None
         )
 
         return ChatCompletionMessage(
@@ -351,8 +363,8 @@ class LitellmConverter:
     def convert_annotations_to_openai(
         cls, message: litellm.types.utils.Message
     ) -> list[Annotation] | None:
-        annotations: list[litellm.types.llms.openai.ChatCompletionAnnotation] | None = message.get(
-            "annotations", None
+        annotations: list[litellm.types.llms.openai.ChatCompletionAnnotation] | None = (
+            message.get("annotations", None)
         )
         if not annotations:
             return None
@@ -378,6 +390,7 @@ class LitellmConverter:
             id=tool_call.id,
             type="function",
             function=Function(
-                name=tool_call.function.name or "", arguments=tool_call.function.arguments
+                name=tool_call.function.name or "",
+                arguments=tool_call.function.arguments,
             ),
         )
