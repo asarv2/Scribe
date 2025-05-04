@@ -6,6 +6,7 @@ from pylatex.utils import NoEscape
 import os
 import re
 import logging
+import io, zipfile
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +15,35 @@ class QuestionsDownloader:
         self.questions = questions
         self.chat_title = chat_title
         self.directory_id = directory_id or (self.questions[0][0]['id'].split('_')[0] if self.questions and self.questions[0] else "questions")
+
+    # ------------ public zip helpers ------------------------------------
+    def zip_pdfs(self, title) -> tuple[str, str]:
+        bio = io.BytesIO()
+        with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
+            for idx, q in enumerate(self.questions, 1):
+                single = QuestionsDownloader([q], f"{title} – Q{idx}",
+                                             self.directory_id)
+                fp = single.download_pdf()
+                z.write(fp, os.path.basename(fp))
+        return self._write_zip(bio, "questions_pdf.zip")
+
+    def zip_latexs(self, title) -> tuple[str, str]:
+        bio = io.BytesIO()
+        with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
+            for idx, q in enumerate(self.questions, 1):
+                single = QuestionsDownloader([q], f"{title} – Q{idx}",
+                                             self.directory_id)
+                fp = single.download_latex()
+                z.write(fp, os.path.basename(fp))
+        return self._write_zip(bio, "questions_tex.zip")
+
+    # ------------ util ---------------------------------------------------
+    def _write_zip(self, bio, fname):
+        bio.seek(0)
+        path = os.path.join(QUESTIONS_DIR, self.directory_id, fname)
+        with open(path, "wb") as f:
+            f.write(bio.getvalue())
+        return path, fname
 
 
     def _clean_content(self, content):

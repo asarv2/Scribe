@@ -164,129 +164,115 @@ async def download_summary_get(
     return FileResponse(path, filename=fname, media_type=mtype,
                         headers={"Content-Disposition": f"attachment; filename={fname}"})
 
-@router.get('/questions')
+@router.get("/questions")
 async def download_questions_get(
     request: Request,
     chat_id: str = Query(...),
     question_ids: list[str] = Query(...),
-    format: str = Query(...),  # 'pdf', 'latex', or 'text'
+    format: Literal["pdf", "latex", "text"] = Query(...),
+    zip: bool = Query(False)                                # ← NEW
 ):
     """Download questions for a given questions ID using GET method."""
-    try:
-        supabase_client = get_supabase()
+    supabase_client = get_supabase()
 
-        # Get questions data for the selected questions
-        questions_response = supabase_client.table("questions").select("*").in_("id", question_ids).execute()
+    # Get questions data for the selected questions
+    questions_response = supabase_client.table("questions").select("*").in_("id", question_ids).execute()
+    
+    if not questions_response.data:
+        raise HTTPException(status_code=404, detail="Questions not found")
+    
+    # Format questions data for the downloader
+    questions_data = []
+    for question in questions_response.data:
+        frq_question = question.get('frq', False)  # Default to frq if type not specified
         
-        if not questions_response.data:
-            raise HTTPException(status_code=404, detail="Questions not found")
-        
-        # Format questions data for the downloader
-        questions_data = []
-        for question in questions_response.data:
-            frq_question = question.get('frq', False)  # Default to frq if type not specified
-            
-            if not frq_question:
-                # MCQ question
-                mcq_question = {
-                    "id": question.get('id'),
-                    "title": question.get('title', ''),
-                    "question_type": "mcq",  # Add explicit question_type field
-                    "question": question.get('problem', ''),
-                    "options": question.get('options', []),
-                    "answers": question.get('answers', []),
-                    "explanations": question.get('explanations', []),
-                    "references": question.get('references', []),
-                    "figures": question.get('figures', [])
-                }
-                questions_data.append([mcq_question])
-            else:
-                # FRQ question
-                frq_question = {
-                    "id": question.get('id'),
-                    "title": question.get('title', ''),
-                    "question_type": "frq",  # Add explicit question_type field
-                    "question": question.get('problem', ''),
-                    "solution": question.get('solution', ''),
-                    "references": question.get('references', []),
-                    "figures": question.get('figures', [])
-                }
-                questions_data.append([frq_question])
-        
-        # Get titles for the selected questions
-        question_titles = []
-        for question in questions_response.data:
-            # Use the title attribute instead of the problem text
-            title = question.get('title', '')
-            if not title:
-                # Fall back to problem text if title is empty
-                problem_text = question.get('problem', '')
-                title = problem_text[:30].strip()
-                if len(problem_text) > 30:
-                    title += "..."
-            question_titles.append(title)
-        
-        # Create a combined title
-        if len(question_titles) == 1:
-            combined_title = question_titles[0]
-        elif len(question_titles) == 2:
-            combined_title = f"{question_titles[0]} and {question_titles[1]}"
-        else:
-            combined_title = f"{question_titles[0]}, {question_titles[1]} and more"
-        
-        # Create document title and directory ID
-        document_title = combined_title
-        # Use the first question ID as the directory ID if multiple questions
-        directory_id = question_ids[0] if question_ids else "unknown"
-        
-        # Create downloader with the directory ID
-        downloader = QuestionsDownloader(questions_data, document_title, directory_id)
-        
-        # Generate file based on format
-        if format == 'pdf':
-            filepath = downloader.download_pdf()
-            media_type = 'application/pdf'
-            filename = f"{document_title}.pdf"
-        elif format == 'latex':
-            filepath = downloader.download_latex()
-            media_type = 'application/x-tex'
-            filename = f"{document_title}.tex"
-        elif format == 'text':
-            filepath = downloader.download_text()
-            media_type = 'text/plain'
-            filename = f"{document_title}.txt"
-        else:
-            raise HTTPException(status_code=400, detail="Invalid format")
-        
-        # Replace print statements with logger
-        logger.info(f"Generated filepath: {filepath}")
-        logger.info(f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}")
-        
-        if not filepath or not os.path.exists(filepath):
-            raise HTTPException(status_code=500, detail=f"Failed to generate file at {filepath}")
-        
-        # Clean filename for safe download
-        filename = re.sub(r'[^\w\s.-]', '', filename).replace(' ', '_')
-            
-        return FileResponse(
-            path=filepath,
-            filename=filename,
-            media_type=media_type,
-            headers={"Content-Disposition": f"attachment; filename={filename}"}
-        )
-
-    except Exception as e:
-        # Replace print statements with logger
-        logger.error(f"Error in download-questions-get function: {e}")
-
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": str(e),
-                "stack": traceback.format_exc(),
-                "name": type(e).__name__
+        if not frq_question:
+            # MCQ question
+            mcq_question = {
+                "id": question.get('id'),
+                "title": question.get('title', ''),
+                "question_type": "mcq",  # Add explicit question_type field
+                "question": question.get('problem', ''),
+                "options": question.get('options', []),
+                "answers": question.get('answers', []),
+                "explanations": question.get('explanations', []),
+                "references": question.get('references', []),
+                "figures": question.get('figures', [])
             }
-        )
+            questions_data.append([mcq_question])
+        else:
+            # FRQ question
+            frq_question = {
+                "id": question.get('id'),
+                "title": question.get('title', ''),
+                "question_type": "frq",  # Add explicit question_type field
+                "question": question.get('problem', ''),
+                "solution": question.get('solution', ''),
+                "references": question.get('references', []),
+                "figures": question.get('figures', [])
+            }
+            questions_data.append([frq_question])
+    
+    # Get titles for the selected questions
+    question_titles = []
+    for question in questions_response.data:
+        # Use the title attribute instead of the problem text
+        title = question.get('title', '')
+        if not title:
+            # Fall back to problem text if title is empty
+            problem_text = question.get('problem', '')
+            title = problem_text[:30].strip()
+            if len(problem_text) > 30:
+                title += "..."
+        question_titles.append(title)
+    
+    # Create a combined title
+    if len(question_titles) == 1:
+        combined_title = question_titles[0]
+    elif len(question_titles) == 2:
+        combined_title = f"{question_titles[0]} and {question_titles[1]}"
+    else:
+        combined_title = f"{question_titles[0]}, {question_titles[1]} and more"
+    
+    # Create document title and directory ID
+    document_title = combined_title
+    # Use the first question ID as the directory ID if multiple questions
+    directory_id = question_ids[0] if question_ids else "unknown"
+    
+    # Create downloader with the directory ID
+    downloader = QuestionsDownloader(questions_data, document_title,
+                                     directory_id)
+    # ---------- choose output -------------------------------------------
+    if zip:
+        if format == "pdf":
+            path, fname = downloader.zip_pdfs(combined_title)
+            media = "application/zip"
+        elif format == "latex":
+            path, fname = downloader.zip_latexs(combined_title)
+            media = "application/zip"
+        else:                                               # text not zipped
+            raise HTTPException(status_code=400,
+                                detail="zip supported only for pdf/latex")
+    else:
+        if format == "pdf":
+            path = downloader.download_pdf()
+            fname = f"{document_title}.pdf"
+            media = "application/pdf"
+        elif format == "latex":
+            path = downloader.download_latex()
+            fname = f"{document_title}.tex"
+            media = "application/x-tex"
+        else:
+            path = downloader.download_text()
+            fname = f"{document_title}.txt"
+            media = "text/plain"
+
+    if not path or not os.path.exists(path):
+        raise HTTPException(500, "Failed to generate file")
+
+    fname = re.sub(r"[^\w\s.-]", "", fname).replace(" ", "_")
+    return FileResponse(path, filename=fname, media_type=media,
+                        headers={"Content-Disposition": f"attachment; filename={fname}"})
     
 @router.get('/grade')
 async def download_grade_get(
