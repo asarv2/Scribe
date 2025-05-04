@@ -5,47 +5,74 @@ from pylatex.utils import NoEscape
 import re
 from app.extensions import SUMMARIES_DIR
 import logging
-
+import io, zipfile
+from app.services.download.figure import FigureDownloader
 logger = logging.getLogger(__name__)
 
+# ---------- figure insertion -----------------------------------------
+_DOC_TAG_RE = re.compile(r"<DOCUMENT>(.*?)</DOCUMENT>", re.S)
+
 class SummaryDownloader:
-    def __init__(self, summaries):
-        # Can accept either a single summary or a list of summaries
-        if isinstance(summaries, list):
-            self.summaries = summaries
-        else:
-            self.summaries = [summaries]
-        
-        # Create a directory based on the first summary's ID
-        self.base_dir = os.path.join(SUMMARIES_DIR, self.summaries[0]['id'])
+    def __init__(self, summaries, figure_map, document_map, files,
+                 *, class_id: str, chat_id: str):
+        self.summaries = summaries
+        self.figures   = figure_map
+        self.files = files
+        self.documents = document_map
+        self.class_id  = class_id
+        self.chat_id   = chat_id
+        self.base_dir  = os.path.join(SUMMARIES_DIR, summaries[0]["id"])
+        self._FIG_TAG_RE = re.compile(r"<FIGURE>(.*?)</FIGURE>", re.S)
         os.makedirs(self.base_dir, exist_ok=True)
 
-    def download_text(self, combined_title=None):
-        """Download summaries as text file"""
-        if not combined_title:
-            combined_title = self._get_combined_title()
-        
-        # Combine all summaries into one text file
-        content = ""
-        for i, summary in enumerate(self.summaries):
-            if i > 0:
-                content += "\n\n" + "-" * 50 + "\n\n"
-            
-            content += f"# {summary['title']}\n\n"
-            content += self._clean_content(summary['preamble']) + "\n\n" 
-            content += self._clean_content(summary['content']) + "\n\n" 
-            content += self._clean_content(summary['conclusion'])
-        
-        # Create a safe filename
-        safe_name = re.sub(r'[^\w\-_\. ]', '_', combined_title)
-        safe_name = safe_name.replace(' ', '_')
-        filename = f"{safe_name}.txt"
-        filepath = os.path.join(self.base_dir, filename)
-        
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(content)
-            
-        return filepath
+    def _page_ranges(self, docs):
+        pages = sorted({d["page"] for d in docs if d["page"] is not None})
+        out, start = [], pages[0] if pages else None
+        for i, p in enumerate(pages + [None]):          # sentinel
+            if i == len(pages) or p != pages[i-1] + 1:
+                end = pages[i-1]
+                out.append((start, end))
+                if i < len(pages):
+                    start = p
+        return out                                       # list[(start,end)]
+
+    def _label(self, doc, rng=None):
+        # find the file in the files list with the same id as the doc
+        file = next((f for f in self.files if f["id"] == doc["file"]), None)
+        if not file:
+            return f"File not found: {doc['file']}"
+        if file["type"] in ("video", "audio"):
+            fmt = lambda t: f"{int(t//60):02d}:{int(t%60):02d}"
+            return f"[{file['title']} {fmt(doc['start_time'])}-{fmt(doc['end_time'])}]"
+        return f"[{file['title']} p.{rng or doc['page']}]"
+
+    # ---------- public helpers for zip ------------------------------------
+    def zip_pdfs(self, title) -> tuple[str, str]:
+        bio = io.BytesIO()
+        with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
+            for s in self.summaries:
+                fp = self._single_pdf(s)         # build one by one
+                z.write(fp, os.path.basename(fp))
+        return self._write_zip(bio, title, "summaries_pdf.zip")
+
+    def zip_latexs(self, title) -> tuple[str, str]:
+        bio = io.BytesIO()
+        with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
+            for s in self.summaries:
+                fp = self._single_tex(s)
+                z.write(fp, os.path.basename(fp))
+        return self._write_zip(bio, title, "summaries_tex.zip")
+    
+    def _insert_figures(self, raw: str, summary) -> str:
+        def repl(match):
+            key = match.group(1).strip() or summary["figures"].pop(0)
+            fig = self.figures.get(key)
+            if not fig:
+                return r"\textbf{[missing figure]}"
+            code = self._enlarge(fig["code"])        # reuse from below
+            return FigureDownloader._figure_block(   # staticmethod call
+                       FigureDownloader, code, fig["title"], caption=False)
+        return self._FIG_TAG_RE.sub(repl, raw)
 
     def download_pdf(self, combined_title=None):
         """Download summaries as PDF file"""
@@ -182,7 +209,26 @@ class SummaryDownloader:
         # Add each summary as a separate section
         for summary in summaries:
             with doc.create(Section(summary['title'])):
-                content = summary['preamble'] + "\n\n" + self._clean_content(summary['content']) + "\n\n" + summary['conclusion']
+                content = (
+                    self._clean_content(
+                        self._insert_figures(                 # existing
+                            self._insert_docs(summary['preamble']),  # ← NEW
+                            summary
+                        )
+                    ) + "\n\n" + 
+                    self._clean_content(
+                        self._insert_figures(                 # existing
+                            self._insert_docs(summary['content']),  # ← NEW
+                            summary
+                        )
+                    ) + "\n\n" + 
+                    self._clean_content(
+                        self._insert_figures(                 # existing
+                            self._insert_docs(summary['conclusion']),  # ← NEW
+                            summary
+                        )
+                    )
+                )
                 doc.append(NoEscape(content))
 
         # Create a valid filename
@@ -267,3 +313,39 @@ class SummaryDownloader:
         else:
             doc.generate_tex(filepath)
             return True
+        
+    # ---------- utils -----------------------------------------------------
+    @staticmethod
+    def _enlarge(code: str) -> str:
+        return "\\resizebox{0.9\\linewidth}{!}{%\n" + code.strip() + "\n}"
+
+    def _write_zip(self, bio, title, fname):
+        bio.seek(0)
+        path = os.path.join(self.base_dir, fname)
+        with open(path, "wb") as f:
+            f.write(bio.getvalue())
+        return path, fname
+    
+    def _insert_docs(self, raw: str) -> str:
+        def repl(m):
+            doc_id = m.group(1).strip()
+            doc = self.documents.get(doc_id)
+            if not doc:
+                return r"\textbf{[missing doc]}"
+            # group contiguous pages for same file
+            same_file_docs = [d for d in self.documents.values()
+                            if d["file"] == doc["file"]]
+            ranges = self._page_ranges(same_file_docs)
+            # find which range this page belongs to
+            rng = next(f"{s}-{e}" if s!=e else f"{s}"
+                    for s,e in ranges if s <= doc["page"] <= e)
+            label = self._label(doc, rng)
+            url = (f"https://www.scribe.it.com/class/{self.class_id}"
+                f"/chat/{self.chat_id}?document={doc_id}")
+            return rf"\href{{{url}}}{{{self._escape(label)}}}"
+        return _DOC_TAG_RE.sub(repl, raw)
+
+    @staticmethod
+    def _escape(txt):
+        return (txt.replace("&","\\&").replace("%","\\%")
+                .replace("#","\\#").replace("_","\\_"))
