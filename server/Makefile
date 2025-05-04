@@ -25,9 +25,9 @@ mypy: dev-tools
 	@./.venv/bin/python -m mypy .
 
 tests: dev-tools
-	@./.venv/bin/python -m pytest -v --disable-warnings
+	@./.venv/bin/python -m pytest -q --disable-warnings
 
 coverage: dev-tools
-	@./.venv/bin/python -m coverage run -m pytest --disable-warnings
+	@./.venv/bin/python -m coverage run -m pytest -q --disable-warnings
 	@./.venv/bin/python -m coverage xml -o coverage.xml
 	@./.venv/bin/python -m coverage report -m --fail-under=95

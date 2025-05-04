@@ -1,8 +1,6 @@
 # tests/test_figure.py
 import io
-import json
 import zipfile
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -12,8 +10,9 @@ from PIL import Image
 # ---------------------------------------------------------------------
 # import the code under test
 # ---------------------------------------------------------------------
-import app.routes.download as download_mod          # contains endpoint
-import app.services.download.figure as fig_mod      # FigureDownloader
+import app.routes.download as download_mod  # contains endpoint
+import app.services.download.figure as fig_mod  # FigureDownloader
+
 
 # ---------------------------------------------------------------------
 # helpers / fakes
@@ -28,12 +27,14 @@ def png_bytes():
 
 class _FakeResult:
     """Mimics Supabase .execute().data behaviour."""
+
     def __init__(self, data):
         self.data = data
 
 
 class FakeSupabase:
     """Very small stub that understands the chained table()...execute()."""
+
     def __init__(self, chats, figures):
         self._tables = {"chats": chats, "figures": figures}
 
@@ -64,7 +65,7 @@ class FakeSupabase:
 def tmp_dirs(monkeypatch, tmp_path):
     """Redirect FIGURES_DIR to a temp folder for every test."""
     monkeypatch.setattr(download_mod, "FIGURES_DIR", tmp_path, raising=False)
-    monkeypatch.setattr(fig_mod,      "FIGURES_DIR", tmp_path, raising=False)
+    monkeypatch.setattr(fig_mod, "FIGURES_DIR", tmp_path, raising=False)
     return tmp_path
 
 
@@ -72,19 +73,19 @@ def tmp_dirs(monkeypatch, tmp_path):
 def client(monkeypatch, png_bytes, tmp_dirs):
     """TestClient with *all* externals monkey‑patched."""
     # 1) fake Supabase ----------------------------------------------
-    chats   = [{"id": "chat1", "class": "classA", "name": "Chat"}]
+    chats = [{"id": "chat1", "class": "classA", "name": "Chat"}]
     figures = [
-        {   # single very small figure
-            "id":  "fig1",
+        {  # single very small figure
+            "id": "fig1",
             "title": "Tiny",
             "code": r"\begin{tikzpicture}\draw (0,0)--(1,1);\end{tikzpicture}",
-            "references": []
+            "references": [],
         },
-        {   # second figure for multi‑zip tests
-            "id":  "fig2",
+        {  # second figure for multi‑zip tests
+            "id": "fig2",
             "title": "Tiny-2",
             "code": r"\begin{tikzpicture}\draw (0,1)--(1,0);\end{tikzpicture}",
-            "references": []
+            "references": [],
         },
     ]
     monkeypatch.setattr(
@@ -110,7 +111,8 @@ def client(monkeypatch, png_bytes, tmp_dirs):
 
     monkeypatch.setattr(fig_mod.FigureDownloader, "combine_pdf", fake_combine_pdf)
 
-    from app.main import app                      # your FastAPI entry‑point
+    from app.main import app  # your FastAPI entry‑point
+
     return TestClient(app)
 
 
@@ -145,12 +147,13 @@ def test_multi_png_zip(client):
         assert names == ["Tiny.png", "Tiny_2.png"]
         assert all(z.read(n)[:8] == b"\x89PNG\r\n\x1a\n" for n in names)
 
+
 def test_single_latex(client):
     r = _call(client, "latex", ["fig1"])
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("application/x-tex")
-    assert br"\documentclass" in r.content
-    assert br"Tiny" in r.content
+    assert rb"\documentclass" in r.content
+    assert rb"Tiny" in r.content
 
 
 def test_multi_latex_zip(client):
@@ -158,6 +161,7 @@ def test_multi_latex_zip(client):
     assert r.status_code == 200
     with zipfile.ZipFile(io.BytesIO(r.content)) as z:
         assert sorted(z.namelist()) == ["Tiny.tex", "Tiny_2.tex"]
+
 
 def test_pdf(client):
     r = _call(client, "pdf", ["fig1"])
@@ -173,12 +177,13 @@ def test_chat_not_found(client, monkeypatch):
     r = _call(client, "png", ["fig1"])
     assert r.status_code == 404
 
+
 @pytest.mark.parametrize(
     "fmt,ids,ctype,zip_flag",
     [
-        ("png",  ["fig1", "fig2"], "image/png", False),     # grid combine
-        ("latex",["fig1", "fig2"], "application/x-tex", False),
-        ("pdf",  ["fig1", "fig2"], "application/pdf", False),
+        ("png", ["fig1", "fig2"], "image/png", False),  # grid combine
+        ("latex", ["fig1", "fig2"], "application/x-tex", False),
+        ("pdf", ["fig1", "fig2"], "application/pdf", False),
     ],
 )
 def test_multi_combine_no_zip(client, fmt, ids, ctype, zip_flag):
@@ -194,6 +199,7 @@ def test_multi_combine_no_zip(client, fmt, ids, ctype, zip_flag):
     elif fmt == "pdf":
         assert r.content.startswith(b"%PDF")
 
+
 def test_figures_not_found(client, monkeypatch):
     empty = FakeSupabase(
         chats=[{"id": "chat1", "class": "classA", "name": "Chat"}],
@@ -204,14 +210,17 @@ def test_figures_not_found(client, monkeypatch):
     assert r.status_code == 404
     assert r.json()["detail"] == "Figures not found"
 
+
 def test_invalid_format(client):
-    r = _call(client, "svg", ["fig1"])          # unsupported format
+    r = _call(client, "svg", ["fig1"])  # unsupported format
     assert r.status_code == 422
+
 
 def test_missing_required_params(client):
     # omit 'figure_ids' completely
     r = client.get("/download/figure", params={"chat_id": "chat1", "format": "png"})
-    assert r.status_code == 422                 # FastAPI validation error
+    assert r.status_code == 422  # FastAPI validation error
+
 
 def test_pdf_with_zip_true_still_returns_pdf(client):
     r = _call(client, "pdf", ["fig1"], zip=True)

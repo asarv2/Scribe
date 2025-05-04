@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request, Query
 from fastapi.responses import FileResponse
 from app.extensions import get_supabase
-import traceback
 import os
 import logging
 from app.services.download.summary import SummaryDownloader
@@ -197,8 +196,8 @@ async def download_questions_get(
     request: Request,
     chat_id: str = Query(...),
     question_ids: list[str] = Query(...),
-    format: Literal["pdf", "latex", "text"] = Query(...),
-    zip: bool = Query(False),  # ← NEW
+    format: Literal["pdf", "latex"] = Query(...),
+    zip: bool = Query(False),
 ):
     """Download questions for a given questions ID using GET method."""
     supabase_client = get_supabase()
@@ -285,19 +284,15 @@ async def download_questions_get(
             raise HTTPException(
                 status_code=400, detail="zip supported only for pdf/latex"
             )
-    else:
+    else:  # not zipped
         if format == "pdf":
             path = downloader.download_pdf()
             fname = f"{document_title}.pdf"
             media = "application/pdf"
-        elif format == "latex":
+        else:  # latex
             path = downloader.download_latex()
             fname = f"{document_title}.tex"
             media = "application/x-tex"
-        else:
-            path = downloader.download_text()
-            fname = f"{document_title}.txt"
-            media = "text/plain"
 
     if not path or not os.path.exists(path):
         raise HTTPException(500, "Failed to generate file")
