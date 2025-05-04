@@ -1,5 +1,6 @@
 from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, Handoff
 from app.extensions import get_gemini, get_litellm
+from openai.types import Reasoning
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
 from app.services.chat.agents.tools.report import ReportHooks
@@ -48,7 +49,10 @@ class AnalyzeAgent(ReportHooks):
                 ),
                 model_settings=ModelSettings(
                     temperature=0.0,
-                    include_usage=True
+                    include_usage=True,
+                    reasoning=Reasoning(
+                        effort="low"
+                    )
                 ),
                 tools=[self.create_report_tool, self.create_reports_tool],
                 tool_use_behavior=self.create_report_check

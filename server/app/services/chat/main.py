@@ -6,7 +6,7 @@ from agents import Agent, Runner, trace, RunHooks, Tool, RunContextWrapper, RawR
 from app.services.chat.models.main import Documents, CreateFigureResponse, CreateQuestionResponse, CreateSummaryResponse, CreateReportResponse, ChatAgents, Reference
 from app.services.chat.utils.references import process_special_tags, clean_references
 from agents.items import TResponseInputItem
-from openai.types.responses import ResponseTextDeltaEvent, ResponseFunctionCallArgumentsDeltaEvent
+from openai.types.responses import ResponseTextDeltaEvent, ResponseFunctionCallArgumentsDeltaEvent, ResponseReasoningSummaryTextDeltaEvent
 import logging
 import asyncio
 from app.services.chat.agents.guardrail import GuardrailAgent
@@ -316,6 +316,8 @@ class ChatProcessor(RunHooks):
                             chunk = event.data.delta
                             cleaned_chunk = clean_references(chunk, documents.references)
                             await self.stream_callback(cleaned_chunk)
+                        elif isinstance(event.data, ResponseReasoningSummaryTextDeltaEvent):
+                            logger.info(f"Reasoning summary: {event.data.delta}")
 
                 # Update usage statistics
                 raw_responses = result.raw_responses

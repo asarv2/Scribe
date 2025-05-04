@@ -1,5 +1,6 @@
 from typing import List
 from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, Handoff
+from openai.types import Reasoning
 from app.extensions import get_gemini, get_litellm
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
@@ -39,7 +40,10 @@ class ContentAgent:
                 ),
                 model_settings=ModelSettings(
                     temperature=0.0,
-                    include_usage=True
+                    include_usage=True,
+                    reasoning=Reasoning(
+                        effort="low"
+                    )
                 )
             )
     

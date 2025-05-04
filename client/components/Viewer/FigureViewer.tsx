@@ -117,18 +117,25 @@ export default function FigureViewer({
     setTouchStartX(null);
   };
 
-  const handleDownload = (format: 'png' | 'pdf' | 'latex', downloadAll: boolean = false) => {
+  const handleDownload = (
+    format: 'png' | 'pdf' | 'latex',
+    downloadAll = false
+  ) => {
     setDownloadFormat(format);
     setDownloadLoading(true);
-
-    // If downloadAll is true or we have multiple figures, download all figures
-    const figureIds = downloadAll ?
-      validFigures.map(fig => fig.id) :
-      [validFigures[currentIndex].id];
-
-    const downloadUrl = getFigureDownloadUrl(chatId, figureIds, format);
+  
+    const ids = downloadAll
+      ? validFigures.map(f => f.id)
+      : [validFigures[currentIndex].id];
+  
+    // decide zip flag
+    const zip =
+      (format === 'png'  && downloadAll) ||
+      (format === 'latex' && downloadAll);
+  
+    const downloadUrl = getFigureDownloadUrl(chatId, ids, format, zip);
     console.log(`Downloading from URL: ${downloadUrl}`);
-    console.log(`Format: ${format}, Download All: ${downloadAll}, Figure IDs: ${figureIds.join(', ')}`);
+    console.log(`Format: ${format}, Download All: ${downloadAll}, Figure IDs: ${ids.join(', ')}`);
 
     fetch(downloadUrl, {
       headers: {
@@ -146,10 +153,11 @@ export default function FigureViewer({
         console.log(`Content-Type: ${contentType}`);
         console.log(`Content-Disposition: ${contentDisposition}`);
         
-        let filename = `figure.${format === 'latex' ? 'tex' : format}`;
-        if (downloadAll && format === 'png') {
-          filename = 'figures.zip';  // Ensure zip extension for multiple PNGs
-        }
+        let filename = (() => {
+          if (zip) return `${format === 'png' ? 'figures_png' : 'figures_tex'}.zip`;
+          if (format === 'latex') return 'figure.tex';
+          return `figure.${format}`;
+        })();
 
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);

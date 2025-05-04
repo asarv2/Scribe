@@ -3,9 +3,10 @@ from app.extensions import get_gemini, get_litellm
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
 from app.services.chat.agents.tools.summary import SummaryHooks
-from typing import List, Dict, Any
+from typing import List
 from app.services.chat.utils.references import emit_google_cache
 from app.services.chat.models.main import Reference
+from openai.types import Reasoning
 
 class ReviewAgent(SummaryHooks):
     def __init__(self, chat_id: str):
@@ -51,7 +52,10 @@ class ReviewAgent(SummaryHooks):
                 ),
                 model_settings=ModelSettings(
                     temperature=0.0,
-                    include_usage=True
+                    include_usage=True,
+                    reasoning=Reasoning(
+                        effort="low"
+                    )
                 ),
                 tools=[self.create_summary_tool, self.create_summaries_tool],
                 tool_use_behavior=self.create_summary_check

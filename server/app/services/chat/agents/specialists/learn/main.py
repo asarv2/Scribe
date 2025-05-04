@@ -3,9 +3,10 @@ from app.extensions import get_gemini, get_litellm
 from app.services.chat.models.main import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
 from app.services.chat.agents.tools.figure import FigureHooks
-from typing import List, Dict, Any
+from typing import List
 from app.services.chat.utils.references import emit_google_cache
 from app.services.chat.models.main import Reference
+from openai.types import Reasoning
 
 class LearnAgent(FigureHooks):
     def __init__(self, chat_id: str):
@@ -66,7 +67,10 @@ class LearnAgent(FigureHooks):
                 ),
                 model_settings=ModelSettings(
                     temperature=0.0,
-                    include_usage=True
+                    include_usage=True,
+                    reasoning=Reasoning(
+                        effort="low"
+                    )
                 ),
                 tools=[self.create_figure_tool, self.create_figures_tool],
                 tool_use_behavior=self.create_figure_check
