@@ -6,7 +6,6 @@ import os
 import logging
 from app.services.download.summary import SummaryDownloader
 from app.services.download.questions import QuestionsDownloader
-from app.services.download.grade import GradeDownloader
 from app.services.download.figure import FigureDownloader
 import re
 from typing import Literal
@@ -310,98 +309,3 @@ async def download_questions_get(
         media_type=media,
         headers={"Content-Disposition": f"attachment; filename={fname}"},
     )
-
-
-@router.get("/grade")
-async def download_grade_get(
-    request: Request,
-    grade_id: str = Query(...),
-    chat_id: str = Query(...),
-    format: str = Query(...),  # 'pdf', 'latex', or 'text'
-):
-    """Download a grade for a given grade ID using GET method."""
-    try:
-        supabase_client = get_supabase()
-        # Get chat data
-        chat_response = (
-            supabase_client.table("chats").select("*").eq("id", chat_id).execute()
-        )
-
-        if not chat_response.data:
-            raise HTTPException(status_code=404, detail="Chat not found")
-
-        # get all messages for this chat
-        messages_response = (
-            supabase_client.table("messages").select("*").eq("chat", chat_id).execute()
-        )
-
-        if not messages_response.data:
-            raise HTTPException(status_code=404, detail="Messages not found")
-
-        # Get grade data
-        grade_response = (
-            supabase_client.table("grades").select("*").eq("id", grade_id).execute()
-        )
-
-        if not grade_response.data:
-            raise HTTPException(status_code=404, detail="Grade not found")
-
-        grade_data = grade_response.data[0]
-
-        title = grade_data.get("title", "Grade")
-
-        # Create Grade object
-        grade = {
-            "id": grade_id,
-            "title": title,
-            "results": grade_data.get("results", ""),
-            "feedback": grade_data.get("feedback", ""),
-            "references": grade_data.get("references", []),
-            "figures": grade_data.get("figures", []),
-        }
-
-        # Create downloader
-        downloader = GradeDownloader(grade)
-
-        # Generate file based on format
-        if format == "pdf":
-            filepath = downloader.download_pdf()
-            media_type = "application/pdf"
-            filename = f"{title}.pdf"
-        elif format == "latex":
-            filepath = downloader.download_latex()
-            media_type = "application/x-tex"
-            filename = f"{title}.tex"
-        elif format == "text":
-            filepath = downloader.download_text()
-            media_type = "text/plain"
-            filename = f"{title}.txt"
-        else:
-            raise HTTPException(status_code=400, detail="Invalid format")
-
-        # Replace print statements with logger
-        logger.info(f"Generated filepath: {filepath}")
-        logger.info(
-            f"File exists check: {os.path.exists(filepath) if filepath else 'No filepath returned'}"
-        )
-
-        if not filepath or not os.path.exists(filepath):
-            raise HTTPException(
-                status_code=500, detail=f"Failed to generate file at {filepath}"
-            )
-
-        # Clean filename for safe download
-        filename = re.sub(r"[^\w\s.-]", "", filename).replace(" ", "_")
-
-        return FileResponse(
-            path=filepath,
-            filename=filename,
-            media_type=media_type,
-            headers={"Content-Disposition": f"attachment; filename={filename}"},
-        )
-
-    except Exception as e:
-        # Replace print statements with logger
-        logger.error(f"Error in download-grade-get function: {str(e)}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
-        raise
