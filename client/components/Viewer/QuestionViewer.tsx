@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Document, Question, ViewerMode } from '../../types';
 import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Stack, Radio, RadioGroup, Switch, Pagination, Tooltip, Modal, Textarea } from '@mantine/core';
-import { IconDownload, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconEye, IconMaximize, IconEyeOff } from '@tabler/icons-react';
+import { IconDownload, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconEye, IconMaximize, IconEyeOff, IconFiles, IconFileStack } from '@tabler/icons-react';
 import Latex from '../Latex';
 import { notifications } from '@mantine/notifications';
 import { getProfile } from '@/utils/queries/get-profile';
@@ -40,6 +40,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     const [frqAnswers, setFrqAnswers] = useState<Record<string, string>>({});
     const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({});
     const [downloadLoading, setDownloadLoading] = useState(false);
+    const [downloadAll, setDownloadAll] = useState(true);
+    const [combined, setCombined] = useState(false);
 
 
     // Store the question IDs in a ref to detect when the actual questions change
@@ -162,10 +164,10 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
         setFrqAnswers(prev => ({ ...prev, [questionId]: value }));
     };
 
-    const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = true) => {
+    const handleDownload = (format: 'pdf' | 'latex') => {
         // If downloadAll is false, only download the current question
         const questionIds = downloadAll ? validQuestions.map(q => q.id) : [question.id];
-        const useZip = downloadAll && validQuestions.length > 1;
+        const useZip = downloadAll && validQuestions.length > 1 && !combined;
         const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format, useZip);
 
         setDownloadLoading(true);
@@ -179,7 +181,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             .then(response => {
                 // Get filename from Content-Disposition header if available
                 const contentDisposition = response.headers.get('Content-Disposition');
-                console.log('Content-Disposition:', contentDisposition);
                 let filename = useZip
                     ? `questions-${chatId}.zip`
                     : downloadAll
@@ -471,57 +472,39 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                 </Tooltip>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                {validQuestions.length > 1 ? (
-                                    <>
-                                        <Menu.Label>Download Options</Menu.Label>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf', false)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'Current Question (PDF)'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex', false)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'Current Question (LaTeX)'}
-                                        </Menu.Item>
-                                        <Menu.Divider />
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf', true)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'All Questions (PDF)'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex', true)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'All Questions (LaTeX)'}
-                                        </Menu.Item>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf')}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex')}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                                        </Menu.Item>
-                                    </>
-                                )}
+                                <Menu.Label>
+                                    <Group justify="space-between" gap={"xs"}>
+                                        Download Options
+                                        {validQuestions.length > 1 && (
+                                            <Group gap={2}>
+                                                <Tooltip label={'All'}>
+                                                    <ActionIcon variant={downloadAll ? "filled" : "subtle"} size="md" onClick={() => setDownloadAll((prev) => !prev)} disabled={downloadLoading}>
+                                                        <IconFiles size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip label={'Combined'}>
+                                                    <ActionIcon variant={combined ? "filled" : "subtle"} size="md" onClick={() => setCombined((prev) => !prev)} disabled={downloadLoading || !downloadAll}>
+                                                        <IconFileStack size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Group>
+                                        )}
+                                    </Group>
+                                </Menu.Label>
+                                <Menu.Item
+                                    leftSection={<IconFile size={14} />}
+                                    onClick={() => handleDownload('pdf')}
+                                    disabled={downloadLoading}
+                                >
+                                    {downloadLoading ? 'Downloading...' : 'PDF Document'}
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={<IconFileTypography size={14} />}
+                                    onClick={() => handleDownload('latex')}
+                                    disabled={downloadLoading}
+                                >
+                                    {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
+                                </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
                     </Group>

@@ -8,7 +8,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { getFigureUrl, getFigureDownloadUrl } from "@/utils/services/images";
 import { Card, Text, ActionIcon, Box, Group, Loader, Button, Center, Skeleton, Modal, Tooltip, Menu } from '@mantine/core';
-import { IconDownload, IconRefresh, IconFile, IconFileTypography, IconFileTypePdf, IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
+import { IconDownload, IconRefresh, IconFile, IconFileTypography, IconFileTypePdf, IconChevronLeft, IconChevronRight, IconMaximize, IconFiles, IconFileStack } from '@tabler/icons-react';
 import Image from "next/image";
 import { notifications } from '@mantine/notifications';
 import { Document, Figure, ViewerMode } from '../../types';
@@ -42,6 +42,8 @@ export default function FigureViewer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [downloadAll, setDownloadAll] = useState(false);
+  const [combined, setCombined] = useState(false);
 
   // Get valid figures (without errors)
   const validFigures = useMemo(() => {
@@ -117,10 +119,7 @@ export default function FigureViewer({
     setTouchStartX(null);
   };
 
-  const handleDownload = (
-    format: 'png' | 'pdf' | 'latex',
-    downloadAll = false
-  ) => {
+  const handleDownload = (format: 'png' | 'pdf' | 'latex') => {
     setDownloadFormat(format);
     setDownloadLoading(true);
   
@@ -128,12 +127,12 @@ export default function FigureViewer({
         ? validFigures.map(f => f.id)
         : [validFigures[currentIndex].id];
   
-    // decide zip flag - use zip for multiple figures when downloading all
-    const zip = downloadAll && validFigures.length > 1;
+    // decide zip flag - use zip for multiple figures when downloading all and not combined
+    const zip = downloadAll && validFigures.length > 1 && !combined;
   
     const downloadUrl = getFigureDownloadUrl(chatId, ids, format, zip);
     console.log(`Downloading from URL: ${downloadUrl}`);
-    console.log(`Format: ${format}, Download All: ${downloadAll}, Figure IDs: ${ids.join(', ')}`);
+    console.log(`Format: ${format}, Download All: ${downloadAll}, Combined: ${combined}, Figure IDs: ${ids.join(', ')}`);
 
     fetch(downloadUrl, {
         headers: {
@@ -153,6 +152,7 @@ export default function FigureViewer({
             
             let filename = (() => {
                 if (zip) return `figures-${chatId}.zip`;
+                if (downloadAll && !zip) return `combined-figures-${chatId}.${format === 'latex' ? 'tex' : format}`;
                 if (format === 'latex') return `figure-${validFigures[currentIndex].id}.tex`;
                 return `figure-${validFigures[currentIndex].id}.${format}`;
             })();
@@ -173,7 +173,7 @@ export default function FigureViewer({
         .then(({ blob, filename }) => {
             // For zip files, ensure the correct extension
             if (blob.type === 'application/zip' || 
-                (downloadAll && format === 'png') || 
+                (zip && format === 'png') || 
                 filename.endsWith('.zip')) {
                 if (!filename.endsWith('.zip')) {
                     filename = `${filename}.zip`;
@@ -196,9 +196,14 @@ export default function FigureViewer({
             window.URL.revokeObjectURL(url);
             document.body.removeChild(link);
 
+            let message = `${format.toUpperCase()}`;
+            if (downloadAll) {
+                message += combined ? ' (combined)' : ' (all figures)';
+            }
+            
             notifications.show({
                 title: 'Download complete',
-                message: `${format.toUpperCase()}${downloadAll ? ' (all figures)' : ''} has been downloaded`,
+                message: `${message} has been downloaded`,
                 color: 'green',
             });
         })
@@ -369,51 +374,45 @@ export default function FigureViewer({
               </Tooltip>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Current Figure</Menu.Label>
+              <Menu.Label>
+                <Group justify="space-between" gap={"xs"}>
+                  Download Options
+                  {validFigures.length > 1 && (
+                    <Group gap={2}>
+                      <Tooltip label={'All'}>
+                        <ActionIcon variant={downloadAll ? "filled" : "subtle"} size="md" onClick={() => setDownloadAll((prev) => !prev)} disabled={downloadLoading}>
+                          <IconFiles size={18} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label={'Combined'}>
+                        <ActionIcon variant={combined ? "filled" : "subtle"} size="md" onClick={() => setCombined((prev) => !prev)} disabled={downloadLoading || !downloadAll}>
+                          <IconFileStack size={18} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                  )}
+                </Group>
+              </Menu.Label>
               <Menu.Item
                 leftSection={<IconFile size={14} />}
-                onClick={() => handleDownload('png', false)}
+                onClick={() => handleDownload('png')}
                 disabled={downloadLoading}
               >
                 {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 'PNG Image'}
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconFileTypePdf size={14} />}
-                onClick={() => handleDownload('pdf', false)}
+                onClick={() => handleDownload('pdf')}
                 disabled={downloadLoading}
               >
                 {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'PDF Document'}
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconFileTypography size={14} />}
-                onClick={() => handleDownload('latex', false)}
+                onClick={() => handleDownload('latex')}
                 disabled={downloadLoading}
               >
                 {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'LaTeX Source'}
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Label>All Figures</Menu.Label>
-              <Menu.Item
-                leftSection={<IconFile size={14} />}
-                onClick={() => handleDownload('png', true)}
-                disabled={downloadLoading}
-              >
-                {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 
-                 validFigures.length > 1 ? 'PNG Images (ZIP)' : 'PNG Image'}
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconFileTypePdf size={14} />}
-                onClick={() => handleDownload('pdf', true)}
-                disabled={downloadLoading}
-              >
-                {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'Combined PDF'}
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconFileTypography size={14} />}
-                onClick={() => handleDownload('latex', true)}
-                disabled={downloadLoading}
-              >
-                {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'Combined LaTeX'}
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>}
