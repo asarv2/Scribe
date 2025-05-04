@@ -10,7 +10,7 @@ from app.services.download.figure import FigureDownloader
 logger = logging.getLogger(__name__)
 
 # ---------- figure insertion -----------------------------------------
-_DOC_TAG_RE = re.compile(r"<DOCUMENT>(.*?)</DOCUMENT>", re.S)
+_DOC_TAG_RE = re.compile(r"(\s*)<DOCUMENT>(.*?)</DOCUMENT>(\s*\.)?", re.S)
 
 class SummaryDownloader:
     def __init__(self, summaries, figure_map, document_map, files,
@@ -328,21 +328,29 @@ class SummaryDownloader:
     
     def _insert_docs(self, raw: str) -> str:
         def repl(m):
-            doc_id = m.group(1).strip()
-            doc = self.documents.get(doc_id)
+            leading_ws = m.group(1)
+            doc_id     = m.group(2).strip()
+            has_dot    = bool(m.group(3))          # "."
+            doc        = self.documents.get(doc_id)
+
             if not doc:
-                return r"\textbf{[missing doc]}"
-            # group contiguous pages for same file
-            same_file_docs = [d for d in self.documents.values()
-                            if d["file"] == doc["file"]]
-            ranges = self._page_ranges(same_file_docs)
-            # find which range this page belongs to
-            rng = next(f"{s}-{e}" if s!=e else f"{s}"
-                    for s,e in ranges if s <= doc["page"] <= e)
-            label = self._label(doc, rng)
-            url = (f"https://www.scribe.it.com/class/{self.class_id}"
-                f"/chat/{self.chat_id}?document={doc_id}")
-            return rf"\href{{{url}}}{{{self._escape(label)}}}"
+                link = r"\textbf{[missing doc]}"
+            else:
+                # page‑range + label -------------------------------------------
+                same = [d for d in self.documents.values()
+                        if d["file"] == doc["file"]]
+                rng  = next(f"{s}-{e}" if s != e else f"{s}"
+                            for s, e in self._page_ranges(same)
+                            if s <= doc["page"] <= e)
+                label = self._label(doc, rng)
+
+                url   = (f"https://www.scribe.it.com/class/{self.class_id}"
+                        f"/chat/{self.chat_id}?document={doc_id}")
+                link  = rf"\href{{{url}}}{{{self._escape(label)}}}"
+
+            # build output: optional leading spaces *only when there is no dot*
+            return ("" if has_dot else leading_ws) + ('. ' if has_dot else '') + link
+
         return _DOC_TAG_RE.sub(repl, raw)
 
     @staticmethod
