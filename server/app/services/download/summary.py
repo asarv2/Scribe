@@ -57,16 +57,18 @@ class SummaryDownloader:
         bio = io.BytesIO()
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
             for s in self.summaries:
-                fp = self._single_pdf(s)  # build one by one
-                z.write(fp, os.path.basename(fp))
+                fp = self.download_pdf(s["title"])
+                if fp:
+                    z.write(fp, os.path.basename(fp))
         return self._write_zip(bio, title, "summaries_pdf.zip")
 
     def zip_latexs(self, title) -> tuple[str, str]:
         bio = io.BytesIO()
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
             for s in self.summaries:
-                fp = self._single_tex(s)
-                z.write(fp, os.path.basename(fp))
+                fp = self.download_latex(s["title"])
+                if fp:
+                    z.write(fp, os.path.basename(fp))
         return self._write_zip(bio, title, "summaries_tex.zip")
 
     def _insert_figures(self, raw: str, summary) -> str:

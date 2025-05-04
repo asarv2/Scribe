@@ -124,10 +124,10 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
         setTouchStartX(null);
     };
 
-    const handleDownload = (format: 'pdf' | 'latex' | 'text', downloadAll: boolean = false) => {
+    const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = false) => {
         // If downloadAll is true, we need to modify the API call to get all summaries
         const downloadUrl = downloadAll
-            ? getSummaryDownloadUrl(chatId, validSummaries.map(s => s.id), format)
+            ? getSummaryDownloadUrl(chatId, validSummaries.map(s => s.id), format, validSummaries.length > 1)
             : getSummaryDownloadUrl(chatId, [summary.id], format);
 
         setDownloadLoading(true);
@@ -141,8 +141,8 @@ const SummaryViewer: React.FC<SummaryViewerProps> = ({ classId, chatId, summarie
             .then(response => {
                 // Get filename from Content-Disposition header if available
                 const contentDisposition = response.headers.get('Content-Disposition');
-                let filename = downloadAll
-                    ? `all-summaries-${chatId}.${format === 'latex' ? 'tex' : format}`
+                let filename = downloadAll && validSummaries.length > 1
+                    ? `summaries-${chatId}.zip`
                     : `${summary.title || `summary-${currentIndex + 1}`}.${format === 'latex' ? 'tex' : format}`;
 
                 if (contentDisposition) {

@@ -125,97 +125,95 @@ export default function FigureViewer({
     setDownloadLoading(true);
   
     const ids = downloadAll
-      ? validFigures.map(f => f.id)
-      : [validFigures[currentIndex].id];
+        ? validFigures.map(f => f.id)
+        : [validFigures[currentIndex].id];
   
-    // decide zip flag
-    const zip =
-      (format === 'png'  && downloadAll) ||
-      (format === 'latex' && downloadAll);
+    // decide zip flag - use zip for multiple figures when downloading all
+    const zip = downloadAll && validFigures.length > 1;
   
     const downloadUrl = getFigureDownloadUrl(chatId, ids, format, zip);
     console.log(`Downloading from URL: ${downloadUrl}`);
     console.log(`Format: ${format}, Download All: ${downloadAll}, Figure IDs: ${ids.join(', ')}`);
 
     fetch(downloadUrl, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true'
-      }
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-        }
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+            }
 
-        // Get filename from Content-Disposition header if available
-        const contentDisposition = response.headers.get('Content-Disposition');
-        const contentType = response.headers.get('Content-Type');
-        console.log(`Content-Type: ${contentType}`);
-        console.log(`Content-Disposition: ${contentDisposition}`);
-        
-        let filename = (() => {
-          if (zip) return `${format === 'png' ? 'figures_png' : 'figures_tex'}.zip`;
-          if (format === 'latex') return 'figure.tex';
-          return `figure.${format}`;
-        })();
+            // Get filename from Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const contentType = response.headers.get('Content-Type');
+            console.log(`Content-Type: ${contentType}`);
+            console.log(`Content-Disposition: ${contentDisposition}`);
+            
+            let filename = (() => {
+                if (zip) return `figures-${chatId}.zip`;
+                if (format === 'latex') return `figure-${validFigures[currentIndex].id}.tex`;
+                return `figure-${validFigures[currentIndex].id}.${format}`;
+            })();
 
-        if (contentDisposition) {
-          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-          if (filenameMatch && filenameMatch[1]) {
-            filename = filenameMatch[1].replace(/['"]/g, '');
-            console.log(`Extracted filename: ${filename}`);
-          }
-        }
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                    console.log(`Extracted filename: ${filename}`);
+                }
+            }
 
-        return response.blob().then(blob => {
-          console.log(`Blob type: ${blob.type}, size: ${blob.size} bytes`);
-          return { blob, filename };
+            return response.blob().then(blob => {
+                console.log(`Blob type: ${blob.type}, size: ${blob.size} bytes`);
+                return { blob, filename };
+            });
+        })
+        .then(({ blob, filename }) => {
+            // For zip files, ensure the correct extension
+            if (blob.type === 'application/zip' || 
+                (downloadAll && format === 'png') || 
+                filename.endsWith('.zip')) {
+                if (!filename.endsWith('.zip')) {
+                    filename = `${filename}.zip`;
+                }
+            }
+            
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a hidden anchor element
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.download = filename;
+            console.log(`Downloading as: ${filename}`);
+
+            // Append to the document, click it, and remove it
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+
+            notifications.show({
+                title: 'Download complete',
+                message: `${format.toUpperCase()}${downloadAll ? ' (all figures)' : ''} has been downloaded`,
+                color: 'green',
+            });
+        })
+        .catch(error => {
+            console.error('Download failed:', error);
+            notifications.show({
+                title: 'Download failed',
+                message: `Failed to download the figure: ${error.message}`,
+                color: 'red',
+            });
+        })
+        .finally(() => {
+            setDownloadLoading(false);
+            setDownloadFormat(null);
         });
-      })
-      .then(({ blob, filename }) => {
-        // For zip files, ensure the correct extension
-        if (blob.type === 'application/zip' || 
-            (downloadAll && format === 'png') || 
-            filename.endsWith('.zip')) {
-          if (!filename.endsWith('.zip')) {
-            filename = `${filename}.zip`;
-          }
-        }
-        
-        // Create a URL for the blob
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a hidden anchor element
-        const link = document.createElement('a');
-        link.style.display = 'none';
-        link.href = url;
-        link.download = filename;
-        console.log(`Downloading as: ${filename}`);
-
-        // Append to the document, click it, and remove it
-        document.body.appendChild(link);
-        link.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(link);
-
-        notifications.show({
-          title: 'Download complete',
-          message: `${format.toUpperCase()}${downloadAll ? ' (all figures)' : ''} has been downloaded`,
-          color: 'green',
-        });
-      })
-      .catch(error => {
-        console.error('Download failed:', error);
-        notifications.show({
-          title: 'Download failed',
-          message: `Failed to download the figure: ${error.message}`,
-          color: 'red',
-        });
-      })
-      .finally(() => {
-        setDownloadLoading(false);
-        setDownloadFormat(null);
-      });
   };
 
   const renderContent = () => {

@@ -165,7 +165,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = true) => {
         // If downloadAll is false, only download the current question
         const questionIds = downloadAll ? validQuestions.map(q => q.id) : [question.id];
-        const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format);
+        const useZip = downloadAll && validQuestions.length > 1;
+        const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format, useZip);
 
         setDownloadLoading(true);
 
@@ -179,11 +180,11 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                 // Get filename from Content-Disposition header if available
                 const contentDisposition = response.headers.get('Content-Disposition');
                 console.log('Content-Disposition:', contentDisposition);
-                let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
-
-                if (!downloadAll) {
-                    filename = `question-${currentIndex + 1}-${chatId}.${format === 'latex' ? 'tex' : format}`;
-                }
+                let filename = useZip
+                    ? `questions-${chatId}.zip`
+                    : downloadAll
+                        ? `questions-${chatId}.${format === 'latex' ? 'tex' : format}`
+                        : `question-${currentIndex + 1}-${chatId}.${format === 'latex' ? 'tex' : format}`;
 
                 if (contentDisposition) {
                     const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);

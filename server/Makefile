@@ -1,4 +1,4 @@
-.PHONY: venv sync format lint mypy tests coverage
+.PHONY: venv sync format lint mypy tests coverage run
 
 # 1. Ensure the virtual environment exists
 venv:
@@ -31,3 +31,7 @@ coverage: dev-tools
 	@./.venv/bin/python -m coverage run -m pytest -q --disable-warnings
 	@./.venv/bin/python -m coverage xml -o coverage.xml
 	@./.venv/bin/python -m coverage report -m --fail-under=95
+
+run: sync
+	@echo "Starting the application..."
+	@./.venv/bin/python app/main.py
