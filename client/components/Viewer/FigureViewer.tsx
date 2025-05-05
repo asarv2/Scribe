@@ -296,6 +296,7 @@ export default function FigureViewer({
                     }
                   }}
                   priority={false}
+                  unoptimized
                 />
               </Box>
             </Box>

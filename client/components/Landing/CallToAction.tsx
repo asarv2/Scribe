@@ -10,13 +10,13 @@ import { getClasses } from "@/utils/queries/get-classes";
 import { getProfile } from "@/utils/queries/get-profile";
 import { getUser } from "@/utils/queries/get-user";
 import useSupabaseBrowser from "@/utils/supabase/supabase-browser";
-import { Box, Container, Image } from "@mantine/core";
+import { Box, Container } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import styles from './CallToAction.module.css';
 import { useStudentMode } from "../StudentModeContext";
-
+import Image from "next/image";
 export default function CallToAction() {
     const supabase = useSupabaseBrowser();
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -81,6 +81,12 @@ export default function CallToAction() {
                             src="/icon.png"
                             alt="Scribe Logo"
                             className={styles.logo}
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: 'auto', height: 'auto' }}
+                            priority
+                            unoptimized
                         />
                     </div>
                 </div>

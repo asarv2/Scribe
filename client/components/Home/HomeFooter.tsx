@@ -25,6 +25,7 @@ export function HomeFooter() {
             width={90}
             height={20}
             className={classes['logo-light']}
+            unoptimized
           />
           <Image
             src={"/images/logo-dark.png"}
@@ -33,6 +34,7 @@ export function HomeFooter() {
             width={90}
             height={20}
             className={classes['logo-dark']}
+            unoptimized
           />
         </Link>
         <Group className={classes.links}>

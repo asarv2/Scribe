@@ -291,6 +291,7 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                                     : { width: '90%', height: 'auto' }) // Portrait or square
                             }}
                             sizes="100vw"
+                            unoptimized
                         />
                     </Box>
                 )}
@@ -327,6 +328,7 @@ export default function PageDetailsModal({ classId, viewerMode, setViewerMode }:
                                     objectFit: "contain"
                                 }}
                                 sizes="100vw"
+                                unoptimized
                             />
                         </Box>
                         <audio 

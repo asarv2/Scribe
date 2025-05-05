@@ -397,26 +397,6 @@ export function ClassHeader({ classId, basePath, showClasses }: ClassHeaderProps
             }}>
                 {/* Logo - Centered */}
                 {renderClassSelector()}
-                {/* <Link href="/" style={{ pointerEvents: 'auto', display: 'inline-block' }}>
-                    <Image
-                        src={"/images/logo-light.png"}
-                        priority
-                        alt="Logo"
-                        width={75}
-                        height={25}
-                        style={{ marginTop: '4px' }}
-                        className={classes['logo-light']}
-                    />
-                    <Image
-                        src={"/images/logo-dark.png"}
-                        priority
-                        alt="Logo"
-                        width={75}
-                        height={25}
-                        style={{ marginTop: '4px' }}
-                        className={classes['logo-dark']}
-                    />
-                </Link> */}
             </Center>
 
             {/* Right Group: Feedback, Account Menu */}

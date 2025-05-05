@@ -1,5 +1,5 @@
 import { useDrop } from "react-dnd";
-import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Image, Box } from "@mantine/core"; // Added Box
+import { Card, Group, Stack, Text, Skeleton, ActionIcon, Tooltip, RingProgress, Loader, Box } from "@mantine/core"; // Added Box
 import { IconX, IconPlus, IconLoader, IconCircleX } from "@tabler/icons-react"; // Changed IconEye to IconPlus, added IconCircleX
 import { useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -8,6 +8,7 @@ import { ContentType } from "@/types";
 import DraggableWrapper from "../DragDrop/DraggableWrapper";
 import { handleDocumentClick } from "@/utils/chat/chat-helpers";
 import classes from '../Chat/Canvas/ChatCanvas.module.css'; // Import animation CSS
+import Image from "next/image";
 
 export default function ItemCard({
     item,
@@ -167,12 +168,13 @@ export default function ItemCard({
                         <Image
                             src={item.imageUrl}
                             alt={item.newName}
+                            width={40}
+                            height={40}
                             style={{
-                                width: '100%',
-                                height: '100%',
                                 objectFit: 'cover',
                             }}
-                            loading="lazy"
+                            priority={false}
+                            unoptimized
                         />
                     </div>
                 ) : (

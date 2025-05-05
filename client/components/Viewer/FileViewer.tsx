@@ -246,6 +246,7 @@ export default function FileViewer({
                                                 placeholder="blur"
                                                 blurDataURL={"/placeholder_image.svg"}
                                                 onError={() => console.log(`Failed to load image for document ${doc.id}`)}
+                                                unoptimized
                                             />
                                         </Box>
                                         {/* Add magnifying glass icon in top right corner to open the image modal */}
