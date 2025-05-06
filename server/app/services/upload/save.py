@@ -3,7 +3,7 @@ import logging
 import magic
 from typing import Dict, Any
 from app.extensions import get_google
-from app.services.upload.models import FileExtractChunk
+from app.services.upload.upload_models import FileExtractChunk
 from google.genai.types import UploadFileConfig
 
 logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class FileSaver:
         file_id: str,
         extract_chunk: FileExtractChunk,
         progress_callback=None,
-    ) -> str:
+    ) -> str | None:
         """
         Save a document to database and storage
 
@@ -341,7 +341,7 @@ class FileSaver:
                 progress_callback(0.0, "error", f"Error saving document: {str(e)}")
             return None
 
-    def save_file_to_gemini(self, file_id: str, file_path: str) -> str:
+    def save_file_to_gemini(self, file_id: str, file_path: str) -> str | None:
         """
         Upload a file to Gemini API
 
@@ -374,12 +374,14 @@ class FileSaver:
                     "google_id": google_file_id,
                 }
             ).execute()
-
+            return google_file_id
         except Exception as e:
             logger.error(f"Error uploading to Gemini: {str(e)}")
             return None
 
-    def save_file_to_supabase(self, class_id: str, file_id: str, file_path: str) -> str:
+    def save_file_to_supabase(
+        self, class_id: str, file_id: str, file_path: str
+    ) -> str | None:
         """
         Save a file to Supabase storage using S3 protocol
 

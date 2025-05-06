@@ -59,7 +59,7 @@ class ModelManager:
             device = "cuda" if has_gpu else "cpu"
 
             # Import whisper here to avoid loading it unnecessarily
-            import whisper
+            import whisper  # type: ignore
 
             logger.info(
                 f"Initializing Whisper {self.whisper_model_size} model on {device}..."

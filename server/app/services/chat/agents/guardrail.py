@@ -1,9 +1,9 @@
 import logging
 import re
-from typing import Optional, Callable, Awaitable, Any, List, Dict
-from agents import Agent, OpenAIChatCompletionsModel, ModelSettings
+from typing import Optional, Callable, Awaitable, Any, List, Dict, cast
+from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, OutputGuardrail
 from app.extensions import get_gemini
-from app.services.chat.models.main import (
+from app.services.chat.models.general import (
     InitialChatOutput,
     Documents,
     AfterChatOutput,
@@ -31,7 +31,7 @@ class GuardrailAgent:
         self,
         course_title: str,
         full_outcome_description: str | None,
-        update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str,
+        update_chat_title: Optional[Callable[[str, str], Awaitable[str]]] = None,
         update_chat_usage: Optional[
             Callable[[str, str, str, int, int, int, int], Awaitable[None]]
         ] = None,
@@ -47,8 +47,8 @@ class GuardrailAgent:
         self.update_chat_title = update_chat_title
         self.update_chat_usage = update_chat_usage
 
-        self.input_guardrail_agent = self.input_guardrail_agent()
-        self.output_guardrail_agent = self.output_guardrail_agent()
+        self._input_guardrail_agent = self._create_input_guardrail_agent()
+        self._output_guardrail_agent = self._create_output_guardrail_agent()
 
     def input_guardrail_wrapper(self):
         @input_guardrail(name="Input Guardrail")
@@ -62,13 +62,15 @@ class GuardrailAgent:
                 for item in input:
                     if isinstance(item, dict) and isinstance(item.get("content"), list):
                         has_image = False
-                        for content_item in item.get("content"):
-                            if (
-                                isinstance(content_item, dict)
-                                and content_item.get("type") == "input_image"
-                            ):
-                                has_image = True
-                                break
+                        content_list = item.get("content", [])
+                        if isinstance(content_list, list):
+                            for content_item in content_list:
+                                if (
+                                    isinstance(content_item, dict)
+                                    and content_item.get("type") == "input_image"
+                                ):
+                                    has_image = True
+                                    break
                         if not has_image:
                             new_input.append(item)
                     else:
@@ -76,7 +78,7 @@ class GuardrailAgent:
                 input = new_input
 
             result = await Runner.run(
-                self.input_guardrail_agent, input, context=ctx.context
+                self._input_guardrail_agent, input, context=ctx.context
             )
             output = result.final_output_as(InitialChatOutput)
 
@@ -92,7 +94,7 @@ class GuardrailAgent:
                 await self.update_chat_usage(
                     ctx.context.chat_id,
                     ctx.context.profile_id,
-                    str(self.input_guardrail_agent.model.model),
+                    str(self._input_guardrail_agent.model.model),
                     ctx.usage.input_tokens,
                     0,
                     ctx.usage.output_tokens,
@@ -110,7 +112,7 @@ class GuardrailAgent:
 
         return input_guardrail_function
 
-    def output_guardrail_wrapper(self):
+    def output_guardrail_wrapper(self) -> OutputGuardrail[Any]:
         # ── tiny config table ───────────────────────────────────────────────────
         _ID_KEY: Dict[str, tuple[str, type]] = {
             "Figure Agent": ("figure_id", CreateFigureResponse),
@@ -160,7 +162,10 @@ class GuardrailAgent:
             if not ids:
                 return [raw]
 
-            return [model(success=True, **{key: id_}) for id_ in ids]
+            if model:
+                return [model(success=True, **{key: id_}) for id_ in ids]
+            else:
+                return [raw]
 
         async def to_chat_items(resp: Any, supabase, ctx) -> list[dict]:
             if isinstance(resp, CreateFigureResponse):
@@ -184,7 +189,7 @@ class GuardrailAgent:
 
         @output_guardrail(name="Output Guardrail")
         async def output_guardrail_function(
-            ctx, agent, output: Any
+            ctx: RunContextWrapper[Any], agent: Agent, output: Any
         ) -> GuardrailFunctionOutput:
             supabase = get_supabase()
 
@@ -209,8 +214,10 @@ class GuardrailAgent:
             )
 
             # ④ run the guardrail agent exactly as before …
+            typed_chat_history = cast(List[TResponseInputItem], chat_history)
+
             result = await Runner.run(
-                self.output_guardrail_agent, chat_history, context=ctx.context
+                self._output_guardrail_agent, typed_chat_history, context=ctx.context
             )
 
             final = result.final_output_as(AfterChatOutput)
@@ -244,7 +251,7 @@ class GuardrailAgent:
                 await self.update_chat_usage(
                     ctx.context.chat_id,
                     ctx.context.profile_id,
-                    str(self.output_guardrail_agent.model.model),
+                    str(self._output_guardrail_agent.model.model),
                     ctx.usage.input_tokens,
                     0,
                     ctx.usage.output_tokens,
@@ -262,7 +269,7 @@ class GuardrailAgent:
 
         return output_guardrail_function
 
-    def input_guardrail_agent(self):
+    def _create_input_guardrail_agent(self):
         system_prompt = self.input_guardrail_system_prompt()
 
         return Agent[Documents](
@@ -276,7 +283,7 @@ class GuardrailAgent:
             output_type=InitialChatOutput,
         )
 
-    def output_guardrail_agent(self):
+    def _create_output_guardrail_agent(self):
         system_prompt = self.output_guardrail_system_prompt()
 
         return Agent[Documents](

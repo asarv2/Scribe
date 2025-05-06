@@ -1,7 +1,6 @@
 # test_summary.py
 
 import io
-import re
 import zipfile
 from pathlib import Path
 
@@ -9,8 +8,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 # ------------------------------------------------------------------ imports
-import app.routes.download as droute  # router that owns /summary
-import app.services.download.summary as smod  # SummaryDownloader
+import app.routes.download_route as droute  # router that owns /summary
+import app.services.download.summaries as smod  # SummaryDownloader
 
 
 # ------------------------------------------------------------------ helpers
@@ -94,7 +93,7 @@ def client(monkeypatch, tmp_path):
     # 1) write a stub file & return True
     def fake_save(self, directory, summaries, base, title, pdf=True):
         Path(directory).mkdir(parents=True, exist_ok=True)
-        ext  = "pdf" if pdf else "tex"
+        ext = "pdf" if pdf else "tex"
         path = Path(directory) / f"{base}.{ext}"
         header = b"%PDF-STUB\n" if pdf else b"\\documentclass{article}\n"
         path.write_bytes(header + title.encode())
@@ -146,6 +145,7 @@ def test_download_variants(client, fmt, ctype, zip_flag):
     else:
         assert r.content.startswith(b"%PDF")
 
+
 def test_zip_individual_files_are_singleton_summaries(client):
     # ask for two summaries zipped
     r = _sget(client, "pdf", ["s1", "s2"], zip=True)
@@ -156,12 +156,13 @@ def test_zip_individual_files_are_singleton_summaries(client):
         names = sorted(z.namelist())
         assert names == ["First_Summary.pdf", "Second_Summary.pdf"]
 
-        first  = z.read("First_Summary.pdf")
+        first = z.read("First_Summary.pdf")
         second = z.read("Second_Summary.pdf")
 
         # each stub PDF must mention ONLY its own title
-        assert b"First Summary"  in first and b"Second Summary" not in first
-        assert b"Second Summary" in second and b"First Summary"  not in second
+        assert b"First Summary" in first and b"Second Summary" not in first
+        assert b"Second Summary" in second and b"First Summary" not in second
+
 
 def test_chat_not_found(client, monkeypatch):
     empty_tables = {

@@ -12,7 +12,7 @@ from app.services.upload.compress import FileCompressor
 from app.services.upload.save import FileSaver
 from app.services.upload.extract import FileExtractor
 from app.config import model_manager
-from app.services.upload.models import FileExtractChunk
+from app.services.upload.upload_models import FileExtractChunk
 
 from app.extensions import CHUNKS_DIR
 
@@ -25,6 +25,9 @@ logger = logging.getLogger(__name__)
 
 
 class FileProcessor:
+    # Add this class variable declaration at the class level
+    _cuda_semaphore: asyncio.Semaphore | None = None
+
     def __init__(self, supabase_client):
         """Initialize the file processor
 
@@ -330,8 +333,6 @@ class FileProcessor:
                     )
             except Exception as e:
                 logger.warning("Could not handle persist-dir cleanup: %s", e)
-            finally:
-                self.current_file_id = None
 
     async def _extract_file_content(
         self, file_path: str, file_type: str
@@ -362,7 +363,7 @@ class FileProcessor:
 
             # Create a semaphore to ensure only one CUDA operation runs at a time
             # This is a global semaphore to coordinate across all requests
-            if not hasattr(FileProcessor, "_cuda_semaphore"):
+            if FileProcessor._cuda_semaphore is None:
                 FileProcessor._cuda_semaphore = asyncio.Semaphore(1)
 
             try:
@@ -644,7 +645,7 @@ class FileProcessor:
             progress_callback(10.0, "cpu_fallback", "Attempting CPU-only transcription")
 
         # Import here to avoid circular imports
-        import whisper
+        import whisper  # type: ignore
         import tempfile
 
         # Create a temporary directory for this operation

@@ -8,7 +8,7 @@ from typing import Any, Literal, cast, overload
 from agents.exceptions import ModelBehaviorError
 
 try:
-    import litellm
+    import litellm  # type: ignore
 except ImportError as _e:
     raise ImportError(
         "`litellm` is required to use the LitellmModel. You can install it via the optional "

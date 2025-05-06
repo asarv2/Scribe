@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 # ------------------------------------------------------------------ imports
-import app.routes.download as qroute  # route with FileResponse
+import app.routes.download_route as qroute  # route with FileResponse
 import app.services.download.questions as qmod  # QuestionsDownloader
 
 

@@ -1,6 +1,6 @@
 from agents import Agent, RunContextWrapper
 from agents import HandoffInputData
-from app.services.chat.models.main import (
+from app.services.chat.models.general import (
     Documents,
     HandoffInputSchema,
 )
@@ -34,8 +34,18 @@ def invoke_handoff(agent: Agent[Documents]):
         ]
 
         # merge the references
-        wrapper.context.used_files.extend(file_ids)
-        wrapper.context.used_documents.extend(document_ids)
+        if file_ids:
+            formatted_file_ids = [
+                str(file_id) for file_id in file_ids if file_id is not None
+            ]
+            wrapper.context.used_files.extend(formatted_file_ids)
+        if document_ids:
+            formatted_document_ids = [
+                str(document_id)
+                for document_id in document_ids
+                if document_id is not None
+            ]
+            wrapper.context.used_documents.extend(formatted_document_ids)
 
         return agent
 

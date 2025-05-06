@@ -1,11 +1,11 @@
 from agents import Agent, OpenAIChatCompletionsModel, ModelSettings, Handoff
 from app.extensions import get_gemini, get_litellm
-from app.services.chat.models.main import Documents, HandoffInputSchema
+from app.services.chat.models.general import Documents, HandoffInputSchema
 from app.services.chat.utils.handoff import handoff_input_filter, invoke_handoff
 from app.services.chat.agents.tools.question import QuestionHooks
 from typing import List
 from app.services.chat.utils.references import emit_google_cache
-from app.services.chat.models.main import Reference
+from app.services.chat.models.general import Reference
 from openai.types import Reasoning
 
 

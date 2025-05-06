@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from PIL import Image
+from PIL import Image  # type: ignore
 
 # ---------------------------------------------------------------------
 # import the code under test
 # ---------------------------------------------------------------------
-import app.routes.download as download_mod  # contains endpoint
-import app.services.download.figure as fig_mod  # FigureDownloader
+import app.routes.download_route as download_mod  # contains endpoint
+import app.services.download.figures as fig_mod  # FigureDownloader
 
 
 # ---------------------------------------------------------------------

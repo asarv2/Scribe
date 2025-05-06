@@ -6,7 +6,7 @@ import json
 import logging
 import math
 from app.services.chat.utils.google import GoogleFiles
-from app.services.chat.models.main import Reference, ReferencesOutputSchema
+from app.services.chat.models.general import Reference, ReferencesOutputSchema
 from app.extensions import get_supabase, get_google
 from google.genai import types
 
@@ -319,9 +319,9 @@ async def get_mapped_references(
     # — add every page that belongs to those files ---------------------
     for fid in cur_fset:  # each file uploaded *this* turn
         for doc in docs_by_file[fid]:  # every page row of that file
-            num = id_to_num.get(doc["id"])
-            if num:
-                expanded_nums.add(num)
+            doc_id_num = id_to_num.get(doc["id"])
+            if doc_id_num is not None:
+                expanded_nums.add(doc_id_num)
 
     expanded_refs = [r for r in all_refs if r.number in expanded_nums]
 
@@ -725,7 +725,7 @@ async def process_special_tags(
 # ──────────────────────────────────────────────────────────────────────────
 #  _process_tags_from_message  (only the *inside* changed)  # ★
 # ──────────────────────────────────────────────────────────────────────────
-async def _process_tags_from_message(message, db, documents):
+async def _process_tags_from_message(message, db, documents) -> List[Dict[str, Any]]:
     """
     Same docstring as before, but now calls build_history() which in turn
     auto-selects singular vs plural tools. Almost all heavy lifting moved

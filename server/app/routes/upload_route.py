@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import logging
 import magic
 
-from app.services.upload.main import FileProcessor
+from app.services.upload.upload import FileProcessor
 
 load_dotenv()
 router = APIRouter()

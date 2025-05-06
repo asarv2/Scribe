@@ -1,10 +1,10 @@
 import logging
 from typing import List, Literal
 import os
-import fitz
-from app.services.upload.models import FileExtractChunk
+import fitz  # type: ignore
+from app.services.upload.upload_models import FileExtractChunk
 from app.config import model_manager
-from PIL import Image
+from PIL import Image  # type: ignore
 import io
 import torch
 from pathlib import Path
@@ -686,10 +686,10 @@ class FileExtractor:
 
             # Try to use a standard font, fall back to default if not available
             try:
-                body_font = ImageFont.truetype("Arial", 14)
+                body_font = ImageFont.truetype("Arial", 14)  # type: ignore
             except Exception as e:
                 logger.error(f"Error loading font: {e}")
-                body_font = ImageFont.load_default()
+                body_font = ImageFont.load_default()  # type: ignore
 
             # Wrap and draw text
             wrapper = textwrap.TextWrapper(width=80)
@@ -747,10 +747,10 @@ class FileExtractor:
 
             # Try to use a standard font, fall back to default if not available
             try:
-                font = ImageFont.truetype("Arial", 16)
+                font = ImageFont.truetype("Arial", 16)  # type: ignore
             except Exception as e:
                 logger.error(f"Error loading font: {e}")
-                font = ImageFont.load_default()
+                font = ImageFont.load_default()  # type: ignore
 
             # Draw text centered
             text_width = draw.textlength(text, font=font)

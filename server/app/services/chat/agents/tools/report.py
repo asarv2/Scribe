@@ -8,7 +8,7 @@ from agents import (
 from typing import List, Dict
 from agents.tool import function_tool
 from app.extensions import get_supabase
-from app.services.chat.models.main import (
+from app.services.chat.models.general import (
     Documents,
     Report,
     CreateReportResponse,
@@ -16,7 +16,7 @@ from app.services.chat.models.main import (
 )
 from app.services.chat.agents.tools.figure import create_figures
 from app.services.chat.utils.references import clean_references
-from app.services.chat.utils.figures import clean_figures
+from app.services.chat.utils.figure_tools import clean_figures
 import logging
 
 logger = logging.getLogger(__name__)
@@ -31,6 +31,7 @@ class ReportHooks(AgentHooks):
             create_reports, name_override="create_reports"
         )
         self.create_report_check = create_report_check
+        self.supabase_client = get_supabase()
 
     async def on_handoff(
         self,

@@ -3,8 +3,8 @@ from datetime import datetime
 import logging
 import traceback
 from app.extensions import get_supabase
-from app.services.chat.main import ChatProcessor
-from app.services.chat.models.main import Documents, ChatAgents, Reference
+from app.services.chat.chat import ChatProcessor
+from app.services.chat.models.general import Documents, ChatAgents, Reference
 from app.services.chat.utils.references import fetch_chat_context, get_mapped_references
 from app.services.chat.utils.outcomes import get_mapped_outcomes
 from typing import List
@@ -67,7 +67,7 @@ async def handle_chat(
         messages = messages_response.data
 
         # Get the current message and format past messages for context
-        current_message = next(
+        current_message: dict | None = next(
             (msg for msg in messages if msg["id"] == message_id), None
         )
         past_messages = [
@@ -77,8 +77,8 @@ async def handle_chat(
         ]
 
         # Get resource IDs from the message
-        file_ids = current_message.get("files", []) or []
-        document_ids = current_message.get("documents", []) or []
+        file_ids = current_message.get("files", []) if current_message else []
+        document_ids = current_message.get("documents", []) if current_message else []
 
         all_file_ids = used_files + file_ids
         all_document_ids = used_documents + document_ids
@@ -198,15 +198,26 @@ async def handle_chat(
                 {"used_files": all_file_ids, "used_documents": all_document_ids}
             ).eq("id", chat_id).execute()
 
+        # Fix for line 205 and 209: Add null check for current_message
+        if current_message is None:
+            raise HTTPException(
+                status_code=400,
+                detail="Message not found",
+            )
+
         # Initialize processor and response
         processor = ChatProcessor(
             chat_id=chat_id,
             teacher=teacher,
-            starting_agent=current_message["start_agent"],
+            starting_agent=current_message[
+                "start_agent"
+            ],  # Now safe since we checked above
             course_title=class_title,
             all_references=all_references,
             expanded_references=expanded_references,
-            question=current_message["bare_question"],
+            question=current_message[
+                "bare_question"
+            ],  # Now safe since we checked above
             past_messages=past_messages,
             past_references=past_references,
             trace_id=trace_id,

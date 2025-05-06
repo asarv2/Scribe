@@ -97,10 +97,10 @@ def init_app():
     )
 
     # Import latest version routers
-    from app.routes.parse import router as parse_router
-    from app.routes.chat import router as chat_router
-    from app.routes.upload import router as upload_router
-    from app.routes.download import router as download_router
+    from app.routes.parse_route import router as parse_router
+    from app.routes.chat_route import router as chat_router
+    from app.routes.upload_route import router as upload_router
+    from app.routes.download_route import router as download_router
 
     # Include latest version routers directly on app
     app.include_router(parse_router, prefix="/parse")

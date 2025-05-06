@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image  # type: ignore
 import io
 import math
 import zipfile
@@ -27,7 +27,8 @@ FIG_OR_DOC_RE = re.compile(r"\\(begin\{figure\}|documentclass)", re.I)
 
 
 def _split_preamble(code: str):
-    pre, body = [], []
+    pre: list[str] = []
+    body: list[str] = []
     for ln in code.splitlines():
         if DOC_RE.match(ln.strip()):  # ← throw these lines away
             continue

@@ -1,12 +1,12 @@
 import os
-from pylatex import Document, Section, Command, Package
-from pylatex.utils import NoEscape
+from pylatex import Document, Section, Command, Package  # type: ignore
+from pylatex.utils import NoEscape  # type: ignore
 import re
 from app.extensions import SUMMARIES_DIR
 import logging
 import io
 import zipfile
-from app.services.download.figure import FigureDownloader
+from app.services.download.figures import FigureDownloader
 
 logger = logging.getLogger(__name__)
 
@@ -58,8 +58,12 @@ class SummaryDownloader:
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
             for s in self.summaries:
                 single = SummaryDownloader(
-                    [s], self.figures, self.documents, self.files,
-                    class_id=self.class_id, chat_id=self.chat_id
+                    [s],
+                    self.figures,
+                    self.documents,
+                    self.files,
+                    class_id=self.class_id,
+                    chat_id=self.chat_id,
                 )
                 fp = single.download_pdf(s["title"])
                 if fp:
@@ -71,8 +75,12 @@ class SummaryDownloader:
         with zipfile.ZipFile(bio, "w", zipfile.ZIP_DEFLATED) as z:
             for s in self.summaries:
                 single = SummaryDownloader(
-                    [s], self.figures, self.documents, self.files,
-                    class_id=self.class_id, chat_id=self.chat_id
+                    [s],
+                    self.figures,
+                    self.documents,
+                    self.files,
+                    class_id=self.class_id,
+                    chat_id=self.chat_id,
                 )
                 fp = single.download_latex(s["title"])
                 if fp:

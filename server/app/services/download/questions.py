@@ -1,8 +1,8 @@
 from typing import List, Union
-from app.services.download.models import MCQQuestion, FRQQuestion
+from app.services.download.download_models import MCQQuestion, FRQQuestion
 from app.extensions import QUESTIONS_DIR
-from pylatex import Document, Section, Command, Package
-from pylatex.utils import NoEscape
+from pylatex import Document, Section, Command, Package  # type: ignore
+from pylatex.utils import NoEscape  # type: ignore
 import os
 import re
 import logging
@@ -17,7 +17,7 @@ class QuestionsDownloader:
         self,
         questions: List[List[Union[MCQQuestion, FRQQuestion]]],
         chat_title: str,
-        directory_id: str = None,
+        directory_id: str,
     ):
         self.questions = questions
         self.chat_title = chat_title

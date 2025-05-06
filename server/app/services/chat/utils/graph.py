@@ -1,13 +1,13 @@
 # Graph of agents and handoffs
-from app.services.chat.agents.specialists.content.main import ContentAgent
-from app.services.chat.agents.specialists.grade.main import GradeAgent
-from app.services.chat.agents.specialists.analyze.main import AnalyzeAgent
-from app.services.chat.agents.specialists.review.main import ReviewAgent
-from app.services.chat.agents.specialists.homework.main import HomeworkAgent
-from app.services.chat.agents.specialists.learn.main import LearnAgent
-from app.services.chat.models.main import ChatAgents
+from app.services.chat.agents.specialists.content import ContentAgent
+from app.services.chat.agents.specialists.grade import GradeAgent
+from app.services.chat.agents.specialists.analyze import AnalyzeAgent
+from app.services.chat.agents.specialists.review import ReviewAgent
+from app.services.chat.agents.specialists.homework import HomeworkAgent
+from app.services.chat.agents.specialists.learn import LearnAgent
+from app.services.chat.models.general import ChatAgents
 from typing import List
-from app.services.chat.models.main import Reference
+from app.services.chat.models.general import Reference
 
 
 class AgentGraph:

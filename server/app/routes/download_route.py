@@ -3,11 +3,12 @@ from fastapi.responses import FileResponse
 from app.extensions import get_supabase
 import os
 import logging
-from app.services.download.summary import SummaryDownloader
+from app.services.download.summaries import SummaryDownloader
 from app.services.download.questions import QuestionsDownloader
-from app.services.download.figure import FigureDownloader
+from app.services.download.figures import FigureDownloader
+from app.services.download.download_models import MCQQuestion, FRQQuestion
 import re
-from typing import Literal
+from typing import Literal, List
 
 # Get logger for this module
 logger = logging.getLogger(__name__)
@@ -211,15 +212,11 @@ async def download_questions_get(
         raise HTTPException(status_code=404, detail="Questions not found")
 
     # Format questions data for the downloader
-    questions_data = []
+    questions_data: List[List[MCQQuestion | FRQQuestion]] = []
     for question in questions_response.data:
-        frq_question = question.get(
-            "frq", False
-        )  # Default to frq if type not specified
-
-        if not frq_question:
+        if question.get("frq", False):
             # MCQ question
-            mcq_question = {
+            mcq_question: MCQQuestion = {
                 "id": question.get("id"),
                 "title": question.get("title", ""),
                 "question_type": "mcq",  # Add explicit question_type field
@@ -233,7 +230,7 @@ async def download_questions_get(
             questions_data.append([mcq_question])
         else:
             # FRQ question
-            frq_question = {
+            frq_question: FRQQuestion = {
                 "id": question.get("id"),
                 "title": question.get("title", ""),
                 "question_type": "frq",  # Add explicit question_type field

@@ -158,12 +158,12 @@ class GoogleFiles:
             logger.warning(f"Unexpected error checking {google_id}: {e}")
             return False
 
-    def get_files(self) -> List[str]:
+    def get_files(self) -> List[str | None]:
         """
         Return a list of Google IDs for all files,
         uploading any that don't exist or aren't ACTIVE.
         """
-        out_ids: List[str] = []
+        out_ids: List[str | None] = []
         for meta in self.files_data:
             gid = meta.get("google_id")
             if not gid or not self._is_google_file_active(gid):
@@ -176,12 +176,12 @@ class GoogleFiles:
             out_ids.append(gid)
         return out_ids
 
-    def get_documents(self) -> List[str]:
+    def get_documents(self) -> List[str | None]:
         """
         Return a list of Google IDs for all documents,
         uploading any that don't exist or aren't ACTIVE.
         """
-        out_ids: List[str] = []
+        out_ids: List[str | None] = []
         for meta in self.documents_data:
             gid = meta.get("google_id")
             if not gid or not self._is_google_file_active(gid):

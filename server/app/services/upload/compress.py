@@ -7,11 +7,11 @@ import concurrent.futures
 import logging
 import torch
 import magic
-import fitz  # PyMuPDF
+import fitz  # type: ignore
 from pathlib import Path
 from typing import Literal
 from filelock import FileLock  # <── new ❶
-from .models import FileCompressionResult
+from .upload_models import FileCompressionResult
 from subprocess import TimeoutExpired, CalledProcessError
 
 logger = logging.getLogger(__name__)
@@ -43,10 +43,10 @@ class FileCompressor:
         Returns the path of the produced PDF or None on failure.
         """
 
-        input_path = Path(input_path)
-        output_dir = Path(output_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-        pdf_path = output_dir / f"{input_path.stem}.pdf"
+        input_path_obj = Path(input_path)
+        output_dir_obj = Path(output_dir)
+        output_dir_obj.mkdir(parents=True, exist_ok=True)
+        pdf_path = output_dir_obj / f"{input_path_obj.stem}.pdf"
 
         # reuse existing PDF
         if pdf_path.exists() and pdf_path.stat().st_size > 0:
@@ -70,8 +70,8 @@ class FileCompressor:
                     "--convert-to",
                     "pdf:writer_pdf_Export",
                     "--outdir",
-                    str(output_dir),
-                    str(input_path),
+                    str(output_dir_obj),
+                    str(input_path_obj),
                 ]
                 logger.info("Running conversion command: %s", " ".join(cmd))
 
@@ -98,7 +98,7 @@ class FileCompressor:
                 return str(pdf_path)
 
         except TimeoutExpired:
-            logger.error("LibreOffice conversion timed out for %s", input_path)
+            logger.error("LibreOffice conversion timed out for %s", input_path_obj)
         except CalledProcessError as e:
             logger.error("soffice conversion failed: %s", e.stderr or e)
         except Exception as e:
@@ -128,7 +128,7 @@ class FileCompressor:
         try:
             os.makedirs(output_dir, exist_ok=True)
 
-            # ── MIME sniffing (don’t trust extension) ─────────────────────────
+            # ── MIME sniffing (don't trust extension) ─────────────────────────
             mime_type = self.mime.from_file(input_path)
             logger.info("Compressing %s (%s)", filename, mime_type)
             if progress_callback:
@@ -148,7 +148,7 @@ class FileCompressor:
                     filename = os.path.basename(pdf_path)
                     mime_type = "application/pdf"
                 else:
-                    # failed: treat like “other”
+                    # failed: treat like "other"
                     mime_type = "application/octet-stream"
 
             # ── Choose compression branch ─────────────────────────────────────
@@ -492,7 +492,9 @@ class FileCompressor:
         # Get total duration for progress calculation
         total_duration = self.get_media_duration(input_path)
         if total_duration <= 0:
-            total_duration = None  # sentinel for “unknown”
+            total_duration = (
+                10.0  # Default to 10 seconds if we can't determine duration
+            )
 
         # Build FFmpeg command with structured progress output
         cmd = (
@@ -517,41 +519,42 @@ class FileCompressor:
         last_callback_time = time.time()
 
         try:
-            for line in proc.stdout:
-                if line.startswith("out_time_ms="):
-                    out_ms = int(line.strip().split("=", 1)[1])
-                    if total_duration:
-                        percent = min(out_ms / 1000 / total_duration, 1.0)
+            if proc.stdout:
+                for line in proc.stdout:
+                    if line.startswith("out_time_ms="):
+                        out_ms = int(line.strip().split("=", 1)[1])
+                        if total_duration:
+                            percent = min(out_ms / 1000 / total_duration, 1.0)
 
-                        # Update progress at most once per second
-                        current_time = time.time()
-                        if current_time - last_update_time >= 1.0:
-                            logger.info(
-                                f"Progress: {percent * 100:5.1f}% (ETA: {(1 - percent) * total_duration / 60:.1f}m)"
-                            )
-                            last_update_time = current_time
+                            # Update progress at most once per second
+                            current_time = time.time()
+                            if current_time - last_update_time >= 1.0:
+                                logger.info(
+                                    f"Progress: {percent * 100:5.1f}% (ETA: {(1 - percent) * total_duration / 60:.1f}m)"
+                                )
+                                last_update_time = current_time
 
-                        # Call progress callback at most once every 3 seconds to avoid overwhelming the system
-                        if (
-                            progress_callback
-                            and current_time - last_callback_time >= 3.0
-                        ):
-                            # Scale percent from 0-1 to 20-90 (reserving 0-20 for setup and 90-100 for finalization)
-                            callback_percent = 20.0 + (percent * 70.0)
+                            # Call progress callback at most once every 3 seconds to avoid overwhelming the system
+                            if (
+                                progress_callback
+                                and current_time - last_callback_time >= 3.0
+                            ):
+                                # Scale percent from 0-1 to 20-90 (reserving 0-20 for setup and 90-100 for finalization)
+                                callback_percent = 20.0 + (percent * 70.0)
+                                progress_callback(
+                                    callback_percent,
+                                    "encoding",
+                                    f"{percent * 100:.1f}% (ETA: {(1 - percent) * total_duration / 60:.1f}m)",
+                                )
+                                last_callback_time = current_time
+
+                    elif line.startswith("progress=") and line.strip().endswith("end"):
+                        logger.info("Progress: 100.0%")
+                        if progress_callback:
                             progress_callback(
-                                callback_percent,
-                                "encoding",
-                                f"{percent * 100:.1f}% (ETA: {(1 - percent) * total_duration / 60:.1f}m)",
+                                90.0, "finalizing", "Encoding complete, finalizing file"
                             )
-                            last_callback_time = current_time
-
-                elif line.startswith("progress=") and line.strip().endswith("end"):
-                    logger.info("Progress: 100.0%")
-                    if progress_callback:
-                        progress_callback(
-                            90.0, "finalizing", "Encoding complete, finalizing file"
-                        )
-                    break  # Break the loop when FFmpeg signals completion
+                        break  # Break the loop when FFmpeg signals completion
 
             # Check if process is still running but not producing output
             if proc.poll() is None:
@@ -566,7 +569,9 @@ class FileCompressor:
 
         # Check for errors
         if proc.returncode != 0:
-            stderr = proc.stderr.read()
+            stderr = ""
+            if proc.stderr:
+                stderr = proc.stderr.read()
             logger.error(f"FFmpeg error: {stderr}")
             if progress_callback:
                 progress_callback(0.0, "error", "Video encoding failed")
@@ -977,7 +982,9 @@ class FileCompressor:
         # Get video duration for progress reporting
         total_duration = self.get_media_duration(input_path)
         if total_duration <= 0:
-            total_duration = 10  # Default to 10 seconds if we can't determine duration
+            total_duration = (
+                10.0  # Default to 10 seconds if we can't determine duration
+            )
 
         # Set quality parameters based on preset
         if quality == "ultrafast":
@@ -1033,29 +1040,28 @@ class FileCompressor:
 
         last_update_time = time.time()
         try:
-            for line in proc.stderr:
-                if "time=" in line:
-                    # Extract time information
-                    time_parts = line.split("time=")[1].split()[0].split(":")
-                    if len(time_parts) == 3:
-                        hours, minutes, seconds = time_parts
-                        current_time = (
-                            float(hours) * 3600 + float(minutes) * 60 + float(seconds)
-                        )
-                        percent = min(current_time / total_duration, 1.0)
-
-                        # Update progress at most once per second
-                        current_clock = time.time()
-                        if current_clock - last_update_time >= 1.0:
-                            logger.info(
-                                f"Progress: {percent * 100:5.1f}% (ETA: {(1 - percent) * total_duration / 60:.1f}m)"
+            if proc.stderr:
+                for line in proc.stderr:
+                    if "time=" in line:
+                        # Extract time information
+                        time_parts = line.split("time=")[1].split()[0].split(":")
+                        if len(time_parts) == 3:
+                            hours, minutes, seconds = time_parts
+                            current_time = (
+                                float(hours) * 3600
+                                + float(minutes) * 60
+                                + float(seconds)
                             )
-                            last_update_time = current_clock
+                            percent = min(current_time / total_duration, 1.0)
 
-                # Check for completion
-                if "progress=end" in line:
-                    logger.info("Progress: 100.0%")
-                    break
+                            # Update progress at most once per second
+                            current_clock = time.time()
+                            if current_clock - last_update_time >= 1.0:
+                                logger.info(
+                                    f"Progress: {percent * 100:5.1f}% (ETA: {(1 - percent) * total_duration / 60:.1f}m)"
+                                )
+                                last_update_time = current_clock
+
         except Exception as e:
             logger.error(f"Error during CPU encoding progress monitoring: {e}")
 

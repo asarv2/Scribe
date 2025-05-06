@@ -1,16 +1,30 @@
 from agents import Agent, ModelSettings, OpenAIChatCompletionsModel, Runner
-from app.services.parse.models import ParseDocuments, SyllabusResponse
+from app.services.parse.parse_models import ParseDocuments, SyllabusResponse
 from app.services.parse.prompts import get_syllabus_prompt
 from supabase import Client
+from typing import List, Any, Optional, cast
+from agents.items import TResponseInputItem
+from app.extensions import get_gemini
 
 
 class FileParser:
-    def __init__(self, supabase_client: Client, class_id: str, file_id: str):
+    def __init__(
+        self,
+        supabase_client: Client,
+        class_id: str,
+        file_id: str,
+        course_title: str = "",
+    ):
         self.class_id = class_id
         self.file_id = file_id
         self.supabase_client = supabase_client
+        self.course_title = course_title
+        self.gemini_client = get_gemini()
 
-        self.parse_syllabus_system_prompt = get_syllabus_prompt(self.course_title)
+        self.parse_syllabus_system_prompt = get_syllabus_prompt()
+
+        if not self.gemini_client:
+            raise Exception("Gemini client not found")
 
         self.parse_syllabus_agent = Agent[ParseDocuments](
             name="Parse Syllabus Agent",
@@ -29,10 +43,10 @@ class FileParser:
     async def parse_syllabus(
         self,
         google_file_id: str,
-        prev_class_name: str | None = None,
-        prev_class_code: str | None = None,
-        prev_class_description: str | None = None,
-        prev_outcomes: list[str] | None = None,
+        prev_class_name: Optional[str] = None,
+        prev_class_code: Optional[str] = None,
+        prev_class_description: Optional[str] = None,
+        prev_outcomes: Optional[List[str]] = None,
     ):
         """
         Parses the syllabus and returns a SyllabusResponse
@@ -53,9 +67,14 @@ class FileParser:
             },
         ]
 
+        # Cast the message to the correct type
+        input_message = cast(
+            List[TResponseInputItem], [{"role": "user", "content": input_message_parts}]
+        )
+
         result = await Runner.run(
             self.parse_syllabus_agent,
-            input=[{"role": "user", "content": input_message_parts}],
+            input=input_message,
             context=documents,
         )
 
@@ -73,27 +92,34 @@ class FileParser:
             update_data["course_description"] = class_description
 
         # update the supabase database
-        class_result = (
-            await self.supabase_client.table("classes")
+        class_result = await cast(
+            Any,
+            self.supabase_client.table("classes")
             .update(update_data)
             .eq("id", self.class_id)
-            .execute()
+            .execute(),
         )
 
         if class_result.error:
             raise Exception(f"Failed to update class: {class_result.error}")
 
         # making previous outcomes lowercase
-        prev_outcomes = [outcome.lower() for outcome in prev_outcomes]
+        prev_outcomes_list = (
+            []
+            if prev_outcomes is None
+            else [outcome.lower() for outcome in prev_outcomes]
+        )
 
         # insert the outcomes
         insert_data = [
             {"class": self.class_id, "title": outcome}
             for outcome in outcomes
-            if outcome.lower() not in prev_outcomes
+            if outcome.lower() not in prev_outcomes_list
         ]
-        outcomes_result = (
-            await self.supabase_client.table("outcomes").upsert(insert_data).execute()
+
+        # Fix awaitable issue
+        outcomes_result = await cast(
+            Any, self.supabase_client.table("outcomes").upsert(insert_data).execute()
         )
 
         if outcomes_result.error:

@@ -4,8 +4,8 @@ import tempfile
 import os
 import torch
 from app.config import model_manager
-from app.services.parse.models import TranscriptionResponse
-from app.services.parse.main import FileParser
+from app.services.parse.parse_models import TranscriptionResponse
+from app.services.parse.parse import FileParser
 from app.extensions import get_supabase
 
 router = APIRouter()
@@ -144,7 +144,7 @@ async def transcribe_audio(
         if "temp_file_path" in locals():
             try:
                 os.unlink(temp_file_path)
-            except Exception as e:
-                logger.error(f"Error cleaning up temp file: {str(e)}")
+            except Exception as temp_e:
+                logger.error(f"Error cleaning up temp file: {str(temp_e)}")
 
         raise HTTPException(status_code=500, detail=f"Error processing audio: {str(e)}")

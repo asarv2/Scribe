@@ -8,7 +8,7 @@ from agents import (
 from typing import List
 from agents.tool import function_tool
 from app.extensions import get_supabase
-from app.services.chat.models.main import (
+from app.services.chat.models.general import (
     Documents,
     Question,
     CreateQuestionResponse,
@@ -29,6 +29,7 @@ class QuestionHooks(AgentHooks):
             create_questions, name_override="create_questions"
         )
         self.create_question_check = create_question_check
+        self.supabase_client = get_supabase()
 
     async def on_handoff(
         self,

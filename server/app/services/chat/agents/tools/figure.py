@@ -2,7 +2,7 @@ from agents import AgentHooks, RunContextWrapper, Agent, ToolsToFinalOutputResul
 from typing import List, Optional, Tuple
 from app.extensions import get_supabase
 from agents.tool import function_tool, FunctionToolResult
-from app.services.chat.models.main import Documents, Figure, CreateFigureResponse
+from app.services.chat.models.general import Documents, Figure, CreateFigureResponse
 import subprocess
 import shutil
 import os
@@ -32,6 +32,7 @@ class FigureHooks(AgentHooks):
             create_figures, name_override="create_figures"
         )
         self.create_figure_check = create_figure_check
+        self.supabase_client = get_supabase()
 
     async def on_handoff(
         self,
@@ -106,14 +107,15 @@ def convert_pdf_to_images(
     Returns:
         Tuple of (svg_file_path, png_file_path), either may be None if conversion failed
     """
-    svg_file = os.path.join(output_dir, "figure.svg")
-    png_file = os.path.join(output_dir, "figure.png")
+    svg_file: str | None = os.path.join(output_dir, "figure.svg")
+    png_file: str | None = os.path.join(output_dir, "figure.png")
 
     # Convert PDF to SVG
     logger.info(f"Converting PDF to SVG: {pdf_file} -> {svg_file}")
     try:
-        run_cmd(["pdf2svg", pdf_file, svg_file], timeout=timeout)
-        logger.info("PDF to SVG conversion successful")
+        if png_file and svg_file:
+            run_cmd(["pdf2svg", pdf_file, svg_file], timeout=timeout)
+            logger.info("PDF to SVG conversion successful")
     except Exception as e:
         logger.warning(f"PDF to SVG conversion failed: {str(e)}")
         svg_file = None
@@ -121,19 +123,20 @@ def convert_pdf_to_images(
     # Convert PDF to PNG with transparent background
     logger.info(f"Converting PDF to PNG: {pdf_file} -> {png_file}")
     try:
-        run_cmd(
-            [
-                "convert",
-                "-density",
-                "300",
-                "-background",
-                "transparent",
-                pdf_file,
-                png_file,
-            ],
-            timeout=timeout,
-        )
-        logger.info("PDF to PNG conversion successful")
+        if png_file:
+            run_cmd(
+                [
+                    "convert",
+                    "-density",
+                    "300",
+                    "-background",
+                    "transparent",
+                    pdf_file,
+                    png_file,
+                ],
+                timeout=timeout,
+            )
+            logger.info("PDF to PNG conversion successful")
     except Exception as e:
         logger.warning(
             f"Primary PNG conversion failed: {str(e)}, trying alternative method"
@@ -160,8 +163,15 @@ def convert_pdf_to_images(
                 if f.startswith("figure-") and f.endswith(".png")
             ]
             if png_files:
-                shutil.move(os.path.join(output_dir, png_files[0]), png_file)
-                logger.info("Alternative PNG conversion successful")
+                png_file = png_files[0]
+                if png_file:
+                    shutil.move(os.path.join(output_dir, png_file), png_file)
+                    logger.info("Alternative PNG conversion successful")
+                else:
+                    logger.error(
+                        "Alternative PNG conversion failed to produce output files"
+                    )
+                    png_file = None
             else:
                 logger.error(
                     "Alternative PNG conversion failed to produce output files"
@@ -523,7 +533,7 @@ async def create_figures(
                 responses.append(
                     CreateFigureResponse(
                         success=False,
-                        figure_id=figure_id,
+                        figure_id=figure_id or "",
                         error=error_msg,
                         message=figure.message,
                     )
@@ -605,7 +615,7 @@ async def create_figures(
                 responses.append(
                     CreateFigureResponse(
                         success=True,
-                        figure_id=figure_id,
+                        figure_id=figure_id or "",
                         error=None,
                         message=figure.message,
                     )
@@ -880,7 +890,7 @@ async def create_figures(
                         responses.append(
                             CreateFigureResponse(
                                 success=False,
-                                figure_id=figure_id,
+                                figure_id=figure_id or "",
                                 error=error_msg,
                                 message=figure.message,
                             )
@@ -907,7 +917,7 @@ async def create_figures(
                     responses.append(
                         CreateFigureResponse(
                             success=False,
-                            figure_id=figure_id,
+                            figure_id=figure_id or "",
                             error=error_msg,
                             message=figure.message,
                         )
@@ -958,7 +968,7 @@ async def create_figures(
                 responses.append(
                     CreateFigureResponse(
                         success=True,
-                        figure_id=figure_id,
+                        figure_id=figure_id or "",
                         error=None,
                         message=figure.message,
                     )
@@ -983,7 +993,7 @@ async def create_figures(
             responses.append(
                 CreateFigureResponse(
                     success=False,
-                    figure_id=figure_id,
+                    figure_id=figure_id or "",
                     error=str(e),
                     message=figure.message,
                 )
