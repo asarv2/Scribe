@@ -60,7 +60,7 @@ class ReviewAgent(SummaryHooks):
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    reasoning=Reasoning(effort="low"),
+                    reasoning=Reasoning(effort="medium"),
                 ),
                 tools=[self.create_summary_tool, self.create_summaries_tool],
                 tool_use_behavior=self.create_summary_check,

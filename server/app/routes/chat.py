@@ -161,8 +161,9 @@ async def handle_chat(
             profile_id: str,
             model: str,
             input_tokens: int,
-            output_tokens: int,
             cached_input_tokens: int,
+            output_tokens: int,
+            reasoning_tokens: int,
         ):
             supabase_client.table("usage").insert(
                 {
@@ -170,8 +171,9 @@ async def handle_chat(
                     "profile": profile_id,
                     "model": model,
                     "input_tokens": input_tokens,
-                    "output_tokens": output_tokens,
                     "cached_input_tokens": cached_input_tokens,
+                    "output_tokens": output_tokens,
+                    "reasoning_tokens": reasoning_tokens,
                 }
             ).execute()
 

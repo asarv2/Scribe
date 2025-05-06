@@ -58,7 +58,7 @@ class ChatProcessor(RunHooks):
         update_trace_id: Optional[Callable[[str], Awaitable[None]]] = None,
         update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str,
         update_chat_usage: Optional[
-            Callable[[str, str, str, int, int, int], Awaitable[None]]
+            Callable[[str, str, str, int, int, int, int], Awaitable[None]]
         ] = None,
         update_end_agent: Optional[Callable[[str, ChatAgents], Awaitable[None]]] = None,
         update_chat_files: Optional[Callable[[str], Awaitable[None]]] = None,
@@ -385,13 +385,18 @@ class ChatProcessor(RunHooks):
                 raw_responses = result.raw_responses
                 for response in raw_responses:
                     usage = response.usage
+                    # calculate the reasoning tokens to be total tokens minus input + output
+                    reasoning_tokens = usage.total_tokens - (
+                        usage.input_tokens + usage.output_tokens
+                    )
                     await self.update_chat_usage(
                         documents.chat_id,
                         documents.profile_id,
                         str(result.current_agent.model.model),
                         usage.input_tokens,
-                        usage.output_tokens,
                         self.cached_tokens,
+                        usage.output_tokens,
+                        reasoning_tokens if reasoning_tokens > 0 else 0,
                     )
 
                 # If we get here, processing was successful

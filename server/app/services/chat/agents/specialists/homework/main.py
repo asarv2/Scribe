@@ -68,7 +68,7 @@ class HomeworkAgent(QuestionHooks):
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    reasoning=Reasoning(effort="low"),
+                    reasoning=Reasoning(effort="high"),
                 ),
                 tools=[self.create_question_tool, self.create_questions_tool],
                 tool_use_behavior=self.create_question_check,

@@ -33,7 +33,7 @@ class GuardrailAgent:
         full_outcome_description: str | None,
         update_chat_title: Optional[Callable[[str, str], Awaitable[None]]] = str,
         update_chat_usage: Optional[
-            Callable[[str, str, str, int, int, int], Awaitable[None]]
+            Callable[[str, str, str, int, int, int, int], Awaitable[None]]
         ] = None,
     ):
         """
@@ -94,6 +94,7 @@ class GuardrailAgent:
                     ctx.context.profile_id,
                     str(self.input_guardrail_agent.model.model),
                     ctx.usage.input_tokens,
+                    0,
                     ctx.usage.output_tokens,
                     0,
                 )
@@ -245,6 +246,7 @@ class GuardrailAgent:
                     ctx.context.profile_id,
                     str(self.output_guardrail_agent.model.model),
                     ctx.usage.input_tokens,
+                    0,
                     ctx.usage.output_tokens,
                     0,
                 )

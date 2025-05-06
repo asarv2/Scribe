@@ -47,7 +47,7 @@ class ContentAgent:
                 model_settings=ModelSettings(
                     temperature=0.0,
                     include_usage=True,
-                    reasoning=Reasoning(effort="low"),
+                    reasoning=Reasoning(effort="medium"),
                 ),
             )
 
