@@ -298,7 +298,13 @@ async def create_summaries(
             conclusion = summary.conclusion
             figures = summary.figures
 
-            # Get references - Fix: Filter out None values before attempting to use them
+            # Add validation before proceeding
+            if not body.strip():
+                raise ValueError("Summary body cannot be empty")
+            for f in figures:
+                if not f.latex_code.strip():
+                    raise ValueError("Each figure must contain latex_code")
+
             references = [
                 wrapper.context.references.get(ref, None) for ref in summary.references
             ]

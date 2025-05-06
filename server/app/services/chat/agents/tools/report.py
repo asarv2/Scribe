@@ -251,6 +251,13 @@ async def create_reports(
             content = report.content
             figures = report.figures
 
+            # Add validation before proceeding
+            if not content.strip():
+                raise ValueError("Report content cannot be empty")
+            for f in figures:
+                if not f.latex_code.strip():
+                    raise ValueError("Each figure must contain latex_code")
+
             references = [
                 wrapper.context.references.get(ref, None) for ref in report.references
             ]
