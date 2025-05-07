@@ -111,7 +111,7 @@ class FigureDownloader:
         preamble, figures = set(), []
         for f in self.figures:
             pre, body = _split_preamble(f["code"])
-            # ✱ 1.  Strip any class / begin‑end doc lines entirely
+            # ✱ 1.  Strip any class / begin-end doc lines entirely
             pre = [
                 ln
                 for ln in pre

@@ -45,7 +45,7 @@ class FakeSupabase:
     def __init__(self, summaries_store):
         self._tables = {"summaries": summaries_store}
 
-    # -- Supabase‑like chained API ---------------------------------------
+    # -- Supabase-like chained API ---------------------------------------
     def table(self, name):
         self._current_table = name
         self._filter = lambda r: True
@@ -118,7 +118,7 @@ def patch_helpers(monkeypatch):
     """
 
     async def _fake_create_figures(wrapper, figs):
-        # by default succeed & return mapping 1‑>dummy‑id
+        # by default succeed & return mapping 1->dummy-id
         if not figs:
             return []
         resp = []

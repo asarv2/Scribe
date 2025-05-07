@@ -390,7 +390,7 @@ class SummaryDownloader:
             if not doc:
                 link = r"\textbf{[missing doc]}"
             else:
-                # page‑range + label -------------------------------------------
+                # page-range + label -------------------------------------------
                 same = [d for d in self.documents.values() if d["file"] == doc["file"]]
                 rng = next(
                     f"{s}-{e}" if s != e else f"{s}"

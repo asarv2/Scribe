@@ -12,7 +12,7 @@ from uuid import uuid4
 import pytest
 
 # ──────────────────────────────────────────────────────────────────────────
-# code‑under‑test
+# code-under-test
 # ──────────────────────────────────────────────────────────────────────────
 import app.services.chat.agents.tools.figure as fig_mod
 from app.services.chat.models.general import Figure, CreateFigureResponse
@@ -126,7 +126,7 @@ def patch_external(monkeypatch, tmp_path):
 
     monkeypatch.setattr(fig_mod, "convert_pdf_to_images", ok_convert, raising=True)
 
-    # 4) upload_with_retry → no‑op
+    # 4) upload_with_retry → no-op
     monkeypatch.setattr(
         fig_mod, "upload_with_retry", lambda *a, **kw: None, raising=True
     )
@@ -176,7 +176,7 @@ async def test_compile_error_triggers_alt_path(
 
     def flaky_run(cmd, cwd=None, timeout=60):
         calls["n"] += 1
-        # first call: returncode non‑zero, *no PDF written*
+        # first call: returncode non-zero, *no PDF written*
         if calls["n"] == 1:
             return SimpleNamespace(returncode=1, stdout="", stderr="boom")
         # second call behaves like success (alt path) and writes PDF
@@ -250,7 +250,7 @@ async def test_cache_short_circuit(
     resp1 = (await fig_mod.create_figures(wrapper, [fig]))[0]
     assert resp1.success is True
 
-    # monkey‑patch run_cmd so it would explode if invoked again
+    # monkey-patch run_cmd so it would explode if invoked again
     monkeypatch.setattr(
         fig_mod,
         "run_cmd",

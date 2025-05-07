@@ -208,8 +208,8 @@ async def get_mapped_references(
     all_file_ids: List[str] | None,  # files seen in the chat
     all_document_ids: List[str] | None,  # pages seen in the chat
 ) -> Tuple[
-    List[Reference],  # expanded_refs   (this‑turn + pages)
-    List[Reference],  # all_refs        (whole‑chat)
+    List[Reference],  # expanded_refs   (this-turn + pages)
+    List[Reference],  # all_refs        (whole-chat)
     Dict[int, Dict[str, Any]],
 ]:
     # ------------------------------------------------------------------ #

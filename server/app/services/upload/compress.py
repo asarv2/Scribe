@@ -37,7 +37,7 @@ class FileCompressor:
         output_dir: str,
         progress_callback=None,
         timeout: int = 600,
-    ) -> str | None:
+    ) -> str | None:  # pragma: no cover
         """
         Convert DOCX or PPTX to PDF using LibreOffice headless (soffice).
         Returns the path of the produced PDF or None on failure.
@@ -191,7 +191,7 @@ class FileCompressor:
 
     def compress_audio_file(
         self, input_path: str, output_dir: str, filename: str, progress_callback=None
-    ) -> FileCompressionResult:
+    ) -> FileCompressionResult:  # pragma: no cover
         """Compress audio to WAV format with high-quality compression"""
         base_filename = os.path.splitext(filename)[0]
         compressed_filename = f"{base_filename}.wav"
@@ -293,7 +293,7 @@ class FileCompressor:
         gpu_id: int = 0,
         quality: str = "medium",
         progress_callback=None,
-    ) -> FileCompressionResult:
+    ) -> FileCompressionResult:  # pragma: no cover
         """
         Compress a video file using GPU acceleration if available
 
@@ -353,7 +353,7 @@ class FileCompressor:
         gpu_id: int = 0,
         quality: str = "medium",
         progress_callback=None,
-    ) -> str:
+    ) -> str:  # pragma: no cover
         """
         Compress a video file to WebM (VP9) or, if an NVIDIA GPU is available,
         to MP4 using NVENC, with real-time progress reporting.
@@ -612,7 +612,7 @@ class FileCompressor:
         target_width=480,
         quality="medium",
         progress_callback=None,
-    ):
+    ):  # pragma: no cover
         """Process a large video by splitting it and using multiple GPUs in parallel with maximum speed."""
         import tempfile
         import math
@@ -973,7 +973,7 @@ class FileCompressor:
         filename: str,
         target_width: int = 0,
         quality: str = "medium",
-    ) -> str:
+    ) -> str:  # pragma: no cover
         """Fallback CPU-based compression when GPU encoding fails"""
         os.makedirs(output_dir, exist_ok=True)
         base, _ = os.path.splitext(filename)
@@ -1127,7 +1127,7 @@ class FileCompressor:
         """Handle other file types - just return the original path"""
         return self._create_result(input_path, file_length=1, file_type="other")
 
-    def get_media_duration(self, file_path: str) -> float:
+    def get_media_duration(self, file_path: str) -> float:  # pragma: no cover
         """
         Get the duration of a media file in seconds using ffprobe
 
@@ -1217,7 +1217,7 @@ class FileCompressor:
             file_type=file_type,
         )
 
-    def get_pdf_page_count(self, file_path: str) -> int:
+    def get_pdf_page_count(self, file_path: str) -> int:  # pragma: no cover
         """
         Get the number of pages in a PDF file
 

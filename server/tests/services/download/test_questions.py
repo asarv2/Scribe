@@ -71,7 +71,7 @@ def client(monkeypatch, tmp_path):
         lambda: FakeSupabase(qs),
     )
 
-    # ----- short‑circuit heavy PyLaTeX work ------------------------
+    # ----- short-circuit heavy PyLaTeX work ------------------------
     def fake_save(self, name, questions, base_filename, pdf=True):
         """Write a stub file that matches the downloader's expected path."""
         out_dir = tmp_path / name

@@ -71,7 +71,7 @@ def tmp_dirs(monkeypatch, tmp_path):
 
 @pytest.fixture()
 def client(monkeypatch, png_bytes, tmp_dirs):
-    """TestClient with *all* externals monkey‑patched."""
+    """TestClient with *all* externals monkey-patched."""
     # 1) fake Supabase ----------------------------------------------
     chats = [{"id": "chat1", "class": "classA", "name": "Chat"}]
     figures = [
@@ -81,7 +81,7 @@ def client(monkeypatch, png_bytes, tmp_dirs):
             "code": r"\begin{tikzpicture}\draw (0,0)--(1,1);\end{tikzpicture}",
             "references": [],
         },
-        {  # second figure for multi‑zip tests
+        {  # second figure for multi-zip tests
             "id": "fig2",
             "title": "Tiny-2",
             "code": r"\begin{tikzpicture}\draw (0,1)--(1,0);\end{tikzpicture}",
@@ -102,7 +102,7 @@ def client(monkeypatch, png_bytes, tmp_dirs):
         fig_mod.FigureDownloader, "_fetch_png", fake_fetch_png, raising=True
     )
 
-    # 3) short‑circuit LaTeX compile so combine_pdf just writes stub
+    # 3) short-circuit LaTeX compile so combine_pdf just writes stub
     def fake_combine_pdf(self):
         outfile = Path(tmp_dirs) / self.figures[0]["id"] / "combined.pdf"
         outfile.parent.mkdir(parents=True, exist_ok=True)
@@ -111,7 +111,7 @@ def client(monkeypatch, png_bytes, tmp_dirs):
 
     monkeypatch.setattr(fig_mod.FigureDownloader, "combine_pdf", fake_combine_pdf)
 
-    from app.main import app  # your FastAPI entry‑point
+    from app.main import app  # your FastAPI entry-point
 
     return TestClient(app)
 
@@ -171,7 +171,7 @@ def test_pdf(client):
 
 
 def test_chat_not_found(client, monkeypatch):
-    # monkey‑patch get_supabase to return empty chats list
+    # monkey-patch get_supabase to return empty chats list
     bad_supabase = FakeSupabase([], [])
     monkeypatch.setattr(download_mod, "get_supabase", lambda: bad_supabase)
     r = _call(client, "png", ["fig1"])
