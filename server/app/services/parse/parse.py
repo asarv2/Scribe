@@ -1,6 +1,5 @@
 from agents import Agent, ModelSettings, OpenAIChatCompletionsModel, Runner
 from app.services.parse.parse_models import ParseDocuments, SyllabusResponse
-from app.services.parse.prompts import get_syllabus_prompt
 from supabase import Client
 from typing import List, Any, Optional, cast
 from agents.items import TResponseInputItem
@@ -21,7 +20,9 @@ class FileParser:
         self.course_title = course_title
         self.gemini_client = get_gemini()
 
-        self.parse_syllabus_system_prompt = get_syllabus_prompt()
+        self.parse_syllabus_system_prompt = """
+        You are an expert in educational curriculum design. You will be given a syllabus for a class, and your goal is to extract the necessary information. You will try to find the class name, class code, class description, and learning outcomes. For the learning outcomes, do not try to make these up on your own, be sure to only include them if the professor has explicitly stated them.
+        """
 
         if not self.gemini_client:
             raise Exception("Gemini client not found")

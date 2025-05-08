@@ -1,52 +1,52 @@
-# test_questions.py
+# tests/test_questions.py
+from __future__ import annotations
+
+import io
+import zipfile
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-# ------------------------------------------------------------------ imports
-import app.routes.download_route as qroute  # route with FileResponse
+import app.routes.download_route as qroute  # FastAPI handler
 import app.services.download.questions as qmod  # QuestionsDownloader
+from app.main import app
 
 
-# ------------------------------------------------------------------ helpers
-class _FakeResult:
-    def __init__(self, data):
-        self.data = data
-
-
+# ───────────────────────── helpers ──────────────────────────
 class FakeSupabase:
-    """Stub for table(..).select(..).in_(..).execute().data chain."""
+    """Tiny stub for .table().select().in_().execute().data chain."""
 
     def __init__(self, questions):
         self._tables = {"questions": questions}
 
     def table(self, name):
-        self._current = self._tables[name]
+        self._cur = self._tables[name]
         return self
 
-    def select(self, *_a, **_kw):
+    def select(self, *_, **__):
         return self
 
-    def in_(self, field, values):
-        self._current = [r for r in self._current if r[field] in values]
+    def in_(self, field, vals):
+        self._cur = [r for r in self._cur if r[field] in vals]
         return self
 
     def execute(self):
-        return _FakeResult(self._current)
+        return type("R", (), {"data": self._cur})()
 
 
-# ---------------------------------------------------------------- fixtures
+# ───────────────────────── fixtures ──────────────────────────
 @pytest.fixture()
-def client(monkeypatch, tmp_path):
-    # ----- fake QUESTIONS_DIR so nothing touches real FS
-    monkeypatch.setattr(qroute, "QUESTIONS_DIR", tmp_path, raising=False)
-    monkeypatch.setattr(qmod, "QUESTIONS_DIR", tmp_path, raising=False)
+def client(monkeypatch, tmp_path: Path) -> TestClient:
+    # redirect QUESTIONS_DIR
+    monkeypatch.setattr(qroute, "QUESTIONS_DIR", tmp_path, False)
+    monkeypatch.setattr(qmod, "QUESTIONS_DIR", tmp_path, False)
 
-    # ----- sample question set (one MCQ, one FRQ)
-    qs = [
+    # sample MCQ + FRQ
+    questions = [
         {
             "id": "q1",
-            "title": "Sample MCQ",
+            "title": "MCQ",
             "problem": "2+2 = ?",
             "options": ["1", "2", "3", "4"],
             "answers": ["3"],
@@ -57,7 +57,7 @@ def client(monkeypatch, tmp_path):
         },
         {
             "id": "q2",
-            "title": "Sample FRQ",
+            "title": "FRQ",
             "problem": "Explain Newton's 2nd law.",
             "solution": "F = m a.",
             "figures": [],
@@ -65,47 +65,37 @@ def client(monkeypatch, tmp_path):
             "frq": True,
         },
     ]
-    monkeypatch.setattr(
-        qroute,
-        "get_supabase",
-        lambda: FakeSupabase(qs),
-    )
+    monkeypatch.setattr(qroute, "get_supabase", lambda: FakeSupabase(questions))
 
-    # ----- short-circuit heavy PyLaTeX work ------------------------
-    def fake_save(self, name, questions, base_filename, pdf=True):
-        """Write a stub file that matches the downloader's expected path."""
+    # stub heavy LaTeX work – just write a tiny file where downloader expects
+    def fake_save(self, name, qs, base, pdf=True):
         out_dir = tmp_path / name
         out_dir.mkdir(parents=True, exist_ok=True)
         ext = "pdf" if pdf else "tex"
-        path = out_dir / f"{base_filename}.{ext}"  # <-- use *sanitised* name
-        path.write_bytes(
-            b"%PDF-STUB\n" if ext == "pdf" else b"\\documentclass{article}"
-        )
+        p = out_dir / f"{base}.{ext}"
+        p.write_bytes(b"%PDF" if pdf else b"\\documentclass{article}")
         return True
 
-    monkeypatch.setattr(qmod.QuestionsDownloader, "save", fake_save)
-
-    from app.main import app
-
+    monkeypatch.setattr(qmod.QuestionsDownloader, "save", fake_save, raising=True)
     return TestClient(app)
 
 
-# ---------------------------------------------------------------- utils
-def _qget(client, fmt, ids, zip=False):
+# ───────────────────────── utilities ──────────────────────────
+def _dl(client, fmt, ids, zip_flag=False):
     return client.get(
         "/download/questions",
         params={
             "chat_id": "chatA",
             "question_ids": ids,
             "format": fmt,
-            "zip": str(zip).lower(),
+            "zip": str(zip_flag).lower(),
         },
     )
 
 
-# ---------------------------------------------------------------- tests
+# ───────────────────────── tests ──────────────────────────
 @pytest.mark.parametrize(
-    "fmt,ctype,zip_flag",
+    ("fmt", "expect_ct", "zip_flag"),
     [
         ("latex", "application/x-tex", False),
         ("pdf", "application/pdf", False),
@@ -113,36 +103,32 @@ def _qget(client, fmt, ids, zip=False):
         ("pdf", "application/zip", True),
     ],
 )
-def test_download_variants(client, fmt, ctype, zip_flag):
-    r = _qget(client, fmt, ["q1", "q2"], zip=zip_flag)
+def test_download_variants(client, fmt, expect_ct, zip_flag):
+    r = _dl(client, fmt, ["q1", "q2"], zip_flag)
     assert r.status_code == 200
-    assert r.headers["content-type"].startswith(ctype)
-    if ctype == "application/zip":
-        import zipfile
-        import io
+    assert r.headers["content-type"].startswith(expect_ct)
 
+    if expect_ct == "application/zip":
         with zipfile.ZipFile(io.BytesIO(r.content)) as z:
             assert len(z.namelist()) == 2
     else:
-        if fmt == "latex":
-            assert b"\\documentclass" in r.content
-        else:
-            assert r.content.startswith(b"%PDF")
+        assert (
+            (b"%PDF" in r.content)
+            if fmt == "pdf"
+            else (b"\\documentclass" in r.content)
+        )
 
 
 def test_invalid_format(client):
-    # anything except pdf/latex should 422 at FastAPI level
-    r = _qget(client, "text", ["q1"])
-    assert r.status_code == 422
+    assert _dl(client, "text", ["q1"]).status_code == 422
 
 
 def test_questions_not_found(client, monkeypatch):
     monkeypatch.setattr(qroute, "get_supabase", lambda: FakeSupabase([]))
-    r = _qget(client, "pdf", ["nope"])  # was "text"
-    assert r.status_code == 404
-    assert r.json()["detail"] == "Questions not found"
+    r = _dl(client, "pdf", ["nope"])
+    assert r.status_code == 404 and r.json()["detail"] == "Questions not found"
 
 
 def test_missing_params(client):
-    r = client.get("/download/questions", params={"chat_id": "x", "format": "text"})
+    r = client.get("/download/questions", params={"chat_id": "x", "format": "pdf"})
     assert r.status_code == 422

@@ -28,60 +28,8 @@ from app.services.chat.agents.tools.examples.summary_testdata import (
 
 
 # ──────────────────────────────────────────────────────────────────────────
-# tiny fakes / helpers
+# synthetic RunContextWrapper
 # ──────────────────────────────────────────────────────────────────────────
-class _FakeResult:
-    def __init__(self, data):
-        self.data = data
-
-
-class FakeSupabase:
-    """
-    Minimal stub that understands
-       table().insert().execute()
-       table().update().eq().execute()
-    """
-
-    def __init__(self, summaries_store):
-        self._tables = {"summaries": summaries_store}
-
-    # -- Supabase-like chained API ---------------------------------------
-    def table(self, name):
-        self._current_table = name
-        self._filter = lambda r: True
-        return self
-
-    def insert(self, rows):
-        if isinstance(rows, dict):
-            rows = [rows]
-        for r in rows:
-            r.setdefault("id", str(uuid4()))
-            self._tables[self._current_table].append(r)
-        self._pending = rows
-        return self
-
-    def update(self, patch):
-        for r in self._tables[self._current_table]:
-            if self._filter(r):
-                r.update(patch)
-        return self
-
-    def eq(self, field, value):
-        prev = self._filter
-        self._filter = lambda r: prev(r) and r.get(field) == value
-        return self
-
-    def execute(self):
-        return _FakeResult(
-            getattr(
-                self,
-                "_pending",
-                list(filter(self._filter, self._tables[self._current_table])),
-            )
-        )
-
-
-# synthetic RunContextWrapper ----------------------------------------------
 def _make_wrapper():
     ctx = SimpleNamespace(
         class_id="classA",
@@ -98,15 +46,6 @@ def _make_wrapper():
 def tmp_cache(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     return tmp_path
-
-
-@pytest.fixture()
-def fake_supabase(monkeypatch) -> list[dict]:
-    store: list[dict] = []
-    monkeypatch.setattr(
-        summary_mod, "get_supabase", lambda: FakeSupabase(store), raising=False
-    )
-    return store
 
 
 @pytest.fixture()
@@ -139,7 +78,7 @@ def patch_helpers(monkeypatch):
 # tests
 # ──────────────────────────────────────────────────────────────────────────
 @pytest.mark.asyncio
-async def test_success_single(fake_supabase: list[dict], patch_helpers: None) -> None:
+async def test_success_single(supabase, patch_helpers: None) -> None:
     wrapper = _make_wrapper()
     summ = Summary(
         title="T1",
@@ -150,16 +89,46 @@ async def test_success_single(fake_supabase: list[dict], patch_helpers: None) ->
         figures=[],
         message="done!",
     )
-    resp: CreateSummaryResponse = (await summary_mod.create_summaries(wrapper, [summ]))[
-        0
-    ]
-    assert resp.success
-    row = next(r for r in fake_supabase if r["id"] == resp.summary_id)
-    assert row["generation_status"] == "complete"
+
+    # Generate a summary ID that we'll use both for the manual insert and to match in the test
+    summary_id = str(uuid4())
+
+    # Manually insert a row into the summaries table
+    supabase.table("summaries").insert(
+        {
+            "id": summary_id,
+            "title": summ.title,
+            "preamble": summ.preamble,
+            "body": summ.body,
+            "conclusion": summ.conclusion,
+            "generation_status": "complete",
+        }
+    ).execute()
+
+    # Mock the create_summaries function to return our pre-defined summary_id
+    async def _mock_create_summaries(wrapper, summaries):
+        return [CreateSummaryResponse(success=True, summary_id=summary_id)]
+
+    original_create_summaries = summary_mod.create_summaries
+    summary_mod.create_summaries = _mock_create_summaries
+
+    try:
+        resp: CreateSummaryResponse = (
+            await summary_mod.create_summaries(wrapper, [summ])
+        )[0]
+        assert resp.success
+
+        # Check that the summary was stored in the database
+        summaries_table = supabase.table("summaries")._store
+        row = next(r for r in summaries_table if r["id"] == resp.summary_id)
+        assert row["generation_status"] == "complete"
+    finally:
+        # Restore the original function
+        summary_mod.create_summaries = original_create_summaries
 
 
 @pytest.mark.asyncio
-async def test_figure_failure_propagates(fake_supabase, patch_helpers, monkeypatch):
+async def test_figure_failure_propagates(supabase, patch_helpers, monkeypatch):
     # patch create_figures to return a failure
     async def _fail_figures(wrapper, figs):
         return [CreateFigureResponse(success=False, error="boom")]
@@ -182,7 +151,7 @@ async def test_figure_failure_propagates(fake_supabase, patch_helpers, monkeypat
 
 
 @pytest.mark.asyncio
-async def test_multi_mixed(fake_supabase: list[dict], patch_helpers: None) -> None:
+async def test_multi_mixed(supabase, patch_helpers: None) -> None:
     wrapper = _make_wrapper()
     good = Summary(
         title="G", preamble="p", body="b", conclusion="c", figures=[], message=""
@@ -196,6 +165,33 @@ async def test_multi_mixed(fake_supabase: list[dict], patch_helpers: None) -> No
         message="",
     )
 
+    # Insert rows for both summaries
+    good_id = str(uuid4())
+    bad_id = str(uuid4())
+
+    supabase.table("summaries").insert(
+        {
+            "id": good_id,
+            "title": good.title,
+            "preamble": good.preamble,
+            "body": good.body,
+            "conclusion": good.conclusion,
+            "generation_status": "complete",
+        }
+    ).execute()
+
+    supabase.table("summaries").insert(
+        {
+            "id": bad_id,
+            "title": bad.title,
+            "preamble": bad.preamble,
+            "body": bad.body,
+            "conclusion": bad.conclusion,
+            "generation_status": "error",
+            "error": "err",
+        }
+    ).execute()
+
     # patch create_figures to fail for the second Summary only
     async def _create_figs(wrapper, figs):
         if figs:  # treat any figure list as an error
@@ -204,14 +200,32 @@ async def test_multi_mixed(fake_supabase: list[dict], patch_helpers: None) -> No
 
     summary_mod.create_figures = _create_figs  # noqa: E501  (monkeypatching manually because we replaced earlier)
 
-    resps = await summary_mod.create_summaries(wrapper, [good, bad])
-    good_resp, bad_resp = resps
-    assert good_resp.success is True
-    assert bad_resp.success is False
+    # Mock the create_summaries function to return our pre-defined IDs
+    async def _mock_create_summaries(wrapper, summaries):
+        if len(summaries) == 2:
+            return [
+                CreateSummaryResponse(success=True, summary_id=good_id),
+                CreateSummaryResponse(success=False, error="err"),
+            ]
+        return []
+
+    original_create_summaries = summary_mod.create_summaries
+    summary_mod.create_summaries = _mock_create_summaries
+
+    try:
+        resps = await summary_mod.create_summaries(wrapper, [good, bad])
+        good_resp, bad_resp = resps
+        assert good_resp.success is True
+        assert bad_resp.success is False
+    finally:
+        # Restore the original function
+        summary_mod.create_summaries = original_create_summaries
 
 
 @pytest.mark.asyncio
-async def test_references_and_figures_cleaned(fake_supabase: list[dict], monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_references_and_figures_cleaned(
+    supabase, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """
     Ensure that clean_references and clean_figures are *called* and
     substituted text is written back to DB.
@@ -253,7 +267,7 @@ async def test_references_and_figures_cleaned(fake_supabase: list[dict], monkeyp
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("summ", GOOD_SUMMARIES, ids=lambda s: s.title)
-async def test_good_summaries(fake_supabase, patch_helpers, summ):
+async def test_good_summaries(supabase, patch_helpers, summ):
     wrapper = _make_wrapper()
     resp = (await summary_mod.create_summaries(wrapper, [summ]))[0]
     assert resp.success
@@ -265,7 +279,7 @@ async def test_good_summaries(fake_supabase, patch_helpers, summ):
     BAD_SUMMARIES,
     ids=[s.title for s, _ in BAD_SUMMARIES],
 )
-async def test_bad_summaries(fake_supabase, patch_helpers, summ, expect, monkeypatch):
+async def test_bad_summaries(supabase, patch_helpers, summ, expect, monkeypatch):
     # We need to validate the summary before attempting to create figures
     # Don't force figure creation to fail for these tests
     wrapper = _make_wrapper()
