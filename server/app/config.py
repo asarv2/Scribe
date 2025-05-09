@@ -22,6 +22,10 @@ class ModelManager:
         # Whisper model settings
         self.cache_dir = MODEL_CACHE_DIR
         self.whisper_cache_dir = os.path.join(self.cache_dir, "whisper_models")
+        # Convert string paths to Path objects if MODEL_CACHE_DIR is a Path
+        if hasattr(MODEL_CACHE_DIR, "__class__") and MODEL_CACHE_DIR.__class__.__name__ == "Path":
+            self.cache_dir = MODEL_CACHE_DIR
+            self.whisper_cache_dir = MODEL_CACHE_DIR / "whisper_models"
 
         # Create cache directories if they don't exist
         os.makedirs(self.cache_dir, exist_ok=True)
@@ -33,6 +37,7 @@ class ModelManager:
     def _get_gpu_memory(self) -> float:
         """Get available GPU memory in GB"""
         try:
+            # Use the global torch module
             if not torch.cuda.is_available():
                 return 0
 
@@ -94,7 +99,7 @@ class ModelManager:
         """Get the global Whisper model instance"""
         with MODEL_LOCK:
             if not MODEL_REGISTRY["whisper_initialized"]:
-                self.initialize_whisper_model()
+                return self.initialize_whisper_model()
 
             model = MODEL_REGISTRY["whisper_model"]
             if not model:
