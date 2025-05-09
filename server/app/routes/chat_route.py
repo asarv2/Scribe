@@ -36,10 +36,15 @@ async def handle_chat(
             supabase_client.table("chats")
             .select("*")
             .eq("id", chat_id)
-            .single()
             .execute()
         )
-        chat = chat_response.data
+        chat_data = chat_response.data
+        if not chat_data:
+            raise HTTPException(
+                status_code=404,
+                detail="Chat not found",
+            )
+        chat = chat_data[0]
         trace_id = chat.get("trace")
         class_id = chat.get("class")
         profile_id = chat.get("profile")
@@ -51,10 +56,15 @@ async def handle_chat(
             supabase_client.table("classes")
             .select("title, course_description")
             .eq("id", class_id)
-            .single()
             .execute()
         )
-        class_title = class_response.data.get("title")
+        class_data = class_response.data
+        if not class_data:
+            raise HTTPException(
+                status_code=404,
+                detail="Class not found",
+            )
+        class_title = class_data[0].get("title")
 
         # Get all messages for this generation, ordered by creation time
         messages_response = (
@@ -201,7 +211,7 @@ async def handle_chat(
         # Fix for line 205 and 209: Add null check for current_message
         if current_message is None:
             raise HTTPException(
-                status_code=400,
+                status_code=404,
                 detail="Message not found",
             )
 
@@ -246,7 +256,14 @@ async def handle_chat(
 
         except Exception as error:
             # throw the error to the outside block
-            raise error
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": str(error),
+                    "stack": traceback.format_exc(),
+                    "name": type(error).__name__,
+                },
+            )
     except Exception as error:
         # print the stack trace
         logger.error(f"Error in generate-chat function: {error}")
@@ -260,11 +277,4 @@ async def handle_chat(
             }
         ).eq("id", message_id).execute()
 
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": str(error),
-                "stack": traceback.format_exc(),
-                "name": type(error).__name__,
-            },
-        )
+        raise error
