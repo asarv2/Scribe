@@ -18,28 +18,10 @@ class FileParser:
         self.file_id = file_id
         self.supabase_client = supabase_client
         self.course_title = course_title
-        self.gemini_client = get_gemini()
 
         self.parse_syllabus_system_prompt = """
         You are an expert in educational curriculum design. You will be given a syllabus for a class, and your goal is to extract the necessary information. You will try to find the class name, class code, class description, and learning outcomes. For the learning outcomes, do not try to make these up on your own, be sure to only include them if the professor has explicitly stated them.
         """
-
-        if not self.gemini_client:
-            raise Exception("Gemini client not found")
-
-        self.parse_syllabus_agent = Agent[ParseDocuments](
-            name="Parse Syllabus Agent",
-            instructions=self.parse_syllabus_system_prompt,
-            model=OpenAIChatCompletionsModel(
-                model="gemini-2.5-flash-preview-04-17",
-                openai_client=self.gemini_client,
-            ),
-            model_settings=ModelSettings(
-                include_usage=True,
-                temperature=0.0,  # deterministic output
-            ),
-            output_type=SyllabusResponse,
-        )
 
     async def parse_syllabus(
         self,
@@ -52,6 +34,8 @@ class FileParser:
         """
         Parses the syllabus and returns a SyllabusResponse
         """
+
+        gemini_client = get_gemini()
 
         documents = ParseDocuments(class_id=self.class_id, file_id=self.file_id)
 
@@ -73,8 +57,22 @@ class FileParser:
             List[TResponseInputItem], [{"role": "user", "content": input_message_parts}]
         )
 
+        parse_syllabus_agent = Agent[ParseDocuments](
+            name="Parse Syllabus Agent",
+            instructions=self.parse_syllabus_system_prompt,
+            model=OpenAIChatCompletionsModel(
+                model="gemini-2.5-flash-preview-04-17",
+                openai_client=gemini_client,
+            ),
+            model_settings=ModelSettings(
+                include_usage=True,
+                temperature=0.0,  # deterministic output
+            ),
+            output_type=SyllabusResponse,
+        )
+
         result = await Runner.run(
-            self.parse_syllabus_agent,
+            parse_syllabus_agent,
             input=input_message,
             context=documents,
         )

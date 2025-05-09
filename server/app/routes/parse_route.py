@@ -15,77 +15,80 @@ logger = logging.getLogger(__name__)
 
 @router.post("/syllabus")
 async def parse_syllabus(class_id: str = Form(...)):
-    try:
-        supabase_client = get_supabase()
+    supabase_client = get_supabase()
 
-        # getting the class in supabase
-        class_result = (
-            await supabase_client.table("classes")
-            .select("*")
-            .eq("id", class_id)
-            .execute()
-        )
-        class_data = class_result.data[0]
+    # getting the class in supabase
+    class_result = (
+        supabase_client.table("classes")
+        .select("*")
+        .eq("id", class_id)
+        .execute()
+    )
+    if not class_result.data:
+        raise HTTPException(status_code=404, detail="Class not found")
+    class_data = class_result.data[0]
 
-        # save non-empty data, so we know what to update
-        prev_class_name = class_data.get("title")
-        prev_class_code = class_data.get("class_code")
-        prev_class_description = class_data.get("course_description")
-        syllabus_file_id = class_data.get("syllabus")
+    # save non-empty data, so we know what to update
+    prev_class_name = class_data.get("title")
+    prev_class_code = class_data.get("class_code")
+    prev_class_description = class_data.get("course_description")
+    syllabus_file_id = class_data.get("syllabus")
 
-        if syllabus_file_id is None:
-            raise HTTPException(status_code=400, detail="No syllabus file found")
+    if syllabus_file_id is None:
+        raise HTTPException(status_code=400, detail="No syllabus file found")
 
-        # get existing outcomes
-        outcomes_result = (
-            await supabase_client.table("outcomes")
-            .select("*")
-            .eq("class", class_id)
-            .execute()
-        )
-        outcomes = outcomes_result.data
-        prev_outcomes = [outcome.get("title") for outcome in outcomes]
+    # get existing outcomes
+    outcomes_result = (
+        supabase_client.table("outcomes")
+        .select("*")
+        .eq("class", class_id)
+        .execute()
+    )
+    outcomes = outcomes_result.data
+    prev_outcomes = [outcome.get("title") for outcome in outcomes]
 
-        # getting the google file in supabase
-        google_file_result = (
-            await supabase_client.table("google_files")
-            .select("*")
-            .eq("file", syllabus_file_id)
-            .execute()
-        )
-        google_file_data = google_file_result.data[0]
-        google_file_id = google_file_data.get("google_id")
+    # getting the google file in supabase
+    google_file_result = (
+        supabase_client.table("google_files")
+        .select("*")
+        .eq("file", syllabus_file_id)
+        .execute()
+    )
+    google_file_data = google_file_result.data
+    
+    if len(google_file_data) == 0:
+        raise HTTPException(status_code=404, detail="Google file not found")
+    google_file_id = google_file_data[0].get("google_id")
 
-        file_parser = FileParser(supabase_client, class_id, syllabus_file_id)
+    file_parser = FileParser(supabase_client, class_id, syllabus_file_id)
 
-        (
-            class_name,
-            class_code,
-            class_description,
-            outcomes,
-        ) = await file_parser.parse_syllabus(
-            google_file_id,
-            prev_class_name,
-            prev_class_code,
-            prev_class_description,
-            prev_outcomes,
-        )
+    (
+        class_name,
+        class_code,
+        class_description,
+        outcomes,
+    ) = await file_parser.parse_syllabus(
+        google_file_id,
+        prev_class_name,
+        prev_class_code,
+        prev_class_description,
+        prev_outcomes,
+    )
 
-        logger.info(
-            f"Parsed syllabus for class {class_id}: {class_name}, {class_code}, {class_description}, {', '.join(outcomes)}"
-        )
+    logger.info(
+        f"Parsed syllabus for class {class_id}: {class_name}, {class_code}, {class_description}, {', '.join(outcomes)}"
+    )
 
-        return HTTPException(status_code=200, detail="Syllabus parsed successfully")
-    except Exception as e:
-        logger.error(f"Error parsing syllabus: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error parsing syllabus: {str(e)}")
+    raise HTTPException(status_code=200, detail="Syllabus parsed successfully")
 
 
 @router.post("/audio", response_model=TranscriptionResponse)
 async def transcribe_audio(
-    audio_file: UploadFile = File(...),
+    audio_file: UploadFile = File(None),
     task: str = "transcribe",  # Can be "transcribe" or "translate"
 ):
+    if audio_file is None:
+        raise HTTPException(status_code=400, detail="No audio file provided")
     """
     Transcribe or translate audio from a streaming upload.
 
@@ -147,4 +150,4 @@ async def transcribe_audio(
             except Exception as temp_e:
                 logger.error(f"Error cleaning up temp file: {str(temp_e)}")
 
-        raise HTTPException(status_code=500, detail=f"Error processing audio: {str(e)}")
+        raise e
