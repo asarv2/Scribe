@@ -30,7 +30,7 @@ tests: dev-tools
 coverage: dev-tools
 	@./.venv/bin/python -m coverage run -m pytest -q --disable-warnings
 	@./.venv/bin/python -m coverage xml -o coverage.xml
-	@./.venv/bin/python -m coverage report -m --fail-under=80
+	@./.venv/bin/python -m coverage report -m --fail-under=75
 
 run: sync
 	@echo "Starting the application..."

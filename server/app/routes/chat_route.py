@@ -33,10 +33,7 @@ async def handle_chat(
 
         # Get chat and class info
         chat_response = (
-            supabase_client.table("chats")
-            .select("*")
-            .eq("id", chat_id)
-            .execute()
+            supabase_client.table("chats").select("*").eq("id", chat_id).execute()
         )
         chat_data = chat_response.data
         if not chat_data:

@@ -23,7 +23,10 @@ class ModelManager:
         self.cache_dir = MODEL_CACHE_DIR
         self.whisper_cache_dir = os.path.join(self.cache_dir, "whisper_models")
         # Convert string paths to Path objects if MODEL_CACHE_DIR is a Path
-        if hasattr(MODEL_CACHE_DIR, "__class__") and MODEL_CACHE_DIR.__class__.__name__ == "Path":
+        if (
+            hasattr(MODEL_CACHE_DIR, "__class__")
+            and MODEL_CACHE_DIR.__class__.__name__ == "Path"
+        ):
             self.cache_dir = MODEL_CACHE_DIR
             self.whisper_cache_dir = MODEL_CACHE_DIR / "whisper_models"
 

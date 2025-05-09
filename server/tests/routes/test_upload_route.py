@@ -1,15 +1,11 @@
 # tests/routes/test_upload_route.py
-import os
 import json
 import base64
-import uuid
-import shutil
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import app.routes.upload_route as upload_route
-from app.extensions import get_supabase
 
 
 @pytest.fixture(autouse=True)
@@ -33,6 +29,7 @@ def client(monkeypatch, supabase):
 
 # OPTIONS /tus
 
+
 def test_tus_options(client):
     r = client.options("/tus")
     assert r.status_code == 200
@@ -41,6 +38,7 @@ def test_tus_options(client):
 
 
 # POST /tus - creation
+
 
 def test_tus_creation_missing_version(client):
     r = client.post("/tus")
@@ -59,19 +57,19 @@ def test_tus_creation_success_no_body(client, patch_tus_dir):
     metadata = {
         "filename": "test.txt",
         "classId": "classA",
-        "baseUrl": "http://example.com"
+        "baseUrl": "http://example.com",
     }
     encoded = base64.b64encode(metadata["filename"].encode()).decode()
     headers = {
         "Tus-Resumable": "1.0.0",
         "Upload-Length": "100",
-        "Upload-Metadata": f"filename {encoded},classId {base64.b64encode(metadata['classId'].encode()).decode()}"
+        "Upload-Metadata": f"filename {encoded},classId {base64.b64encode(metadata['classId'].encode()).decode()}",
     }
     r = client.post("/tus", headers=headers)
     assert r.status_code == 201
     loc = r.headers["Location"]
     assert loc.endswith(f"/upload/tus/{loc.split('/')[-1]}")
-    upload_id = loc.split('/')[-1]
+    upload_id = loc.split("/")[-1]
     udir = patch_tus_dir / upload_id
     assert (udir / "metadata.json").exists()
     info = (udir / "info").read_text()
@@ -81,20 +79,17 @@ def test_tus_creation_success_no_body(client, patch_tus_dir):
 
 def test_tus_creation_with_body(client, patch_tus_dir):
     data = b"hello"
-    headers = {
-        "Tus-Resumable": "1.0.0",
-        "Upload-Length": "5",
-        "Content-Length": "5"
-    }
+    headers = {"Tus-Resumable": "1.0.0", "Upload-Length": "5", "Content-Length": "5"}
     r = client.post("/tus", headers=headers, content=data)
     assert r.status_code == 201
     assert r.headers["Upload-Offset"] == "5"
-    upload_id = r.headers["Location"].split('/')[-1]
+    upload_id = r.headers["Location"].split("/")[-1]
     udir = patch_tus_dir / upload_id
     assert (udir / "file").read_bytes() == data
 
 
 # HEAD /tus/{upload_id}
+
 
 def test_tus_head_not_found(client):
     r = client.head("/tus/nonexistent")
@@ -114,6 +109,7 @@ def test_tus_head_success(client, patch_tus_dir):
 
 # PATCH /tus/{upload_id}
 
+
 def test_tus_patch_not_found(client):
     r = client.patch("/tus/nonexistent")
     assert r.status_code == 404
@@ -121,7 +117,8 @@ def test_tus_patch_not_found(client):
 
 def test_tus_patch_wrong_version(client, patch_tus_dir):
     uid = "u1"
-    d = patch_tus_dir / uid; d.mkdir()
+    d = patch_tus_dir / uid
+    d.mkdir()
     (d / "info").write_text("length:4\noffset:0")
     headers = {"Tus-Resumable": "0.2.0"}
     r = client.patch(f"/tus/{uid}", headers=headers)
@@ -131,12 +128,13 @@ def test_tus_patch_wrong_version(client, patch_tus_dir):
 
 def test_tus_patch_wrong_content_type(client, patch_tus_dir):
     uid = "u2"
-    d = patch_tus_dir / uid; d.mkdir()
+    d = patch_tus_dir / uid
+    d.mkdir()
     (d / "info").write_text("length:4\noffset:0")
     headers = {
         "Tus-Resumable": "1.0.0",
         "Content-Type": "text/plain",
-        "Upload-Offset": "0"
+        "Upload-Offset": "0",
     }
     r = client.patch(f"/tus/{uid}", headers=headers)
     assert r.status_code == 415
@@ -144,12 +142,13 @@ def test_tus_patch_wrong_content_type(client, patch_tus_dir):
 
 def test_tus_patch_offset_mismatch(client, patch_tus_dir):
     uid = "u3"
-    d = patch_tus_dir / uid; d.mkdir()
+    d = patch_tus_dir / uid
+    d.mkdir()
     (d / "info").write_text("length:4\noffset:2")
     headers = {
         "Tus-Resumable": "1.0.0",
         "Content-Type": "application/offset+octet-stream",
-        "Upload-Offset": "1"
+        "Upload-Offset": "1",
     }
     r = client.patch(f"/tus/{uid}", headers=headers)
     assert r.status_code == 409
@@ -157,12 +156,13 @@ def test_tus_patch_offset_mismatch(client, patch_tus_dir):
 
 def test_tus_patch_success(client, patch_tus_dir):
     uid = "u4"
-    d = patch_tus_dir / uid; d.mkdir()
+    d = patch_tus_dir / uid
+    d.mkdir()
     (d / "info").write_text("length:6\noffset:0")
     headers = {
         "Tus-Resumable": "1.0.0",
         "Content-Type": "application/offset+octet-stream",
-        "Upload-Offset": "0"
+        "Upload-Offset": "0",
     }
     data = b"abc"
     r = client.patch(f"/tus/{uid}", headers=headers, content=data)
@@ -174,6 +174,7 @@ def test_tus_patch_success(client, patch_tus_dir):
 
 # OPTIONS /tus/{upload_id}
 
+
 def test_tus_options_id(client):
     r = client.options("/tus/someid")
     assert r.status_code == 200
@@ -182,6 +183,7 @@ def test_tus_options_id(client):
 
 
 # POST /tus/finalize
+
 
 def test_finalize_missing_fileid(client):
     r = client.post("/tus/finalize", json={})
@@ -201,7 +203,8 @@ def test_finalize_not_found(client, patch_tus_dir):
 
 def test_finalize_file_missing(client, patch_tus_dir):
     fid = "f1"
-    d = patch_tus_dir / fid; d.mkdir()
+    d = patch_tus_dir / fid
+    d.mkdir()
     (d / "metadata.json").write_text(json.dumps({"fileId": fid, "classId": "c1"}))
     r = client.post("/tus/finalize", json={"fileId": fid})
     assert r.status_code == 400
@@ -210,7 +213,8 @@ def test_finalize_file_missing(client, patch_tus_dir):
 
 def test_finalize_file_empty(client, patch_tus_dir):
     fid = "f2"
-    d = patch_tus_dir / fid; d.mkdir()
+    d = patch_tus_dir / fid
+    d.mkdir()
     (d / "file").write_bytes(b"")
     (d / "metadata.json").write_text(json.dumps({"fileId": fid, "classId": "c1"}))
     r = client.post("/tus/finalize", json={"fileId": fid})
@@ -220,7 +224,8 @@ def test_finalize_file_empty(client, patch_tus_dir):
 
 def test_finalize_missing_classid(client, patch_tus_dir):
     fid = "f3"
-    d = patch_tus_dir / fid; d.mkdir()
+    d = patch_tus_dir / fid
+    d.mkdir()
     (d / "file").write_bytes(b"data")
     (d / "metadata.json").write_text(json.dumps({"fileId": fid}))
     r = client.post("/tus/finalize", json={"fileId": fid})
@@ -230,9 +235,12 @@ def test_finalize_missing_classid(client, patch_tus_dir):
 
 def test_finalize_success(client, patch_tus_dir, monkeypatch):
     fid = "f4"
-    d = patch_tus_dir / fid; d.mkdir()
+    d = patch_tus_dir / fid
+    d.mkdir()
     (d / "file").write_bytes(b"data")
-    (d / "metadata.json").write_text(json.dumps({"fileId": fid, "classId": "c1", "filename": "nm"}))
+    (d / "metadata.json").write_text(
+        json.dumps({"fileId": fid, "classId": "c1", "filename": "nm"})
+    )
 
     # stub FileProcessor
     class DummyProc:

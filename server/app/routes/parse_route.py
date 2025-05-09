@@ -19,10 +19,7 @@ async def parse_syllabus(class_id: str = Form(...)):
 
     # getting the class in supabase
     class_result = (
-        supabase_client.table("classes")
-        .select("*")
-        .eq("id", class_id)
-        .execute()
+        supabase_client.table("classes").select("*").eq("id", class_id).execute()
     )
     if not class_result.data:
         raise HTTPException(status_code=404, detail="Class not found")
@@ -39,10 +36,7 @@ async def parse_syllabus(class_id: str = Form(...)):
 
     # get existing outcomes
     outcomes_result = (
-        supabase_client.table("outcomes")
-        .select("*")
-        .eq("class", class_id)
-        .execute()
+        supabase_client.table("outcomes").select("*").eq("class", class_id).execute()
     )
     outcomes = outcomes_result.data
     prev_outcomes = [outcome.get("title") for outcome in outcomes]
@@ -55,7 +49,7 @@ async def parse_syllabus(class_id: str = Form(...)):
         .execute()
     )
     google_file_data = google_file_result.data
-    
+
     if len(google_file_data) == 0:
         raise HTTPException(status_code=404, detail="Google file not found")
     google_file_id = google_file_data[0].get("google_id")

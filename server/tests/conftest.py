@@ -222,9 +222,11 @@ class _FakeGoogleClient:
 _google_pkg = types.ModuleType("google")
 _genai_pkg = types.ModuleType("google.genai")
 setattr(_genai_pkg, "files", _FakeFilesAPI())
-setattr(_genai_pkg, "caches", _FakeCachesAPI()) # Assuming you might use this based on _FakeGoogleClient structure
-setattr(_genai_pkg, "models", _FakeModelsAPI()) # Assuming you might use this
-setattr(_genai_pkg, "Client", _FakeGoogleClient) # <<< --- ADD THIS LINE
+setattr(
+    _genai_pkg, "caches", _FakeCachesAPI()
+)  # Assuming you might use this based on _FakeGoogleClient structure
+setattr(_genai_pkg, "models", _FakeModelsAPI())  # Assuming you might use this
+setattr(_genai_pkg, "Client", _FakeGoogleClient)  # <<< --- ADD THIS LINE
 
 _errs = types.ModuleType("google.genai.errors")
 for _n, _c in {
@@ -236,21 +238,31 @@ for _n, _c in {
 setattr(_genai_pkg, "errors", _errs)
 
 _types_mod = types.ModuleType("google.genai.types")
+
+
 class UploadFileConfig:
     def __init__(self, **kw):
         self.__dict__.update(kw)
+
+
 setattr(_types_mod, "UploadFileConfig", UploadFileConfig)
+
+
 # Add File to google.genai.types (already present in your conftest)
 class File:
     def __init__(self, name="dummy-file"):
         self.name = name
+
+
 setattr(_types_mod, "File", File)
 
-setattr(_genai_pkg, "types", _types_mod) # Link types module to genai package
+setattr(_genai_pkg, "types", _types_mod)  # Link types module to genai package
 
 
 for _m in (_google_pkg, _genai_pkg, _errs, _types_mod):
-    if _m.__name__ not in sys.modules: # Ensure not to overwrite if already there by mistake
+    if (
+        _m.__name__ not in sys.modules
+    ):  # Ensure not to overwrite if already there by mistake
         sys.modules[_m.__name__] = _m
 setattr(_google_pkg, "genai", _genai_pkg)  # parent→child link
 
@@ -355,15 +367,6 @@ class _FakeLitellmModel:
 # Update get_litellm to return our fake model
 setattr(_ext, "get_litellm", lambda: _FakeLitellmModel())
 setattr(_ext, "initialize_clients", lambda: None)  # placeholder
-
-# Add File to google.genai.types
-if _types_mod is not None:
-
-    class File:
-        def __init__(self, name="dummy-file"):
-            self.name = name
-
-    setattr(_types_mod, "File", File)
 
 
 ###########################################################################
