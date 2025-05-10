@@ -158,12 +158,13 @@ class GoogleFiles:
             logger.warning(f"Unexpected error checking {google_id}: {e}")
             return False
 
-    def get_files(self) -> List[str | None]:
+    def get_files(self) -> List[Optional[str]]:
         """
         Return a list of Google IDs for all files,
         uploading any that don't exist or aren't ACTIVE.
+        Returns None for files that couldn't be uploaded.
         """
-        out_ids: List[str | None] = []
+        out_ids: List[Optional[str]] = []
         for meta in self.files_data:
             gid = meta.get("google_id")
             if not gid or not self._is_google_file_active(gid):
@@ -173,6 +174,10 @@ class GoogleFiles:
                 )
                 if media:
                     gid = media.name
+                else:
+                    # If upload failed, set gid to None to indicate failure
+                    logger.warning(f"Failed to upload file {meta['file_id']} to Google")
+                    gid = None
             out_ids.append(gid)
         return out_ids
 

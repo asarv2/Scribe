@@ -82,3 +82,39 @@ def test_get_files_triggers_upload(monkeypatch, supabase, tmp_path: Path):
     gids = gf.get_files()
     # original DB row had no google_id, so a fresh upload returns "new-id"
     assert gids == ["new-id"]
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# _upload_file_from_supabase - error handling
+# ──────────────────────────────────────────────────────────────────────────
+def test_upload_file_from_supabase_storage_error(monkeypatch, supabase):
+    """Test that _upload_file_from_supabase handles storage errors gracefully."""
+    gf = _gf(monkeypatch, supabase)
+    
+    # First, undo the mock from _gf helper to restore the original method
+    monkeypatch.undo()
+    
+    # Mock the storage.from_().download to raise a StorageApiError
+    class MockStorageError(Exception):
+        def __init__(self):
+            self.message = "Object not found"
+            self.error = "not_found"
+            self.statusCode = 404
+    
+    def mock_download(*args, **kwargs):
+        raise MockStorageError()
+    
+    monkeypatch.setattr(
+        gf.supabase.storage.from_("files"), "download", mock_download, raising=True
+    )
+    
+    # Call the method and verify it returns None on storage error
+    result = gf._upload_file_from_supabase("missing-file", "c1", "pdf")
+    assert result is None
+    
+    # Test that get_files handles this gracefully
+    # First, modify our test instance to have a file that will fail to download
+    gf.files_data = [{"file_id": "missing-file", "class_id": "c1", "extension": "pdf"}]
+    
+    # The method should return None for the missing file
+    assert gf.get_files() == [None]

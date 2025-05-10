@@ -23,8 +23,9 @@ ChatAgents = Literal[
 class Reference(BaseModel):
     number: int
     title: str
-    url: str
+    url: str = ""
     file: bool
+    error: Optional[str] = None
 
 
 class ReferencesOutputSchema(BaseModel):
@@ -46,7 +47,7 @@ class InitialChatOutput(BaseModel):
 
 
 class OutcomeObjectives(BaseModel):
-    number: int  # “Outcome 1”, “Outcome 2”, …
+    number: int  # "Outcome 1", "Outcome 2", ...
     objectives: List[str]  # 1–2-word strings
 
 
