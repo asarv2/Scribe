@@ -261,8 +261,10 @@ export const ChatInput = memo(({
 
   // Function to render mode options in the popover
   const renderModeOptions = () => {
-    const studentModes: AgentType[] = ['learn', 'review', 'homework'];
-    const teacherModes: AgentType[] = ['content', 'analyze', 'grade'];
+    // const studentModes: AgentType[] = ['learn', 'review', 'homework'];
+    const studentModes: AgentType[] = [];
+    // const teacherModes: AgentType[] = ['content', 'analyze', 'grade'];
+    const teacherModes: AgentType[] = [];
 
     // Get the appropriate role-specific modes
     const roleModes = activeChat.teacher ? teacherModes : studentModes;

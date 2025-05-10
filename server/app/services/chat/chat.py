@@ -163,10 +163,7 @@ class ChatProcessor(RunHooks):
                             "content": self.google_references[message_index]["content"],
                         }  # type: ignore
                     )
-                    for ref in self.chat_references[message_index]:
-                        user_message_items.append(
-                            {"role": "user", "content": ref["content"]}
-                        )  # type: ignore
+                    user_message_items.extend(self.chat_references[message_index])  # type: ignore
                 user_message_items.append(
                     {"role": "user", "content": self.chat_history[i]}
                 )
@@ -189,10 +186,7 @@ class ChatProcessor(RunHooks):
                     {"role": "user", "content": self.expanded_references_google}  # type: ignore
                 )
             if self.expanded_references and not self.is_caching:
-                for ref in self.expanded_references:
-                    current_message_items.append(
-                        {"role": "user", "content": ref["content"]}
-                    )  # type: ignore
+                current_message_items.extend(self.expanded_references)  # type: ignore
             current_message_items.append(
                 {"role": "user", "content": self.current_question}
             )
