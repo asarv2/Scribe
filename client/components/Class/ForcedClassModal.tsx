@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Group, TextInput, Textarea, Stack, Modal, Text } from '@mantine/core';
+import { Button, Group, TextInput, Textarea, Stack, Modal, Text, ActionIcon, Tooltip, Box, Flex } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useQueryClient } from '@tanstack/react-query';
 import { createClass } from '@/utils/services/class';
 import { updateProfile } from '@/utils/services/profile';
 import { checkCode } from '@/utils/services/code';
 import { Profile } from '@/types';
+import { IconLogout } from '@tabler/icons-react';
+import { logout } from '@/utils/services/auth';
 
 interface ForcedClassModalProps {
   isOpen: boolean;
@@ -22,6 +24,33 @@ export function ForcedClassModal({ isOpen, profile, studentMode }: ForcedClassMo
   const [newClassCode, setNewClassCode] = useState("");
   const [newClassDescription, setNewClassDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLogoutLoading(true);
+    try {
+      const { success, error } = await logout();
+      if (!success) {
+        throw new Error(error);
+      } else {
+        notifications.show({
+          title: 'Success',
+          message: 'Logged out',
+          color: 'green'
+        });
+        queryClient.clear();
+        router.push("/login");
+      }
+    } catch (error: any) {
+      notifications.show({
+        title: 'Error',
+        message: error.message,
+        color: 'red'
+      });
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
 
   const handleAddClass = async () => {
     if (!profile) {
@@ -151,12 +180,30 @@ export function ForcedClassModal({ isOpen, profile, studentMode }: ForcedClassMo
       closeOnClickOutside={false}
       closeOnEscape={false}
       title={
-        <Text size="xl" fw={700}>
-          {profile && ((profile.professor || profile.admin) && !studentMode)
-            ? "Add Your First Class"
-            : "Join Your First Class"}
-        </Text>
+        <Flex justify="space-between" align="center" gap="sm">
+          <Text size="xl" fw={700}>
+            {profile && ((profile.professor || profile.admin) && !studentMode)
+              ? "Add Your First Class"
+              : "Join Your First Class"}
+          </Text>
+          <Tooltip label="Logout">
+            <ActionIcon
+              color="red"
+              variant="subtle"
+              onClick={handleLogout}
+              loading={logoutLoading}
+              size="lg"
+            >
+              <IconLogout size={20} />
+            </ActionIcon>
+          </Tooltip>
+        </Flex>
       }
+      styles={{
+        title: {
+          width: '100%',
+        },
+      }}
       centered
       size="lg"
     >
@@ -205,24 +252,24 @@ export function ForcedClassModal({ isOpen, profile, studentMode }: ForcedClassMo
               value={classCode}
               onChange={(event) => {
                 let value = event.currentTarget.value.toUpperCase();
-                
+
                 // Remove any non-alphanumeric characters except hyphen
                 value = value.replace(/[^A-Z0-9-]/g, '');
-                
+
                 // Auto-insert hyphen after 5 characters if not present
                 if (value.length > 5 && value.charAt(5) !== '-') {
                   value = value.slice(0, 5) + '-' + value.slice(5);
                 }
-                
+
                 // Limit to 11 characters (5 + hyphen + 5)
                 if (value.length > 11) {
                   value = value.slice(0, 11);
                 }
-                
+
                 setClassCode(value);
               }}
             />
-            <Group justify="flex-end">
+            <Group justify="space-between">
               <Button onClick={handleJoinClass} loading={loading}>Join Class</Button>
             </Group>
           </Stack>

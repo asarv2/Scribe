@@ -1,22 +1,37 @@
-from agents import AgentHooks, RunContextWrapper, Agent, ToolsToFinalOutputResult, FunctionToolResult
+from agents import (
+    AgentHooks,
+    RunContextWrapper,
+    Agent,
+    ToolsToFinalOutputResult,
+    FunctionToolResult,
+)
 from typing import List, Dict
-from agents.tool import function_tool, FunctionTool, Tool
-from agents.run_context import RunContextWrapper
+from agents.tool import function_tool
 from app.extensions import get_supabase
-from app.services.chat.models.main import Documents, Summary, CreateSummaryResponse, CreateFigureResponse
+from app.services.chat.models.general import (
+    Documents,
+    Summary,
+    CreateSummaryResponse,
+    CreateFigureResponse,
+)
 from app.services.chat.agents.tools.figure import create_figures
 from app.services.chat.utils.references import clean_references
-from app.services.chat.utils.figures import clean_figures
+from app.services.chat.utils.figure_tools import clean_figures
 import logging
 
 logger = logging.getLogger(__name__)
 
-class SummaryHooks(AgentHooks):
 
+class SummaryHooks(AgentHooks):
     def __init__(self):
-        self.create_summary_tool = function_tool(create_summary, name_override="create_summary")
-        self.create_summaries_tool = function_tool(create_summaries, name_override="create_summaries")
+        self.create_summary_tool = function_tool(
+            create_summary, name_override="create_summary"
+        )
+        self.create_summaries_tool = function_tool(
+            create_summaries, name_override="create_summaries"
+        )
         self.create_summary_check = create_summary_check
+        self.supabase_client = get_supabase()
 
     async def on_handoff(
         self,
@@ -28,13 +43,13 @@ class SummaryHooks(AgentHooks):
         off to this agent."""
         message_id = wrapper.context.message_id
         # update the status text
-        self.supabase_client.table("messages").update({
-            "status_text": f"Getting ready to create summaries..."
-        }).eq("id", message_id).execute()
+        self.supabase_client.table("messages").update(
+            {"status_text": "Getting ready to create summaries..."}
+        ).eq("id", message_id).execute()
+
 
 async def create_summary_check(
-    wrapper: RunContextWrapper[Documents],
-    results: list[FunctionToolResult]
+    wrapper: RunContextWrapper[Documents], results: list[FunctionToolResult]
 ) -> ToolsToFinalOutputResult:
     # 1⃣  Collect *all* CreateSummaryResponse objects
     all_responses: list[CreateSummaryResponse] = []
@@ -50,7 +65,7 @@ async def create_summary_check(
     # 2⃣  Build a success map keyed by summary_id
     summary_success: dict[str, bool] = {}
     for resp in all_responses:
-        sid = resp.summary_id or ""          # empty string if not provided
+        sid = resp.summary_id or ""  # empty string if not provided
         # Initialise to False; upgrade to True if any success comes in
         summary_success[sid] = summary_success.get(sid, False) or resp.success
 
@@ -58,32 +73,34 @@ async def create_summary_check(
     all_success = bool(summary_success) and all(summary_success.values())
 
     # 4⃣  Decide finality based on the *last* tool invoked
-    final_tool       = results[-1].tool
+    final_tool = results[-1].tool
     final_output_raw = results[-1].output
 
     if final_tool.name == "create_summary":
         # Single-summary call: final iff that single ID succeeded
-        is_final = isinstance(final_output_raw, CreateSummaryResponse) \
-                   and final_output_raw.success
+        is_final = (
+            isinstance(final_output_raw, CreateSummaryResponse)
+            and final_output_raw.success
+        )
         return ToolsToFinalOutputResult(
-            is_final_output=is_final,
-            final_output=final_output_raw
+            is_final_output=is_final, final_output=final_output_raw
         )
 
     elif final_tool.name == "create_summaries":
         # Multi-summary call: final only if *all* unique IDs succeeded
         return ToolsToFinalOutputResult(
-            is_final_output=all_success,
-            final_output=final_output_raw
+            is_final_output=all_success, final_output=final_output_raw
         )
 
     # Fallback: not a question-creation tool
     return ToolsToFinalOutputResult(
-        is_final_output=False,
-        final_output=final_output_raw
+        is_final_output=False, final_output=final_output_raw
     )
 
-async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: List[Summary]) -> List[CreateSummaryResponse]:
+
+async def create_summaries(
+    wrapper: RunContextWrapper[Documents], summaries: List[Summary]
+) -> List[CreateSummaryResponse]:
     """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via LaTeX, you should create figure prompts within the create_summaries tool, and they will be added to the summary. Use markdown bullet points to make the summary more readable.
 
     To include document references in the summary, you should use [x], where x is the reference number. This helps to leave the user with a reference to the document that they can click on to view the document.
@@ -92,7 +109,7 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
 
     You should aim to output in inline LaTeX, as this will be easier for the user to read. Moreover, you can use markdown bullet points to make the summary more readable.
 
-    This function will return the id of the summary, which will then be replaced by the actual summary of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the summary id itself, as this is unknown to the user. 
+    This function will return the id of the summary, which will then be replaced by the actual summary of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the summary id itself, as this is unknown to the user.
 
     Args:
         summaries: List[Summary]
@@ -281,19 +298,37 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
             conclusion = summary.conclusion
             figures = summary.figures
 
-            # Get references - Fix: Filter out None values before attempting to use them
-            references = [wrapper.context.references.get(ref, None) for ref in summary.references]
-            references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
+            # Add validation before proceeding
+            if not body.strip():
+                raise ValueError("Summary body cannot be empty")
+            for f in figures:
+                if not f.latex_code.strip():
+                    raise ValueError("Each figure must contain latex_code")
+
+            references = [
+                wrapper.context.references.get(ref, None) for ref in summary.references
+            ]
+            references = [
+                ref.get("id")
+                for ref in references
+                if ref is not None and ref.get("file") is False
+            ]
 
             # insert a summary in the database, with the generation status set to generating
-            summary_response = supabase_client.table('summaries').insert({
-                'generation_status': 'generating',
-                'message': message_id,
-                'title': title,
-                'references': references,
-                'class': class_id
-            }).execute()
-            summary_id = summary_response.data[0]['id']
+            summary_response = (
+                supabase_client.table("summaries")
+                .insert(
+                    {
+                        "generation_status": "generating",
+                        "message": message_id,
+                        "title": title,
+                        "references": references,
+                        "class": class_id,
+                    }
+                )
+                .execute()
+            )
+            summary_id = summary_response.data[0]["id"]
 
             # create any figures that are needed
             figure_responses = await create_figures(wrapper, figures)
@@ -319,47 +354,88 @@ async def create_summaries(wrapper: RunContextWrapper[Documents], summaries: Lis
             body = clean_references(body, wrapper.context.references)
             conclusion = clean_references(conclusion, wrapper.context.references)
 
+            # Fix markdown bullet points by ensuring proper line breaks
+            body = body.replace("\\n-", "\\n\n-")
+
             # Filter out None values from figure_errors
-            figure_errors = [r.error or "Unknown error" for r in figure_responses if not r.success]
+            figure_errors = [
+                r.error or "Unknown error" for r in figure_responses if not r.success
+            ]
 
             if figure_errors:
-                raise Exception("Failed to create figures with the following errors: " + ", ".join(figure_errors))
+                raise Exception(
+                    "Failed to create figures with the following errors: "
+                    + ", ".join(figure_errors)
+                )
             else:
                 summary_update_data = {
                     "figures": figure_ids,
-                    'preamble': preamble,
-                    'body': body,
-                    'conclusion': conclusion,
-                    "generation_status": "complete"
+                    "preamble": preamble,
+                    "body": body,
+                    "conclusion": conclusion,
+                    "generation_status": "complete",
                 }
 
                 if summary_id is None:
-                    raise Exception("Failed to create summary: No ID returned from database")
+                    raise Exception(
+                        "Failed to create summary: No ID returned from database"
+                    )
 
                 # Insert the question into the database
-                summary_update_response = supabase_client.table('summaries').update(summary_update_data).eq("id", summary_id).execute()
+                summary_update_response = (
+                    supabase_client.table("summaries")
+                    .update(summary_update_data)
+                    .eq("id", summary_id)
+                    .execute()
+                )
 
-                if not (summary_update_response.data and len(summary_update_response.data) > 0):
-                    raise Exception("Failed to update summary: No ID returned from database")
-                
-                responses.append(CreateSummaryResponse(success=True, summary_id=summary_id, message=summary.message))
-        
+                if not (
+                    summary_update_response.data
+                    and len(summary_update_response.data) > 0
+                ):
+                    raise Exception(
+                        "Failed to update summary: No ID returned from database"
+                    )
+
+                responses.append(
+                    CreateSummaryResponse(
+                        success=True, summary_id=summary_id, message=summary.message
+                    )
+                )
+
         except Exception as e:
             if summary_id is not None:
                 # update the summary into the database
-                summary_update_response = supabase_client.table('summaries').update({
-                    'preamble': preamble,
-                    'body': body,
-                    'conclusion': conclusion,
-                    "generation_status": "error",
-                    "generation_error": str(e)
-                }).eq("id", summary_id).execute()
+                summary_update_response = (
+                    supabase_client.table("summaries")
+                    .update(
+                        {
+                            "preamble": preamble,
+                            "body": body,
+                            "conclusion": conclusion,
+                            "generation_status": "error",
+                            "generation_error": str(e),
+                        }
+                    )
+                    .eq("id", summary_id)
+                    .execute()
+                )
 
-            responses.append(CreateSummaryResponse(success=False, error=str(e), summary_id=summary_id or "", message=summary.message))
+            responses.append(
+                CreateSummaryResponse(
+                    success=False,
+                    error=str(e),
+                    summary_id=summary_id or "",
+                    message=summary.message,
+                )
+            )
 
     return responses
 
-async def create_summary(wrapper: RunContextWrapper[Documents], summary: Summary) -> CreateSummaryResponse:
+
+async def create_summary(
+    wrapper: RunContextWrapper[Documents], summary: Summary
+) -> CreateSummaryResponse:
     """Generates a summary object given the preamble, body, and conclusion. If you need any figures generated via LaTeX, you should create figure prompts within the create_summaries tool, and they will be added to the summary. Use markdown bullet points to make the summary more readable.
 
     To include document references in the summary, you should use [x], where x is the reference number. This helps to leave the user with a reference to the document that they can click on to view the document.
@@ -368,7 +444,7 @@ async def create_summary(wrapper: RunContextWrapper[Documents], summary: Summary
 
     You should aim to output in inline LaTeX, as this will be easier for the user to read. Moreover, you can use markdown bullet points to make the summary more readable.
 
-    This function will return the id of the summary, which will then be replaced by the actual summary of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the summary id itself, as this is unknown to the user. 
+    This function will return the id of the summary, which will then be replaced by the actual summary of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the summary id itself, as this is unknown to the user.
 
     Args:
         summary: Summary

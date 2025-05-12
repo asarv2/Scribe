@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Document, Question, ViewerMode } from '../../types';
 import { Card, Text, Menu, ActionIcon, Box, Group, Loader, Button, Center, Stack, Radio, RadioGroup, Switch, Pagination, Tooltip, Modal, Textarea } from '@mantine/core';
-import { IconDownload, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconEye, IconMaximize, IconEyeOff } from '@tabler/icons-react';
+import { IconDownload, IconFileTypography, IconRefresh, IconFile, IconChevronLeft, IconChevronRight, IconEye, IconMaximize, IconEyeOff, IconFiles, IconFileStack } from '@tabler/icons-react';
 import Latex from '../Latex';
 import { notifications } from '@mantine/notifications';
 import { getProfile } from '@/utils/queries/get-profile';
@@ -40,6 +40,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     const [frqAnswers, setFrqAnswers] = useState<Record<string, string>>({});
     const [checkedAnswers, setCheckedAnswers] = useState<Record<string, boolean>>({});
     const [downloadLoading, setDownloadLoading] = useState(false);
+    const [downloadAll, setDownloadAll] = useState(true);
+    const [combined, setCombined] = useState(false);
 
 
     // Store the question IDs in a ref to detect when the actual questions change
@@ -160,14 +162,13 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
     // Handle FRQ answer input
     const handleFrqAnswerChange = (questionId: string, value: string) => {
         setFrqAnswers(prev => ({ ...prev, [questionId]: value }));
-        // Reset checked status when answer changes
-        setCheckedAnswers(prev => ({ ...prev, [questionId]: false }));
     };
 
-    const handleDownload = (format: 'pdf' | 'latex', downloadAll: boolean = true) => {
+    const handleDownload = (format: 'pdf' | 'latex') => {
         // If downloadAll is false, only download the current question
         const questionIds = downloadAll ? validQuestions.map(q => q.id) : [question.id];
-        const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format);
+        const useZip = downloadAll && validQuestions.length > 1 && !combined;
+        const downloadUrl = getQuestionDownloadUrl(chatId, questionIds, format, useZip);
 
         setDownloadLoading(true);
 
@@ -180,12 +181,11 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
             .then(response => {
                 // Get filename from Content-Disposition header if available
                 const contentDisposition = response.headers.get('Content-Disposition');
-                console.log('Content-Disposition:', contentDisposition);
-                let filename = `questions-${chatId}.${format === 'latex' ? 'tex' : format}`;
-
-                if (!downloadAll) {
-                    filename = `question-${currentIndex + 1}-${chatId}.${format === 'latex' ? 'tex' : format}`;
-                }
+                let filename = useZip
+                    ? `questions-${chatId}.zip`
+                    : downloadAll
+                        ? `questions-${chatId}.${format === 'latex' ? 'tex' : format}`
+                        : `question-${currentIndex + 1}-${chatId}.${format === 'latex' ? 'tex' : format}`;
 
                 if (contentDisposition) {
                     const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
@@ -318,10 +318,11 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                 }
                                 
                                 const showFeedback = checkedAnswers[question.id];
+                                const isSelected = selectedAnswers[question.id]?.[0] === String(index);
 
                                 // Determine the style for the option based on whether it's checked and correct
                                 let optionStyle = {};
-                                if (showFeedback) {
+                                if (showFeedback && isSelected) {
                                     if (isCorrectAnswer) {
                                         optionStyle = { backgroundColor: 'rgba(0,200,0,0.1)', padding: '8px', borderRadius: '4px' };
                                     } else {
@@ -343,7 +344,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                             }}
                                         />
 
-                                        {showFeedback && (
+                                        {showFeedback && isSelected && (
                                             <Text size="sm" mt="xs" ml="2rem" c={isCorrectAnswer ? "green.7" : "red.7"}>
                                                 <Latex handleEnhancedDocumentClick={handleEnhancedDocumentClick} classId={classId}>{splitTextByDocuments(
                                                     question.explanations?.[index],
@@ -361,19 +362,6 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
 
                     </Box>
                 }
-
-                {/* Check/Reset Answer Button */}
-                <Group justify="flex-end" mt="md">
-                    <Button
-                        onClick={() => setCheckedAnswers(prev => ({ ...prev, [question.id]: !prev[question.id] }))}
-                        disabled={
-                            (question.frq && !frqAnswers[question.id]) ||
-                            (!question.frq && !selectedAnswers[question.id])
-                        }
-                    >
-                        {checkedAnswers[question.id] ? "Hide Feedback" : "Check Answer"}
-                    </Button>
-                </Group>
             </>
         )
     }
@@ -456,6 +444,21 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                         )}
                     </Group>
                     <Group gap="xs">
+                        <Tooltip label={checkedAnswers[question.id] ? "Hide Answer" : "Show Answer"}>
+                            <ActionIcon
+                                variant="subtle"
+                                size="md"
+                                onClick={() => setCheckedAnswers(prev => ({ ...prev, [question.id]: !prev[question.id] }))}
+                                disabled={
+                                    !checkedAnswers[question.id] && (
+                                        (question.frq && !frqAnswers[question.id]) ||
+                                        (!question.frq && !selectedAnswers[question.id])
+                                    )
+                                }
+                            >
+                                {checkedAnswers[question.id] ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                            </ActionIcon>
+                        </Tooltip>
                         <Menu position="bottom-end" shadow="md">
                             <Menu.Target>
                                 <Tooltip label={downloadLoading ? "Downloading..." : "Download Questions"}>
@@ -469,57 +472,39 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({ classId, chatId, questi
                                 </Tooltip>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                {validQuestions.length > 1 ? (
-                                    <>
-                                        <Menu.Label>Download Options</Menu.Label>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf', false)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'Current Question (PDF)'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex', false)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'Current Question (LaTeX)'}
-                                        </Menu.Item>
-                                        <Menu.Divider />
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf', true)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'All Questions (PDF)'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex', true)}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'All Questions (LaTeX)'}
-                                        </Menu.Item>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Menu.Item
-                                            leftSection={<IconFile size={14} />}
-                                            onClick={() => handleDownload('pdf')}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'PDF Document'}
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            leftSection={<IconFileTypography size={14} />}
-                                            onClick={() => handleDownload('latex')}
-                                            disabled={downloadLoading}
-                                        >
-                                            {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
-                                        </Menu.Item>
-                                    </>
-                                )}
+                                <Menu.Label>
+                                    <Group justify="space-between" gap={"xs"}>
+                                        Download Options
+                                        {validQuestions.length > 1 && (
+                                            <Group gap={2}>
+                                                <Tooltip label={'All'}>
+                                                    <ActionIcon variant={downloadAll ? "filled" : "subtle"} size="md" onClick={() => setDownloadAll((prev) => !prev)} disabled={downloadLoading}>
+                                                        <IconFiles size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                                <Tooltip label={'Combined'}>
+                                                    <ActionIcon variant={combined ? "filled" : "subtle"} size="md" onClick={() => setCombined((prev) => !prev)} disabled={downloadLoading || !downloadAll}>
+                                                        <IconFileStack size={18} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Group>
+                                        )}
+                                    </Group>
+                                </Menu.Label>
+                                <Menu.Item
+                                    leftSection={<IconFile size={14} />}
+                                    onClick={() => handleDownload('pdf')}
+                                    disabled={downloadLoading}
+                                >
+                                    {downloadLoading ? 'Downloading...' : 'PDF Document'}
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={<IconFileTypography size={14} />}
+                                    onClick={() => handleDownload('latex')}
+                                    disabled={downloadLoading}
+                                >
+                                    {downloadLoading ? 'Downloading...' : 'LaTeX Source'}
+                                </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
                     </Group>

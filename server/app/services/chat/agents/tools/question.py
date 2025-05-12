@@ -1,23 +1,36 @@
-from agents import AgentHooks, RunContextWrapper, Agent, ToolsToFinalOutputResult, FunctionToolResult
+from agents import (
+    AgentHooks,
+    RunContextWrapper,
+    Agent,
+    ToolsToFinalOutputResult,
+    FunctionToolResult,
+)
 from typing import List
-from agents.run_context import RunContextWrapper
 from agents.tool import function_tool
-from typing import List
 from app.extensions import get_supabase
-from app.services.chat.models.main import Documents, Question, CreateQuestionResponse, CreateFigureResponse
+from app.services.chat.models.general import (
+    Documents,
+    Question,
+    CreateQuestionResponse,
+    CreateFigureResponse,
+)
 from app.services.chat.agents.tools.figure import create_figures
 import logging
 
 logger = logging.getLogger(__name__)
 
+
 class QuestionHooks(AgentHooks):
-
     def __init__(self):
-        self.create_question_tool = function_tool(create_question, name_override="create_question")
-        self.create_questions_tool = function_tool(create_questions, name_override="create_questions")
+        self.create_question_tool = function_tool(
+            create_question, name_override="create_question"
+        )
+        self.create_questions_tool = function_tool(
+            create_questions, name_override="create_questions"
+        )
         self.create_question_check = create_question_check
+        self.supabase_client = get_supabase()
 
-    
     async def on_handoff(
         self,
         wrapper: RunContextWrapper[Documents],
@@ -28,14 +41,13 @@ class QuestionHooks(AgentHooks):
         off to this agent."""
         message_id = wrapper.context.message_id
         # update the status text
-        self.supabase_client.table("messages").update({
-            "status_text": f"Getting ready to create questions..."
-        }).eq("id", message_id).execute()
+        self.supabase_client.table("messages").update(
+            {"status_text": "Getting ready to create questions..."}
+        ).eq("id", message_id).execute()
 
 
 async def create_question_check(
-    wrapper: RunContextWrapper[Documents],
-    results: list[FunctionToolResult]
+    wrapper: RunContextWrapper[Documents], results: list[FunctionToolResult]
 ) -> ToolsToFinalOutputResult:
     # 1⃣  Collect *all* CreateFigureResponse objects
     all_responses: list[CreateQuestionResponse] = []
@@ -51,7 +63,7 @@ async def create_question_check(
     # 2⃣  Build a success map keyed by question_id
     question_success: dict[str, bool] = {}
     for resp in all_responses:
-        qid = resp.question_id or ""          # empty string if not provided
+        qid = resp.question_id or ""  # empty string if not provided
         # Initialise to False; upgrade to True if any success comes in
         question_success[qid] = question_success.get(qid, False) or resp.success
 
@@ -59,46 +71,52 @@ async def create_question_check(
     all_success = bool(question_success) and all(question_success.values())
 
     # 4⃣  Decide finality based on the *last* tool invoked
-    final_tool       = results[-1].tool
+    final_tool = results[-1].tool
     final_output_raw = results[-1].output
 
     if final_tool.name == "create_question":
         # Single-question call: final iff that single ID succeeded
-        is_final = isinstance(final_output_raw, CreateQuestionResponse) \
-                   and final_output_raw.success
+        is_final = (
+            isinstance(final_output_raw, CreateQuestionResponse)
+            and final_output_raw.success
+        )
         return ToolsToFinalOutputResult(
-            is_final_output=is_final,
-            final_output=final_output_raw
+            is_final_output=is_final, final_output=final_output_raw
         )
 
     elif final_tool.name == "create_questions":
         # Multi-question call: final only if *all* unique IDs succeeded
         return ToolsToFinalOutputResult(
-            is_final_output=all_success,
-            final_output=final_output_raw
+            is_final_output=all_success, final_output=final_output_raw
         )
 
     # Fallback: not a question-creation tool
     return ToolsToFinalOutputResult(
-        is_final_output=False,
-        final_output=final_output_raw
+        is_final_output=False, final_output=final_output_raw
     )
 
-async def create_questions(wrapper: RunContextWrapper[Documents], questions: List[Question]) -> List[CreateQuestionResponse]:
+
+async def create_questions(
+    wrapper: RunContextWrapper[Documents], questions: List[Question]
+) -> List[CreateQuestionResponse]:
     """Generates a list of questions given the questions. This will return the ids of the questions, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
 
+    If you are creating a multiple choice question, you should fill in the options and explanations field to accompany the question. Provide the answer in the answer field. Do not include things like "A", or a) in your options, explanations, or answer as this will automatically be added by the system. The answer should be the exact text of the option that is correct.
+
+    If you are creating a free response question, you should leave the options and explanations field empty, and just provide your full solution in the answer field.
+
     Args:
-        List[Question]: 
+        List[Question]:
             title: str = Field(default="") # The title of the question
             question_type: Literal["mcq", "frq"] = "mcq" # The type of question, either "mcq" or "frq"
             question: str = Field(default="") # The question text
-            options: List[str] = Field(default_factory=list) # The options for the question
-            answer: str = Field(default="") # The answer to the question
-            explanations: List[str] = Field(default_factory=list) # The explanations for the question
+            options: List[str] = Field(default_factory=list) # The options for the question. Blank for frq
+            answer: str = Field(default="") # The answer to the question. Full answer for frq
+            explanations: List[str] = Field(default_factory=list) # The explanations for the question. Blank for frq
             references: List[int] = Field(default_factory=list) # The references for the question
             figures: List[Figure] = Field(default_factory=list) # The figures for the question
             message: str = Field(default="") # The message to be displayed to the user after the tool is run
-    
+
     Figure:
         latex_code: str = Field(default="") # The latex code for the figure
         title: str = Field(default="") # The title of the figure
@@ -274,36 +292,51 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
 
     for question in questions:
         question_id = None  # Initialize question_id at the beginning of each loop
-        
+
         if question.question_type == "mcq":
             try:
                 title = question.title
-                question_text = question.question  # Rename to avoid overwriting the question object
+                question_text = (
+                    question.question
+                )  # Rename to avoid overwriting the question object
                 options = question.options
                 explanations = question.explanations
                 answer = question.answer
                 figures = question.figures
 
                 # Get references
-                references = [wrapper.context.references.get(ref, None) for ref in question.references]
-                references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
-                
+                references = [
+                    wrapper.context.references.get(ref, None)
+                    for ref in question.references
+                ]
+                references = [
+                    ref.get("id")
+                    for ref in references
+                    if ref is not None and ref.get("file") is False
+                ]
+
                 # insert a question in the database, with the generation status set to generating
-                question_response = supabase_client.table('questions').insert({
-                    'generation_status': 'generating',
-                    'message': message_id,
-                    'title': title,
-                    'problem': question_text,
-                    'options': options,
-                    'explanations': explanations,
-                    'answers': [answer],
-                    'frq': False,
-                    'references': references,
-                    'class': class_id
-                }).execute()
-                
+                question_response = (
+                    supabase_client.table("questions")
+                    .insert(
+                        {
+                            "generation_status": "generating",
+                            "message": message_id,
+                            "title": title,
+                            "problem": question_text,
+                            "options": options,
+                            "explanations": explanations,
+                            "answers": [answer],
+                            "frq": False,
+                            "references": references,
+                            "class": class_id,
+                        }
+                    )
+                    .execute()
+                )
+
                 # get the question id
-                question_id = question_response.data[0]['id']
+                question_id = question_response.data[0]["id"]
 
                 # create any figures that are needed
                 figure_responses = await create_figures(wrapper, figures)
@@ -320,54 +353,101 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
                 if any(figure_errors):
                     # Filter out None values before joining
                     error_messages = [err for err in figure_errors if err is not None]
-                    raise Exception("Failed to create figures with the following errors: " + ", ".join(error_messages))
+                    raise Exception(
+                        "Failed to create figures with the following errors: "
+                        + ", ".join(error_messages)
+                    )
                 else:
                     question_update_data = {
                         "figures": figure_ids,
-                        "generation_status": "complete"
+                        "generation_status": "complete",
                     }
 
                     # Insert the question into the database
-                    question_update_response = supabase_client.table('questions').update(question_update_data).eq("id", question_id).execute()
+                    question_update_response = (
+                        supabase_client.table("questions")
+                        .update(question_update_data)
+                        .eq("id", question_id)
+                        .execute()
+                    )
 
-                    if not (question_update_response.data and len(question_update_response.data) > 0):
-                        raise Exception("Failed to update question: No ID returned from database")
-                    
-                    responses.append(CreateQuestionResponse(success=True, question_id=question_id, message=question.message))
+                    if not (
+                        question_update_response.data
+                        and len(question_update_response.data) > 0
+                    ):
+                        raise Exception(
+                            "Failed to update question: No ID returned from database"
+                        )
+
+                    responses.append(
+                        CreateQuestionResponse(
+                            success=True,
+                            question_id=question_id,
+                            message=question.message,
+                        )
+                    )
             except Exception as e:
                 if question_id:  # Only try to update if question_id exists
                     # update the question into the database
-                    question_update_response = supabase_client.table('questions').update({
-                        "generation_status": "error",
-                        "generation_error": str(e)
-                    }).eq("id", question_id).execute()
+                    question_update_response = (
+                        supabase_client.table("questions")
+                        .update(
+                            {"generation_status": "error", "generation_error": str(e)}
+                        )
+                        .eq("id", question_id)
+                        .execute()
+                    )
 
-                responses.append(CreateQuestionResponse(success=False, error=str(e), message=question.message))
+                responses.append(
+                    CreateQuestionResponse(
+                        success=False, error=str(e), message=question.message
+                    )
+                )
         elif question.question_type == "frq":
             try:
                 title = question.title
-                question_text = question.question  # Rename to avoid overwriting the question object
+                question_text = (
+                    question.question
+                )  # Rename to avoid overwriting the question object
                 answer = question.answer
                 figures = question.figures
+                explanations = question.explanations
+
+                # check if answer is empty, and if so, concatenate the explanations
+                if not answer:
+                    answer = "\n".join(explanations)
 
                 # Get references
-                references = [wrapper.context.references.get(ref, None) for ref in question.references]
-                references = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
-                
+                references = [
+                    wrapper.context.references.get(ref, None)
+                    for ref in question.references
+                ]
+                references = [
+                    ref.get("id")
+                    for ref in references
+                    if ref is not None and ref.get("file") is False
+                ]
+
                 # insert a question in the database, with the generation status set to generating
-                question_response = supabase_client.table('questions').insert({
-                    'generation_status': 'generating',
-                    'message': message_id,
-                    'title': title,
-                    'problem': question_text,
-                    'solution': answer,
-                    'frq': True,
-                    'references': references,
-                    'class': class_id
-                }).execute()
-                
+                question_response = (
+                    supabase_client.table("questions")
+                    .insert(
+                        {
+                            "generation_status": "generating",
+                            "message": message_id,
+                            "title": title,
+                            "problem": question_text,
+                            "solution": answer,
+                            "frq": True,
+                            "references": references,
+                            "class": class_id,
+                        }
+                    )
+                    .execute()
+                )
+
                 # get the question id
-                question_id = question_response.data[0]['id']
+                question_id = question_response.data[0]["id"]
 
                 # create any figures that are needed
                 figure_responses = await create_figures(wrapper, figures)
@@ -384,42 +464,76 @@ async def create_questions(wrapper: RunContextWrapper[Documents], questions: Lis
                 if any(figure_errors):
                     # Filter out None values before joining
                     error_messages = [err for err in figure_errors if err is not None]
-                    raise Exception("Failed to create figures with the following errors: " + ", ".join(error_messages))
+                    raise Exception(
+                        "Failed to create figures with the following errors: "
+                        + ", ".join(error_messages)
+                    )
                 else:
                     question_update_data = {
                         "figures": figure_ids,
-                        "generation_status": "complete"
+                        "generation_status": "complete",
                     }
 
                     # Insert the question into the database
-                    question_update_response = supabase_client.table('questions').update(question_update_data).eq("id", question_id).execute()
+                    question_update_response = (
+                        supabase_client.table("questions")
+                        .update(question_update_data)
+                        .eq("id", question_id)
+                        .execute()
+                    )
 
-                    if not (question_update_response.data and len(question_update_response.data) > 0):
-                        raise Exception("Failed to update question: No ID returned from database")
-                    
-                    responses.append(CreateQuestionResponse(success=True, question_id=question_id, message=question.message))
+                    if not (
+                        question_update_response.data
+                        and len(question_update_response.data) > 0
+                    ):
+                        raise Exception(
+                            "Failed to update question: No ID returned from database"
+                        )
+
+                    responses.append(
+                        CreateQuestionResponse(
+                            success=True,
+                            question_id=question_id,
+                            message=question.message,
+                        )
+                    )
             except Exception as e:
                 if question_id:  # Only try to update if question_id exists
                     # update the question into the database
-                    question_update_response = supabase_client.table('questions').update({
-                        "generation_status": "error",
-                        "generation_error": str(e)
-                    }).eq("id", question_id).execute()
-                responses.append(CreateQuestionResponse(success=False, error=str(e), message=question.message))
+                    question_update_response = (
+                        supabase_client.table("questions")
+                        .update(
+                            {"generation_status": "error", "generation_error": str(e)}
+                        )
+                        .eq("id", question_id)
+                        .execute()
+                    )
+                responses.append(
+                    CreateQuestionResponse(
+                        success=False, error=str(e), message=question.message
+                    )
+                )
 
     return responses
 
-async def create_question(wrapper: RunContextWrapper[Documents], question: Question) -> CreateQuestionResponse:
+
+async def create_question(
+    wrapper: RunContextWrapper[Documents], question: Question
+) -> CreateQuestionResponse:
     """Generates a list of questions given the questions. This will return the ids of the questions, which will then be replaced by the actual question of the object. You should provide a reassuring message after this tool is run, to clarify what was just created. Do not include any references to the question id itself, as this is unknown to the user.
 
+    If you are creating a multiple choice question, you should fill in the options and explanations field to accompany the question. Provide the answer in the answer field. Do not include things like "A", or a) in your options, explanations, or answer as this will automatically be added by the system. The answer should be the exact text of the option that is correct.
+
+    If you are creating a free response question, you should leave the options and explanations field empty, and just provide your full solution in the answer field.
+
     Args:
-        Question: 
+        Question:
             title: str = Field(default="") # The title of the question
             question_type: Literal["mcq", "frq"] = "mcq" # The type of question, either "mcq" or "frq"
             question: str = Field(default="") # The question text
-            options: List[str] = Field(default_factory=list) # The options for the question
-            answer: str = Field(default="") # The answer to the question
-            explanations: List[str] = Field(default_factory=list) # The explanations for the question
+            options: List[str] = Field(default_factory=list) # The options for the question. Blank for frq
+            answer: str = Field(default="") # The answer to the question. Full answer for frq
+            explanations: List[str] = Field(default_factory=list) # The explanations for the question. Blank for frq
             references: List[int] = Field(default_factory=list) # The references for the question
             figures: List[Figure] = Field(default_factory=list) # The figures for the question
             message: str = Field(default="") # The message to be displayed to the user after the tool is run

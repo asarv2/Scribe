@@ -1,30 +1,56 @@
-from agents import Agent, RunContextWrapper, HandoffCallItem
-from agents.items import FunctionCallOutput
-from app.extensions import get_supabase
+from agents import Agent, RunContextWrapper
 from agents import HandoffInputData
-from app.services.chat.models.main import Documents, HandoffInputSchema, ReferencesOutputSchema, Reference
+from app.services.chat.models.general import (
+    Documents,
+    HandoffInputSchema,
+)
 from typing import List
 import logging
-from app.services.chat.utils.references import emit_google_references, emit_user_references
 
 logger = logging.getLogger(__name__)
 
+
 def invoke_handoff(agent: Agent[Documents]):
-    async def on_invoke_handoff(wrapper: RunContextWrapper[Documents], args_json: str) -> Agent[Documents]:
+    async def on_invoke_handoff(
+        wrapper: RunContextWrapper[Documents], args_json: str
+    ) -> Agent[Documents]:
         # Parse the JSON arguments
         args = HandoffInputSchema.model_validate_json(args_json)
         reference_numbers: List[int] = args.references
 
-        references = [wrapper.context.references.get(reference_number, None) for reference_number in reference_numbers]
-        document_ids = [ref.get("id") for ref in references if ref is not None and ref.get("file") is False]
-        file_ids = [ref.get("id") for ref in references if ref is not None and ref.get("file") is True]
+        references = [
+            wrapper.context.references.get(reference_number, None)
+            for reference_number in reference_numbers
+        ]
+        document_ids = [
+            ref.get("id")
+            for ref in references
+            if ref is not None and ref.get("file") is False
+        ]
+        file_ids = [
+            ref.get("id")
+            for ref in references
+            if ref is not None and ref.get("file") is True
+        ]
 
         # merge the references
-        wrapper.context.used_files.extend(file_ids)
-        wrapper.context.used_documents.extend(document_ids)
+        if file_ids:
+            formatted_file_ids = [
+                str(file_id) for file_id in file_ids if file_id is not None
+            ]
+            wrapper.context.used_files.extend(formatted_file_ids)
+        if document_ids:
+            formatted_document_ids = [
+                str(document_id)
+                for document_id in document_ids
+                if document_id is not None
+            ]
+            wrapper.context.used_documents.extend(formatted_document_ids)
 
         return agent
+
     return on_invoke_handoff
+
 
 def handoff_input_filter(data: HandoffInputData) -> HandoffInputData:
     """
@@ -72,16 +98,16 @@ def handoff_input_filter(data: HandoffInputData) -> HandoffInputData:
     #         "role": "user",
     #         "content": google_references
     #     }
-        
+
     #     # Create a new HandoffInputData with the updated input_history
     #     new_input_history = data.input_history + (new_message,)
     # else:
     #     new_input_history = data.input_history
     #     logger.warning("No google references found")
-    
+
     # Return a new HandoffInputData object with the updated input_history
     return HandoffInputData(
         input_history=data.input_history,
         pre_handoff_items=data.pre_handoff_items,
-        new_items=data.new_items
+        new_items=data.new_items,
     )

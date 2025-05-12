@@ -152,7 +152,7 @@ export default function Login() {
             <Container size="xs" style={{ height: '70vh', display: 'flex', alignItems: 'center' }}>
                 <Paper radius="md" p="xl" withBorder shadow="md" w="100%">
                     <Group align="center" justify="center">
-                        <Image src="/icon.png" alt="Logo" width={60} height={60} />
+                        <Image src="/icon.png" alt="Logo" width={60} height={60} unoptimized />
                         <Text size="xl" fw={500}>Scribe Login</Text>
                     </Group>
                     <Group grow mb="md" mt="md">

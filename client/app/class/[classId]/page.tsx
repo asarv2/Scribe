@@ -1049,10 +1049,8 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                         )}
                     </Card>
 
-                    {/* Modified Learning Outcome 1 card */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                    {/* <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Group justify="space-between" mb="md" align="center" wrap="nowrap">
-                            {/* Left: Exam filter circles */}
                             <Group gap="xs" ml="md">
                                 {examOptions.map((option) => (
                                     <Group key={option.value} gap="xs">
@@ -1087,10 +1085,8 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                                 ))}
                             </Group>
 
-                            {/* Center: Title */}
                             <Text size="lg" fw={500} style={{ textAlign: 'center' }}>Learning Outcome 1</Text>
 
-                            {/* Right: Objective filter dropdown - updated to use chevron */}
                             <Menu position="bottom-end" withArrow>
                                 <Menu.Target>
                                     <Group 
@@ -1154,10 +1150,8 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                         )}
                     </Card>
 
-                    {/* Learning Outcome 2 card - updated with same pattern */}
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
                         <Group justify="space-between" mb="md" align="center" wrap="nowrap">
-                            {/* Left: Exam filter circles */}
                             <Group gap="xs" ml="md">
                                 {examOptions.map((option) => (
                                     <Group key={option.value} gap="xs" style={{ cursor: 'pointer'}}>
@@ -1192,10 +1186,8 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                                 ))}
                             </Group>
 
-                            {/* Center: Title */}
                             <Text size="lg" fw={500} style={{ textAlign: 'center' }}>Learning Outcome 2</Text>
 
-                            {/* Right: Objective filter dropdown - updated to use chevron */}
                             <Menu position="bottom-end" withArrow>
                                 <Menu.Target>
                                     <Group 
@@ -1257,7 +1249,7 @@ export default function Class({ params }: { params: Promise<{ classId: string }>
                         ) : (
                             <Skeleton height={300} radius="md" />
                         )}
-                    </Card>
+                    </Card> */}
                 </SimpleGrid>
             </Container>
         </ClassLayout>

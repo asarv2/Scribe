@@ -8,7 +8,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { getFigureUrl, getFigureDownloadUrl } from "@/utils/services/images";
 import { Card, Text, ActionIcon, Box, Group, Loader, Button, Center, Skeleton, Modal, Tooltip, Menu } from '@mantine/core';
-import { IconDownload, IconRefresh, IconFile, IconFileTypography, IconFileTypePdf, IconChevronLeft, IconChevronRight, IconMaximize } from '@tabler/icons-react';
+import { IconDownload, IconRefresh, IconFile, IconFileTypography, IconFileTypePdf, IconChevronLeft, IconChevronRight, IconMaximize, IconFiles, IconFileStack } from '@tabler/icons-react';
 import Image from "next/image";
 import { notifications } from '@mantine/notifications';
 import { Document, Figure, ViewerMode } from '../../types';
@@ -42,6 +42,8 @@ export default function FigureViewer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [downloadAll, setDownloadAll] = useState(false);
+  const [combined, setCombined] = useState(false);
 
   // Get valid figures (without errors)
   const validFigures = useMemo(() => {
@@ -117,97 +119,106 @@ export default function FigureViewer({
     setTouchStartX(null);
   };
 
-  const handleDownload = (format: 'png' | 'pdf' | 'latex', downloadAll: boolean = false) => {
+  const handleDownload = (format: 'png' | 'pdf' | 'latex') => {
     setDownloadFormat(format);
     setDownloadLoading(true);
-
-    // If downloadAll is true or we have multiple figures, download all figures
-    const figureIds = downloadAll ?
-      validFigures.map(fig => fig.id) :
-      [validFigures[currentIndex].id];
-
-    const downloadUrl = getFigureDownloadUrl(chatId, figureIds, format);
+  
+    const ids = downloadAll
+        ? validFigures.map(f => f.id)
+        : [validFigures[currentIndex].id];
+  
+    // decide zip flag - use zip for multiple figures when downloading all and not combined
+    const zip = downloadAll && validFigures.length > 1 && !combined;
+  
+    const downloadUrl = getFigureDownloadUrl(chatId, ids, format, zip);
     console.log(`Downloading from URL: ${downloadUrl}`);
-    console.log(`Format: ${format}, Download All: ${downloadAll}, Figure IDs: ${figureIds.join(', ')}`);
+    console.log(`Format: ${format}, Download All: ${downloadAll}, Combined: ${combined}, Figure IDs: ${ids.join(', ')}`);
 
     fetch(downloadUrl, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true'
-      }
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-        }
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+            }
 
-        // Get filename from Content-Disposition header if available
-        const contentDisposition = response.headers.get('Content-Disposition');
-        const contentType = response.headers.get('Content-Type');
-        console.log(`Content-Type: ${contentType}`);
-        console.log(`Content-Disposition: ${contentDisposition}`);
-        
-        let filename = `figure.${format === 'latex' ? 'tex' : format}`;
-        if (downloadAll && format === 'png') {
-          filename = 'figures.zip';  // Ensure zip extension for multiple PNGs
-        }
+            // Get filename from Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const contentType = response.headers.get('Content-Type');
+            console.log(`Content-Type: ${contentType}`);
+            console.log(`Content-Disposition: ${contentDisposition}`);
+            
+            let filename = (() => {
+                if (zip) return `figures-${chatId}.zip`;
+                if (downloadAll && !zip) return `combined-figures-${chatId}.${format === 'latex' ? 'tex' : format}`;
+                if (format === 'latex') return `figure-${validFigures[currentIndex].id}.tex`;
+                return `figure-${validFigures[currentIndex].id}.${format}`;
+            })();
 
-        if (contentDisposition) {
-          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-          if (filenameMatch && filenameMatch[1]) {
-            filename = filenameMatch[1].replace(/['"]/g, '');
-            console.log(`Extracted filename: ${filename}`);
-          }
-        }
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                    console.log(`Extracted filename: ${filename}`);
+                }
+            }
 
-        return response.blob().then(blob => {
-          console.log(`Blob type: ${blob.type}, size: ${blob.size} bytes`);
-          return { blob, filename };
+            return response.blob().then(blob => {
+                console.log(`Blob type: ${blob.type}, size: ${blob.size} bytes`);
+                return { blob, filename };
+            });
+        })
+        .then(({ blob, filename }) => {
+            // For zip files, ensure the correct extension
+            if (blob.type === 'application/zip' || 
+                (zip && format === 'png') || 
+                filename.endsWith('.zip')) {
+                if (!filename.endsWith('.zip')) {
+                    filename = `${filename}.zip`;
+                }
+            }
+            
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a hidden anchor element
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.download = filename;
+            console.log(`Downloading as: ${filename}`);
+
+            // Append to the document, click it, and remove it
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+
+            let message = `${format.toUpperCase()}`;
+            if (downloadAll) {
+                message += combined ? ' (combined)' : ' (all figures)';
+            }
+            
+            notifications.show({
+                title: 'Download complete',
+                message: `${message} has been downloaded`,
+                color: 'green',
+            });
+        })
+        .catch(error => {
+            console.error('Download failed:', error);
+            notifications.show({
+                title: 'Download failed',
+                message: `Failed to download the figure: ${error.message}`,
+                color: 'red',
+            });
+        })
+        .finally(() => {
+            setDownloadLoading(false);
+            setDownloadFormat(null);
         });
-      })
-      .then(({ blob, filename }) => {
-        // For zip files, ensure the correct extension
-        if (blob.type === 'application/zip' || 
-            (downloadAll && format === 'png') || 
-            filename.endsWith('.zip')) {
-          if (!filename.endsWith('.zip')) {
-            filename = `${filename}.zip`;
-          }
-        }
-        
-        // Create a URL for the blob
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a hidden anchor element
-        const link = document.createElement('a');
-        link.style.display = 'none';
-        link.href = url;
-        link.download = filename;
-        console.log(`Downloading as: ${filename}`);
-
-        // Append to the document, click it, and remove it
-        document.body.appendChild(link);
-        link.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(link);
-
-        notifications.show({
-          title: 'Download complete',
-          message: `${format.toUpperCase()}${downloadAll ? ' (all figures)' : ''} has been downloaded`,
-          color: 'green',
-        });
-      })
-      .catch(error => {
-        console.error('Download failed:', error);
-        notifications.show({
-          title: 'Download failed',
-          message: `Failed to download the figure: ${error.message}`,
-          color: 'red',
-        });
-      })
-      .finally(() => {
-        setDownloadLoading(false);
-        setDownloadFormat(null);
-      });
   };
 
   const renderContent = () => {
@@ -285,6 +296,7 @@ export default function FigureViewer({
                     }
                   }}
                   priority={false}
+                  unoptimized
                 />
               </Box>
             </Box>
@@ -341,7 +353,7 @@ export default function FigureViewer({
                 <IconChevronRight size={20} />
               </ActionIcon>
             </Group>
-            <Text size="sm" c="dimmed">{figure.title}</Text>
+            {showDownloadMenu && <Text size="sm" c="dimmed">{figure.title}</Text>}
             {figure.generation_status === 'generating' && (
               <Text size="sm" c="blue" fw={500}>Generating...</Text>
             )}
@@ -363,51 +375,45 @@ export default function FigureViewer({
               </Tooltip>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Current Figure</Menu.Label>
+              <Menu.Label>
+                <Group justify="space-between" gap={"xs"}>
+                  Download Options
+                  {validFigures.length > 1 && (
+                    <Group gap={2}>
+                      <Tooltip label={'All'}>
+                        <ActionIcon variant={downloadAll ? "filled" : "subtle"} size="md" onClick={() => setDownloadAll((prev) => !prev)} disabled={downloadLoading}>
+                          <IconFiles size={18} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label={'Combined'}>
+                        <ActionIcon variant={combined ? "filled" : "subtle"} size="md" onClick={() => setCombined((prev) => !prev)} disabled={downloadLoading || !downloadAll}>
+                          <IconFileStack size={18} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                  )}
+                </Group>
+              </Menu.Label>
               <Menu.Item
                 leftSection={<IconFile size={14} />}
-                onClick={() => handleDownload('png', false)}
+                onClick={() => handleDownload('png')}
                 disabled={downloadLoading}
               >
                 {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 'PNG Image'}
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconFileTypePdf size={14} />}
-                onClick={() => handleDownload('pdf', false)}
+                onClick={() => handleDownload('pdf')}
                 disabled={downloadLoading}
               >
                 {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'PDF Document'}
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconFileTypography size={14} />}
-                onClick={() => handleDownload('latex', false)}
+                onClick={() => handleDownload('latex')}
                 disabled={downloadLoading}
               >
                 {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'LaTeX Source'}
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Label>All Figures</Menu.Label>
-              <Menu.Item
-                leftSection={<IconFile size={14} />}
-                onClick={() => handleDownload('png', true)}
-                disabled={downloadLoading}
-              >
-                {downloadLoading && downloadFormat === 'png' ? 'Downloading...' : 
-                 validFigures.length > 1 ? 'PNG Images (ZIP)' : 'PNG Image'}
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconFileTypePdf size={14} />}
-                onClick={() => handleDownload('pdf', true)}
-                disabled={downloadLoading}
-              >
-                {downloadLoading && downloadFormat === 'pdf' ? 'Downloading...' : 'Combined PDF'}
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconFileTypography size={14} />}
-                onClick={() => handleDownload('latex', true)}
-                disabled={downloadLoading}
-              >
-                {downloadLoading && downloadFormat === 'latex' ? 'Downloading...' : 'Combined LaTeX'}
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>}
@@ -416,7 +422,7 @@ export default function FigureViewer({
         /* Header for single figure with title and download button */
         <Group justify="space-between" style={{ position: 'absolute', top: '10px', left: '10px', right: '10px', zIndex: 10, padding: '0 10px' }}>
           <Text size="sm" c="dimmed" p="xs" style={{ borderRadius: '4px' }}>
-            {figure.title}
+            {showDownloadMenu && figure.title}
             {figure.generation_status === 'generating' && (
               <Text span ml="xs" c="blue" fw={500}>Generating...</Text>
             )}

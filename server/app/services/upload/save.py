@@ -1,111 +1,145 @@
 import os
 import logging
-import io
-import json
 import magic
-from typing import Dict, Any, List, Literal
-from datetime import datetime
+from typing import Dict, Any
 from app.extensions import get_google
-from app.services.upload.models import FileExtractChunk
+from app.services.upload.upload_models import FileExtractChunk
 from google.genai.types import UploadFileConfig
+
 logger = logging.getLogger(__name__)
+
 
 class FileSaver:
     def __init__(self, supabase_client):
         self.supabase = supabase_client
         self.google = get_google()
         self.mime = magic.Magic(mime=True)
-    
-    def save_file_metadata(self, file_id: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+
+    def save_file_metadata(
+        self, file_id: str, metadata: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Save file metadata to database
-        
+
         Args:
             file_id: File ID
             metadata: Dictionary with metadata to save
-            
+
         Returns:
             Updated file data
         """
         try:
             # Update file record in database
-            response = self.supabase.table("files").update(metadata).eq("id", file_id).execute()
-            
+            response = (
+                self.supabase.table("files")
+                .update(metadata)
+                .eq("id", file_id)
+                .execute()
+            )
+
             if response.data:
                 logger.info(f"Updated file metadata for {file_id}")
                 return response.data[0]
             else:
                 logger.error(f"Failed to update file metadata for {file_id}")
                 return {}
-                
+
         except Exception as e:
             logger.error(f"Error saving file metadata: {str(e)}")
             return {}
-    
-    def save_document(self, class_id: str, file_id: str, extract_chunk: FileExtractChunk, progress_callback=None) -> str:
+
+    def save_document(
+        self,
+        class_id: str,
+        file_id: str,
+        extract_chunk: FileExtractChunk,
+        progress_callback=None,
+    ) -> str | None:
         """
         Save a document to database and storage
-        
+
         Args:
             class_id: Class ID
             file_id: File ID
             extract_chunk: FileExtractChunk to save
             progress_callback: Optional callback for progress updates
-            
+
         Returns:
             Document ID
         """
         try:
-            logger.info(f"Saving document: type={extract_chunk.type}, has_image={bool(extract_chunk.image_data)}, start_time={extract_chunk.start_time}, end_time={extract_chunk.end_time}")
-            
+            logger.info(
+                f"Saving document: type={extract_chunk.type}, has_image={bool(extract_chunk.image_data)}, start_time={extract_chunk.start_time}, end_time={extract_chunk.end_time}"
+            )
+
             # Check if video/audio chunk paths exist and log details
             if extract_chunk.video_chunk_path:
                 if os.path.exists(extract_chunk.video_chunk_path):
                     size = os.path.getsize(extract_chunk.video_chunk_path)
-                    logger.info(f"Video chunk exists: {extract_chunk.video_chunk_path} ({size} bytes)")
+                    logger.info(
+                        f"Video chunk exists: {extract_chunk.video_chunk_path} ({size} bytes)"
+                    )
                 else:
-                    logger.error(f"Video chunk path does not exist: {extract_chunk.video_chunk_path}")
-                
+                    logger.error(
+                        f"Video chunk path does not exist: {extract_chunk.video_chunk_path}"
+                    )
+
             if extract_chunk.audio_chunk_path:
                 if os.path.exists(extract_chunk.audio_chunk_path):
                     size = os.path.getsize(extract_chunk.audio_chunk_path)
-                    logger.info(f"Audio chunk exists: {extract_chunk.audio_chunk_path} ({size} bytes)")
+                    logger.info(
+                        f"Audio chunk exists: {extract_chunk.audio_chunk_path} ({size} bytes)"
+                    )
                 else:
-                    logger.error(f"Audio chunk path does not exist: {extract_chunk.audio_chunk_path}")
-            
+                    logger.error(
+                        f"Audio chunk path does not exist: {extract_chunk.audio_chunk_path}"
+                    )
+
             # Progress update - starting document save
             if progress_callback:
-                progress_callback(0.0, "processing", f"Saving document metadata for {extract_chunk.type}")
-            
+                progress_callback(
+                    0.0,
+                    "processing",
+                    f"Saving document metadata for {extract_chunk.type}",
+                )
+
             # construct document data, depending on the type of file
-            if extract_chunk.type == 'pdf_page':
+            if extract_chunk.type == "pdf_page":
                 document_data = {
                     "file": file_id,
                     "text": extract_chunk.text,
                     "page": extract_chunk.page,
                     "class": class_id,
-                    "extension": "png"
+                    "extension": "png",
                 }
-            elif extract_chunk.type == 'audio_chunk':
+            elif extract_chunk.type == "audio_chunk":
                 # Ensure start_time and end_time are always included for audio/video
                 document_data = {
                     "file": file_id,
                     "text": extract_chunk.text,
                     "page": extract_chunk.page,
-                    "start_time": extract_chunk.start_time if extract_chunk.start_time is not None else 0,
-                    "end_time": extract_chunk.end_time if extract_chunk.end_time is not None else 0,
+                    "start_time": extract_chunk.start_time
+                    if extract_chunk.start_time is not None
+                    else 0,
+                    "end_time": extract_chunk.end_time
+                    if extract_chunk.end_time is not None
+                    else 0,
                     "class": class_id,
-                    "extension": "wav" # we upload audio chunks as wav, and also save the waveform image as a png
+                    "extension": "wav",  # we upload audio chunks as wav, and also save the waveform image as a png
                 }
-            elif extract_chunk.type == 'video_chunk':
+            elif extract_chunk.type == "video_chunk":
                 document_data = {
                     "file": file_id,
                     "text": extract_chunk.text,
                     "page": extract_chunk.page,
-                    "start_time": extract_chunk.start_time if extract_chunk.start_time is not None else 0,
-                    "end_time": extract_chunk.end_time if extract_chunk.end_time is not None else 0,
+                    "start_time": extract_chunk.start_time
+                    if extract_chunk.start_time is not None
+                    else 0,
+                    "end_time": extract_chunk.end_time
+                    if extract_chunk.end_time is not None
+                    else 0,
                     "class": class_id,
-                    "extension": "mp4" # we upload video chunks as mp4
+                    "extension": "mp4",  # we upload video chunks as mp4
                 }
             else:
                 document_data = {
@@ -113,236 +147,298 @@ class FileSaver:
                     "text": extract_chunk.text,
                     "page": extract_chunk.page,
                     "class": class_id,
-                    "extension": "txt"
+                    "extension": "txt",
                 }
-            
+
             # Progress update - metadata prepared
             if progress_callback:
-                progress_callback(20.0, "processing", f"Saving document record to database")
-            
+                progress_callback(
+                    20.0, "processing", "Saving document record to database"
+                )
+
             # Insert document record
-            logger.info(f"Inserting document record for file {file_id}: {document_data}")
+            logger.info(
+                f"Inserting document record for file {file_id}: {document_data}"
+            )
             response = self.supabase.table("documents").insert(document_data).execute()
-            
+
             if not response.data:
                 logger.error(f"Failed to create document record: {response}")
                 if progress_callback:
                     progress_callback(0.0, "error", "Failed to create document record")
                 return None
-            
+
             document_id = response.data[0]["id"]
             logger.info(f"Document record created: {document_id}")
-            
+
             # Progress update - document record created
             if progress_callback:
-                progress_callback(40.0, "processing", f"Document record created, uploading assets")
-            
+                progress_callback(
+                    40.0, "processing", "Document record created, uploading assets"
+                )
+
             # Upload image if provided
             if extract_chunk.image_data:
                 storage_path = f"{class_id}/{file_id}/{document_id}.png"
-                logger.info(f"Uploading image ({len(extract_chunk.image_data)} bytes) to {storage_path}")
-                
+                logger.info(
+                    f"Uploading image ({len(extract_chunk.image_data)} bytes) to {storage_path}"
+                )
+
                 try:
                     upload_result = self.supabase.storage.from_("files").upload(
                         path=storage_path,
                         file=extract_chunk.image_data,
-                        file_options={"content-type": "image/png"}
+                        file_options={"content-type": "image/png"},
                     )
                     logger.info(f"Image upload successful: {upload_result}")
-                    
+
                     # Progress update - image uploaded
                     if progress_callback:
-                        progress_callback(60.0, "processing", f"Image uploaded successfully")
+                        progress_callback(
+                            60.0, "processing", "Image uploaded successfully"
+                        )
                 except Exception as upload_error:
                     logger.error(f"Image upload failed: {str(upload_error)}")
                     if progress_callback:
-                        progress_callback(40.0, "warning", f"Image upload failed: {str(upload_error)}")
+                        progress_callback(
+                            40.0, "warning", f"Image upload failed: {str(upload_error)}"
+                        )
             else:
                 logger.warning(f"No image provided for document {document_id}")
                 if progress_callback:
-                    progress_callback(60.0, "processing", f"No image to upload, continuing")
-            
+                    progress_callback(
+                        60.0, "processing", "No image to upload, continuing"
+                    )
+
             # Upload video chunk if provided
-            if extract_chunk.video_chunk_path and os.path.exists(extract_chunk.video_chunk_path):
+            if extract_chunk.video_chunk_path and os.path.exists(
+                extract_chunk.video_chunk_path
+            ):
                 storage_path = f"{class_id}/{file_id}/{document_id}.mp4"
-                logger.info(f"Uploading video chunk from {extract_chunk.video_chunk_path} to {storage_path}")
-                
+                logger.info(
+                    f"Uploading video chunk from {extract_chunk.video_chunk_path} to {storage_path}"
+                )
+
                 try:
                     # Read the file into memory first to avoid file access issues
-                    with open(extract_chunk.video_chunk_path, 'rb') as f:
+                    with open(extract_chunk.video_chunk_path, "rb") as f:
                         video_data = f.read()
-                        
+
                     # Check if we have valid data
                     if len(video_data) > 0:
                         # Progress update - reading video data
                         if progress_callback:
-                            progress_callback(70.0, "processing", f"Uploading video chunk ({len(video_data)/(1024*1024):.2f} MB)")
-                        
+                            progress_callback(
+                                70.0,
+                                "processing",
+                                f"Uploading video chunk ({len(video_data) / (1024 * 1024):.2f} MB)",
+                            )
+
                         upload_result = self.supabase.storage.from_("files").upload(
                             path=storage_path,
                             file=video_data,
-                            file_options={"content-type": "video/mp4"}
+                            file_options={"content-type": "video/mp4"},
                         )
                         logger.info(f"Video chunk upload successful: {upload_result}")
-                        
+
                         # Progress update - video uploaded
                         if progress_callback:
-                            progress_callback(80.0, "processing", f"Video chunk uploaded successfully")
+                            progress_callback(
+                                80.0, "processing", "Video chunk uploaded successfully"
+                            )
                     else:
-                        logger.error(f"Video chunk file is empty: {extract_chunk.video_chunk_path}")
+                        logger.error(
+                            f"Video chunk file is empty: {extract_chunk.video_chunk_path}"
+                        )
                         if progress_callback:
-                            progress_callback(70.0, "warning", f"Video chunk file is empty")
+                            progress_callback(
+                                70.0, "warning", "Video chunk file is empty"
+                            )
                 except Exception as upload_error:
                     logger.error(f"Video chunk upload failed: {str(upload_error)}")
                     if progress_callback:
-                        progress_callback(70.0, "warning", f"Video upload failed: {str(upload_error)}")
+                        progress_callback(
+                            70.0, "warning", f"Video upload failed: {str(upload_error)}"
+                        )
             else:
-                logger.warning(f"No video chunk provided for document {document_id} or path: {extract_chunk.video_chunk_path} doesn't exist")
+                logger.warning(
+                    f"No video chunk provided for document {document_id} or path: {extract_chunk.video_chunk_path} doesn't exist"
+                )
                 if progress_callback:
-                    progress_callback(80.0, "processing", f"No video chunk to upload, continuing")
-            
+                    progress_callback(
+                        80.0, "processing", "No video chunk to upload, continuing"
+                    )
+
             # Upload audio chunk if provided
-            if extract_chunk.audio_chunk_path and os.path.exists(extract_chunk.audio_chunk_path):
+            if extract_chunk.audio_chunk_path and os.path.exists(
+                extract_chunk.audio_chunk_path
+            ):
                 storage_path = f"{class_id}/{file_id}/{document_id}.wav"
-                logger.info(f"Uploading audio chunk from {extract_chunk.audio_chunk_path} to {storage_path}")
-                
+                logger.info(
+                    f"Uploading audio chunk from {extract_chunk.audio_chunk_path} to {storage_path}"
+                )
+
                 try:
                     # Read the file into memory first to avoid file access issues
-                    with open(extract_chunk.audio_chunk_path, 'rb') as f:
+                    with open(extract_chunk.audio_chunk_path, "rb") as f:
                         audio_data = f.read()
-                    
+
                     # Check if we have valid data
                     if len(audio_data) > 0:
                         # Progress update - reading audio data
                         if progress_callback:
-                            progress_callback(90.0, "processing", f"Uploading audio chunk ({len(audio_data)/(1024*1024):.2f} MB)")
-                        
+                            progress_callback(
+                                90.0,
+                                "processing",
+                                f"Uploading audio chunk ({len(audio_data) / (1024 * 1024):.2f} MB)",
+                            )
+
                         upload_result = self.supabase.storage.from_("files").upload(
                             path=storage_path,
                             file=audio_data,
-                            file_options={"content-type": "audio/wav"}
+                            file_options={"content-type": "audio/wav"},
                         )
                         logger.info(f"Audio chunk upload successful: {upload_result}")
-                        
+
                         # Progress update - audio uploaded
                         if progress_callback:
-                            progress_callback(95.0, "processing", f"Audio chunk uploaded successfully")
+                            progress_callback(
+                                95.0, "processing", "Audio chunk uploaded successfully"
+                            )
                     else:
-                        logger.error(f"Audio chunk file is empty: {extract_chunk.audio_chunk_path}")
+                        logger.error(
+                            f"Audio chunk file is empty: {extract_chunk.audio_chunk_path}"
+                        )
                         if progress_callback:
-                            progress_callback(90.0, "warning", f"Audio chunk file is empty")
+                            progress_callback(
+                                90.0, "warning", "Audio chunk file is empty"
+                            )
                 except Exception as upload_error:
                     logger.error(f"Audio chunk upload failed: {str(upload_error)}")
                     if progress_callback:
-                        progress_callback(90.0, "warning", f"Audio upload failed: {str(upload_error)}")
+                        progress_callback(
+                            90.0, "warning", f"Audio upload failed: {str(upload_error)}"
+                        )
             else:
-                logger.warning(f"No audio chunk provided for document {document_id} or path: {extract_chunk.audio_chunk_path} doesn't exist")
+                logger.warning(
+                    f"No audio chunk provided for document {document_id} or path: {extract_chunk.audio_chunk_path} doesn't exist"
+                )
                 if progress_callback:
-                    progress_callback(95.0, "processing", f"No audio chunk to upload, continuing")
-            
+                    progress_callback(
+                        95.0, "processing", "No audio chunk to upload, continuing"
+                    )
+
             # Final progress update
             if progress_callback:
-                progress_callback(100.0, "complete", f"Document saved successfully")
-            
+                progress_callback(100.0, "complete", "Document saved successfully")
+
             logger.info(f"Document saved successfully: {document_id}")
             return document_id
-            
+
         except Exception as e:
             logger.error(f"Error saving document: {str(e)}")
             if progress_callback:
                 progress_callback(0.0, "error", f"Error saving document: {str(e)}")
             return None
-    
-    def save_file_to_gemini(self, file_id: str, file_path: str) -> str:
+
+    def save_file_to_gemini(self, file_id: str, file_path: str) -> str | None:
         """
         Upload a file to Gemini API
-        
+
         Args:
             file_id: File ID
             file_path: Path to the file
-            
+
         Returns:
             Gemini file ID or None if failed
         """
         try:
             # Detect MIME type if not provided
             mime_type = self.mime.from_file(file_path)
-            
+
             logger.info(f"Uploading to Gemini: {file_path} ({mime_type})")
-            
+
             # Upload file to Gemini
-            with open(file_path, 'rb') as f:
-                media_file = self.google.files.upload(file=f, config=UploadFileConfig(mime_type=mime_type))
-            
+            with open(file_path, "rb") as f:
+                media_file = self.google.files.upload(
+                    file=f, config=UploadFileConfig(mime_type=mime_type)
+                )
+
             # Extract file ID from response
             google_file_id = media_file.name
-            
+
             # saving in the google table
-            self.supabase.table("google").insert({
-                "file": file_id,
-                "google_id": google_file_id,
-            }).execute()
-            
+            self.supabase.table("google").insert(
+                {
+                    "file": file_id,
+                    "google_id": google_file_id,
+                }
+            ).execute()
+            return google_file_id
         except Exception as e:
             logger.error(f"Error uploading to Gemini: {str(e)}")
             return None
-        
-    def save_file_to_supabase(self, class_id: str, file_id: str, file_path: str) -> str:
+
+    def save_file_to_supabase(
+        self, class_id: str, file_id: str, file_path: str
+    ) -> str | None:
         """
         Save a file to Supabase storage using S3 protocol
-        
+
         Args:
             class_id: Class ID
             file_id: File ID
             file_path: Path to the file
             file_type: Type of file (pdf, audio, video, image, other)
-            
+
         Returns:
             Storage path if successful, None if failed
         """
         try:
             # Detect MIME type if not provided
             mime_type = self.mime.from_file(file_path)
-            
+
             # Get file extension from path
             _, file_extension = os.path.splitext(file_path)
-            
+
             # For text files, ensure we use .txt extension
-            if mime_type == 'text/plain' and file_extension.lower() != '.txt':
-                file_extension = '.txt'
-            
+            if mime_type == "text/plain" and file_extension.lower() != ".txt":
+                file_extension = ".txt"
+
             # Create storage path
             storage_path = f"{class_id}/{file_id}{file_extension}"
-            logger.info(f"Uploading file to Supabase storage: {storage_path} ({mime_type})")
-            
+            logger.info(
+                f"Uploading file to Supabase storage: {storage_path} ({mime_type})"
+            )
+
             # Get file size to determine upload method
             file_size = os.path.getsize(file_path)
-            
+
             # For smaller files (< 100MB), use standard upload
             if file_size < 100 * 1024 * 1024:  # 100MB threshold
-                with open(file_path, 'rb') as f:
+                with open(file_path, "rb") as f:
                     upload_result = self.supabase.storage.from_("files").upload(
                         path=storage_path,
                         file=f,
-                        file_options={"content-type": mime_type}
+                        file_options={"content-type": mime_type},
                     )
                 logger.info(f"Standard upload successful: {upload_result}")
             else:
                 # For larger files, use the multipart upload via the storage API
                 # The Supabase client handles multipart uploads automatically for large files
-                with open(file_path, 'rb') as f:
+                with open(file_path, "rb") as f:
                     upload_result = self.supabase.storage.from_("files").upload(
                         path=storage_path,
                         file=f,
                         file_options={
                             "content-type": mime_type,
-                            "x-upsert": "true"  # Overwrite if exists
-                        }
+                            "x-upsert": "true",  # Overwrite if exists
+                        },
                     )
                 logger.info(f"Multipart upload successful: {upload_result}")
-            
+
             return storage_path
-            
+
         except Exception as e:
             logger.error(f"Error uploading file to Supabase storage: {str(e)}")
             return None

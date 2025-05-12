@@ -60,6 +60,7 @@ export default function HowItWorks() {
                             style={{ objectFit: 'cover' }}
                             className={styles.stepImage}
                             priority
+                            unoptimized
                         />
                     </div>
                 </Card.Section>

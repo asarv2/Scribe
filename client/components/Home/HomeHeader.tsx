@@ -62,6 +62,7 @@ export function HomeHeader() {
                         height={20}
                         style={{ marginTop: '4px' }}
                         className={classes['logo-light']}
+                        unoptimized
                     />
                     <Image
                         src={"/images/logo-dark.png"}
@@ -71,6 +72,7 @@ export function HomeHeader() {
                         height={20}
                         style={{ marginTop: '4px' }}
                         className={classes['logo-dark']}
+                        unoptimized
                     />
                 </Link>
             </Group>

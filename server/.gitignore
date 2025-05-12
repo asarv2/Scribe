@@ -3,8 +3,16 @@ app/env
 uploads
 classes
 cache
+.venv
 
-# Byte‑compiled / optimized / DLL files
+.coverage
+coverage.xml
+
+.pytest_cache
+.ruff_cache
+.mypy_cache
+
+# Byte-compiled / optimized / DLL files
 __pycache__/
 **/__pycache__/
 

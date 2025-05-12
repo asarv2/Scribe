@@ -549,15 +549,12 @@ export const MessageList = memo(({
   // Add this new function to handle bug reports
   const handleBugReport = async (message: Message) => {
     try {
-      const classInfo = existingChat ? `class (${classId}): ${classData?.title || 'Unknown'}` : `class (${classId}): Unknown`;
-      const chatInfo = existingChat ? `chat (${chatId}): ${existingChat.name || 'Unknown'}` : `chat (${chatId}): New chat`;
-      const messageInfo = `message (${message.id})`;
-      const errorInfo = `error: ${message.generation_error || 'Unknown error'}`;
-
-      const bugReport = `BUG REPORT:\n${classInfo}\n${chatInfo}\n${messageInfo}\n${errorInfo}`;
-
-      // Call the submitFeedback function with empty likes/wishlist and the bug report as dislikes
-      await submitFeedback('', bugReport, '');
+      if (existingChat && classData) {
+        // Call the submitFeedback function with empty likes/wishlist and the bug report as dislikes
+        await submitFeedback(`BUG REPORT: ${classData.title}`, message.generation_error, existingChat.name);
+      } else {
+        throw new Error("No existing chat or class data found");
+      }
 
       // Show success notification
       notifications.show({

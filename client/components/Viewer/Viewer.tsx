@@ -152,6 +152,7 @@ export default function Viewer({
                                             blurDataURL="/placeholder_image.svg"
                                             onClick={() => setIsImageModalOpen(true)}
                                             priority
+                                            unoptimized
                                         />
 
                                         {showNavigation && (
@@ -261,6 +262,7 @@ export default function Viewer({
                                                         outlineOffset: '-2px',
                                                     }}
                                                     sizes="100vw"
+                                                    unoptimized
                                                 />
                                             </Box>
                                         ))}
@@ -327,6 +329,7 @@ export default function Viewer({
                             objectFit: "contain"
                         }}
                         sizes="100vw"
+                        unoptimized
                     />
                 </Box>
             </Modal>

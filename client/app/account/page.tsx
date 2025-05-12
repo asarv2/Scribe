@@ -48,9 +48,10 @@ import { createCode, deleteCode } from "@/utils/services/code";
 import { getUser } from "@/utils/queries/get-user";
 import { getProfile } from "@/utils/queries/get-profile";
 import { ClassLayout } from "@/components/Class/ClassLayout";
-import { updateClassPrivacy } from "@/utils/services/class";
+import { updateClassPrivacy, updateProfileClasses } from "@/utils/services/class";
 import Management from "@/components/Account/Management";
 import avatarStyles from '@/components/Account/Avatar.module.css';
+import LeaveClassModal from "@/components/Delete/LeaveClassModal";
 
 export default function AccountPage() {
     const openRef = useRef<() => void>(null);
@@ -66,6 +67,8 @@ export default function AccountPage() {
 
     const [deleteModalOpened, setDeleteModalOpened] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const [leaveClassLoading, setLeaveClassLoading] = useState<string | null>(null);
 
     const { data: user, isLoading: loadingUser } = useQuery({
         queryKey: ["user"],
@@ -224,6 +227,31 @@ export default function AccountPage() {
         }
     };
 
+    const handleLeaveClass = async (classId: string) => {
+        setLeaveClassLoading(classId);
+        try {   
+            const { success, error } = await updateProfileClasses(user!.id, profile!.classes.filter((id) => id !== classId));
+            if (!success) {
+                throw new Error(error);
+            }
+            queryClient.invalidateQueries({ queryKey: ["classes"] });
+            queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
+            notifications.show({
+                title: 'Success',
+                message: 'You have left the class successfully',
+                color: 'green'
+            });
+        } catch (error: any) {
+            notifications.show({
+                title: 'Error',
+                message: error.message,
+                color: 'red'
+            });
+        } finally {
+            setLeaveClassLoading(null);
+        }
+    };
+
     return (
         <ClassLayout classId={null} showClasses={false}>
             <Container fluid style={{ marginTop: "30px" }}>
@@ -321,6 +349,53 @@ export default function AccountPage() {
                                         </>
                                     )}
                                 </Box>
+                            </Card>
+                        </div>
+
+                        {/* Classes Section */}
+                        <div>
+                            <Text size="lg" fw={500} mb="md">Classes</Text>
+                            <Card withBorder shadow="sm" radius="md" p="xl">
+                                {classesLoading ? (
+                                    <Stack gap="md">
+                                        <Skeleton height={30} />
+                                        <Skeleton height={30} />
+                                        <Skeleton height={30} />
+                                    </Stack>
+                                ) : (
+                                    <Stack gap="md">
+                                        {profile?.admin ? (
+                                            // Admin sees all classes, no option to leave
+                                            classes && classes.length > 0 ? (
+                                                classes.map((classData) => (
+                                                    <Group key={classData.id} justify="space-between">
+                                                        <Text>{classData.title}</Text>
+                                                    </Group>
+                                                ))
+                                            ) : (
+                                                <Text c="dimmed" fs="italic">No classes available</Text>
+                                            )
+                                        ) : (
+                                            // Regular users see only their enrolled classes
+                                            profile?.classes && profile.classes.length > 0 ? (
+                                                profile.classes.map((classId) => {
+                                                    const classData = classes?.find((c) => c.id === classId);
+                                                    return classData ? (
+                                                        <Group key={classId} justify="space-between">
+                                                            <Text>{classData.title}</Text>
+                                                            <LeaveClassModal 
+                                                                classId={classId} 
+                                                                className={classData.title ?? ""} 
+                                                            />
+                                                        </Group>
+                                                    ) : null;
+                                                })
+                                            ) : (
+                                                <Text c="dimmed" fs="italic">You are not enrolled in any classes</Text>
+                                            )
+                                        )}
+                                    </Stack>
+                                )}
                             </Card>
                         </div>
 

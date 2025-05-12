@@ -221,7 +221,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                     classId,
                     activeChat.title,
                     profileId,
-                    activeChat.teacher,
+                    activeChat.teacher
                 );
                 newChatId = chat.id;
             }
@@ -261,12 +261,12 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
             });
 
             // Reset states
-            setActiveChat({
-                ...activeChat,
+            setActiveChat(prev => ({
+                ...prev,
                 prompt: "",
                 files: [],
                 documents: []
-            });
+            }));
 
             router.push(`/class/${classId}/chat/${newChatId}`);
         } finally {
@@ -344,22 +344,29 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
 
     const [menuOpened, setMenuOpened] = useState(false);
 
-    // Initialize agent type from the latest message's end_agent if available
+    // ... existing code ...
+
     useEffect(() => {
         if (messages && messages.length > 0 && existingChat) {
             // Sort messages by created_at in descending order to get the latest one
-            const sortedMessages = [...messages].sort((a, b) => 
+            const sortedMessages = [...messages].sort((a, b) =>
                 new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
             );
-            
+
             // Get the latest message
             const latestMessage = sortedMessages[0];
-            
+
             // If the latest message has an end_agent, use it to set the agent type
             if (latestMessage.end_agent) {
                 setActiveChat(prev => ({
                     ...prev,
                     agentType: latestMessage.end_agent
+                }));
+            } else if (latestMessage.start_agent) {
+                // If end_agent isn't available yet but start_agent is, use that
+                setActiveChat(prev => ({
+                    ...prev,
+                    agentType: latestMessage.start_agent
                 }));
             }
         }
@@ -371,7 +378,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
             >
                 <Grid.Col
                     // Adjust span: use 'auto' when context is closed on desktop
-                    span={isMobile ? 12 : viewerMode.open ? 9 : 'auto'} 
+                    span={isMobile ? 12 : viewerMode.open ? 9 : 'auto'}
                     style={{
                         transition: 'all 300ms ease-in-out',
                         position: 'relative',
@@ -394,8 +401,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                         bg="transparent"
                     >
                         {/* Header Flex */}
-                        <Flex justify="space-between" align="center" h={46} p="xs" style={{ 
-                            flexShrink: 0, 
+                        <Flex justify="space-between" align="center" h={46} p="xs" style={{
+                            flexShrink: 0,
                             // Removed borderBottom style
                         }}>
                             {isInitializing ? (
@@ -420,8 +427,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                             trigger="click-hover"
                                         >
                                             <Menu.Target>
-                                                <Box 
-                                                    style={{ 
+                                                <Box
+                                                    style={{
                                                         cursor: 'pointer',
                                                         opacity: menuOpened ? 0.8 : 1,
                                                         transition: 'opacity 150ms ease',
@@ -463,7 +470,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                                             activeChat.title
                                                         )}
                                                     </Text>
-                                                    <IconChevronDown size={18} style={{ marginTop: '2px'}} />
+                                                    <IconChevronDown size={18} style={{ marginTop: '2px' }} />
                                                 </Box>
                                             </Menu.Target>
 
@@ -536,7 +543,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                             loading={loading}
                         />
 
-                        <Box p="xs" style={{ 
+                        <Box p="xs" style={{
                             flexShrink: 0,
                             // Removed borderTop style
                         }}> {/* Added borderTop for better visual separation */}
@@ -553,9 +560,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                                 onRemoveDocument={removeDocumentFromChat}
                                 setViewerMode={setViewerMode}
                                 files={files}
-                                fileDocuments={fileDocuments}
-                                onAddFileContext={addFileToChat}
-                                onAddDocumentContext={addDocumentToChat}
+                                messages={messages}
                             />
                         </Box>
 
@@ -564,7 +569,7 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                 </Grid.Col>
                 <Grid.Col
                     // Fixed width column with right alignment
-                    span={isMobile ? 12 : viewerMode.open ? 3 : 0} 
+                    span={isMobile ? 12 : viewerMode.open ? 3 : 0}
                     style={{
                         transition: 'width 300ms ease-in-out',
                         padding: 0,
@@ -613,8 +618,8 @@ export default function ChatCanvas({ classId, chatId, chatTitleUpdated }: { clas
                     </Box> */}
 
                     {/* Content Area Box */}
-                    <Box style={{ 
-                        flex: 1, 
+                    <Box style={{
+                        flex: 1,
                         overflow: 'hidden',
                         width: '100%',
                         visibility: viewerMode.open ? 'visible' : 'hidden', // Hide content when closed
