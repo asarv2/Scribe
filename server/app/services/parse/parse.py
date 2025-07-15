@@ -61,7 +61,7 @@ class FileParser:
             name="Parse Syllabus Agent",
             instructions=self.parse_syllabus_system_prompt,
             model=OpenAIChatCompletionsModel(
-                model="gemini-2.5-flash-preview-04-17",
+                model="gemini-2.5-flash",
                 openai_client=gemini_client,
             ),
             model_settings=ModelSettings(

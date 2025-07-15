@@ -45,7 +45,7 @@ class GradeAgent:
                 name="Grade Agent",
                 instructions=self.system_prompt,
                 model=OpenAIChatCompletionsModel(
-                    model="gemini-2.5-flash-preview-04-17",
+                    model="gemini-2.5-flash",
                     openai_client=self.gemini_client,
                 ),
                 model_settings=ModelSettings(
