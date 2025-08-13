@@ -32,8 +32,6 @@ services:
       - FFMPEG_TIMEOUT=180
       - TRANSCRIPTION_TIMEOUT=600
       - CUDA_MEMORY_FRACTION=0.8
-    env_file:
-      - ./.env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 10s
@@ -58,8 +56,6 @@ services:
     shm_size: '8gb'
     environment:
       - PYTHONUNBUFFERED=1
-    env_file:
-      - ./.env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 10s
