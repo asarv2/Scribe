@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  scribe:
+    image: ghcr.io/ashokhomepc/scribe:prod
+    container_name: scribe
+    restart: unless-stopped
+    # No ports exposed - only accessible through nginx
+    deploy:
+      resources:
+        limits:
+          memory: 48GB
+        reservations:
+          memory: 32GB
+          devices:
+            - driver: nvidia
+              capabilities: [gpu, compute, video, utility]
+              device_ids: ["0", "1"]
+    volumes:
+      - ./uploads:/app/uploads
+      - ./model_cache:/app/model_cache
+      - ./gpu_lock:/var/run
+      - ./core:/tmp/core
+    shm_size: '32gb'
+    tmpfs:
+      - /tmp:size=16G,exec
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NVIDIA_VISIBLE_DEVICES=0,1
+      - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
+      - PYTHONFAULTHANDLER=1
+      - FFMPEG_TIMEOUT=180
+      - TRANSCRIPTION_TIMEOUT=600
+      - CUDA_MEMORY_FRACTION=0.8
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    runtime: nvidia
+    ulimits:
+      core:
+        soft: -1
+        hard: -1
+
+  scribe-dev:
+    image: ghcr.io/ashokhomepc/scribe:main
+    container_name: scribe-dev
+    restart: unless-stopped
+    # No ports exposed - only accessible through nginx
+    volumes:
+      - ./uploads:/app/uploads
+      - ./model_cache:/app/model_cache
+      - ./gpu_lock:/var/run
+    shm_size: '8gb'
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "5000:80"  # Changed from 443:80 to avoid conflict with Traefik
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - scribe
+      - scribe-dev
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    restart: unless-stopped
+    ports:
+      - "4040:4040"  # Ngrok web interface
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command:
+      - "http"
+      - "--log=stdout"
+      - "nginx:80"  # This is correct - nginx exposes port 80 internally
+    depends_on:
+      - nginx
