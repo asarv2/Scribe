@@ -111,10 +111,10 @@ jobs:
           # Start the specific service and nginx (skip pulling other images)
           docker compose up -d --no-deps $SERVICE nginx
           
-          # Keep ngrok running unless it's down
+          # Keep ngrok running unless it's down (avoid starting dependencies like scribe-dev)
           if ! docker compose ps ngrok | grep -q "Up"; then
             echo "Starting ngrok service"
-            docker compose up -d ngrok
+            docker compose up -d --no-deps ngrok
           else
             echo "Ngrok is already running, keeping it up"
           fi
