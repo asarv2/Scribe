@@ -89,17 +89,27 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          # Pull latest images
-          docker compose pull
-          
-          # Only restart the specific service based on branch
+          # Determine which tag to use based on branch
           if [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
+            TAG="prod"
+            SERVICE="scribe"
             echo "Deploying to production (scribe service)"
-            docker compose up -d scribe nginx
           else
+            TAG="main"
+            SERVICE="scribe-dev"
             echo "Deploying to development (scribe-dev service)"
-            docker compose up -d scribe-dev nginx
           fi
+          
+          # Pull the specific image for this deployment
+          echo "Pulling image: ghcr.io/ashokhomepc/scribe:$TAG"
+          docker pull ghcr.io/ashokhomepc/scribe:$TAG || {
+            echo "Error: Image ghcr.io/ashokhomepc/scribe:$TAG not found"
+            echo "Make sure the build job completed successfully"
+            exit 1
+          }
+          
+          # Start the specific service and nginx
+          docker compose up -d $SERVICE nginx
           
           # Keep ngrok running unless it's down
           if ! docker compose ps ngrok | grep -q "Up"; then
