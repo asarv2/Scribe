@@ -1,4 +1,3 @@
-.env
 app/env
 uploads
 classes
@@ -18,3 +17,4 @@ __pycache__/
 
 # Compiled Python files
 *.py[cod]
+.env
