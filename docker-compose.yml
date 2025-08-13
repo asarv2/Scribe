@@ -15,10 +15,10 @@ services:
               capabilities: [gpu, compute, video, utility]
               device_ids: ["0", "1"]
     volumes:
-      - ./uploads:/app/uploads
-      - ./model_cache:/app/model_cache
-      - ./gpu_lock:/var/run
-      - ./core:/tmp/core
+      - ../../../scribe_data/uploads:/app/uploads
+      - ../../../scribe_data/model_cache:/app/model_cache
+      - ../../../scribe_data/gpu_lock:/var/run
+      - ../../../scribe_data/core:/tmp/core
     shm_size: '32gb'
     tmpfs:
       - /tmp:size=16G,exec
@@ -48,9 +48,9 @@ services:
     restart: unless-stopped
     # No ports exposed - only accessible through nginx
     volumes:
-      - ./uploads:/app/uploads
-      - ./model_cache:/app/model_cache
-      - ./gpu_lock:/var/run
+      - ../../../scribe_data/uploads:/app/uploads
+      - ../../../scribe_data/model_cache:/app/model_cache
+      - ../../../scribe_data/gpu_lock:/var/run
     shm_size: '8gb'
     environment:
       - PYTHONUNBUFFERED=1
