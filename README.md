@@ -1,3 +1,1 @@
 Scribe AI Repo
-
-Hello
