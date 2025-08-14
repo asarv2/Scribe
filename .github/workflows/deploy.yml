@@ -100,6 +100,33 @@ jobs:
             echo "Deploying to development (scribe-dev service)"
           fi
           
+          # Verify environment variables are set (without exposing values)
+          echo "Checking environment variables..."
+          if [[ -z "$SUPABASE_SCHEMA" ]]; then echo "WARNING: SUPABASE_SCHEMA is not set"; fi
+          if [[ -z "$SUPABASE_PRIVATE_KEY" ]]; then echo "WARNING: SUPABASE_PRIVATE_KEY is not set"; fi
+          if [[ -z "$SUPABASE_URL" ]]; then echo "WARNING: SUPABASE_URL is not set"; fi
+          if [[ -z "$OPENAI_API_KEY" ]]; then echo "WARNING: OPENAI_API_KEY is not set"; fi
+          if [[ -z "$GOOGLE_API_KEY" ]]; then echo "WARNING: GOOGLE_API_KEY is not set"; fi
+          if [[ -z "$NGROK_AUTHTOKEN" ]]; then echo "WARNING: NGROK_AUTHTOKEN is not set"; fi
+          
+          # Export environment variables for docker compose
+          export SUPABASE_SCHEMA="$SUPABASE_SCHEMA"
+          export SUPABASE_PRIVATE_KEY="$SUPABASE_PRIVATE_KEY"
+          export SUPABASE_URL="$SUPABASE_URL"
+          export OPENAI_API_KEY="$OPENAI_API_KEY"
+          export GOOGLE_API_KEY="$GOOGLE_API_KEY"
+          export NGROK_AUTHTOKEN="$NGROK_AUTHTOKEN"
+          
+          # Alternative: Create .env file for docker compose
+          cat > .env << EOF
+          SUPABASE_SCHEMA=$SUPABASE_SCHEMA
+          SUPABASE_PRIVATE_KEY=$SUPABASE_PRIVATE_KEY
+          SUPABASE_URL=$SUPABASE_URL
+          OPENAI_API_KEY=$OPENAI_API_KEY
+          GOOGLE_API_KEY=$GOOGLE_API_KEY
+          NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN
+          EOF
+          
           # Pull the specific image for this deployment
           echo "Pulling image: ghcr.io/ashokhomepc/scribe:$TAG"
           docker pull ghcr.io/ashokhomepc/scribe:$TAG || {
