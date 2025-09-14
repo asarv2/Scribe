@@ -4,16 +4,16 @@ services:
     container_name: scribe
     restart: unless-stopped
     # No ports exposed - only accessible through nginx
-    deploy:
-      resources:
-        limits:
-          memory: 48GB
-        reservations:
-          memory: 32GB
-          devices:
-            - driver: nvidia
-              capabilities: [gpu, compute, video, utility]
-              device_ids: ["0", "1"]
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 48GB
+    #     reservations:
+    #       memory: 32GB
+    #       devices:
+    #         - driver: nvidia
+    #           capabilities: [gpu, compute, video, utility]
+    #           device_ids: ["0", "1"]
     volumes:
       - ../../../scribe_data/uploads:/app/uploads
       - ../../../scribe_data/model_cache:/app/model_cache
