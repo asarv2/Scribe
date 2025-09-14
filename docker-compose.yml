@@ -41,11 +41,11 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-    runtime: nvidia
-    ulimits:
-      core:
-        soft: -1
-        hard: -1
+    # runtime: nvidia
+    # ulimits:
+    #   core:
+    #     soft: -1
+    #     hard: -1
 
   scribe-dev:
     image: ghcr.io/ashokhomepc/scribe:main
