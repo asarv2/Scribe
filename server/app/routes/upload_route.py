@@ -26,15 +26,16 @@ os.makedirs(TUS_UPLOADS_DIR, exist_ok=True)
 async def tus_options(request: Request):
     """Handle OPTIONS request for tus protocol"""
     return Response(
+        status_code=204,
         headers={
             "Tus-Resumable": "1.0.0",
             "Tus-Version": "1.0.0",
             "Tus-Extension": "creation,termination,creation-with-upload,parallel-upload",
             "Tus-Max-Size": "1073741824",  # 1GB max file size
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, HEAD, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Content-Type, Upload-Concat",
-            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location",
+            "Access-Control-Allow-Methods": "POST, HEAD, PATCH, OPTIONS, DELETE",
+            "Access-Control-Allow-Headers": "*, Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Content-Type, Upload-Concat, Authorization, Content-Length",
+            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location, Tus-Version, Tus-Extension, Tus-Max-Size",
             "Access-Control-Max-Age": "86400",
         }
     )
@@ -259,14 +260,15 @@ async def tus_patch(upload_id: str, request: Request):
 async def tus_options_upload_id(upload_id: str, request: Request):
     """Handle OPTIONS request for specific upload"""
     return Response(
+        status_code=204,
         headers={
             "Tus-Resumable": "1.0.0",
             "Tus-Version": "1.0.0",
             "Tus-Extension": "creation,termination,creation-with-upload,parallel-upload",
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "HEAD, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Content-Type, Upload-Concat",
-            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location",
+            "Access-Control-Allow-Methods": "HEAD, PATCH, OPTIONS, DELETE",
+            "Access-Control-Allow-Headers": "*, Tus-Resumable, Upload-Length, Upload-Metadata, Upload-Offset, Content-Type, Upload-Concat, Authorization, Content-Length",
+            "Access-Control-Expose-Headers": "Tus-Resumable, Upload-Offset, Upload-Length, Location, Tus-Version, Tus-Extension, Upload-Defer-Length",
             "Access-Control-Max-Age": "86400",
         }
     )
