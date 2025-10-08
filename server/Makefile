@@ -10,7 +10,7 @@ dev-tools: venv
 	@./.venv/bin/python -m pip install uv ruff mypy pytest pytest-asyncio coverage >/dev/null 2>&1
 
 sync: dev-tools
-	@./.venv/bin/python -m uv pip install -r app/requirements.txt
+	@./.venv/bin/pip install -r app/requirements.txt
 
 format: dev-tools
 	@./.venv/bin/python -m ruff format

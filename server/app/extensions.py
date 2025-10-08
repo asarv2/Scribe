@@ -90,7 +90,7 @@ def initialize_clients():
 
     if os.getenv("GOOGLE_API_KEY") and litellm_client is None:
         litellm_client = LitellmModel(
-            model="gemini/gemini-1.5-flash-002",  # only model with context caching
+            model="gemini/gemini-2.5-flash",  # only model with context caching
             api_key=os.getenv("GOOGLE_API_KEY"),
         )
     elif litellm_client is None and os.getenv("GOOGLE_API_KEY"):
