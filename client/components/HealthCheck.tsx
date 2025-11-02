@@ -14,7 +14,8 @@ const checkHealth = async () => {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        // Content-Type removed: GET requests don't need it, and including it triggers CORS preflight
+        // which ngrok free tier intercepts without proper CORS headers
         'ngrok-skip-browser-warning': 'true'
       },
     });
