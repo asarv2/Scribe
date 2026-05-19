@@ -17,6 +17,10 @@ automatically.
 
 ## Demos
 
+
+https://github.com/user-attachments/assets/abf01f5f-2dad-4619-ab75-ec2e819dd678
+
+
 Short walkthroughs (most are under a minute). Full-quality copies are
 in [`docs/`](./docs).
 
