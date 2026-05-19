@@ -52,6 +52,38 @@ in [`docs/`](./docs).
 
 (drop the develop video here from docs/develop.mp4)
 
+
+https://github.com/user-attachments/assets/18f84f1a-3b44-4a2d-84cd-aa83d816d8d3
+
+
+
+https://github.com/user-attachments/assets/9f2bede0-21ff-4aaf-8bda-e49a1c4395f1
+
+
+
+https://github.com/user-attachments/assets/10c3d392-a4c1-4df5-b13c-48c97d105c0b
+
+
+
+https://github.com/user-attachments/assets/dc0b09c6-a4bf-40e2-8f5d-f6e7633e69ff
+
+
+
+https://github.com/user-attachments/assets/095bdc48-bd1b-423b-9a0f-27604e7ae61f
+
+
+
+https://github.com/user-attachments/assets/5a75fb6e-2105-4d49-b23f-9e01663bc7ec
+
+
+
+https://github.com/user-attachments/assets/dac2251d-2944-4787-af16-d61928c5b7a3
+
+
+
+https://github.com/user-attachments/assets/9623da30-0ced-485a-918d-bfe38063f17e
+
+
 ## Screenshots
 
 | Login (Microsoft SSO) | AI figure generation |
