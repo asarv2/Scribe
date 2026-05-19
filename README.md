@@ -22,67 +22,31 @@ in [`docs/`](./docs).
 
 **Professor demo** — setting up a class, uploading material, configuring the assistant.
 
-(drop the professor video here from docs/professor-demo.mp4)
+https://github.com/user-attachments/assets/18f84f1a-3b44-4a2d-84cd-aa83d816d8d3
 
 **Student demo** — the day-to-day flow: open a class, ask the assistant, get a generated answer.
 
-(drop the student video here from docs/student-demo.mp4)
+https://github.com/user-attachments/assets/9f2bede0-21ff-4aaf-8bda-e49a1c4395f1
 
 **Exam mode** — generating practice problems and step-by-step solutions, with show/hide answer toggles.
 
-(drop the exam video here from docs/exam.mp4)
+https://github.com/user-attachments/assets/5a75fb6e-2105-4d49-b23f-9e01663bc7ec
 
 **Analytics** — usage and engagement dashboards for instructors.
 
-(drop the analytics video here from docs/analytics.mp4)
+https://github.com/user-attachments/assets/9623da30-0ced-485a-918d-bfe38063f17e
 
 **Visualizations** — on-demand figure and graph generation (e.g. MST, derivations).
 
-(drop the visual video here from docs/visual.mp4)
+https://github.com/user-attachments/assets/10c3d392-a4c1-4df5-b13c-48c97d105c0b
 
 **Ready-made content** — pre-built study material that ships with each class.
 
-(drop the ready-content video here from docs/ready-content.mp4)
-
-**Privacy & security** — how lecture content and student data are handled.
-
-(drop the secure video here from docs/secure.mp4)
+https://github.com/user-attachments/assets/dc0b09c6-a4bf-40e2-8f5d-f6e7633e69ff
 
 **Developer mode** — building, configuring, and shipping new assistants.
 
-(drop the develop video here from docs/develop.mp4)
-
-
-https://github.com/user-attachments/assets/18f84f1a-3b44-4a2d-84cd-aa83d816d8d3
-
-
-
-https://github.com/user-attachments/assets/9f2bede0-21ff-4aaf-8bda-e49a1c4395f1
-
-
-
-https://github.com/user-attachments/assets/10c3d392-a4c1-4df5-b13c-48c97d105c0b
-
-
-
-https://github.com/user-attachments/assets/dc0b09c6-a4bf-40e2-8f5d-f6e7633e69ff
-
-
-
-https://github.com/user-attachments/assets/095bdc48-bd1b-423b-9a0f-27604e7ae61f
-
-
-
-https://github.com/user-attachments/assets/5a75fb6e-2105-4d49-b23f-9e01663bc7ec
-
-
-
 https://github.com/user-attachments/assets/dac2251d-2944-4787-af16-d61928c5b7a3
-
-
-
-https://github.com/user-attachments/assets/9623da30-0ced-485a-918d-bfe38063f17e
-
 
 ## Screenshots
 
