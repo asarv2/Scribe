@@ -17,10 +17,6 @@ automatically.
 
 ## Demos
 
-
-https://github.com/user-attachments/assets/abf01f5f-2dad-4619-ab75-ec2e819dd678
-
-
 Short walkthroughs (most are under a minute). Full-quality copies are
 in [`docs/`](./docs).
 
@@ -47,6 +43,10 @@ https://github.com/user-attachments/assets/10c3d392-a4c1-4df5-b13c-48c97d105c0b
 **Ready-made content** — pre-built study material that ships with each class.
 
 https://github.com/user-attachments/assets/dc0b09c6-a4bf-40e2-8f5d-f6e7633e69ff
+
+**Privacy & security** — how lecture content and student data are handled.
+
+https://github.com/user-attachments/assets/abf01f5f-2dad-4619-ab75-ec2e819dd678
 
 **Developer mode** — building, configuring, and shipping new assistants.
 
