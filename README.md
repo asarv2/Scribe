@@ -65,6 +65,11 @@ https://github.com/user-attachments/assets/dac2251d-2944-4787-af16-d61928c5b7a3
   rendering, TanStack Query/Virtual for data + virtualization.
 - **`server/`** — FastAPI (Python 3.12) backend. PDF/document ingest,
   the assistant pipeline, file uploads, served via Gunicorn + Uvicorn.
+- **`db/schema.sql`** — Postgres schema extract (DDL only — 38 tables
+  across `public` + `prod` schemas, 13 enum types, 11 functions, 69 RLS
+  policies, 3 triggers). Run on a fresh Supabase project to recreate the
+  DB structure. Pulled from a Jan 2025 cluster backup; the live schema
+  may have drifted since.
 - **`docker-compose.yml`** — orchestrates client, server, and nginx.
 - **`nginx.conf`** — reverse proxy / TLS termination for prod.
 
